@@ -3,12 +3,14 @@
 Asteria is a local-first desktop app for chaining file actions from a command bar.
 
 Drop files, type a skill, preview changes immediately, and export when ready.
+It is built as an open-source alternative to Filestar-style batch file workflows.
 
 ## Why This Exists
 
 - Keyboard-first workflow for repetitive file operations.
 - Deterministic local pipeline, no cloud round-trips required.
 - Fast iteration with native-feeling desktop UX.
+- Open source and hackable, so you can extend skills instead of being locked to a closed tool.
 
 ## Core Concepts
 
