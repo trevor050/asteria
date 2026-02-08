@@ -9,7 +9,7 @@ This file provides guidance to WARP (warp.dev) when working with code in this re
 
 ## Project Overview
 
-This is a Wails v2 desktop application with a Svelte + TypeScript frontend. Wails is a Go framework that allows building desktop applications with Go backend and web frontend, similar to Electron but using native webview and producing smaller binaries.
+This is a Wails desktop application with a Svelte + TypeScript frontend. The active module configuration currently tracks Wails v3 alpha packages in `go.mod`, so treat this repo as a Wails v3-alpha codebase unless explicitly migrated.
 
 ## Architecture
 
@@ -17,8 +17,8 @@ This is a Wails v2 desktop application with a Svelte + TypeScript frontend. Wail
 - **Entry point**: `main.go` - Creates Wails app instance, configures window options, and embeds frontend assets
 - **App struct**: `app.go` - Contains application logic and methods exposed to frontend
 - **Module**: `asteria` (defined in `go.mod`)
-- **Go version**: 1.23
-- **Framework**: Wails v2.11.0
+- **Go version**: 1.25 (per `go.mod`)
+- **Framework**: Wails v3 alpha (`github.com/wailsapp/wails/v3`)
 
 ### Frontend (Svelte + TypeScript)
 - **Location**: `frontend/` directory
@@ -125,6 +125,7 @@ go mod download
 
 ## Migration Notes
 
-- The original GitHub history used a Tauri + Svelte setup. This codebase now replaces it with Wails v2 + Svelte + TypeScript.
+- The original GitHub history used a Tauri + Svelte setup. This codebase now replaces it with Wails v3-alpha + Svelte + TypeScript.
 - Keep `frontend/wailsjs/` committed because bindings are generated and consumed by the frontend.
 - Keep build artifacts and local binaries out of git (`build/bin`, `frontend/dist`, root `asteria` binary).
+- README was rewritten to be a proper contributor-facing quickstart + architecture guide. Keep it updated as commands/versions change.

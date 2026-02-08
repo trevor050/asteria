@@ -1,36 +1,90 @@
 # Asteria
 
-Local, live file actions with a command-bar workflow. Drop files, type a skill, watch the preview update, and export when ready.
+Asteria is a local-first desktop app for chaining file actions from a command bar.
 
-## Core Behavior
+Drop files, type a skill, preview changes immediately, and export when ready.
 
-- Every action is a skill (convert, resize, compress, switch modes, export).
-- Skills apply instantly and stack as a live pipeline.
-- Removing a skill replays the remaining chain for a seamless update.
-- The command bar is the universal entry point for actions and settings.
+## Why This Exists
 
-## Development
+- Keyboard-first workflow for repetitive file operations.
+- Deterministic local pipeline, no cloud round-trips required.
+- Fast iteration with native-feeling desktop UX.
 
-Run the app in dev mode:
+## Core Concepts
+
+- Everything is a skill: convert, resize, compress, filters, mode switches, export.
+- Skills execute immediately and stack as a live pipeline.
+- Removing a skill replays the remaining chain to keep output coherent.
+- Ranking combines fuzzy match + frecency + input-type awareness.
+
+## Tech Stack
+
+- Backend: Go
+- Desktop shell: Wails v3 alpha
+- Frontend: Svelte + TypeScript + Vite
+- Image processing: `github.com/disintegration/imaging`
+
+## Project Layout
+
+```text
+.
+├── app.go                # Backend methods exposed to frontend
+├── main.go               # Wails app bootstrap
+├── internal/             # Pipeline/session/storage/skills logic
+├── frontend/             # Svelte app
+│   ├── src/
+│   └── wailsjs/          # Generated bridge bindings
+├── skills/               # Skill definitions (JSON)
+└── wails.json            # Wails config
+```
+
+## Quick Start
+
+### Prerequisites
+
+- Go (matching `go.mod`)
+- Node.js + npm
+- Wails CLI
+
+Install Wails CLI:
+
+```bash
+go install github.com/wailsapp/wails/v3/cmd/wails3@latest
+```
+
+### Install Dependencies
+
+```bash
+cd frontend
+npm install
+cd ..
+```
+
+### Run Dev Mode
 
 ```bash
 wails dev
 ```
 
-If you want a browser preview with bindings available:
+Wails also exposes a browser dev URL during development (typically `http://localhost:34115`).
 
-```bash
-http://localhost:34115
-```
-
-## Build
+### Build
 
 ```bash
 wails build
 ```
 
-## Notes
+## Current Skill Categories
 
-- Image processing is Go-native (via `disintegration/imaging`).
-- Skill ranking uses frecency + fuzzy matching + input-type awareness.
-- Settings and usage stats are stored in JSON under the user config directory.
+- Image transforms (resize, blur, grayscale)
+- Format conversion (JPEG/PNG/HEIC workflows)
+- Compression presets
+- Meta controls (batch/per-file mode, export behavior, naming/output options)
+
+## Local Data
+
+Asteria stores settings/trust/usage metadata in JSON under your user config directory.
+
+## Migration Note
+
+This repo originally started as a Tauri app. It has been fully migrated to Wails for faster iteration and a tighter Go-native workflow.
