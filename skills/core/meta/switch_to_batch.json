@@ -1,0 +1,17 @@
+{
+  "id": "switch_to_batch",
+  "name": "Switch to Batch",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["batch", "apply to all"],
+  "category": "meta",
+  "description": "Apply skills to all files",
+  "inputTypes": ["*"],
+  "outputType": "none",
+  "params": [],
+  "driver": "meta",
+  "isMeta": true,
+  "executor": {"type": "meta"},
+  "permissions": [],
+  "dangerLevel": 0
+}

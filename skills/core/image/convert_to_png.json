@@ -1,0 +1,17 @@
+{
+  "id": "convert_to_png",
+  "name": "Convert to PNG",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["png", "to png"],
+  "category": "convert",
+  "description": "Convert images to PNG format",
+  "inputTypes": [".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff", ".gif"],
+  "outputType": ".png",
+  "params": [],
+  "driver": "image",
+  "isMeta": false,
+  "executor": {"type": "native", "handler": "image.convert_to_png"},
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

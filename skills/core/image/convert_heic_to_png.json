@@ -1,0 +1,22 @@
+{
+  "id": "convert_heic_to_png",
+  "name": "HEIC to PNG",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["heic png", "heif png", "convert heic"],
+  "category": "convert",
+  "description": "Convert HEIC/HEIF images to PNG",
+  "inputTypes": [".heic", ".heif"],
+  "outputType": ".png",
+  "params": [],
+  "driver": "cli",
+  "isMeta": false,
+  "executor": {
+    "type": "cli",
+    "command": "magick",
+    "args": ["{{input}}", "{{output}}"],
+    "timeoutMs": 600000
+  },
+  "permissions": ["files.read", "files.write", "files.temp", "tools.exec"],
+  "dangerLevel": 0
+}

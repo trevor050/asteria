@@ -1,0 +1,32 @@
+{
+  "id": "set_accent_color",
+  "name": "Accent Color",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["accent", "theme color", "highlight color"],
+  "category": "meta",
+  "description": "Set the UI accent color",
+  "inputTypes": ["*"],
+  "outputType": "none",
+  "params": [
+    {
+      "name": "color",
+      "type": "string",
+      "label": "Color",
+      "default": "99,102,241",
+      "presets": [
+        {"label": "Indigo", "value": "99,102,241"},
+        {"label": "Sky", "value": "14,165,233"},
+        {"label": "Emerald", "value": "16,185,129"},
+        {"label": "Orange", "value": "249,115,22"},
+        {"label": "Red", "value": "239,68,68"},
+        {"label": "Violet", "value": "168,85,247"}
+      ]
+    }
+  ],
+  "driver": "meta",
+  "isMeta": true,
+  "executor": {"type": "meta"},
+  "permissions": [],
+  "dangerLevel": 0
+}

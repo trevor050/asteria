@@ -1,0 +1,28 @@
+{
+  "id": "convert_to_jpeg",
+  "name": "Convert to JPEG",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["jpg", "jpeg", "to jpg", "to jpeg"],
+  "category": "convert",
+  "description": "Convert images to JPEG format",
+  "inputTypes": [".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".gif"],
+  "outputType": ".jpg",
+  "params": [
+    {
+      "name": "quality",
+      "type": "int",
+      "label": "Quality",
+      "default": 90,
+      "presets": [95, 90, 85, 80, 70],
+      "min": 40,
+      "max": 100,
+      "unit": "%"
+    }
+  ],
+  "driver": "image",
+  "isMeta": false,
+  "executor": {"type": "native", "handler": "image.convert_to_jpeg"},
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

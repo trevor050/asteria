@@ -1,0 +1,28 @@
+{
+  "id": "compress",
+  "name": "Compress",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["compress file", "reduce size", "shrink"],
+  "category": "compress",
+  "description": "Reduce file size by lowering quality",
+  "inputTypes": [".jpg", ".jpeg", ".png"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "quality",
+      "type": "int",
+      "label": "Quality",
+      "default": 85,
+      "presets": [90, 80, 70, 60],
+      "min": 40,
+      "max": 100,
+      "unit": "%"
+    }
+  ],
+  "driver": "image",
+  "isMeta": false,
+  "executor": {"type": "native", "handler": "image.compress"},
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

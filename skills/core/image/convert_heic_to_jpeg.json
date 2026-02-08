@@ -1,0 +1,33 @@
+{
+  "id": "convert_heic_to_jpeg",
+  "name": "HEIC to JPEG",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["heic jpg", "heic jpeg", "heif jpg"],
+  "category": "convert",
+  "description": "Convert HEIC/HEIF images to JPEG",
+  "inputTypes": [".heic", ".heif"],
+  "outputType": ".jpg",
+  "params": [
+    {
+      "name": "quality",
+      "type": "int",
+      "label": "Quality",
+      "default": 90,
+      "presets": [95, 90, 85, 80, 70],
+      "min": 40,
+      "max": 100,
+      "unit": "%"
+    }
+  ],
+  "driver": "cli",
+  "isMeta": false,
+  "executor": {
+    "type": "cli",
+    "command": "magick",
+    "args": ["{{input}}", "-quality", "{{quality}}", "{{output}}"],
+    "timeoutMs": 600000
+  },
+  "permissions": ["files.read", "files.write", "files.temp", "tools.exec"],
+  "dangerLevel": 0
+}

@@ -1,0 +1,17 @@
+{
+  "id": "switch_to_per_file",
+  "name": "Switch to Per-File",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["per file", "single file", "per-file"],
+  "category": "meta",
+  "description": "Apply skills to a single file",
+  "inputTypes": ["*"],
+  "outputType": "none",
+  "params": [],
+  "driver": "meta",
+  "isMeta": true,
+  "executor": {"type": "meta"},
+  "permissions": [],
+  "dangerLevel": 0
+}

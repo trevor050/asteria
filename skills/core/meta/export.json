@@ -1,0 +1,17 @@
+{
+  "id": "export",
+  "name": "Export Files",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["save", "export", "write"],
+  "category": "meta",
+  "description": "Save outputs to your chosen folder",
+  "inputTypes": ["*"],
+  "outputType": "none",
+  "params": [],
+  "driver": "meta",
+  "isMeta": true,
+  "executor": {"type": "meta"},
+  "permissions": [],
+  "dangerLevel": 0
+}

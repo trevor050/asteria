@@ -1,0 +1,28 @@
+{
+  "id": "blur",
+  "name": "Blur",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["soften", "gaussian"],
+  "category": "filter",
+  "description": "Apply gaussian blur",
+  "inputTypes": [".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".gif"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "radius",
+      "type": "float",
+      "label": "Radius",
+      "default": 2.0,
+      "presets": [1.5, 3.0, 6.0],
+      "min": 0.5,
+      "max": 12,
+      "unit": "px"
+    }
+  ],
+  "driver": "image",
+  "isMeta": false,
+  "executor": {"type": "native", "handler": "image.blur"},
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

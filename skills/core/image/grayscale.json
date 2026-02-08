@@ -1,0 +1,17 @@
+{
+  "id": "grayscale",
+  "name": "Grayscale",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["bw", "black and white", "monochrome"],
+  "category": "filter",
+  "description": "Convert to grayscale",
+  "inputTypes": [".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".gif"],
+  "outputType": "",
+  "params": [],
+  "driver": "image",
+  "isMeta": false,
+  "executor": {"type": "native", "handler": "image.grayscale"},
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

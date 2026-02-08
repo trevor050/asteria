@@ -1,0 +1,35 @@
+{
+  "id": "heic_blur",
+  "name": "HEIC Blur",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["heic soften", "heic gaussian"],
+  "category": "filter",
+  "description": "Blur for HEIC via convert -> filter -> convert",
+  "inputTypes": [".heic", ".heif"],
+  "outputType": ".heic",
+  "params": [
+    {
+      "name": "radius",
+      "type": "float",
+      "label": "Radius",
+      "default": 2.0,
+      "presets": [1.5, 3.0, 6.0],
+      "min": 0.5,
+      "max": 12,
+      "unit": "px"
+    }
+  ],
+  "driver": "pipeline",
+  "isMeta": false,
+  "executor": {
+    "type": "pipeline",
+    "steps": [
+      {"skillId": "convert_heic_to_png"},
+      {"skillId": "blur"},
+      {"skillId": "convert_png_to_heic"}
+    ]
+  },
+  "permissions": ["files.read", "files.write", "files.temp", "tools.exec"],
+  "dangerLevel": 0
+}

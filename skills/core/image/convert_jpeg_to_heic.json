@@ -1,0 +1,22 @@
+{
+  "id": "convert_jpeg_to_heic",
+  "name": "JPEG to HEIC",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["jpg heic", "jpeg heic", "to heic"],
+  "category": "convert",
+  "description": "Convert JPEG images to HEIC",
+  "inputTypes": [".jpg", ".jpeg"],
+  "outputType": ".heic",
+  "params": [],
+  "driver": "cli",
+  "isMeta": false,
+  "executor": {
+    "type": "cli",
+    "command": "magick",
+    "args": ["{{input}}", "{{output}}"],
+    "timeoutMs": 600000
+  },
+  "permissions": ["files.read", "files.write", "files.temp", "tools.exec"],
+  "dangerLevel": 0
+}

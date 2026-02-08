@@ -1,0 +1,24 @@
+{
+  "id": "set_naming_pattern",
+  "name": "Set Naming Pattern",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["file name pattern", "naming pattern"],
+  "category": "meta",
+  "description": "Configure output file names",
+  "inputTypes": ["*"],
+  "outputType": "none",
+  "params": [
+    {
+      "name": "pattern",
+      "type": "string",
+      "label": "Pattern",
+      "default": "{name}_{skill}.{ext}"
+    }
+  ],
+  "driver": "meta",
+  "isMeta": true,
+  "executor": {"type": "meta"},
+  "permissions": [],
+  "dangerLevel": 0
+}

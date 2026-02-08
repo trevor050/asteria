@@ -1,0 +1,28 @@
+{
+  "id": "resize",
+  "name": "Resize",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["scale", "resize image", "size"],
+  "category": "transform",
+  "description": "Resize by percentage",
+  "inputTypes": [".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".gif"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "percent",
+      "type": "int",
+      "label": "Percent",
+      "default": 100,
+      "presets": [90, 75, 50, 25],
+      "min": 10,
+      "max": 300,
+      "unit": "%"
+    }
+  ],
+  "driver": "image",
+  "isMeta": false,
+  "executor": {"type": "native", "handler": "image.resize"},
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}
