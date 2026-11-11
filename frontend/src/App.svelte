@@ -10,7 +10,7 @@
   import SettingsPanel from './lib/Settings.svelte'
   import AddonPrompt from './lib/AddonPrompt.svelte'
   import { isTyping, plural, shortcut } from './lib/format'
-  import { motionReduced, setAppearance, setNativeGlass, setOverrides } from './lib/theme'
+  import { motionReduced, setAppearance, setOverrides } from './lib/theme'
   import { loadSkillMeta } from './lib/skillmeta.svelte'
 
   type Toast = { id: number; text: string; tone: 'info' | 'error'; detail?: string; actions?: { label: string; run: () => void }[] }
@@ -193,7 +193,6 @@
   async function syncFiles() {
     const s = await api.GetState()
     st = s
-    setNativeGlass(!!s.nativeGlass)
     files = s.files ?? []
     const ids = new Set(files.map((f) => f.id))
     selected = selected.filter((id) => ids.has(id))
@@ -1010,10 +1009,6 @@
   }
   [data-phase='settled'] .amber {
     opacity: 0.5;
-  }
-  /* Over native Liquid Glass the wash is only a tint. */
-  :global(:root[data-glass='native']) .aura {
-    opacity: calc(var(--aura-strength, 0.5) * 0.6);
   }
   .shell:has(.tray:global(.file-drop-target-active)) .aura {
     opacity: calc(var(--aura-strength) * 1.8);

@@ -73,7 +73,7 @@ Beyond conversions there are more than 100 picture skills (crop, straighten, lev
 - **Drag a value, see it live.** Skills with a number (saturation, exposure, blur, vignette...) get a slider, and the picture updates as you drag. Nothing is applied until you press <kbd>↵</kbd>.
 - **Steps stack and can be undone.** Each file shows the chain it went through. Remove a step from the middle and the rest is replayed; <kbd>⌘</kbd><kbd>Z</kbd> undoes the last one.
 - **Your originals are never touched.** Skills work on copies in a private workspace. Export writes new files next to the originals (or into a folder you pick) and never overwrites anything.
-- **It looks like it belongs.** On macOS 26 the window itself is Liquid Glass, the system's own material. Light and dark follow your system, or pick one in Settings (<kbd>⌘</kbd><kbd>,</kbd>).
+- **It looks like it belongs.** Light and dark follow your system, or pick one in Settings (<kbd>⌘</kbd><kbd>,</kbd>).
 
 ## Add-ons
 
@@ -119,7 +119,7 @@ The builds aren't signed yet, so your system will warn you the first time:
   <img src="docs/screenshot-windows-addon.png" width="49%" alt="On Windows: Convert to PDF needs LibreOffice, with the download size, disk space and official host, and a Get LibreOffice button">
 </p>
 
-Platform notes: the Liquid Glass window needs macOS 26; older macOS versions get the regular window. Windows uses the WebView2 runtime that ships with Windows 11 (Windows 10 may ask to install it). The Potrace add-on for macOS is an Intel build and runs through Rosetta on Apple Silicon.
+Platform notes: Windows uses the WebView2 runtime that ships with Windows 11 (Windows 10 may ask to install it). The Potrace add-on for macOS is an Intel build and runs through Rosetta on Apple Silicon.
 
 ## Make your own skills
 

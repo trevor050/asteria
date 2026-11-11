@@ -506,13 +506,6 @@
     opacity: 0.55;
     transform: none;
   }
-  /* Over native Liquid Glass the bar stays calm: the window is the show. */
-  :global(:root[data-glass='native']) .halo {
-    opacity: 0;
-  }
-  :global(:root[data-glass='native']) .focused .halo {
-    opacity: 0.12;
-  }
   .busy .halo {
     animation: breathe 2.4s ease-in-out infinite;
   }
@@ -536,10 +529,6 @@
     transition:
       border-color 0.3s var(--ease-out),
       transform 0.4s var(--ease-spring);
-  }
-  /* Over native glass, a denser fill so the field reads as one surface. */
-  :global(:root[data-glass='native']) .field {
-    --glass-bg: var(--glass-strong);
   }
   .focused .field {
     border-color: var(--line-strong);

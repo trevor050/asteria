@@ -165,9 +165,6 @@ type State struct {
 	Tools     []ToolStatus     `json:"tools"`
 	Platform  string           `json:"platform"`
 	Version   string           `json:"version"`
-	// NativeGlass is true when the window shows macOS Liquid Glass behind
-	// the interface (macOS 26+, native build).
-	NativeGlass bool `json:"nativeGlass"`
 }
 
 // GetState returns the tray, settings and environment.
@@ -187,7 +184,6 @@ func (a *App) GetState() State {
 		Problems:    a.registry.Problems(),
 		Tools:       statuses,
 		Platform:    runtime.GOOS,
-		NativeGlass: nativeGlass(),
 		Version:     Version,
 	}
 }

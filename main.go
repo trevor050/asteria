@@ -64,17 +64,10 @@ func main() {
 		MinWidth:  560,
 		MinHeight: 440,
 		Mac: application.MacWindow{
-			// Real Liquid Glass behind the interface on macOS 26; Wails
-			// falls back to the translucent material on older versions.
-			Backdrop: application.MacBackdropLiquidGlass,
-			LiquidGlass: application.MacLiquidGlass{
-				Style:    application.LiquidGlassStyleAutomatic,
-				Material: application.NSVisualEffectMaterialAuto,
-			},
 			TitleBar:                application.MacTitleBarHiddenInset,
 			InvisibleTitleBarHeight: 44,
 		},
-		BackgroundColour: application.NewRGBA(0, 0, 0, 0),
+		BackgroundColour: application.NewRGBA(14, 15, 18, 255),
 		URL:              "/",
 		EnableFileDrop:   true,
 	})

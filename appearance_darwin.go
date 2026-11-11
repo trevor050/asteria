@@ -8,8 +8,7 @@ package main
 #import <Cocoa/Cocoa.h>
 
 // asteriaSetAppearance makes the window follow Asteria's theme setting
-// (0 system, 1 light, 2 dark), so the native Liquid Glass behind the web
-// content matches the interface drawn on it.
+// (0 system, 1 light, 2 dark), so the title bar controls match the interface.
 static void asteriaSetAppearance(void *win, int mode) {
 	if (win == NULL) {
 		return;
@@ -28,25 +27,7 @@ static void asteriaSetAppearance(void *win, int mode) {
 */
 import "C"
 
-import (
-	"strconv"
-	"strings"
-
-	"github.com/wailsapp/wails/v3/pkg/application"
-	"golang.org/x/sys/unix"
-)
-
-// nativeGlass reports whether the window has Liquid Glass behind it:
-// macOS 26 or later (older versions get Wails' translucent fallback, which
-// the interface covers with its own background).
-func nativeGlass() bool {
-	v, err := unix.Sysctl("kern.osproductversion")
-	if err != nil {
-		return false
-	}
-	major, err := strconv.Atoi(strings.SplitN(v, ".", 2)[0])
-	return err == nil && major >= 26
-}
+import "github.com/wailsapp/wails/v3/pkg/application"
 
 func applyWindowAppearance(w application.Window, appearance string) {
 	if w == nil {

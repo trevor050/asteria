@@ -51,7 +51,6 @@
   --glass-strong: rgb(252 252 250 / 0.86);
   --glass-solid: #fbfbf9;
   --glass-edge: rgb(255 255 255 / 0.7);
-  --page-native: rgb(246 246 243 / 0.55);
   --scrim: rgb(30 30 28 / 0.28);
   --accent: color-mix(in oklab, rgb(var(--accent-rgb)) 70%, #1c1c1a);
   --accent-soft: color-mix(in oklab, rgb(var(--accent-rgb)) 14%, transparent);
@@ -109,7 +108,6 @@
   --glass-strong: rgb(22 23 26 / 0.84);
   --glass-solid: #18191c;
   --glass-edge: rgb(255 255 255 / 0.06);
-  --page-native: rgb(14 15 18 / 0.72);
   --scrim: rgb(4 4 6 / 0.62);
   --accent: color-mix(in oklab, rgb(var(--accent-rgb)) 55%, #ecebe6);
   --accent-soft: color-mix(in oklab, rgb(var(--accent-rgb)) 16%, transparent);
@@ -224,26 +222,6 @@ button:focus-visible,
   background: var(--glass-solid) !important;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
-}
-
-/* macOS 26: the window itself is native Liquid Glass (see glass_darwin.go).
-   The page lets it through under a veil strong enough that text keeps its
-   contrast even over a white page behind the window (the glass takes on the
-   brightness of what's behind it; web text can't adapt like native vibrant
-   text). Reduced transparency brings the solid background back. */
-:root[data-glass='native'],
-:root[data-glass='native'] body {
-  background: var(--page-native);
-}
-@media (prefers-reduced-transparency: reduce) {
-  :root[data-glass='native'],
-  :root[data-glass='native'] body {
-    background: var(--bg);
-  }
-}
-:root[data-glass='native'][data-transparency='reduce'],
-:root[data-glass='native'][data-transparency='reduce'] body {
-  background: var(--bg);
 }
 
 ::-webkit-scrollbar {
