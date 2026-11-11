@@ -1,5 +1,19 @@
-build/bin
-node_modules
-frontend/dist
-asteria
+# build output
+bin/
+build/bin/
+build/linux/appimage/build/
+build/linux/*.desktop
+build/windows/nsis/MicrosoftEdgeWebview2Setup.exe
+*.syso
+.task/
+.wails/
+
+# frontend
+frontend/dist/
+frontend/node_modules/
+frontend/bindings/
+
+# local tooling
+.tools/
+.scratch/
 .DS_Store
