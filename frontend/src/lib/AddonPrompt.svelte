@@ -148,13 +148,12 @@
     }
   }
   .sheet {
-    /* The thickest glass: big surface, more blur, deeper shadow. */
-    --glass-bg: var(--glass-strong);
-    --lg-blur: 40px;
-    --glass-shadow: var(--lg-shadow-deep);
+    --glass-bg: color-mix(in oklab, var(--glass-solid) 94%, transparent);
     width: min(440px, 100%);
     padding: 22px 24px 18px;
-    border-radius: 28px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    box-shadow: var(--shadow-pop);
     outline: none;
     animation: sheet-in 0.3s var(--ease-spring) both;
   }
@@ -203,34 +202,26 @@
     margin-top: 16px;
   }
   .btn {
-    height: 32px;
-    padding: 0 16px;
-    border: 0;
+    height: 30px;
+    padding: 0 14px;
+    border: 1px solid var(--line-strong);
     border-radius: 999px;
-    background: var(--lg-control);
-    box-shadow: var(--lg-rims), 0 1px 3px rgb(0 0 0 / 0.08);
+    background: transparent;
     color: var(--ink);
     font-size: 12.5px;
     cursor: pointer;
-    transition:
-      background 0.15s,
-      transform 0.12s var(--ease-out);
   }
   .btn:hover {
-    background: var(--lg-control-hover);
-  }
-  .btn:active {
-    transform: scale(0.96);
+    background: var(--hover);
   }
   .btn.quiet {
-    background: transparent;
-    box-shadow: none;
+    border-color: transparent;
     color: var(--ink-2);
   }
   .btn.primary {
+    border-color: transparent;
     background: var(--seg-on);
     box-shadow: var(--seg-on-shadow);
-    font-weight: 450;
   }
   .progress {
     margin-top: 6px;

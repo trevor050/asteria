@@ -134,8 +134,9 @@
     height: min(780px, 100%);
     display: flex;
     flex-direction: column;
-    border-radius: 28px;
-    --glass-shadow: var(--lg-shadow-deep);
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-pop);
     outline: none;
     overflow: hidden;
     animation: sheet-in 0.34s var(--ease-spring) both;

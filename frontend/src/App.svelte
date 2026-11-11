@@ -561,7 +561,7 @@
         <button type="button" class="quiet" onclick={() => removeFromTray(files.map((f) => f.id))} disabled={busy}>Clear</button>
       </div>
     {/if}
-    <div class="end glass">
+    <div class="end">
       {#if files.length > 1}
         <div class="mode" role="radiogroup" aria-label="Show and apply skills to">
           <button type="button" role="radio" aria-checked={!perFile} class:on={!perFile} onclick={() => setMode('batch')} title="Every file, or the selection">
@@ -1049,16 +1049,12 @@
   .export {
     animation: rise 0.4s var(--ease-out) both;
   }
-  /* The header controls float as one glass capsule, like a toolbar group. */
   .end {
     --wails-draggable: no-drag;
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 8px;
     margin-left: auto;
-    padding: 3px;
-    border-radius: 999px;
-    --lg-blur: 20px;
   }
   .mode {
     display: flex;
@@ -1089,7 +1085,7 @@
     stroke-linecap: round;
   }
   .gear circle {
-    fill: none;
+    fill: var(--bg);
   }
   .gear:hover,
   .gear.on {
@@ -1112,8 +1108,7 @@
     color: var(--ink-2);
   }
   .mode button.on {
-    background: var(--seg-on, var(--chip));
-    box-shadow: var(--seg-on-shadow, none);
+    background: var(--chip);
     color: var(--ink);
   }
 
@@ -1301,15 +1296,14 @@
     align-items: center;
     gap: 10px;
     height: 52px;
-    padding: 0 20px 0 20px;
+    padding: 0 20px;
     border-radius: 26px;
-    border: 0;
+    border: 1px solid var(--line);
     color: var(--muted);
     font-size: 14px;
     font-weight: 400;
     cursor: pointer;
-    --lg-blur: 32px;
-    --glass-shadow: var(--lg-shadow-deep);
+    box-shadow: inset 0 1px 0 var(--glass-edge);
     transition:
       color 0.3s var(--ease-out),
       border-color 0.3s,
@@ -1332,6 +1326,7 @@
     padding: 0;
   }
   .export.ready {
+    border-color: var(--line-strong);
     color: var(--ink);
     font-weight: 450;
   }
@@ -1513,8 +1508,9 @@
     align-items: flex-start;
     gap: 6px;
     padding: 10px 8px 10px 14px;
-    border-radius: 18px;
-    --glass-shadow: var(--lg-shadow-deep);
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-pop);
     font-size: 13px;
     animation: toast-in 0.32s var(--ease-spring) both;
   }
@@ -1570,8 +1566,9 @@
     z-index: 45;
     min-width: 214px;
     padding: 5px;
-    border-radius: 16px;
-    --glass-shadow: var(--lg-shadow-deep);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: var(--shadow-pop);
     display: flex;
     flex-direction: column;
     transform-origin: top left;
@@ -1628,8 +1625,9 @@
   .dialog {
     --glass-bg: var(--glass-strong);
     width: min(440px, 100%);
-    border-radius: 26px;
-    --glass-shadow: var(--lg-shadow-deep);
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-pop);
     padding: 22px;
     font-size: 14px;
     animation: toast-in 0.3s var(--ease-spring) both;
