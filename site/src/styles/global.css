@@ -1,0 +1,513 @@
+/* Asteria site. Same world as the app (frontend/src/style.css, dark theme):
+   near-neutral solid surfaces, thin Geist, and colour only from the ambient
+   wash and the line of light. No glass anywhere. */
+
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../assets/fonts/Geist-Variable-subset.woff2') format('woff2');
+}
+
+:root {
+  color-scheme: dark;
+
+  /* surfaces */
+  --bg: #0f1012;
+  --bg-deep: #0b0c0e;
+  --panel: #17181b;
+  --panel-2: #1c1d21;
+  --line: rgb(255 255 255 / 0.07);
+  --line-strong: rgb(255 255 255 / 0.14);
+  --chip: rgb(255 255 255 / 0.065);
+  --hover: rgb(255 255 255 / 0.04);
+
+  /* ink */
+  --ink: #ecebe6;
+  --ink-2: #b4b2ab;
+  --muted: #8f8d87;
+  --paper: #f3f0e8;
+  --paper-2: #dedad1;
+  --paper-ink: #1c1c1a;
+  --good: #a3cbb0;
+  --warn: #d9b57e;
+
+  /* the wash (app dark tokens) */
+  --aura-teal: 62 118 132;
+  --aura-amber: 160 114 56;
+  --aura-slate: 80 96 142;
+  --aura-strength: 0.64;
+
+  /* the line of light (app icon) */
+  --light-a: #5cc0cf;
+  --light-b: #93a0e6;
+  --light-c: #f3ac52;
+  --light: linear-gradient(180deg, var(--light-a), var(--light-b) 50%, var(--light-c));
+
+  /* family tints for skill icons (app tokens, dark) */
+  --fam-l: 0.8;
+  --fam-c: 0.065;
+  --fam-convert: oklch(var(--fam-l) var(--fam-c) 255);
+  --fam-transform: oklch(var(--fam-l) var(--fam-c) 195);
+  --fam-sizes: oklch(var(--fam-l) var(--fam-c) 175);
+  --fam-compress: oklch(var(--fam-l) var(--fam-c) 95);
+  --fam-adjust: oklch(var(--fam-l) var(--fam-c) 60);
+  --fam-filter: oklch(var(--fam-l) var(--fam-c) 305);
+  --fam-compose: oklch(var(--fam-l) var(--fam-c) 350);
+  --fam-info: oklch(var(--fam-l) calc(var(--fam-c) * 0.5) 240);
+  --fam-pdf: oklch(var(--fam-l) var(--fam-c) 25);
+  --fam-media: oklch(var(--fam-l) var(--fam-c) 145);
+  --fam-archive: oklch(var(--fam-l) calc(var(--fam-c) * 0.7) 75);
+  --fam-data: oklch(var(--fam-l) var(--fam-c) 220);
+  --fam-document: oklch(var(--fam-l) var(--fam-c) 280);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.36, 0.64, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  --sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --gutter: clamp(16px, 4vw, 40px);
+  --measure: 62ch;
+  --wide: 1180px;
+  --shadow-pop: 0 24px 60px -16px rgb(0 0 0 / 0.7), 0 2px 10px rgb(0 0 0 / 0.35);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+[hidden] {
+  display: none !important;
+}
+
+html {
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 24px;
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  position: relative;
+  isolation: isolate;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.55;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+::selection {
+  background: rgb(var(--aura-teal) / 0.6);
+  color: #fff;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 250;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+h1 {
+  font-size: clamp(2.1rem, 1.3rem + 4vw, 4.6rem);
+  font-weight: 200;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+h2 {
+  font-size: clamp(2rem, 1.4rem + 2.6vw, 3.4rem);
+}
+h3 {
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+.lede {
+  color: var(--ink-2);
+  font-size: clamp(1.05rem, 1rem + 0.35vw, 1.25rem);
+  font-weight: 300;
+  line-height: 1.5;
+  max-width: 40ch;
+}
+
+a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 0.22em;
+  transition: text-decoration-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
+}
+@media (hover: hover) {
+  a:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 1.5px solid var(--light-a);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+kbd {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 0.78em;
+  font-weight: 450;
+  line-height: 1;
+  padding: 3px 6px 4px;
+  border-radius: 5px;
+  background: var(--chip);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+  vertical-align: 0.08em;
+}
+/* What a person types into the command bar. The app's bar is Geist, so is this. */
+.typed {
+  display: inline-block;
+  padding: 0.05em 0.45em 0.12em;
+  border-radius: 7px;
+  background: var(--chip);
+  color: var(--ink);
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.wrap {
+  width: 100%;
+  max-width: calc(var(--wide) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 100;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--paper-ink);
+  text-decoration: none;
+}
+.skip:focus {
+  top: 12px;
+}
+
+/* ---- buttons: one primary (paper, like the finished file), one quiet ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 450;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out),
+    transform 0.16s var(--ease-out);
+}
+.btn svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn.primary {
+  background: linear-gradient(180deg, var(--paper), var(--paper-2));
+  border-color: transparent;
+  color: var(--paper-ink);
+  box-shadow: 0 10px 30px -14px rgb(0 0 0 / 0.8);
+}
+@media (hover: hover) {
+  .btn:hover {
+    background-color: var(--hover);
+    border-color: rgb(255 255 255 / 0.22);
+  }
+  .btn.primary:hover {
+    background: linear-gradient(180deg, #fff, var(--paper));
+  }
+}
+.btn .sub {
+  color: inherit;
+  opacity: 0.6;
+  font-weight: 400;
+}
+
+/* ---- the ambient wash (the app's .aura) ---- */
+.aura {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 120vh;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: var(--aura-strength);
+  transition: opacity 0.9s var(--ease-out);
+  -webkit-mask-image: linear-gradient(180deg, #000 30%, transparent);
+  mask-image: linear-gradient(180deg, #000 30%, transparent);
+}
+.aura .blob {
+  position: absolute;
+  border-radius: 50%;
+}
+.aura .teal {
+  width: 72vw;
+  height: 78vh;
+  left: -22vw;
+  top: -40vh;
+  background: radial-gradient(closest-side, rgb(var(--aura-teal)), rgb(var(--aura-teal) / 0.45) 45%, rgb(var(--aura-teal) / 0.12) 75%, transparent);
+  animation: drift-a 42s ease-in-out infinite alternate;
+}
+.aura .amber {
+  width: 66vw;
+  height: 74vh;
+  right: -20vw;
+  top: -36vh;
+  background: radial-gradient(closest-side, rgb(var(--aura-amber)), rgb(var(--aura-amber) / 0.42) 45%, rgb(var(--aura-amber) / 0.1) 75%, transparent);
+  animation: drift-b 50s ease-in-out infinite alternate;
+}
+.aura .slate {
+  width: 84vw;
+  height: 62vh;
+  left: 8vw;
+  top: -44vh;
+  background: radial-gradient(closest-side, rgb(var(--aura-slate)), rgb(var(--aura-slate) / 0.4) 50%, transparent);
+  animation: drift-c 58s ease-in-out infinite alternate;
+}
+@keyframes drift-a {
+  to {
+    transform: translate3d(9vw, 5vh, 0) scale(1.08);
+  }
+}
+@keyframes drift-b {
+  to {
+    transform: translate3d(-8vw, 7vh, 0) scale(0.94);
+  }
+}
+@keyframes drift-c {
+  to {
+    transform: translate3d(-5vw, 4vh, 0) scale(1.1);
+  }
+}
+html.dragging .aura {
+  opacity: calc(var(--aura-strength) * 1.6);
+}
+
+/* ---- top bar ---- */
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 72px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.brand img {
+  width: 30px;
+  height: 30px;
+}
+.top nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.top nav a {
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: var(--ink-2);
+  font-size: 14px;
+  text-decoration: none;
+  transition: background-color 0.15s, color 0.15s;
+}
+@media (hover: hover) {
+  .top nav a:hover {
+    background: var(--chip);
+    color: var(--ink);
+  }
+}
+@media (max-width: 520px) {
+  .top nav .opt {
+    display: none;
+  }
+}
+
+/* ---- footer ---- */
+.foot {
+  margin-top: clamp(80px, 12vw, 160px);
+  padding-block: 32px 40px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+}
+.foot .wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  align-items: center;
+}
+.foot a {
+  color: var(--ink-2);
+}
+.foot .by {
+  margin-left: auto;
+}
+
+/* ---- the file glyph (outline before the line, paper after) ---- */
+.glyph {
+  flex: none;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--gw, 112px);
+  aspect-ratio: 398 / 500;
+}
+.glyph svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.glyph .ext {
+  position: relative;
+  margin-top: 14%;
+  font-size: calc(var(--gw, 112px) * 0.2);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.glyph.outline .ext {
+  color: var(--ink-2);
+}
+.glyph.paper .ext {
+  color: var(--paper-ink);
+  font-weight: 350;
+}
+.glyph.long .ext {
+  font-size: calc(var(--gw, 112px) * 0.15);
+}
+
+/* skill icons (Lucide, from the app) */
+svg.icon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---- the line of light ---- */
+.beam {
+  position: relative;
+  width: 2px;
+  pointer-events: none;
+}
+.beam::before,
+.beam::after,
+.beam i {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  border-radius: 99px;
+}
+/* the core: a hairline of white inside a thin band of the gradient */
+.beam::after {
+  width: 4px;
+  margin-left: -2px;
+  background: var(--light);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.35);
+}
+.beam i {
+  width: 1.5px;
+  margin-left: -0.75px;
+  background: rgb(255 255 255 / 0.85);
+  z-index: 1;
+}
+/* the glow: blurred once, then only its opacity and transform change */
+.beam::before {
+  width: 30px;
+  margin-left: -15px;
+  background: var(--light);
+  filter: blur(18px);
+  opacity: 0.55;
+  transition: opacity 0.5s var(--ease-out);
+}
+html.dragging .beam::before {
+  opacity: 0.95;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

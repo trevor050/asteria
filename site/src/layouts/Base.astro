@@ -1,0 +1,106 @@
+---
+import '../styles/global.css'
+import fontUrl from '../assets/fonts/Geist-Variable-subset.woff2?url'
+import icon from '../assets/icon-64.png'
+import { REPO_URL } from '../lib/release'
+
+interface Props {
+  title: string
+  description: string
+  /** path on the site, starting with / */
+  path: string
+  jsonld?: object | object[]
+  noindex?: boolean
+}
+const { title, description, path, jsonld, noindex = false } = Astro.props
+const site = Astro.site!.href.replace(/\/$/, '')
+const canonical = site + path
+const ogImage = `${site}/og.png`
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#0f1012" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Asteria" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The Asteria icon: a file passing through a line of light" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="sitemap" href="/sitemap.xml" />
+    {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="paper-fill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffffff"></stop>
+          <stop offset="1" stop-color="#dedad1"></stop>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="aura" aria-hidden="true">
+      <div class="blob teal"></div>
+      <div class="blob amber"></div>
+      <div class="blob slate"></div>
+    </div>
+    <header class="wrap top">
+      <a class="brand" href="/" aria-label="Asteria home">
+        <img src={icon.src} width="30" height="30" alt="" />
+        <span>Asteria</span>
+      </a>
+      <nav aria-label="Site">
+        <a class="opt" href="/convert">Conversions</a>
+        <a class="opt" href={REPO_URL}>GitHub</a>
+        <a href="/#download">Download</a>
+      </nav>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="foot">
+      <div class="wrap">
+        <a href={REPO_URL}>Source on GitHub</a>
+        <a href={`${REPO_URL}/blob/master/LICENSE`}>MIT license</a>
+        <span class="by">Made by <a href="https://trevorrosato.com">Trevor Rosato</a></span>
+      </div>
+    </footer>
+    <script>
+      // A file dragged anywhere over the page brightens the wash and the line,
+      // the way the app answers a drag.
+      let depth = 0
+      const root = document.documentElement
+      const hasFiles = (e: DragEvent) => !!e.dataTransfer && [...e.dataTransfer.types].includes('Files')
+      addEventListener('dragenter', (e) => {
+        if (!hasFiles(e)) return
+        depth++
+        root.classList.add('dragging')
+      })
+      addEventListener('dragleave', () => {
+        depth = Math.max(0, depth - 1)
+        if (!depth) root.classList.remove('dragging')
+      })
+      addEventListener('drop', () => {
+        depth = 0
+        root.classList.remove('dragging')
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Asteria app icon: a file goes into a line of light as an outline and comes out the other side as a finished file. Render to build/appicon.png with scripts/capture (node capture.mjs icon). -->
+  <defs>
+    <clipPath id="tile">
+      <rect x="100" y="100" width="824" height="824" rx="186" />
+    </clipPath>
+    <clipPath id="before">
+      <rect x="100" y="100" width="412" height="824" />
+    </clipPath>
+    <clipPath id="after">
+      <rect x="512" y="100" width="412" height="824" />
+    </clipPath>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="90" />
+    </filter>
+    <filter id="beam" filterUnits="userSpaceOnUse" x="250" y="60" width="524" height="904">
+      <feGaussianBlur stdDeviation="46" />
+    </filter>
+    <filter id="lift" filterUnits="userSpaceOnUse" x="250" y="150" width="620" height="760">
+      <feDropShadow dx="0" dy="20" stdDeviation="26" flood-color="#000" flood-opacity="0.5" />
+    </filter>
+    <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b1d21" />
+      <stop offset="1" stop-color="#0b0c0e" />
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#dedad1" />
+    </linearGradient>
+    <linearGradient id="light" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5cc0cf" />
+      <stop offset="0.5" stop-color="#93a0e6" />
+      <stop offset="1" stop-color="#f3ac52" />
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.2" />
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.03" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.07" />
+    </linearGradient>
+  </defs>
+  <g clip-path="url(#tile)">
+    <rect x="100" y="100" width="824" height="824" fill="url(#base)" />
+    <g filter="url(#soft)" opacity="0.85">
+      <circle cx="240" cy="190" r="250" fill="#4f8592" />
+      <circle cx="810" cy="200" r="240" fill="#a8783e" />
+      <circle cx="530" cy="70" r="210" fill="#5d6a90" />
+    </g>
+    <!-- before: an outline -->
+    <g clip-path="url(#before)">
+      <path d="M352 262H584L712 390V724Q712 762 674 762H352Q314 762 314 724V300Q314 262 352 262Z" fill="#ffffff" fill-opacity="0.05" stroke="#f3f0e8" stroke-opacity="0.78" stroke-width="20" stroke-linejoin="round" />
+    </g>
+    <!-- after: a finished file -->
+    <g clip-path="url(#after)">
+      <g filter="url(#lift)">
+        <path d="M352 262H584L712 390V724Q712 762 674 762H352Q314 762 314 724V300Q314 262 352 262Z" fill="url(#paper)" />
+      </g>
+      <path d="M584 262V358Q584 390 616 390H712Z" fill="#c2bdb1" />
+    </g>
+    <!-- the line of light it passes through -->
+    <rect x="482" y="170" width="60" height="684" rx="30" fill="url(#light)" filter="url(#beam)" opacity="0.8" />
+    <rect x="502" y="176" width="20" height="672" rx="10" fill="url(#light)" />
+    <rect x="508" y="182" width="8" height="660" rx="4" fill="#ffffff" opacity="0.8" />
+  </g>
+  <rect x="101" y="101" width="822" height="822" rx="185" fill="none" stroke="url(#edge)" stroke-width="2" />
+</svg>

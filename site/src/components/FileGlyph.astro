@@ -1,0 +1,39 @@
+---
+// The file from the app icon: an outline before the line, a finished sheet of
+// paper after it. Geometry is build/appicon.svg's file, moved to the origin.
+interface Props {
+  kind: 'outline' | 'paper'
+  ext: string
+  width?: number
+  class?: string
+  /** extra attributes for scripting */
+  [key: string]: any
+}
+const { kind, ext, width = 112, class: cls = '', ...rest } = Astro.props
+const label = ext.replace(/^\./, '')
+const long = label.length > 4
+---
+
+<div class:list={['glyph', kind, cls, { long }]} style={`--gw:${width}px`} aria-hidden="true" {...rest}>
+  <svg viewBox="0 0 398 500" focusable="false">
+    {
+      kind === 'outline' ? (
+        <path
+          d="M38 0H270L398 128V462Q398 500 360 500H38Q0 500 0 462V38Q0 0 38 0Z"
+          fill="rgb(255 255 255 / 0.04)"
+          stroke="rgb(243 240 232 / 0.62)"
+          stroke-width="16"
+          stroke-linejoin="round"
+          vector-effect="non-scaling-stroke"
+          style="stroke-width:1.5px"
+        />
+      ) : (
+        <>
+          <path d="M38 0H270L398 128V462Q398 500 360 500H38Q0 500 0 462V38Q0 0 38 0Z" fill="url(#paper-fill)" />
+          <path d="M270 0V96Q270 128 302 128H398Z" fill="#c2bdb1" />
+        </>
+      )
+    }
+  </svg>
+  <span class="ext" data-ext>{label}</span>
+</div>

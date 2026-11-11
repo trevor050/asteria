@@ -1,0 +1,18 @@
+{
+  "name": "asteria-site",
+  "private": true,
+  "type": "module",
+  "description": "The public website for Asteria, built from the repository's own format and skill data.",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^7.4.10",
+    "sharp": "^0.35.5"
+  }
+}
