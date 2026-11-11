@@ -153,6 +153,50 @@ func encodeArgs(ext string, info MediaInfo, crf int) ([]string, error) {
 // runFFmpeg runs ffmpeg with the given arguments, reporting progress against
 // duration (seconds) and returning a readable error with ffmpeg's last lines.
 func runFFmpeg(ctx context.Context, job Job, duration float64, args []string) error {
+	err := runFFmpegOnce(ctx, job, duration, args)
+	if err == nil || ctx.Err() != nil {
+		return err
+	}
+	// Some ffmpeg builds leave out an external encoder (Homebrew's lacks
+	// libvorbis); ffmpeg's own encoder for the same format then stands in.
+	if alt, ok := builtinEncoder(args, err.Error()); ok {
+		return runFFmpegOnce(ctx, job, duration, alt)
+	}
+	return err
+}
+
+// builtinEncoder swaps a missing external encoder for ffmpeg's own.
+func builtinEncoder(args []string, msg string) ([]string, bool) {
+	swaps := map[string][]string{
+		"libvorbis": {"vorbis", "-strict", "experimental", "-ac", "2"},
+		"libopus":   {"opus", "-strict", "experimental", "-ar", "48000"},
+	}
+	for lib, repl := range swaps {
+		if !strings.Contains(msg, "Unknown encoder '"+lib+"'") {
+			continue
+		}
+		out := make([]string, 0, len(args)+4)
+		swapped := false
+		for i, a := range args {
+			if a == lib && i > 0 && strings.HasPrefix(args[i-1], "-c:a") {
+				out = append(out, repl...)
+				swapped = true
+				continue
+			}
+			out = append(out, a)
+		}
+		if swapped {
+			// The output path must stay last.
+			last := out[len(out)-1]
+			if last == args[len(args)-1] {
+				return out, true
+			}
+		}
+	}
+	return nil, false
+}
+
+func runFFmpegOnce(ctx context.Context, job Job, duration float64, args []string) error {
 	bin, ok := job.Tools.Lookup("ffmpeg")
 	if !ok {
 		return &MissingToolError{Tool: "ffmpeg"}

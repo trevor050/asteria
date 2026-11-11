@@ -395,7 +395,7 @@ func verify(path, ext string, wantMarker bool) (string, error) {
 			return "", fmt.Errorf("not a PDF")
 		}
 		return "PDF header", nil
-	case ".mp4", ".mov", ".m4v", ".mkv", ".webm", ".avi", ".mp3", ".m4a", ".wav", ".flac", ".ogg", ".opus", ".aac", ".gif2":
+	case ".mp4", ".mov", ".m4v", ".mkv", ".webm", ".avi", ".mp3", ".m4a", ".wav", ".flac", ".ogg", ".opus", ".aac", ".aiff", ".aif", ".gif2":
 		if !have("ffprobe") {
 			return "", fmt.Errorf("no ffprobe to verify")
 		}
