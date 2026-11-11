@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -113,12 +114,17 @@ func runLibreOffice(ctx context.Context, job Job) error {
 		return err
 	}
 	in, out := paths[0], paths[1]
-	scratch, err := os.MkdirTemp(filepath.Dir(out), ".lo-")
+	// Short paths: a LibreOffice profile nests deep folders, and inside the
+	// session workspace it passed Windows' 260-character limit, where
+	// LibreOffice fails without a word. The scratch output goes to the
+	// system temp folder and the profile to Asteria's own cache folder,
+	// reused so only the first conversion pays LibreOffice's first start.
+	scratch, err := os.MkdirTemp("", "asteria-lo-")
 	if err != nil {
 		return err
 	}
 	defer os.RemoveAll(scratch)
-	profile := filepath.Join(scratch, "profile")
+	profile := loProfileDir(scratch)
 	outDir := filepath.Join(scratch, "out")
 	if err := os.MkdirAll(outDir, 0o755); err != nil {
 		return err
@@ -169,7 +175,27 @@ func runLibreOffice(ctx context.Context, job Job) error {
 		return Userf("LibreOffice couldn't convert this file to %s", strings.ToUpper(strings.SplitN(target, ":", 2)[0]))
 	}
 	job.Progress(0.95)
-	return os.Rename(produced[0], out)
+	if err := os.Rename(produced[0], out); err != nil {
+		// The temp folder may be on another drive.
+		if err := copyFile(produced[0], out); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// loProfileDir is the LibreOffice profile Asteria uses: its own (never the
+// user's LibreOffice settings), in a short path. A lock left by a stopped
+// conversion is cleared, since conversions run one at a time.
+func loProfileDir(scratch string) string {
+	if base, err := os.UserCacheDir(); err == nil {
+		dir := filepath.Join(base, "asteria", "lo")
+		if os.MkdirAll(dir, 0o700) == nil {
+			_ = os.Remove(filepath.Join(dir, ".lock"))
+			return dir
+		}
+	}
+	return filepath.Join(scratch, "profile")
 }
 
 // runOCR reads text from an image with Tesseract: a searchable PDF (the
@@ -347,3 +373,21 @@ var (
 	_ = color.Black
 	_ = sort.Strings
 )
+
+func copyFile(src, dst string) error {
+	in, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer in.Close()
+	out, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	if _, err := io.Copy(out, in); err != nil {
+		out.Close()
+		os.Remove(dst)
+		return err
+	}
+	return out.Close()
+}
