@@ -23,6 +23,7 @@ Images, PDFs, archives and data are handled by Go code built into the app, inclu
 ## How it works
 
 - **Everything is a skill.** Converting, resizing, exporting, switching modes and picking an output folder all live in the same command bar.
+- **One file gets the whole window.** Drop a single file and it's shown large and centered, uncropped, with its size, dimensions and steps right under it and the bar right under that. A PDF shows its first page, a CSV shows as a table. Add more and it settles into the grid; "One by one" brings the big view back for any file (<kbd>←</kbd> <kbd>→</kbd> to move, <kbd>Esc</kbd> for all of them).
 - **It shows you what's next.** Drop files and the likely skills for those exact files sit right above the bar, one click away, next to a real count of everything that applies. Mixed tray? You get a spread: convert, resize, compress, merge.
 - **Skills apply instantly and stack.** Each file shows the chain it went through (`Convert to JPEG 85%` → `Resize 1920`) with its size and dimensions before and after.
 - **Removing a skill replays the rest.** Delete a step from the middle of a chain and Asteria rebuilds from the step before it. <kbd>⌘</kbd><kbd>Z</kbd> undoes the last skill you applied.
@@ -36,7 +37,8 @@ Images, PDFs, archives and data are handled by Go code built into the app, inclu
 | <kbd>Tab</kbd> | Cycle presets while editing a setting |
 | <kbd>Space</kbd> / <kbd>⌘</kbd><kbd>Y</kbd> | Quick Look the focused file; <kbd>O</kbd> toggles the original, <kbd>←</kbd><kbd>→</kbd> move between files |
 | <kbd>⌘</kbd><kbd>↵</kbd> | Export changed files |
-| <kbd>⌘</kbd><kbd>O</kbd> | Add files (drop folders into the window on Windows) |
+| <kbd>⌘</kbd><kbd>O</kbd> or the **+** in the bar | Add files (drop folders into the window on Windows) |
+| <kbd>⌘</kbd><kbd>,</kbd> | Settings: theme (system, light, dark), accent, reduced motion and transparency, where exports go and how they're named, the skills folder, ffmpeg status |
 | <kbd>⌘</kbd><kbd>Z</kbd> | Undo the last skill |
 | <kbd>Esc</kbd> | Cancel what's running, close menus, clear the selection |
 | <kbd>⌘</kbd>-click, <kbd>⇧</kbd>-click, <kbd>⌘</kbd><kbd>A</kbd> | Select files; skills then apply only to the selection |
@@ -45,8 +47,15 @@ Images, PDFs, archives and data are handled by Go code built into the app, inclu
 Skills you type while another is running are queued and run in order.
 
 <p>
-  <img src="docs/screenshot-dark.png" width="49%" alt="Asteria in dark mode: four photos resized and converted to WebP with their sizes before and after, and the command bar previewing a trim of the selected video">
-  <img src="docs/screenshot-light.png" width="49%" alt="Asteria in light mode: the same tray, with the likely next steps for these files shown above the command bar">
+  <img src="docs/screenshot-single-dark.png" width="49%" alt="One photo in dark mode: shown large and centered, its size before and after a resize, the step chip, and the likely next steps right above the command bar">
+  <img src="docs/screenshot-dark.png" width="49%" alt="Eight files in dark mode: four photos resized and converted to WebP with their sizes before and after, and the command bar previewing a trim of the selected video">
+</p>
+<p>
+  <img src="docs/screenshot-single-light.png" width="49%" alt="The same one-photo view in light mode">
+  <img src="docs/screenshot-light.png" width="49%" alt="The tray in light mode, with the likely next steps for these files shown above the command bar">
+</p>
+<p>
+  <img src="docs/screenshot-settings.png" width="49%" alt="The settings panel: theme, accent, reduced motion and transparency, export folder and file names">
 </p>
 
 ## Everything stays on your computer
@@ -110,14 +119,14 @@ internal/session              tray files, workspace, collision-safe export
 internal/skills               skill format, loader, hot reload, search ranking
 internal/inspect              dimensions, page counts, durations, thumbnails
 skills/core                   built-in skills (JSON, embedded in the app)
-frontend/                     Svelte 5 UI (type: Geist and Geist Mono, OFL)
+frontend/                     Svelte 5 UI (type: Geist and Geist Mono, OFL; PDF pages: pdf.js, Apache-2.0)
 scripts/capture               screenshots, demo GIF and app icon render
 build/                        icons, platform config and Taskfiles
 ```
 
 ## What's next
 
-- **PDF to images** and PDF previews in the tray need a PDF renderer; there isn't a solid pure-Go one yet.
+- **PDF to images** as a skill needs a PDF renderer in Go; there isn't a solid pure-Go one yet. (The one-file view already shows a PDF's first page, rendered in the UI with pdf.js.)
 - **Keep photo metadata.** Re-encoding drops EXIF (location included), which is good for privacy but not always what you want.
 - **Animated GIF/WebP** editing. Image skills refuse animated files today instead of silently keeping only the first frame.
 - **The agentic layer.** The pipeline is plain JSON on purpose, so a planner can turn "convert these to PNG, resize to 1200 wide and zip them" into the same skills you'd type by hand, with the same previews.

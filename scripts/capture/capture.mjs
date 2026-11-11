@@ -49,7 +49,20 @@ async function prepareMedia() {
       '-t', '12', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '14', video,
     ])
   }
+  // Awkward cases for the one-file view.
+  const odd = join(media, 'odd')
+  mkdirSync(odd, { recursive: true })
+  const make = (name, args) => {
+    if (!existsSync(join(odd, name))) execFileSync('ffmpeg', ['-v', 'error', '-y', ...args, join(odd, name)])
+  }
+  make('Galactic strip.jpg', ['-i', join(media, 'Galactic center.jpg'), '-vf', 'crop=1100:4400:4300:200', '-q:v', '3'])
+  make('Galactic panorama.jpg', ['-i', join(media, 'Galactic center.jpg'), '-vf', 'crop=9600:1000:60:1900', '-q:v', '3'])
+  make('icon.png', ['-i', join(root, 'build/appicon.png'), '-vf', 'scale=32:32:flags=area'])
+  make('Asteria icon.png', ['-i', join(root, 'build/appicon.png'), '-vf', 'scale=640:640:flags=area'])
+  const long = 'Earthrise over the lunar horizon, photographed by Bill Anders from Apollo 8 on December 24, 1968 (NASA AS08-14-2383).jpg'
+  if (!existsSync(join(odd, long))) copyFileSync(join(media, 'Earthrise.jpg'), join(odd, long))
   const fixtures = join(root, 'testdata/fixtures')
+  copyFileSync(join(fixtures, 'people.csv'), join(odd, 'people.csv'))
   copyFileSync(join(fixtures, 'three-pages.pdf'), join(media, 'Mission brief.pdf'))
   copyFileSync(join(fixtures, 'three-pages.pdf'), join(media, 'Appendix.pdf'))
   copyFileSync(join(fixtures, 'people.json'), join(media, 'crew.json'))
@@ -60,8 +73,8 @@ function cleanExports() {
   for (const f of readdirSync(media)) if (/\(\d+\)|\.webp$|\.png$/.test(f)) rmSync(join(media, f))
 }
 
-async function startServer() {
-  rmSync(home, { recursive: true, force: true })
+async function startServer({ keepHome = false } = {}) {
+  if (!keepHome) rmSync(home, { recursive: true, force: true })
   mkdirSync(home, { recursive: true })
   const bin = process.env.ASTERIA_BIN ?? join(root, 'bin/asteria-server')
   if (!existsSync(bin)) throw new Error('build bin/asteria-server first (see the header of this file)')
@@ -257,16 +270,170 @@ async function perf(browser) {
 }
 
 let server
-async function restart() {
+async function restart(opts) {
   server?.kill()
   await sleep(300)
-  server = await startServer()
+  server = await startServer(opts)
+}
+
+const oddFiles = () => [
+  join(media, 'odd', 'Galactic strip.jpg'),
+  join(media, 'odd', 'Galactic panorama.jpg'),
+  join(media, 'odd', 'icon.png'),
+  join(media, 'odd', 'Asteria icon.png'),
+  join(media, 'odd', 'Earthrise over the lunar horizon, photographed by Bill Anders from Apollo 8 on December 24, 1968 (NASA AS08-14-2383).jpg'),
+  join(media, 'Mission brief.pdf'),
+  join(media, 'Earthrise flyby.mp4'),
+  join(media, 'crew.json'),
+  join(media, 'odd', 'people.csv'),
+]
+
+async function clear(page) {
+  const btn = page.getByRole('button', { name: 'Clear', exact: true })
+  if (await btn.count()) {
+    await btn.click()
+    await sleep(500)
+  }
+}
+
+// One file at a time, every awkward shape, both themes, small and large.
+async function solo(browser) {
+  const sizes = { s: [640, 480], m: [1000, 680], l: [1440, 900] }
+  const only = (process.env.SIZES ?? 'sl').split('')
+  for (const theme of (process.env.THEMES ?? 'dark,light').split(',')) {
+    for (const [sz, [w, h]] of Object.entries(sizes).filter(([k]) => only.includes(k))) {
+      await restart()
+      const { ctx, page } = await open(browser, { theme, w, h, scale: 1 })
+      for (const f of oddFiles()) {
+        await add(page, [f])
+        await page.keyboard.press('Escape')
+        await sleep(f.endsWith('.pdf') ? 1800 : 700)
+        await shot(page, `solo-${theme}-${sz}-${f.split('/').pop().slice(0, 18).replace(/[^a-z0-9]+/gi, '-')}`)
+        await clear(page)
+      }
+      // Steps applied, then the original for comparison.
+      await add(page, [join(media, 'Blue Marble.jpg')])
+      await command(page, 'resize 50%')
+      await command(page, 'webp 80')
+      await page.keyboard.press('Escape')
+      await sleep(600)
+      await shot(page, `solo-${theme}-${sz}-steps`)
+      await page.getByRole('radio', { name: 'Original' }).click()
+      await sleep(700)
+      await shot(page, `solo-${theme}-${sz}-steps-original`)
+      await page.getByRole('radio', { name: 'Result' }).click()
+      // A second file arrives: the hero settles into the grid.
+      await add(page, [join(media, 'Sun corona.jpg'), join(media, 'Mission brief.pdf')])
+      await sleep(700)
+      await shot(page, `solo-${theme}-${sz}-then-grid`)
+      // One by one with several files.
+      await page.getByRole('radio', { name: 'One by one' }).click()
+      await sleep(900)
+      await shot(page, `solo-${theme}-${sz}-one-by-one`)
+      await page.keyboard.press('ArrowRight')
+      await sleep(900)
+      await shot(page, `solo-${theme}-${sz}-one-by-one-next`)
+      await page.keyboard.press('Escape')
+      await sleep(900)
+      await shot(page, `solo-${theme}-${sz}-back-to-grid`)
+      await ctx.close()
+    }
+  }
+}
+
+// Settings: open with the shortcut, change each one through the UI, restart
+// the server with the same HOME and check every value came back.
+async function settings(browser) {
+  await restart()
+  for (const theme of ['dark', 'light']) {
+    const { ctx, page } = await open(browser, { theme, w: 1000, h: 680, scale: 1 })
+    await add(page, files().slice(0, 6))
+    await page.keyboard.press('Escape')
+    await page.keyboard.press('Meta+,')
+    await sleep(600)
+    await shot(page, `settings-${theme}-open`)
+    await ctx.close()
+  }
+  const { ctx, page } = await open(browser, { theme: 'dark', w: 1000, h: 680, scale: 1 })
+  await page.keyboard.press('Meta+,')
+  await sleep(400)
+  const panel = page.getByRole('dialog', { name: 'Settings' })
+  await panel.getByRole('radio', { name: 'Light' }).click()
+  await sleep(500)
+  const themeNow = await page.evaluate(() => document.documentElement.dataset.theme)
+  await panel.getByRole('radio', { name: 'Emerald' }).click()
+  await panel.getByText('Reduce motion').click()
+  await panel.getByText('Reduce transparency').click()
+  await panel.getByRole('radio', { name: /Add the date/ }).click()
+  await sleep(500)
+  const attrs = await page.evaluate(() => ({ ...document.documentElement.dataset }))
+  await shot(page, 'settings-changed-light')
+  await ctx.close()
+  await restart({ keepHome: true })
+  const again = await open(browser, { theme: 'dark', w: 1000, h: 680, scale: 1 })
+  await sleep(600)
+  const saved = await again.page.evaluate(async () => (await window.__asteria.GetState()).settings)
+  const after = await again.page.evaluate(() => ({ ...document.documentElement.dataset }))
+  await shot(again.page, 'settings-after-restart')
+  await again.ctx.close()
+  const ok =
+    themeNow === 'light' && saved.appearance === 'light' && saved.reduceMotion && saved.reduceTransparency &&
+    saved.namingPattern === '{name} {date}.{ext}' && saved.accentColor === '16,185,129' &&
+    after.theme === 'light' && after.motion === 'reduce' && after.transparency === 'reduce'
+  console.log('settings applied instantly:', JSON.stringify(attrs))
+  console.log('settings after restart:', JSON.stringify(saved), JSON.stringify(after))
+  console.log(ok ? 'SETTINGS PERSIST: PASS' : 'SETTINGS PERSIST: FAIL')
+  if (!ok) process.exitCode = 1
+}
+
+// Frames of the processing glow while a video converts to WebM.
+async function glow(browser) {
+  for (const theme of ['dark', 'light']) {
+    await restart()
+    const { ctx, page } = await open(browser, { theme, w: 1000, h: 680, scale: 1 })
+    await add(page, [join(media, 'Earthrise flyby.mp4')])
+    await page.keyboard.press('Escape')
+    await sleep(800)
+    const frames = []
+    const shootAt = async (label) => {
+      const p = join(out, `glow-${theme}-${String(frames.length).padStart(2, '0')}-${label}.png`)
+      mkdirSync(out, { recursive: true })
+      await page.screenshot({ path: p })
+      frames.push(p)
+    }
+    await shootAt('idle')
+    await command(page, 'webm', { wait: false })
+    await sleep(300)
+    if (await page.locator('.params').count()) await page.keyboard.press('Enter')
+    const t0 = Date.now()
+    for (let i = 0; i < 16; i++) {
+      await sleep(800)
+      const busy = await page.evaluate(() => !!document.querySelector('.progress'))
+      await shootAt(busy ? `working-${((Date.now() - t0) / 1000).toFixed(1)}s` : 'done')
+      if (!busy) break
+    }
+    await sleep(400)
+    await shootAt('resolved')
+    await sleep(1600)
+    await shootAt('settled')
+    console.log(`glow ${theme}: ${frames.length} frames`)
+    await ctx.close()
+  }
 }
 
 async function readme(browser) {
   for (const theme of ['dark', 'light']) {
     await restart()
     const { ctx, page } = await open(browser, { theme, w: 1000, h: 660, scale: 2 })
+    // One file: the file is the subject, the next steps sit right under it.
+    await add(page, [join(media, 'Earthrise.jpg')])
+    await command(page, 'resize 1920')
+    await page.keyboard.press('Escape')
+    await page.waitForFunction(() => !document.querySelector('.toast'), null, { timeout: 15000 })
+    await sleep(500)
+    await page.screenshot({ path: join(docs, `screenshot-single-${theme}.png`) })
+    console.log('  docs/screenshot-single-' + theme + '.png')
+    await clear(page)
     await add(page, files())
     await command(page, 'resize 1920')
     await command(page, 'webp 80')
@@ -276,7 +443,6 @@ async function readme(browser) {
       await page.keyboard.press('Meta+k')
       await page.keyboard.type('trim 0:01-0:04', { delay: 30 })
     } else {
-      // Idle: the likely next steps for these files, one click away.
       await page.locator('[data-id]').nth(0).click()
       await page.keyboard.press('Meta+k')
     }
@@ -284,6 +450,14 @@ async function readme(browser) {
     await sleep(500)
     await page.screenshot({ path: join(docs, `screenshot-${theme}.png`) })
     console.log('  docs/screenshot-' + theme + '.png')
+    if (theme === 'dark') {
+      await page.keyboard.press('Escape')
+      await page.keyboard.press('Escape')
+      await page.keyboard.press('Meta+,')
+      await sleep(700)
+      await page.screenshot({ path: join(docs, 'screenshot-settings.png') })
+      console.log('  docs/screenshot-settings.png')
+    }
     await ctx.close()
   }
 }
@@ -311,44 +485,54 @@ async function gif(browser) {
   await page.addStyleTag({ content: '.blob { animation-play-state: paused !important; }' })
   await sleep(300)
   await cdp.send('Page.startScreencast', { format: 'png', everyNthFrame: 1 })
-  await sleep(1600)
-  // Drop: files arrive and the likely next steps appear under them.
-  await add(page, files().slice(0, 6))
   await sleep(1400)
-  // One click: Resize opens its presets; type a value and apply.
+  // One file: it becomes the subject, with its next steps right below.
+  await add(page, [join(media, 'Blue Marble.jpg')])
+  await sleep(1200)
   await page.getByRole('button', { name: 'Resize', exact: true }).click()
-  await sleep(900)
-  await page.keyboard.type('1920', { delay: 90 })
-  await sleep(400)
+  await sleep(800)
+  await page.keyboard.type('50%', { delay: 110 })
+  await sleep(300)
   await page.keyboard.press('Enter')
   await idle(page)
-  await sleep(700)
-  // Typing: a value inline runs it straight away.
+  await sleep(600)
   await page.keyboard.type('webp 80', { delay: 90 })
-  await sleep(700)
-  await page.keyboard.press('Enter')
-  await idle(page)
-  await sleep(900)
-  // Select the two PDFs and merge them.
-  await page.locator('[data-id]').nth(4).click()
-  await page.locator('[data-id]').nth(5).click({ modifiers: ['Meta'] })
-  await sleep(400)
-  await page.keyboard.press('Meta+k')
-  await page.keyboard.type('merge', { delay: 90 })
-  await sleep(700)
+  await sleep(500)
   await page.keyboard.press('Enter')
   await idle(page)
   await sleep(1000)
+  // More files arrive: the photo settles into the grid.
+  await add(page, [join(media, 'Sun corona.jpg'), join(media, 'Galactic center.jpg'), join(media, 'Mission brief.pdf'), join(media, 'Appendix.pdf'), join(media, 'Earthrise flyby.mp4')])
+  await sleep(1300)
+  // Select the two PDFs and merge them.
+  await page.locator('[data-id]').nth(3).click()
+  await page.locator('[data-id]').nth(4).click({ modifiers: ['Meta'] })
+  await sleep(400)
+  await page.keyboard.press('Meta+k')
+  await page.keyboard.type('merge', { delay: 90 })
+  await sleep(600)
+  await page.keyboard.press('Enter')
+  await idle(page)
+  await sleep(900)
+  // Something that takes a moment: the glow comes alive, then settles.
+  await page.locator('[data-id]').nth(5).click()
+  await page.keyboard.press('Meta+k')
+  await page.keyboard.type('compress video 34', { delay: 70 })
+  await sleep(400)
+  await page.keyboard.press('Enter')
+  await idle(page)
+  await sleep(1400)
   // Quick Look, flip between the original and the result.
   await page.locator('[data-id]').first().click()
   await page.keyboard.press(' ')
-  await sleep(1300)
-  await page.keyboard.press('o')
   await sleep(1200)
   await page.keyboard.press('o')
-  await sleep(900)
+  await sleep(1100)
+  await page.keyboard.press('o')
+  await sleep(800)
   await page.keyboard.press('Escape')
-  await sleep(600)
+  await sleep(500)
+  await page.keyboard.press('Meta+a')
   await page.keyboard.press('Meta+Enter')
   await idle(page)
   await sleep(1500)
@@ -402,6 +586,9 @@ try {
   if (mode === 'perf' || mode === 'all') await perf(browser)
   if (mode === 'readme' || mode === 'all') await readme(browser)
   if (mode === 'gif' || mode === 'all') await gif(browser)
+  if (mode === 'solo' || mode === 'all') await solo(browser)
+  if (mode === 'settings' || mode === 'all') await settings(browser)
+  if (mode === 'glow' || mode === 'all') await glow(browser)
 } finally {
   await browser.close()
   server.kill()
