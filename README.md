@@ -1,148 +1,145 @@
 # Asteria
 
-Your new favorite way to convert a file. Drop files in, type what you want, see the result, export. Nothing leaves your computer.
+Drop in a file, type what you want done to it, and get it back converted, resized, cleaned up or combined, on your own computer.
 
-![Asteria enhancing a photo with one click, dragging saturation with a live preview, adding a vignette, making a collage of four photos, browsing every skill by family and exporting](docs/demo.gif)
+![Asteria: one photo enhanced, saturated with a live preview and vignetted, then four photos combined, all from the command bar](docs/demo.gif)
 
-Every "convert X to Y" task usually ends with uploading a file to some random website, waiting through ads, and hoping it gives you back what you sent. Asteria is the opposite: a small desktop app with a Spotlight-style command bar. Type `heic to jpg`, `resize 50%`, `saturate 150%`, `dither gameboy`, `merge pdfs` or `trim 0:05-0:30`, watch the preview update, and press <kbd>⌘</kbd><kbd>↵</kbd> to save. It's not a chatbot, it's a tool router with taste.
+## Why
 
-It's an open-source take on Filestar-style batch file tools, and it grew out of [MoonCow](https://github.com/trevor050/mooncow), my command palette for Firefox: same idea of a fast, keyboard-first bar that answers small tasks in place, applied to the files on your disk.
+Every time I needed to turn a HEIC into a JPG, shrink a video for an email or pull the pages out of a PDF, I ended up on a website that wanted my file uploaded, my email address, or a monthly subscription, sometimes all three. Converting a file shouldn't be a subscription, and it shouldn't mean handing your files to someone else's server.
 
-## What it does
+So Asteria is a small desktop app with one command bar. Drop files in, type `heic to jpg`, `resize 50%`, `merge pdfs`, `compress video` or `track stats`, watch the preview, and press <kbd>⌘</kbd><kbd>↵</kbd> (<kbd>Ctrl</kbd><kbd>↵</kbd> on Windows) to save. It works offline, it's free, and the code is right here. It grew out of [MoonCow](https://github.com/trevor050/mooncow), my keyboard-first command palette for Firefox: the same idea, applied to the files on your disk.
 
-Over a hundred skills, most of them for pictures: the fun part is stacking them (`enhance`, then `saturate +30`, `vignette`, `crop 4:5`) and watching it happen.
+## What it can do
 
-| Family | Skills |
-| --- | --- |
-| Convert (4) | Convert to HEIC · Convert to JPEG · Convert to PNG · Convert to WebP |
-| Size and shape (19) | Black Border · Border · Circle Crop · Crop · Crop Square · Fill · Fit · Flip\* · Mirror\* · Pad · Pixel Art Upscale · Resize · Rotate\* · Round Corners · Straighten · Stretch · Tile · Trim Borders · Trim Transparent |
-| Social and wallpaper sizes (11) | Instagram Portrait · Instagram Square · iPad Wallpaper · iPhone Wallpaper · LinkedIn Banner · OG Image · Story · Twitter Header · Wallpaper 1080p · Wallpaper 4K · YouTube Thumbnail |
-| Compress (1) | Compress Image |
-| Color and tone (29) | Auto Contrast · Auto Enhance · Auto Levels · Auto White Balance · Black & White\* · Brightness · Channel\* · Colorize · Contrast\* · Cooler · Duotone · Exposure · Gamma\* · Grayscale\* · Highlights · Hue Rotate\* · Invert\* · Levels · Opacity · Posterize · Replace Color · Saturate\* · Sepia\* · Shadows · Swap Channels\* · Temperature · Threshold · Tint (green-magenta) · Vibrance |
-| Effects (20) | Add Noise\* · Blur\* · Box Blur\* · Chromatic Aberration · Denoise · Dither · Edge Detect\* · Emboss · Film Grain · Glitch · Glow · Halftone · Mosaic · Motion Blur · Pixelate\* · Scanlines · Sharpen\* · Vertical Motion Blur · Vignette\* · Zoom Blur |
-| Compose and output (17) | Animated GIF · Animated WebP · App Icon Set · Contact Sheet · Drop Shadow · Extract Frames · Favicon Set · Fill Background · Image Grid · Image Strip · Overlay · Remove Background Color · Split into Tiles · Sprite Sheet · Vertical Strip · Watermark · Watermark Image |
-| Info and cleanup (8) | Compare Images · Convert to sRGB · Count Colors · Extract Palette · Image Difference · Palette Swatches · Show Metadata · Strip Metadata |
-| PDF (5) | Compress PDF · Extract Pages · Images to PDF · Merge PDFs · Split PDF |
-| Audio and video (9) | Compress Video · Convert to FLAC · Convert to GIF · Convert to M4A · Convert to MP3 · Convert to MP4 · Convert to WAV · Convert to WebM · Trim |
-| Archives (2) | Extract Archive · Zip |
-| Data (6) | CSV to JSON · CSV to Markdown Table · JSON to CSV · JSON to YAML · Markdown to HTML · YAML to JSON |
+Asteria opens <!-- formats:count -->119<!-- /formats:count --> kinds of files, <!-- formats:builtin -->74<!-- /formats:builtin --> of them with nothing extra installed. Pictures, PDFs, data and config files, subtitles, email, fonts, maps, 3D models, archives and text are handled by code built into the app. Audio and video, office documents and ebooks use free add-ons that Asteria offers to download the first time you need one (see [Add-ons](#add-ons)).
 
-131 skills. \* also works on video (needs ffmpeg).
+Every conversion counted here was run on a real sample file, and its output was checked by a separate tool: an independent image reader, `ffprobe`, Python's own parsers, GDAL, Assimp, fontTools and so on. The numbers and the table below are generated from those results by [`scripts/formats/build.mjs`](scripts/formats/build.mjs), and the full list, with the add-on each conversion needs and the platforms it was verified on, is in [`docs/formats.json`](docs/formats.json).
 
-Some things to type: `heic to jpg`, `resize 1920`, `crop 16:9`, `rotate -3`, `straighten 2`, `saturate 150%`, `temperature -20`, `duotone navy gold`, `pixelate 16`, `dither gameboy`, `glitch`, `round corners`, `watermark Draft`, `strip metadata`, `image grid`, `animated gif`, `favicon set`, `instagram story`, `merge pdfs`, `extract pages 1-3, 5`, `trim 0:05-0:30`, `csv to json`.
+<details>
+<summary>Every verified conversion, by family</summary>
 
-Images, PDFs, archives and data are handled by Go code built into the app, including HEIC (iPhone photos) and WebP. Image skills share one pixel core: 16-bit, color-managed (Display P3 photos are converted, not washed out), blurs and resizing in linear light, and a chain of edits is kept lossless in memory so a JPEG is only re-encoded once per step, never compounded. Audio and video use [ffmpeg](https://ffmpeg.org) if it's installed. If it isn't, those skills say so in the suggestions and tell you the one command to install it (`brew install ffmpeg`, `winget install Gyan.FFmpeg`, `sudo apt install ffmpeg`).
+<!-- formats:start -->
+<!-- Generated by scripts/formats/build.mjs from docs/formats.json. Do not edit by hand. -->
+
+563 conversions between 119 file types, each tested on a real file with the result checked by a separate tool, on macOS on Apple silicon and Linux. "nothing" means it's built in; a name means Asteria offers that free add-on the first time you need it. The full list, with what each conversion needs, is in [docs/formats.json](docs/formats.json).
+
+| Family | Opens | Saves as | Needs |
+| --- | --- | --- | --- |
+| Images | avif bmp dds gif heic heif ico jp2 jpeg jpg pbm pcx pgm png ppm psd ras sgi tga tif tiff webp xpm | heic jpg json png webp | nothing, ImageMagick |
+| Vector | bmp gif heic heif jpeg jpg png svg tif tiff webp | png svg | Potrace, resvg |
+| Color LUTs | 3dl cube | 3dl cube png | nothing |
+| PDF | eps gif jpeg jpg pdf png ps webp | pdf txt | nothing, Ghostscript, Tesseract OCR |
+| Documents | csv doc docx epub htm html ipynb markdown md odp ods odt org ppt pptx rst rtf tex textile xls xlsx | csv docx epub html md odp ods odt pdf pptx rst rtf tex txt xlsx | nothing, LibreOffice, Pandoc |
+| Ebooks | azw3 epub fb2 mobi | azw3 epub mobi pdf txt | Calibre |
+| Audio and video | aiff avi mkv mov mp4 ogg opus wav webm | aiff avi flac gif jpg m4a mkv mov mp3 mp4 ogg opus wav webm | FFmpeg |
+| Subtitles | ass dfxp sbv srt ttml vtt | ass sbv srt ttml vtt | nothing |
+| Data and config | cfg conf csv db env ini json jsonl markdown md ndjson parquet plist sqlite sqlite3 toml tsv xml yaml yml | csv env html ini json jsonl md plist sqlite toml tsv xml yaml | nothing |
+| Text and encoding | txt | bin | nothing |
+| Email | eml mbox mbx | csv html txt | nothing |
+| Fonts | otf ttf woff woff2 | json otf ttf woff woff2 | nothing |
+| Maps and GPS | csv geojson gpx kml kmz zip | csv geojson gpx json kml | nothing |
+| 3D models | 3mf glb gltf obj ply stl | 3mf glb json obj ply stl | nothing |
+| Archives | 7z bz2 gz tar.bz2 tar.gz tar.xz tar.zst tbz tbz2 tgz txz tzst wim xz zip zst | txt | nothing, 7-Zip |
+| Any file | anything | 7z gz json tar.xz tar.zst txt xz zst | nothing, 7-Zip |
+
+<!-- formats:end -->
+
+</details>
+
+Beyond conversions there are more than 100 picture skills (crop, straighten, levels, duotone, dither, vignette, watermark, collage, favicon and app-icon sets...), video edits (trim, speed, crop, rotate, mute, loudness, subtitles, contact sheets), PDF tools (merge, split, extract pages, compress), and helpers that work on any file: zip it, compress it, get its checksum, or ask what it really is.
+
+<p>
+  <img src="docs/screenshot-single-dark.png" width="49%" alt="One photo shown large, with its size before and after a resize and the likely next steps right above the command bar">
+  <img src="docs/screenshot-live.png" width="49%" alt="Saturation being dragged on a slider, the photo previewing the change live">
+</p>
+<p>
+  <img src="docs/screenshot-document.png" width="49%" alt="A Word document converted to PDF, showing the PDF's first page and its size before and after">
+  <img src="docs/screenshot-video.png" width="49%" alt="A video being compressed, the processing glow lighting the top of the window">
+</p>
+<p>
+  <img src="docs/screenshot-more.png" width="49%" alt="A GPS track, a 3D model, an ebook, an email and a font in the tray, with the skills that fit them grouped by family: 3D models, Maps and GPS">
+  <img src="docs/screenshot-dark.png" width="49%" alt="Eight files: photos resized and converted to WebP with their sizes before and after, and a video trim being typed">
+</p>
+<p>
+  <img src="docs/screenshot-light.png" width="49%" alt="The same batch in light mode">
+  <img src="docs/screenshot-skills.png" width="49%" alt="Every skill that fits the files, grouped by family">
+</p>
 
 ## How it works
 
-- **Everything is a skill.** Converting, resizing, exporting, switching modes and picking an output folder all live in the same command bar.
-- **One file gets the whole window.** Drop a single file and it's shown large and centered, uncropped, with its size, dimensions and steps right under it and the bar right under that. A PDF shows its first page, a CSV shows as a table. Add more and it settles into the grid; "One by one" brings the big view back for any file (<kbd>←</kbd> <kbd>→</kbd> to move, <kbd>Esc</kbd> for all of them).
-- **Drag a value, see it live.** Pick a skill with a number (saturation, exposure, blur, vignette...) and a slider appears; the picture updates as you drag, on a quick preview copy, and nothing is applied until <kbd>↵</kbd>. Hovering a suggestion previews it too.
-- **Everything that fits, by family.** "All N skills" lists every skill that applies to your files, grouped into color and tone, effects, size and shape, compose, info and so on.
-- **It shows you what's next.** Drop files and the likely skills for those exact files sit right above the bar, one click away, next to a real count of everything that applies. Mixed tray? You get a spread: convert, resize, compress, merge.
-- **Skills apply instantly and stack.** Each file shows the chain it went through (`Convert to JPEG 85%` → `Resize 1920`) with its size and dimensions before and after.
-- **Removing a skill replays the rest.** Delete a step from the middle of a chain and Asteria rebuilds from the step before it. <kbd>⌘</kbd><kbd>Z</kbd> undoes the last skill you applied.
-- **Your originals are never touched.** Skills work on copies in a private workspace. Export writes new files next to the originals (or to a folder you pick) and never overwrites anything: `photo.jpg` becomes `photo (1).jpg` if the name is taken.
-- **Suggestions tell you what will happen before you press Enter**: how many of your files a skill applies to, what format comes out, and whether it needs a tool you don't have.
+- **Everything is a skill.** Converting, resizing, exporting and even picking the output folder live in the same command bar. A value after the name is used directly: `resize 50%`, `jpg 80`, `trim 0:05-0:30`.
+- **It shows you what's next.** Drop files and the likely skills for those exact files sit above the bar, one click away. Skills that need an add-on are marked and ask before downloading anything.
+- **Drag a value, see it live.** Skills with a number (saturation, exposure, blur, vignette...) get a slider, and the picture updates as you drag. Nothing is applied until you press <kbd>↵</kbd>.
+- **Steps stack and can be undone.** Each file shows the chain it went through. Remove a step from the middle and the rest is replayed; <kbd>⌘</kbd><kbd>Z</kbd> undoes the last one.
+- **Your originals are never touched.** Skills work on copies in a private workspace. Export writes new files next to the originals (or into a folder you pick) and never overwrites anything.
+- **It looks like it belongs.** On macOS 26 the window itself is Liquid Glass, the system's own material. Light and dark follow your system, or pick one in Settings (<kbd>⌘</kbd><kbd>,</kbd>).
 
-| Key | |
-| --- | --- |
-| type anything | Search skills. A value after the name is used directly: `resize 50%`, `jpg80`, `rs50` |
-| <kbd>↵</kbd> | Apply the highlighted skill (or open its one setting) |
-| <kbd>Tab</kbd> | Cycle presets while editing a setting |
-| <kbd>Space</kbd> / <kbd>⌘</kbd><kbd>Y</kbd> | Quick Look the focused file; <kbd>O</kbd> toggles the original, <kbd>←</kbd><kbd>→</kbd> move between files |
-| <kbd>⌘</kbd><kbd>↵</kbd> | Export changed files |
-| <kbd>⌘</kbd><kbd>O</kbd> or the **+** in the bar | Add files (drop folders into the window on Windows) |
-| <kbd>⌘</kbd><kbd>,</kbd> | Settings: theme (system, light, dark), accent, reduced motion and transparency, where exports go and how they're named, the skills folder, ffmpeg status |
-| <kbd>⌘</kbd><kbd>Z</kbd> | Undo the last skill |
-| <kbd>Esc</kbd> | Cancel what's running, close menus, clear the selection |
-| <kbd>⌘</kbd>-click, <kbd>⇧</kbd>-click, <kbd>⌘</kbd><kbd>A</kbd> | Select files; skills then apply only to the selection |
-| <kbd>⌫</kbd> | Remove the selected files from the tray (the files themselves stay put) |
+## Add-ons
 
-Skills you type while another is running are queued and run in order.
+Some formats need a big, well-established engine that it would be silly to rewrite. Asteria doesn't bundle them. The first time a file needs one, it tells you in plain words what it is, who makes it, that it's free, how big the download is, and how much space it will take. One click downloads it from the project's official release channel, checks it against the checksum pinned in [`addons/manifest.json`](addons/manifest.json), unpacks it into Asteria's own folder (no administrator password, nothing installed system-wide) and carries on with your conversion. **Settings → Add-ons** lists them all with their licenses, shows the space they use, and removes any of them with one click. Tools you already have (say, ffmpeg from Homebrew) are found and used as they are.
 
 <p>
-  <img src="docs/screenshot-single-dark.png" width="49%" alt="One photo in dark mode: shown large and centered, its size before and after a resize, the step chip, and the likely next steps right above the command bar">
-  <img src="docs/screenshot-live.png" width="49%" alt="Saturation being dragged on a slider with the photo previewing the change live">
-</p>
-<p>
-  <img src="docs/screenshot-dark.png" width="49%" alt="Eight files in dark mode: four photos resized and converted to WebP with their sizes before and after, and the command bar previewing a trim of the selected video">
-  <img src="docs/screenshot-skills.png" width="49%" alt="Every skill that fits the files, grouped by family">
-</p>
-<p>
-  <img src="docs/screenshot-single-light.png" width="49%" alt="The one-photo view in light mode">
-  <img src="docs/screenshot-settings.png" width="49%" alt="The settings panel: theme, accent, reduced motion and transparency, export folder and file names">
+  <img src="docs/screenshot-addon.png" width="49%" alt="Convert SVG to PNG needs resvg: a plain-words prompt with the download size, the disk space, the official host and a Get resvg button">
+  <img src="docs/screenshot-addons.png" width="49%" alt="Settings, Add-ons: each engine by what it unlocks, with its license, size and a Get, Remove or On this computer label">
 </p>
 
-## Everything stays on your computer
+| Unlocks | Add-on | License | macOS | Windows | Linux |
+| --- | --- | --- | --- | --- | --- |
+| Audio and video | FFmpeg | GPL-3.0-or-later | one click, 28 MB | one click, 115 MB | one click, 153 MB |
+| Markdown, LaTeX and web documents | Pandoc | GPL-2.0-or-later | one click, 43 MB | one click, 43 MB | one click, 36 MB |
+| Office documents | LibreOffice | MPL-2.0 | one click, 299 MB | one click, 376 MB | one click, 221 MB |
+| More archive types (7z, RAR, ISO) | 7-Zip | LGPL-2.1-or-later | one click, 1 MB | one click, 2 MB | one click, 2 MB |
+| SVG to picture | resvg | Apache-2.0 or MIT | one click, 2 MB | one click, 2 MB | one click, 2 MB |
+| Camera RAW and rare image formats | ImageMagick | ImageMagick License | download page | one click, 12 MB | one click, 33 MB |
+| Ebooks | Calibre | GPL-3.0-only | one click, 406 MB | one click, 291 MB | one click, 241 MB |
+| Tracing pictures into vectors | Potrace | GPL-2.0-or-later | one click, 0.1 MB | one click, 0.2 MB | one click, 0.9 MB |
+| Text from pictures (OCR) | Tesseract | Apache-2.0 | download page | download page | one click, 24 MB |
+| PostScript and PDF to pictures | Ghostscript | AGPL-3.0-or-later | download page | download page | download page |
 
-Asteria makes no network requests to process files and has no telemetry, accounts or analytics. All conversions run locally, either in Go code inside the app or in ffmpeg on your machine. What it stores:
+"Download page" means the project only ships an installer that needs administrator rights (or, for Ghostscript, is AGPL software that's best installed from Artifex directly), so Asteria opens the official download page and picks the tool up once it's installed. Sizes are the downloads; Asteria shows the space each one takes before you click.
 
-- your settings and how often you use each skill (for ranking), in your user config folder (`~/Library/Application Support/asteria` on macOS);
-- work-in-progress outputs in your user cache folder, deleted when you quit and cleaned up on the next launch after a crash.
+## Privacy
+
+Asteria never sends your files anywhere, has no accounts, analytics or telemetry, and works offline. The only time it connects to the internet is when you click to install an add-on, and then only to that add-on's official download host listed in the manifest; nothing about your files is sent. A test ([`privacy_test.go`](privacy_test.go)) checks that only the add-on installer can open network connections and that converting files makes none.
+
+What it keeps on your computer: your settings and how often you use each skill (for ranking), in your user config folder; add-ons you installed, next to them; and work in progress in your user cache folder, deleted when you quit.
 
 ## Install
 
-Once the first release is published, grab a build from [Releases](https://github.com/trevor050/asteria/releases): a DMG for macOS (Apple Silicon and Intel), an installer or portable `.exe` for Windows, and a `.deb`, AppImage or tarball for Linux (Ubuntu 24.04 / Debian 13 or newer, since it uses GTK 4 and WebKitGTK 6).
+Builds will be on the [Releases](https://github.com/trevor050/asteria/releases) page once the first one is published: a DMG for macOS (Apple Silicon and Intel), an installer for Windows 10 and 11, and a `.deb`, AppImage or tarball for Linux (Ubuntu 24.04, Debian 13 or newer).
 
-The builds aren't signed yet, so your OS will warn you the first time:
+The builds aren't signed yet, so your system will warn you the first time:
 
-- **macOS:** "Asteria can't be opened because Apple cannot check it for malicious software." Right-click the app in Applications and choose **Open**, or run `xattr -dr com.apple.quarantine /Applications/Asteria.app`.
+- **macOS:** "Asteria can't be opened because Apple cannot verify it." Click **Done**, open **System Settings → Privacy & Security**, scroll down and click **Open Anyway** next to Asteria. You only do this once.
 - **Windows:** SmartScreen says "Windows protected your PC." Click **More info**, then **Run anyway**.
+
+<p>
+  <img src="docs/screenshot-windows-dark.png" width="49%" alt="The native Windows build: six files of different kinds in the tray, with Convert to PDF offered as an add-on skill">
+  <img src="docs/screenshot-windows-addon.png" width="49%" alt="On Windows: Convert to PDF needs LibreOffice, with the download size, disk space and official host, and a Get LibreOffice button">
+</p>
+
+Platform notes: the Liquid Glass window needs macOS 26; older macOS versions get the regular window. Windows uses the WebView2 runtime that ships with Windows 11 (Windows 10 may ask to install it). The Potrace add-on for macOS is an Intel build and runs through Rosetta on Apple Silicon.
 
 ## Make your own skills
 
-Skills are JSON files, and the built-in ones use the same format you would. Type `open skills folder`, drop in a `.json`, and it shows up immediately. A skill can reuse any built-in operation with different settings, chain other skills, or run a program you have installed (pandoc, ImageMagick, ...). See [skills/README.md](skills/README.md) for the format and [skills/examples](skills/examples) for an example.
+Skills are JSON files, and the built-in ones use the same format yours would. Type `open skills folder`, drop in a `.json`, and it shows up immediately. A skill can reuse any built-in operation with different settings, chain other skills, or run an engine. See [skills/README.md](skills/README.md) for the format and [skills/examples](skills/examples) for an example.
 
 ## Build from source
 
-You need Go 1.26+, Node 22+ and the Wails 3 CLI:
+You need Go 1.26+, Node 22+ and the Wails 3 CLI (`go install github.com/wailsapp/wails/v3/cmd/wails3@v3.1.0`). On Linux, also `build-essential pkg-config libgtk-4-dev libwebkitgtk-6.0-dev`.
 
 ```bash
-go install github.com/wailsapp/wails/v3/cmd/wails3@v3.1.0
+wails3 dev                                  # run with hot reload
+wails3 build                                # build for this machine into bin/
+go test -tags nodynamic ./internal/... .    # tests (engine tests run when the engine is installed)
+cd frontend && npm run check                # type-check the UI
 ```
 
-On Linux you also need `build-essential pkg-config libgtk-4-dev libwebkitgtk-6.0-dev`.
+The format matrix behind the numbers above: `ASTERIA_MATRIX=1 ASTERIA_MATRIX_OUT=docs/matrix/<os>-<arch>.json go test ./internal/engine -run TestMatrix -v`, then `node scripts/formats/build.mjs`. The screenshots and the GIF come from the real app driven by a headless Chromium against the server-mode build (`go build -tags server,nodynamic -o bin/asteria-server .`, then `cd scripts/capture && npm install && node capture.mjs readme gif`); the demo photos are NASA's and in the public domain.
 
-```bash
-wails3 dev               # run with hot reload
-wails3 build             # build for this machine into bin/
-wails3 package           # .app on macOS, NSIS installer on Windows, AppImage/deb/rpm on Linux
+Releases: push a `v*` tag and [`release.yml`](.github/workflows/release.yml) builds the macOS DMG, Windows installer and Linux packages into a draft release.
 
-go test -tags nodynamic ./internal/...   # skill tests (media tests run when ffmpeg is installed)
-cd frontend && npm run check              # type-check the UI
-```
+## License
 
-The screenshots and the GIF above come from the real app, driven by a headless Chromium against the server-mode build: `go build -tags server,nodynamic -o bin/asteria-server .`, then `cd scripts/capture && npm install && node capture.mjs readme gif` (needs ffmpeg; the demo photos are NASA's, public domain). `node capture.mjs states` captures every UI state at three window sizes in both themes.
-
-The tests exercise built-in operations on real files in [`testdata/fixtures`](testdata/fixtures) (a HEIC written by Apple's own encoder, a 3-page PDF, a short video, CSV/JSON/YAML with Unicode) and check the output itself: pixels, page counts, durations, exact text.
-
-### Cutting a release
-
-```bash
-git tag v0.1.0 && git push origin v0.1.0
-```
-
-[`release.yml`](.github/workflows/release.yml) stamps the version into the build files, builds the macOS universal DMG, Windows installer and Linux packages, and attaches them to a **draft** release for you to check and publish. Signing isn't set up: removing the warnings above needs an Apple Developer ID (99 USD a year, plus notarization in the workflow) and a Windows code-signing certificate.
-
-## Project layout
-
-```text
-app.go, main.go, preview.go   Wails service, window, preview file server
-internal/ops                  native operations (image, pdf, media, archive, data, cli)
-internal/engine               runs skills: chains, replay, undo, cancel, progress
-internal/session              tray files, workspace, collision-safe export
-internal/skills               skill format, loader, hot reload, search ranking
-internal/inspect              dimensions, page counts, durations, thumbnails
-skills/core                   built-in skills (JSON, embedded in the app)
-frontend/                     Svelte 5 UI (type: Geist and Geist Mono, OFL; icons: Lucide, ISC; PDF pages: pdf.js, Apache-2.0)
-scripts/capture               screenshots, demo GIF and app icon render
-build/                        icons, platform config and Taskfiles
-```
-
-## What's next
-
-- **PDF to images** as a skill needs a PDF renderer in Go; there isn't a solid pure-Go one yet. (The one-file view already shows a PDF's first page, rendered in the UI with pdf.js.)
-- **Keep photo metadata.** Re-encoding drops EXIF (location included), which is good for privacy but not always what you want.
-- **Animated GIF/WebP** editing. Image skills refuse animated files today instead of silently keeping only the first frame.
-- **The agentic layer.** The pipeline is plain JSON on purpose, so a planner can turn "convert these to PNG, resize to 1200 wide and zip them" into the same skills you'd type by hand, with the same previews.
+[MIT](LICENSE). The bundled fonts are Geist and Geist Mono (SIL Open Font License), the icons are Lucide (ISC) and PDF pages are drawn with pdf.js (Apache-2.0). Add-ons are separate programs under their own licenses, listed above and in Settings, and are downloaded unmodified from their projects only when you ask.
