@@ -246,3 +246,64 @@ func TestHotReloadPicksUpMovedSkillDirectory(t *testing.T) {
 		}
 	}
 }
+
+// With a hundred-odd image skills, the obvious one must still come first.
+func TestSearchKeepsTheObviousOnTop(t *testing.T) {
+	r := coreRegistry(t, "")
+	cases := []struct{ q, types, want, value string }{
+		{"blur", ".jpg", "blur", ""},
+		{"crop", ".jpg", "crop", ""},
+		{"crop 16:9", ".jpg", "crop", "16:9"},
+		{"rotate", ".jpg", "rotate", ""},
+		{"rotate 45", ".jpg", "rotate", "45"},
+		{"saturate", ".jpg", "saturate", ""},
+		{"saturate 150%", ".jpg", "saturate", "150%"},
+		{"saturate -30", ".jpg", "saturate", "-30"},
+		{"desaturate", ".jpg", "saturate", ""},
+		{"sharpen", ".jpg", "sharpen", ""},
+		{"sharp", ".jpg", "sharpen", ""},
+		{"brightness", ".jpg", "brightness", ""},
+		{"brighter", ".jpg", "brightness", ""},
+		{"contrast", ".jpg", "contrast", ""},
+		{"black and white", ".jpg", "black_and_white", ""},
+		{"bw", ".jpg", "black_and_white", ""},
+		{"grayscale", ".jpg", "grayscale", ""},
+		{"invert", ".jpg", "invert", ""},
+		{"sepia", ".jpg", "sepia", ""},
+		{"vignette", ".jpg", "vignette", ""},
+		{"pixelate", ".jpg", "pixelate", ""},
+		{"flip", ".jpg", "flip", ""},
+		{"mirror", ".jpg", "mirror", ""},
+		{"warm", ".jpg", "temperature", ""},
+		{"cool", ".jpg", "cool", ""},
+		{"round corners", ".png", "round_corners", ""},
+		{"border", ".jpg", "border", ""},
+		{"resize 1920", ".jpg", "resize", "1920"},
+		{"jpg", ".png", "convert_to_jpeg", ""},
+		{"compress", ".jpg", "compress", ""},
+		{"saturate", ".mp4", "saturate", ""},
+	}
+	for _, c := range cases {
+		m := top(t, r, c.q, c.types)
+		if m.Skill.ID != c.want || m.Value != c.value {
+			t.Errorf("%q on %s -> %s (value %q); want %s (value %q)", c.q, c.types, m.Skill.ID, m.Value, c.want, c.value)
+		}
+	}
+}
+
+// Before anything is typed, each family is represented by its everyday skill.
+func TestEmptyQueryRepresentatives(t *testing.T) {
+	r := coreRegistry(t, "")
+	first := map[string]string{}
+	for _, m := range r.Search("", Context{InputTypes: []string{".jpg"}}) {
+		if _, ok := first[m.Skill.Category]; !ok {
+			first[m.Skill.Category] = m.Skill.ID
+		}
+	}
+	want := map[string]string{"transform": "resize", "adjust": "enhance", "filter": "sharpen", "compress": "compress"}
+	for cat, id := range want {
+		if first[cat] != id {
+			t.Errorf("first %s skill for a JPEG is %s, want %s", cat, first[cat], id)
+		}
+	}
+}
