@@ -1,0 +1,35 @@
+{
+  "id": "story",
+  "name": "Story",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "instagram story",
+    "tiktok",
+    "reel",
+    "reels",
+    "vertical video cover",
+    "shorts"
+  ],
+  "category": "sizes",
+  "icon": "rectangle-vertical",
+  "description": "Story, TikTok or Reel, 1080x1920",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fill",
+    "with": {
+      "size": "1080x1920"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

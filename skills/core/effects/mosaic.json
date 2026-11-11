@@ -1,0 +1,48 @@
+{
+  "id": "mosaic",
+  "name": "Mosaic",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "tiles",
+    "tile",
+    "stained glass",
+    "grout",
+    "tiled"
+  ],
+  "category": "filter",
+  "icon": "brick-wall",
+  "description": "Square tiles with grout lines",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "size",
+      "label": "Tile size",
+      "type": "string",
+      "default": "3%",
+      "presets": [
+        "2%",
+        "3%",
+        "5%",
+        "8%"
+      ],
+      "min": 0.5,
+      "max": 10,
+      "unit": "%",
+      "hint": "Tile size: 3% of the width · or pixels like 24"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.mosaic"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

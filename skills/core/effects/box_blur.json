@@ -1,0 +1,49 @@
+{
+  "id": "box_blur",
+  "name": "Box Blur",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "boxblur",
+    "box",
+    "average blur",
+    "flat blur",
+    "smooth"
+  ],
+  "category": "filter",
+  "icon": "square-dashed",
+  "description": "Even square blur",
+  "inputTypes": [
+    "@image",
+    "@video"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "radius",
+      "label": "Radius",
+      "type": "string",
+      "default": "1%",
+      "presets": [
+        "0.5%",
+        "1%",
+        "2%",
+        "4%"
+      ],
+      "min": 0.2,
+      "max": 5,
+      "unit": "%",
+      "hint": "1% = soft · 4% = heavy · or pixels like 6"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.boxblur"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

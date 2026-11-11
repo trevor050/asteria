@@ -1,0 +1,31 @@
+{
+  "id": "sqlite_to_csv",
+  "name": "SQLite to CSV",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "sqlite csv",
+    "db to csv",
+    "export tables"
+  ],
+  "category": "data",
+  "icon": "database",
+  "description": "A CSV file per table, in a folder",
+  "inputTypes": [
+    ".sqlite",
+    ".sqlite3",
+    ".db"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.sqlite"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

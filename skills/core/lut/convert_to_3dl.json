@@ -1,0 +1,31 @@
+{
+  "id": "convert_to_3dl",
+  "name": "Convert to 3DL",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "3dl",
+    "cube to 3dl",
+    "lut to 3dl",
+    "lustre lut",
+    "flame lut"
+  ],
+  "category": "lut",
+  "icon": "palette",
+  "description": ".3dl LUT from a .cube LUT",
+  "inputTypes": [
+    ".cube"
+  ],
+  "outputType": ".3dl",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "lut.to3dl"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

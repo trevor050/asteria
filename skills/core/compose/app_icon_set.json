@@ -1,0 +1,35 @@
+{
+  "id": "app_icon_set",
+  "name": "App Icon Set",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "app icon",
+    "icon set",
+    "icns",
+    "icon sizes",
+    "ios icon",
+    "mac icon",
+    "windows icon",
+    "app.ico",
+    "make app icon"
+  ],
+  "category": "compose",
+  "icon": "app-window-mac",
+  "description": "App icons from 16 to 1024 px",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "compose.appicon"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

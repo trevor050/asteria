@@ -1,0 +1,32 @@
+{
+  "id": "svg_optimize",
+  "name": "Optimize SVG",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "minify svg",
+    "compress svg",
+    "shrink svg",
+    "clean svg",
+    "svgo",
+    "smaller svg"
+  ],
+  "category": "vector",
+  "icon": "pen-tool",
+  "description": "Smaller SVG with comments and waste removed",
+  "inputTypes": [
+    ".svg"
+  ],
+  "outputType": ".svg",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "svg.optimize"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,47 @@
+{
+  "id": "crop",
+  "name": "Crop",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "cut",
+    "centre crop",
+    "center crop",
+    "aspect ratio",
+    "crop to ratio"
+  ],
+  "category": "transform",
+  "icon": "crop",
+  "priority": 10,
+  "description": "Crop to a ratio, size or percent",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "size",
+      "label": "Crop",
+      "type": "string",
+      "default": "1:1",
+      "presets": [
+        "1:1",
+        "4:5",
+        "16:9",
+        "3:2",
+        "80%"
+      ],
+      "hint": "1:1 or 16:9 = ratio · 800x600 = exact size · 80% = keep the middle 80%"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "geo.crop"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

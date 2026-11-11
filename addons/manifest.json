@@ -1,0 +1,913 @@
+{
+  "schema": 1,
+  "generated": "2026-11-11",
+  "notes": "platform entries with a 'manual' key have no portable official route. 'experimental' entries need a real-machine test of the extraction route before shipping. 'alternatives' lists other candidate sources. sha256 null = no published SHA-256.",
+  "engines": [
+    {
+      "id": "ffmpeg",
+      "name": "FFmpeg",
+      "unlocks": "Audio and video",
+      "publisher": "the FFmpeg project",
+      "license": "GPL-3.0-or-later",
+      "license_url": "https://www.ffmpeg.org/legal.html",
+      "homepage": "https://ffmpeg.org/",
+      "license_note": "FFmpeg core is LGPL-2.1+; every build recorded here is a GPL variant (--enable-gpl --enable-version3, includes x264/x265) so MP4/H.264 output works. We only exec the CLI, never link. LGPL-only builds exist (BtbN 'lgpl' variants) but lack libx264/libx265. Bundle must ship/point to the build's license text (LICENSE in the archive for Windows/Linux). x265/H.265 patent pools are a separate non-license concern. Builds by Gyan Doshi, BtbN, Martin Riedl.",
+      "platforms": {
+        "darwin-arm64": {
+          "version": "9.0.2",
+          "url": "https://ffmpeg.martin-riedl.de/download/macos/arm64/1789931890_9.0.2/ffmpeg.zip",
+          "size": 28395699,
+          "sha256": "c8ed4c4e6978a03c485edbfe4e0a5dc2380f8a30bba5150531b31b094492d924",
+          "checksum_source": "ffmpeg.zip.sha256 sidecar file on ffmpeg.martin-riedl.de (same directory as the zip)",
+          "signature": null,
+          "format": "zip",
+          "bins": {
+            "ffmpeg": "ffmpeg",
+            "ffprobe": "ffprobe"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 170,
+          "notes": "Martin Riedl static build (not linked from ffmpeg.org). ffmpeg and ffprobe ship as two separate zips; each zip holds one binary at its root (bins_verified=false: not downloaded, >5MB). ffmpeg.org's own macOS link is evermeet.cx, which is Intel-only ('I do not plan to provide native ffmpeg binaries for Apple Silicon') and publishes only GPG sigs, no sha256. Release 9.0.2 build, timestamped dir 1789931890. Retention of old timestamped dirs unknown; re-check before pinning.",
+          "extra_artifacts": [
+            {
+              "name": "ffprobe",
+              "url": "https://ffmpeg.martin-riedl.de/download/macos/arm64/1789931890_9.0.2/ffprobe.zip",
+              "size": 28317701,
+              "sha256": "fcbe839537485eaee7a7a8bc5cbc0f90d53617e80943e8a5b2e31cb851197ea6",
+              "checksum_source": "ffprobe.zip.sha256 sidecar on ffmpeg.martin-riedl.de",
+              "format": "zip"
+            }
+          ],
+          "linked_from_ffmpeg_org": false
+        },
+        "darwin-amd64": {
+          "version": "9.0.2",
+          "url": "https://ffmpeg.martin-riedl.de/download/macos/amd64/1789931006_9.0.2/ffmpeg.zip",
+          "size": 33816391,
+          "sha256": "7c6b4125b191cbf773832dc51f424cf2b6bb7da43007d1e066f95909e47cacd4",
+          "checksum_source": "ffmpeg.zip.sha256 sidecar file on ffmpeg.martin-riedl.de",
+          "signature": null,
+          "format": "zip",
+          "bins": {
+            "ffmpeg": "ffmpeg",
+            "ffprobe": "ffprobe"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 190,
+          "notes": "Martin Riedl static build (not linked from ffmpeg.org). ffmpeg and ffprobe ship as two separate zips; each zip holds one binary at its root (bins_verified=false: not downloaded, >5MB). ffmpeg.org's own macOS link is evermeet.cx, which is Intel-only ('I do not plan to provide native ffmpeg binaries for Apple Silicon') and publishes only GPG sigs, no sha256. Martin Riedl states no more macOS Intel release builds from January 2027.",
+          "extra_artifacts": [
+            {
+              "name": "ffprobe",
+              "url": "https://ffmpeg.martin-riedl.de/download/macos/amd64/1789931006_9.0.2/ffprobe.zip",
+              "size": 33719233,
+              "sha256": "2322438ed2f6319a691291b247d09c69dcaa3a982460d1f269a7e1af335cfdfd",
+              "checksum_source": "ffprobe.zip.sha256 sidecar on ffmpeg.martin-riedl.de",
+              "format": "zip"
+            }
+          ],
+          "linked_from_ffmpeg_org": false,
+          "alternatives": [
+            {
+              "name": "evermeet.cx (the macOS link on ffmpeg.org)",
+              "version": "9.0.2",
+              "url": "https://evermeet.cx/ffmpeg/ffmpeg-9.0.2.zip",
+              "size": 26198325,
+              "sha256": null,
+              "checksum_source": "none published (only detached GPG sigs)",
+              "signature": {
+                "url": "https://evermeet.cx/ffmpeg/ffmpeg-9.0.2.zip.sig",
+                "key_fingerprint": "20F6 EA3E 0CFD 6B4C 5344 7A73 476C 4B61 1A66 0874",
+                "key_id": "0x476C4B611A660874"
+              },
+              "format": "zip",
+              "extra_artifacts": [
+                {
+                  "name": "ffprobe",
+                  "url": "https://evermeet.cx/ffmpeg/ffprobe-9.0.2.zip",
+                  "size": 26104193,
+                  "sig": "https://evermeet.cx/ffmpeg/ffprobe-9.0.2.zip.sig"
+                }
+              ],
+              "notes": "Intel-only; runs on Apple Silicon via Rosetta 2. JSON API: https://evermeet.cx/ffmpeg/info/ffmpeg/release"
+            }
+          ]
+        },
+        "windows-amd64": {
+          "version": "9.0.2",
+          "url": "https://github.com/GyanD/codexffmpeg/releases/download/9.0.2/ffmpeg-9.0.2-essentials_build.zip",
+          "size": 114768076,
+          "sha256": "60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba",
+          "checksum_source": "gyan.dev published https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip.sha256 (value identical to GitHub asset digest of this exact file)",
+          "signature": null,
+          "format": "zip",
+          "bins": {
+            "ffmpeg": "ffmpeg-9.0.2-essentials_build/bin/ffmpeg.exe",
+            "ffprobe": "ffmpeg-9.0.2-essentials_build/bin/ffprobe.exe"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 316,
+          "notes": "gyan.dev is linked from ffmpeg.org. Permanent, versioned GitHub release asset (GyanD/codexffmpeg tag 9.0.2). Statically linked exes, GPL v3. Zip also contains ffplay.exe (can skip on extract). Layout verified via HTTP range read of the zip central directory.",
+          "linked_from_ffmpeg_org": true,
+          "alternatives": [
+            {
+              "name": "BtbN gpl-shared (also linked from ffmpeg.org)",
+              "version": "n9.0.2-39-g7adfbe40dc",
+              "url": "https://github.com/FFmpeg-Builds/FFmpeg-Builds/releases/download/autobuild-2026-10-31-12-59/ffmpeg-n9.0.2-39-g7adfbe40dc-win64-gpl-shared-9.0.zip",
+              "size": 85920857,
+              "sha256": "1d9823c35c7a7e2f54d1438cf61030d6efabe3278de01c191309d1e828bb74df",
+              "checksum_source": "checksums.sha256 asset in the same release (matches API digest)",
+              "format": "zip",
+              "bins": {
+                "ffmpeg": "ffmpeg-n9.0.2-39-g7adfbe40dc-win64-gpl-shared-9.0/bin/ffmpeg.exe",
+                "ffprobe": "ffmpeg-n9.0.2-39-g7adfbe40dc-win64-gpl-shared-9.0/bin/ffprobe.exe"
+              },
+              "bins_verified": true,
+              "unpacked_mb": 230
+            }
+          ]
+        },
+        "linux-amd64": {
+          "version": "9.0.2 (n9.0.2-39-g7adfbe40dc)",
+          "url": "https://github.com/FFmpeg-Builds/FFmpeg-Builds/releases/download/autobuild-2026-10-31-12-59/ffmpeg-n9.0.2-39-g7adfbe40dc-linux64-gpl-9.0.tar.xz",
+          "size": 153175100,
+          "sha256": "73e29a56974ae5a651133a04584c7483b21afe941e17dc91d79814a758b608d3",
+          "checksum_source": "checksums.sha256 asset in the same release (matches GitHub API digest)",
+          "signature": null,
+          "format": "tar.xz",
+          "bins": {
+            "ffmpeg": "ffmpeg-n9.0.2-39-g7adfbe40dc-linux64-gpl-9.0/bin/ffmpeg",
+            "ffprobe": "ffmpeg-n9.0.2-39-g7adfbe40dc-linux64-gpl-9.0/bin/ffprobe"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 420,
+          "notes": "BtbN (linked from ffmpeg.org 'Linux Static Builds'). Pinned to the 2026-10-31 month-end autobuild: BtbN retention policy = last 14 daily builds + last build of each month kept 2 years; do NOT pin a daily tag or the floating 'latest' tag. Snapshot of release branch 9.0 (9.0.2 + 39 commits), not a tagged release. Static, glibc>=2.28. Top dir name inferred from asset name (bins_verified=false; tar.xz can't be listed w/o download).",
+          "linked_from_ffmpeg_org": true
+        },
+        "linux-arm64": {
+          "version": "9.0.2 (n9.0.2-39-g7adfbe40dc)",
+          "url": "https://github.com/FFmpeg-Builds/FFmpeg-Builds/releases/download/autobuild-2026-10-31-12-59/ffmpeg-n9.0.2-39-g7adfbe40dc-linuxarm64-gpl-9.0.tar.xz",
+          "size": 128664064,
+          "sha256": "6cad88ae5bcec356cfc5d7979a036cc4007128201928a0cf243df3db483276cc",
+          "checksum_source": "checksums.sha256 asset in the same release (matches GitHub API digest)",
+          "signature": null,
+          "format": "tar.xz",
+          "bins": {
+            "ffmpeg": "ffmpeg-n9.0.2-39-g7adfbe40dc-linuxarm64-gpl-9.0/bin/ffmpeg",
+            "ffprobe": "ffmpeg-n9.0.2-39-g7adfbe40dc-linuxarm64-gpl-9.0/bin/ffprobe"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 360,
+          "notes": "Same as linux-amd64 note. Some deps (davs2/xavs2/libmfx/libva) absent on arm64.",
+          "linked_from_ffmpeg_org": true
+        }
+      },
+      "tools": [
+        "ffmpeg",
+        "ffprobe"
+      ]
+    },
+    {
+      "id": "pandoc",
+      "name": "Pandoc",
+      "unlocks": "Markdown, LaTeX and web documents",
+      "publisher": "John MacFarlane",
+      "license": "GPL-2.0-or-later",
+      "license_url": "https://github.com/jgm/pandoc/blob/main/COPYING.md",
+      "homepage": "https://pandoc.org/",
+      "license_note": "GPL-2.0-or-later; we only exec the unmodified binary. PDF output additionally needs a LaTeX engine (not covered here). Builds: jgm.",
+      "platforms": {
+        "darwin-arm64": {
+          "version": "3.13",
+          "url": "https://github.com/jgm/pandoc/releases/download/3.13/pandoc-3.13-arm64-macOS.zip",
+          "size": 43148194,
+          "sha256": "f436d18bebbfb3ddd326597686dacab9fac5dc23bd060495020f35a28a43a7c3",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "zip",
+          "bins": {
+            "pandoc": "pandoc-3.13-arm64/bin/pandoc"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 196,
+          "notes": "bin/pandoc-lua and bin/pandoc-server are symlinks (size-6 entries) to pandoc: unzipper must handle symlinks or skip them. Zip listing verified by HTTP range read."
+        },
+        "darwin-amd64": {
+          "version": "3.13",
+          "url": "https://github.com/jgm/pandoc/releases/download/3.13/pandoc-3.13-x86_64-macOS.zip",
+          "size": 26891866,
+          "sha256": "1823278715aa405aaf21b59cde5dc789346aa8d4fc307467f9a9ee84162bedc5",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "zip",
+          "bins": {
+            "pandoc": "pandoc-3.13-x86_64/bin/pandoc"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 126,
+          "notes": "Same symlink note."
+        },
+        "windows-amd64": {
+          "version": "3.13",
+          "url": "https://github.com/jgm/pandoc/releases/download/3.13/pandoc-3.13-windows-x86_64.zip",
+          "size": 42983200,
+          "sha256": "23e1f2e978a3df80db8bf65c9c59534f41a23140480cfb4f783a882ab7dc6a4e",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "zip",
+          "bins": {
+            "pandoc": "pandoc-3.13/pandoc.exe"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 240,
+          "notes": "Plain zip, no installer, no elevation."
+        },
+        "linux-amd64": {
+          "version": "3.13",
+          "url": "https://github.com/jgm/pandoc/releases/download/3.13/pandoc-3.13-linux-amd64.tar.gz",
+          "size": 36101020,
+          "sha256": "38aa33b325a2bc96a4c39409631212db55702f564250bcdbead180b3bf646389",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "tar.gz",
+          "bins": {
+            "pandoc": "pandoc-3.13/bin/pandoc"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 190,
+          "notes": "Static binary. Layout inferred from pandoc docs/previous releases (macOS zips verified to use bin/)."
+        },
+        "linux-arm64": {
+          "version": "3.13",
+          "url": "https://github.com/jgm/pandoc/releases/download/3.13/pandoc-3.13-linux-arm64.tar.gz",
+          "size": 38662042,
+          "sha256": "21e1d4ba09bd0b334590d204580fd4f6629b21be4ab6a32b26cc98982e9e0c68",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "tar.gz",
+          "bins": {
+            "pandoc": "pandoc-3.13/bin/pandoc"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 200,
+          "notes": "Same as linux-amd64."
+        }
+      },
+      "tools": [
+        "pandoc"
+      ]
+    },
+    {
+      "id": "libreoffice",
+      "name": "LibreOffice",
+      "unlocks": "Office documents",
+      "publisher": "The Document Foundation",
+      "license": "MPL-2.0",
+      "license_url": "https://www.libreoffice.org/about-us/licenses/",
+      "homepage": "https://www.libreoffice.org/",
+      "license_note": "MPL-2.0 (plus bundled third-party components under their own licenses). Large download. We call soffice --headless --convert-to.",
+      "platforms": {
+        "darwin-arm64": {
+          "version": "26.8.2",
+          "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.2/mac/aarch64/LibreOffice_26.8.2_MacOS_aarch64.dmg",
+          "size": 299236406,
+          "sha256": "9f24fe83ab1ed5c95eb3df580119f32932f713e577feeac02bf619fb00749b55",
+          "checksum_source": "TDF publishes <file>.sha256 next to every download on download.documentfoundation.org",
+          "signature": {
+            "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.2/mac/aarch64/LibreOffice_26.8.2_MacOS_aarch64.dmg.asc",
+            "type": "gpg-detached",
+            "key": "The Document Foundation release signing key (see https://www.documentfoundation.org/gpg-keys/); fingerprint not verified in this research"
+          },
+          "format": "dmg",
+          "bins": {
+            "soffice": "LibreOffice.app/Contents/MacOS/soffice"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 900,
+          "notes": "hdiutil attach -nobrowse -readonly, then copy LibreOffice.app to the data dir (ditto, preserves signature/xattrs). No admin needed for mounting a DMG. App is signed/notarized by TDF. Path expected, not verified."
+        },
+        "darwin-amd64": {
+          "version": "26.8.2",
+          "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.2/mac/x86_64/LibreOffice_26.8.2_MacOS_x86-64.dmg",
+          "size": 309690507,
+          "sha256": "0af062779cc17f6f852918b2424c745f7dd2d20d51d7fb8a0925eb92ec0417a7",
+          "checksum_source": "TDF publishes <file>.sha256 next to every download on download.documentfoundation.org",
+          "signature": {
+            "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.2/mac/x86_64/LibreOffice_26.8.2_MacOS_x86-64.dmg.asc",
+            "type": "gpg-detached",
+            "key": "The Document Foundation release signing key (see https://www.documentfoundation.org/gpg-keys/); fingerprint not verified in this research"
+          },
+          "format": "dmg",
+          "bins": {
+            "soffice": "LibreOffice.app/Contents/MacOS/soffice"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 950,
+          "notes": "Same as darwin-arm64."
+        },
+        "windows-amd64": {
+          "version": "26.8.2",
+          "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.2/win/x86_64/LibreOffice_26.8.2_Win_x86-64.msi",
+          "size": 375934976,
+          "sha256": "ff4b911403b67ee9e6249f820f9782c44bb32c94fdaa45b0da53a8e419e5307a",
+          "checksum_source": "TDF publishes <file>.sha256 next to every download on download.documentfoundation.org",
+          "signature": {
+            "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.2/win/x86_64/LibreOffice_26.8.2_Win_x86-64.msi.asc",
+            "type": "gpg-detached",
+            "key": "The Document Foundation release signing key (see https://www.documentfoundation.org/gpg-keys/); fingerprint not verified in this research"
+          },
+          "format": "msi",
+          "bins": {
+            "soffice": "program/soffice.com"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 1500,
+          "notes": "Extract with: msiexec /a <msi> /qn TARGETDIR=\"<user dir>\" (administrative install = file extraction, no registry/system changes). TDF wiki documents 'msiexec /a ... TARGETDIR=' and says admin rights are needed only when targeting system folders like Program Files. NOT TESTED unelevated; test on the Windows PC. Fallback if msiexec prompts UAC: a pure-Go MSI/CAB extractor or manual. soffice.exe path under TARGETDIR is expected, not verified. soffice.com is the console front end (prints, waits, converts headless); soffice.exe is the GUI launcher and never returns for --version.",
+          "experimental": true,
+          "manual_fallback": {
+            "page": "https://www.libreoffice.org/download/download-libreoffice/",
+            "why": "Standard installer if msiexec /a needs elevation"
+          }
+        },
+        "linux-amd64": {
+          "version": "26.8.2",
+          "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.2/deb/x86_64/LibreOffice_26.8.2_Linux_x86-64_deb.tar.gz",
+          "size": 221006208,
+          "sha256": "8290c8f46cb33d6df8f681cb796e0697461ea070f86ec55b63c94d7eb9d9a476",
+          "checksum_source": "TDF publishes <file>.sha256 next to every download on download.documentfoundation.org",
+          "signature": {
+            "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.2/deb/x86_64/LibreOffice_26.8.2_Linux_x86-64_deb.tar.gz.asc",
+            "type": "gpg-detached",
+            "key": "The Document Foundation release signing key (see https://www.documentfoundation.org/gpg-keys/); fingerprint not verified in this research"
+          },
+          "format": "deb-bundle",
+          "bins": {
+            "soffice": "opt/libreoffice26.8/program/soffice"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 850,
+          "notes": "tar.gz contains LibreOffice_26.8.2.x_Linux_x86-64_deb/DEBS/*.deb. Unpack each .deb (ar + data.tar.xz) without root (dpkg-deb -x or pure-Go ar/tar); only the main libreoffice26.8_*.deb + libobasis26.8-core/writer/calc/impress (+ -ooofonts,-images etc.) are needed for conversion. Paths expected, not verified. Host must provide system libs (libxinerama, libcairo, libcups, libfontconfig, libdbus-glib...), often missing on minimal servers. libreoffice.org links NO AppImage for stable (page lists only deb/rpm)."
+        },
+        "linux-arm64": {
+          "version": "26.8.2",
+          "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.2/deb/aarch64/LibreOffice_26.8.2_Linux_aarch64_deb.tar.gz",
+          "size": 209252608,
+          "sha256": "54a780b666fcda7510c2eebe85265b71dd209db280fc16882fca5589015ca505",
+          "checksum_source": "TDF publishes <file>.sha256 next to every download on download.documentfoundation.org",
+          "signature": {
+            "url": "https://download.documentfoundation.org/libreoffice/stable/26.8.2/deb/aarch64/LibreOffice_26.8.2_Linux_aarch64_deb.tar.gz.asc",
+            "type": "gpg-detached",
+            "key": "The Document Foundation release signing key (see https://www.documentfoundation.org/gpg-keys/); fingerprint not verified in this research"
+          },
+          "format": "deb-bundle",
+          "bins": {
+            "soffice": "opt/libreoffice26.8/program/soffice"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 800,
+          "notes": "Same as linux-amd64."
+        }
+      },
+      "tools": [
+        "soffice"
+      ]
+    },
+    {
+      "id": "7zip",
+      "name": "7-Zip",
+      "unlocks": "More archive types (7z, RAR, ISO)",
+      "publisher": "Igor Pavlov",
+      "license": "LGPL-2.1-or-later",
+      "license_url": "https://www.7-zip.org/license.txt",
+      "homepage": "https://www.7-zip.org/",
+      "license_note": "LGPL-2.1-or-later with the unRAR license restriction (RAR code cannot be used to recreate the RAR compression algorithm) and BSD-licensed parts. Not a clean SPDX single id. Ship License.txt (in archive). 7-zip.org/download.html offers the same files; GitHub ip7z/7zip is the official mirror.",
+      "platforms": {
+        "darwin-arm64": {
+          "version": "26.06",
+          "url": "https://github.com/ip7z/7zip/releases/download/26.06/7z2606-mac.tar.xz",
+          "size": 965712,
+          "sha256": "b6f17920b4240940461dac8ef4009891881ac44d2a5ead625ede2ec8472185dd",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "tar.xz",
+          "bins": {
+            "7zz": "7zz"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 3,
+          "notes": "Mach-O arm64 console binary at archive root (listing + file(1) verified; hash matched our independent download)."
+        },
+        "darwin-amd64": {
+          "version": "26.06",
+          "url": "https://github.com/ip7z/7zip/releases/download/26.06/7z2606-mac-x64.tar.xz",
+          "size": 1025228,
+          "sha256": "3af68b124052da7fc2a246c96b0bea6a68bfee389baa788f4cead1a133445586",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "tar.xz",
+          "bins": {
+            "7zz": "7zz"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 3,
+          "notes": "Listing verified; hash matched our independent download."
+        },
+        "windows-amd64": {
+          "version": "26.06",
+          "url": "https://github.com/ip7z/7zip/releases/download/26.06/7z2606-x64.msi",
+          "size": 2003456,
+          "sha256": "6dc822569e777d9a3ecd5ffcbc22b55600af87e6c5d9810a64e8566cf5a4af9f",
+          "checksum_source": "GitHub release asset digest",
+          "signature": null,
+          "format": "msi",
+          "bins": {
+            "7zz": "Files/7-Zip/7z.exe"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 6,
+          "notes": "Official MSI, unpacked per user with msiexec /a (administrative install image: no elevation, nothing registered). 7z.exe needs 7z.dll beside it, so the full package is used rather than the 7za-only \"extra\" archive (which cannot open RAR, ISO or WIM)."
+        },
+        "linux-amd64": {
+          "version": "26.06",
+          "url": "https://github.com/ip7z/7zip/releases/download/26.06/7z2606-linux-x64.tar.xz",
+          "size": 1575552,
+          "sha256": "2b539cf067b2ad48e1baa5093dbaa8818b73542d1222a0ffde9dc5f2922ea62e",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "tar.xz",
+          "bins": {
+            "7zz": "7zz"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 4,
+          "notes": "Archive root has 7zz (dynamic) and 7zzs (static; use if libc/libstdc++ issues). Listing verified."
+        },
+        "linux-arm64": {
+          "version": "26.06",
+          "url": "https://github.com/ip7z/7zip/releases/download/26.06/7z2606-linux-arm64.tar.xz",
+          "size": 1326668,
+          "sha256": "edcc408aacce77da5223728f2eceb5e9f6dc713b8a9df934ad21e2a7f7560627",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "tar.xz",
+          "bins": {
+            "7zz": "7zz"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 4,
+          "notes": "Same as linux-amd64. Listing verified."
+        }
+      },
+      "tools": [
+        "7z",
+        "7za",
+        "7zz"
+      ]
+    },
+    {
+      "id": "resvg",
+      "name": "resvg",
+      "unlocks": "SVG to picture",
+      "publisher": "Linebender",
+      "license": "Apache-2.0 OR MIT",
+      "license_url": "https://github.com/linebender/resvg/blob/main/LICENSE-APACHE",
+      "homepage": "https://github.com/linebender/resvg",
+      "license_note": "Permissive; no restrictions of note. Also an ~13MB source tarball in releases (not needed). Builds: Yevhenii Reizner.",
+      "platforms": {
+        "darwin-arm64": {
+          "version": "0.49.0",
+          "url": "https://github.com/linebender/resvg/releases/download/v0.49.0/resvg-macos-aarch64.zip",
+          "size": 1791417,
+          "sha256": "847acb5210c7c6244b5e8f07dd62fa1ce596108cce8193628ebfd5750504b259",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "zip",
+          "bins": {
+            "resvg": "resvg"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 5,
+          "notes": "Single-file archive, listing verified; hash matched our independent download. Release assets are unsigned."
+        },
+        "darwin-amd64": {
+          "version": "0.49.0",
+          "url": "https://github.com/linebender/resvg/releases/download/v0.49.0/resvg-macos-x86_64.zip",
+          "size": 1867866,
+          "sha256": "7c92cba55348f0254707c8d2c61e71651296981f8ccfadf8477782e91db5e171",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "zip",
+          "bins": {
+            "resvg": "resvg"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 5,
+          "notes": "Single-file archive, listing verified; hash matched our independent download. Release assets are unsigned."
+        },
+        "windows-amd64": {
+          "version": "0.49.0",
+          "url": "https://github.com/linebender/resvg/releases/download/v0.49.0/resvg-win-x86_64.zip",
+          "size": 1755444,
+          "sha256": "38af9631b37e61118a32a5ef31e6be6af083eda63b4c17ffc4fdc63e449277df",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "zip",
+          "bins": {
+            "resvg": "resvg.exe"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 5,
+          "notes": "Single-file archive, listing verified; hash matched our independent download. Release assets are unsigned."
+        },
+        "linux-amd64": {
+          "version": "0.49.0",
+          "url": "https://github.com/linebender/resvg/releases/download/v0.49.0/resvg-linux-x86_64.tar.gz",
+          "size": 1954483,
+          "sha256": "216637e75e909e53e3098b0875cd5f7da2fdc8b4359771b4a29b539afff9d3f5",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "tar.gz",
+          "bins": {
+            "resvg": "resvg"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 5,
+          "notes": "Single-file archive, listing verified; hash matched our independent download. Release assets are unsigned."
+        },
+        "linux-arm64": {
+          "version": "0.49.0",
+          "url": "https://github.com/linebender/resvg/releases/download/v0.49.0/resvg-linux-aarch64.tar.gz",
+          "size": 1827526,
+          "sha256": "00356cb6984836d7638fe10597a01ec4776b0c356e164538f165eca067f0d982",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "tar.gz",
+          "bins": {
+            "resvg": "resvg"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 5,
+          "notes": "Single-file archive, listing verified; hash matched our independent download. Release assets are unsigned."
+        }
+      },
+      "tools": [
+        "resvg"
+      ]
+    },
+    {
+      "id": "imagemagick",
+      "name": "ImageMagick",
+      "unlocks": "Camera RAW and rare image formats",
+      "publisher": "ImageMagick Studio",
+      "license": "ImageMagick",
+      "license_url": "https://imagemagick.org/script/license.php",
+      "homepage": "https://imagemagick.org/",
+      "license_note": "Custom Apache-2.0-like 'ImageMagick License' (SPDX id 'ImageMagick'); permissive. Some delegates (Ghostscript for PDF/PS/EPS) are separate.",
+      "platforms": {
+        "darwin-arm64": {
+          "manual": {
+            "page": "https://imagemagick.org/download/",
+            "why": "imagemagick.org offers no macOS binary; its macOS section only says use Homebrew (brew install imagemagick)."
+          }
+        },
+        "darwin-amd64": {
+          "manual": {
+            "page": "https://imagemagick.org/download/",
+            "why": "imagemagick.org offers no macOS binary; its macOS section only says use Homebrew (brew install imagemagick)."
+          }
+        },
+        "windows-amd64": {
+          "version": "7.1.2-35",
+          "url": "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-35/ImageMagick-7.1.2-35-portable-Q16-HDRI-x64.7z",
+          "size": 12117825,
+          "sha256": "34db4364da26c88d6b8cc5bbc1fff22b85d00d3b399c82fe85ee4790efacbbf1",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": {
+            "type": "SLSA provenance (in-toto attestation)",
+            "url": "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-35/ImageMagick-7.1.2-35.intoto.jsonl",
+            "note": "One provenance file for the release; verifying needs slsa-verifier. No GPG signature identified."
+          },
+          "format": "7z",
+          "bins": {
+            "magick": "magick.exe"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 60,
+          "notes": "Official 'Portable Windows Archive' (static build, no installer/registry). Q16-HDRI x64. Q16 (non-HDRI) x64 is 12106737 B sha256 e7c629f3530ccb9d4918a15f0e928254feda28e84a7fa794b25873d152c075c1. Needs a 7z reader (see 7-Zip row). magick.exe at archive root expected, not verified."
+        },
+        "linux-amd64": {
+          "version": "7.1.2-35",
+          "url": "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-35/ImageMagick-7.1.2-35-gcc-x86_64.AppImage",
+          "size": 33352184,
+          "sha256": "f111044ed06b68cfb478df724c5a32d35145afa21073242f888d234a2f8cc002",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": {
+            "type": "SLSA provenance (in-toto attestation)",
+            "url": "https://github.com/ImageMagick/ImageMagick/releases/download/7.1.2-35/ImageMagick-7.1.2-35.intoto.jsonl",
+            "note": "One provenance file for the release; verifying needs slsa-verifier. No GPG signature identified."
+          },
+          "format": "appimage",
+          "bins": {
+            "magick": "squashfs-root/AppRun"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 34,
+          "notes": "Single executable file: save as 'magick', chmod +x, run. Needs libfuse2 on host, or run with APPIMAGE_EXTRACT_AND_RUN=1 (or --appimage-extract once). imagemagick.org calls AppImage the 'official portable binary format'. A clang build also exists (sha256 89fab633823fffa39bee1dc7fa9720a1070592dfae0aaf663fd14d154fe627d1)."
+        },
+        "linux-arm64": {
+          "manual": {
+            "page": "https://imagemagick.org/download/",
+            "why": "Only an x86_64 AppImage is published; no arm64 Linux binary. Build from source or use distro package."
+          }
+        }
+      },
+      "tools": [
+        "magick"
+      ]
+    },
+    {
+      "id": "calibre",
+      "name": "Calibre",
+      "unlocks": "Ebooks",
+      "publisher": "Kovid Goyal",
+      "license": "GPL-3.0-only",
+      "license_url": "https://github.com/kovidgoyal/calibre/blob/master/LICENSE",
+      "homepage": "https://calibre-ebook.com/",
+      "license_note": "GPL-3.0; we only exec ebook-convert. Binary bundles Python/Qt. Very large download. Both calibre-ebook.com (download.calibre-ebook.com/9.18.0/...) and the GitHub release host identical files; GitHub chosen for the sha256 digest.",
+      "platforms": {
+        "darwin-arm64": {
+          "version": "9.18.0",
+          "url": "https://github.com/kovidgoyal/calibre/releases/download/v9.18.0/calibre-9.18.0.dmg",
+          "size": 406181327,
+          "sha256": "b4b8000433b6e4d0fdfb3bd0283cd76b7525c65daf5af027ec4dc1e629ef3d0c",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "dmg",
+          "bins": {
+            "ebook-convert": "calibre.app/Contents/MacOS/ebook-convert"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 1000,
+          "notes": "Single DMG for both Mac arches (believed universal; one dmg asset only). Mount with hdiutil, copy calibre.app. Path expected, not verified. No detached GPG signature. Calibre code-signs its Windows binaries (Authenticode) and notarizes macOS; policy at https://calibre-ebook.com/signatures/README-code-signing.txt"
+        },
+        "darwin-amd64": {
+          "version": "9.18.0",
+          "url": "https://github.com/kovidgoyal/calibre/releases/download/v9.18.0/calibre-9.18.0.dmg",
+          "size": 406181327,
+          "sha256": "b4b8000433b6e4d0fdfb3bd0283cd76b7525c65daf5af027ec4dc1e629ef3d0c",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "dmg",
+          "bins": {
+            "ebook-convert": "calibre.app/Contents/MacOS/ebook-convert"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 1000,
+          "notes": "Same DMG as darwin-arm64. No detached GPG signature. Calibre code-signs its Windows binaries (Authenticode) and notarizes macOS; policy at https://calibre-ebook.com/signatures/README-code-signing.txt"
+        },
+        "windows-amd64": {
+          "version": "9.18.0",
+          "url": "https://github.com/kovidgoyal/calibre/releases/download/v9.18.0/calibre-64bit-9.18.0.msi",
+          "size": 291291136,
+          "sha256": "05c0f2223866f8082e05b2d4bc9c57b31a833de8355a1191fd79c260c2636d38",
+          "checksum_source": "GitHub release API asset digest (sha256)",
+          "signature": null,
+          "format": "msi",
+          "bins": {
+            "ebook-convert": "PFiles64/Calibre2/ebook-convert.exe"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 920,
+          "notes": "Administrative extraction (msiexec /a) into the add-ons folder; nothing is installed or registered."
+        },
+        "linux-amd64": {
+          "version": "9.18.0",
+          "url": "https://github.com/kovidgoyal/calibre/releases/download/v9.18.0/calibre-9.18.0-x86_64.txz",
+          "size": 240948148,
+          "sha256": "da638166fb3dd204be77cf0f871a40d803536b3e5948969c5233b8e4f1e1dbe6",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "tar.xz",
+          "bins": {
+            "ebook-convert": "ebook-convert"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 1000,
+          "notes": "Official 'binary install' tarball; calibre docs untar it straight into /opt/calibre and run calibre_postinstall (only for desktop integration, not needed to run ebook-convert). Binaries sit at the tarball root (expected, not verified); extract into <data>/calibre/. Bundles its own Qt/Python; some conversions may want system GL/xcb libs. No detached GPG signature. Calibre code-signs its Windows binaries (Authenticode) and notarizes macOS; policy at https://calibre-ebook.com/signatures/README-code-signing.txt"
+        },
+        "linux-arm64": {
+          "version": "9.18.0",
+          "url": "https://github.com/kovidgoyal/calibre/releases/download/v9.18.0/calibre-9.18.0-arm64.txz",
+          "size": 227149592,
+          "sha256": "7f29f1786dcfc5b6f3b6d29b245998a6701501169fbd4c853f17c35d3a635e91",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "tar.xz",
+          "bins": {
+            "ebook-convert": "ebook-convert"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 950,
+          "notes": "Same as linux-amd64. No detached GPG signature. Calibre code-signs its Windows binaries (Authenticode) and notarizes macOS; policy at https://calibre-ebook.com/signatures/README-code-signing.txt"
+        }
+      },
+      "tools": [
+        "ebook-convert"
+      ]
+    },
+    {
+      "id": "ghostscript",
+      "name": "Ghostscript",
+      "unlocks": "PostScript and PDF to pictures",
+      "publisher": "Artifex",
+      "license": "AGPL-3.0-or-later",
+      "license_url": "https://www.gnu.org/licenses/agpl-3.0.html",
+      "homepage": "https://ghostscript.com/",
+      "license_note": "AGPL-3.0 (commercial license from Artifex otherwise). Review before bundling or redistributing: calling the unmodified binary as a separate process and linking to Artifex's own download is the lowest-risk pattern; do NOT host a copy of the binary yourself without a license review. Network-use clause matters if you ever expose it as a hosted service.",
+      "platforms": {
+        "darwin-arm64": {
+          "manual": {
+            "page": "https://ghostscript.com/releases/gsdnld.html",
+            "why": "Artifex publishes no macOS binaries (source tarball only). Users get it via Homebrew/MacPorts."
+          }
+        },
+        "darwin-amd64": {
+          "manual": {
+            "page": "https://ghostscript.com/releases/gsdnld.html",
+            "why": "Artifex publishes no macOS binaries (source tarball only). Users get it via Homebrew/MacPorts."
+          }
+        },
+        "windows-amd64": {
+          "manual": {
+            "page": "https://ghostscript.com/releases/gsdnld.html",
+            "why": "On Windows it only comes as an installer program, and Asteria doesn't run installers for you."
+          }
+        },
+        "linux-amd64": {
+          "manual": {
+            "page": "https://ghostscript.com/releases/gsdnld.html",
+            "why": "The only official Linux binary is a snap (gs_10.08.0_amd64_snap.tgz, 54062085 B) which needs snapd, not portable. Distro package or build from source."
+          }
+        },
+        "linux-arm64": {
+          "manual": {
+            "page": "https://ghostscript.com/releases/gsdnld.html",
+            "why": "No official Linux arm64 binary. Distro package or build from source."
+          }
+        }
+      },
+      "tools": [
+        "gs",
+        "gswin64c"
+      ]
+    },
+    {
+      "id": "potrace",
+      "name": "Potrace",
+      "unlocks": "Tracing pictures into vectors",
+      "publisher": "Peter Selinger",
+      "license": "GPL-2.0-or-later",
+      "license_url": "https://potrace.sourceforge.net/#license",
+      "homepage": "https://potrace.sourceforge.net/",
+      "license_note": "GPL-2.0-or-later; exec only. Version 1.16 is current (2019).",
+      "platforms": {
+        "darwin-arm64": {
+          "version": "1.16",
+          "url": "https://potrace.sourceforge.net/download/1.16/potrace-1.16.mac-x86_64.tar.gz",
+          "size": 125411,
+          "sha256": "7b144720c1cdf5f7d73e47e9e9a5df03ee49bcc42037498481d3a29855311940",
+          "checksum_source": "No SHA-256 published. Project publishes only SHA-1 sums (https://potrace.sourceforge.net/download/SHA1SUMS.html). sha256_self_computed was computed by us from the download AFTER confirming its SHA-1 equals the published SHA-1; it is NOT a published value (TOFU pin).",
+          "signature": null,
+          "format": "tar.gz",
+          "bins": {
+            "potrace": "potrace-1.16.mac-x86_64/potrace",
+            "mkbitmap": "potrace-1.16.mac-x86_64/mkbitmap"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 1,
+          "notes": "x86_64-only Mach-O: runs on Apple Silicon only through Rosetta 2 (not preinstalled on a fresh Mac). No arm64 binary exists; alternative is manual (Homebrew) or build from source.",
+          "sha1_published": "d60e99ce2e4264c1ef87f0ad4db8fb8ebfd33fc0",
+          "requires_rosetta": true,
+          "checksum_note": "Upstream publishes SHA-1 only; the published SHA-1 is verified and this SHA-256 was pinned after it matched."
+        },
+        "darwin-amd64": {
+          "version": "1.16",
+          "url": "https://potrace.sourceforge.net/download/1.16/potrace-1.16.mac-x86_64.tar.gz",
+          "size": 125411,
+          "sha256": "7b144720c1cdf5f7d73e47e9e9a5df03ee49bcc42037498481d3a29855311940",
+          "checksum_source": "No SHA-256 published. Project publishes only SHA-1 sums (https://potrace.sourceforge.net/download/SHA1SUMS.html). sha256_self_computed was computed by us from the download AFTER confirming its SHA-1 equals the published SHA-1; it is NOT a published value (TOFU pin).",
+          "signature": null,
+          "format": "tar.gz",
+          "bins": {
+            "potrace": "potrace-1.16.mac-x86_64/potrace",
+            "mkbitmap": "potrace-1.16.mac-x86_64/mkbitmap"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 1,
+          "notes": "Listing verified (from downloaded 125 KB archive).",
+          "sha1_published": "d60e99ce2e4264c1ef87f0ad4db8fb8ebfd33fc0",
+          "checksum_note": "Upstream publishes SHA-1 only; the published SHA-1 is verified and this SHA-256 was pinned after it matched."
+        },
+        "windows-amd64": {
+          "version": "1.16",
+          "url": "https://potrace.sourceforge.net/download/1.16/potrace-1.16.win64.zip",
+          "size": 186345,
+          "sha256": "63699f9885b5ed053977fd94452a7bdbb77ee62b77bf28a3f17b2f14b9b9c65d",
+          "checksum_source": "No SHA-256 published. Project publishes only SHA-1 sums (https://potrace.sourceforge.net/download/SHA1SUMS.html). sha256_self_computed was computed by us from the download AFTER confirming its SHA-1 equals the published SHA-1; it is NOT a published value (TOFU pin).",
+          "signature": null,
+          "format": "zip",
+          "bins": {
+            "potrace": "potrace-1.16.win64/potrace.exe",
+            "mkbitmap": "potrace-1.16.win64/mkbitmap.exe"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 1,
+          "notes": "Plain zip; potrace.exe + mkbitmap.exe, listing verified.",
+          "sha1_published": "7e360015c8ac0e6efdffa6c26974daf65ab596e9",
+          "checksum_note": "Upstream publishes SHA-1 only; the published SHA-1 is verified and this SHA-256 was pinned after it matched."
+        },
+        "linux-amd64": {
+          "version": "1.16",
+          "url": "https://potrace.sourceforge.net/download/1.16/potrace-1.16.linux-x86_64.tar.gz",
+          "size": 876144,
+          "sha256": "158ef1cb6bde9f057510c7aa8b555117be10fa5318cd875f6a26a5811dadc2d8",
+          "checksum_source": "No SHA-256 published. Project publishes only SHA-1 sums (https://potrace.sourceforge.net/download/SHA1SUMS.html). sha256_self_computed was computed by us from the download AFTER confirming its SHA-1 equals the published SHA-1; it is NOT a published value (TOFU pin).",
+          "signature": null,
+          "format": "tar.gz",
+          "bins": {
+            "potrace": "potrace-1.16.linux-x86_64/potrace",
+            "mkbitmap": "potrace-1.16.linux-x86_64/mkbitmap"
+          },
+          "bins_verified": true,
+          "unpacked_mb": 2,
+          "notes": "Listing verified. Linkage (static vs dynamic glibc) not inspected.",
+          "sha1_published": "49f8d3f968ce7466529dc866f4070b9ef6b25b3f",
+          "checksum_note": "Upstream publishes SHA-1 only; the published SHA-1 is verified and this SHA-256 was pinned after it matched."
+        },
+        "linux-arm64": {
+          "manual": {
+            "page": "https://potrace.sourceforge.net/#downloading",
+            "why": "No arm64 Linux binary published; build from potrace-1.16.tar.gz source or use distro package."
+          }
+        }
+      },
+      "tools": [
+        "mkbitmap",
+        "potrace"
+      ]
+    },
+    {
+      "id": "tesseract",
+      "name": "Tesseract OCR",
+      "unlocks": "Text from pictures (OCR)",
+      "publisher": "the Tesseract project",
+      "license": "Apache-2.0",
+      "license_url": "https://github.com/tesseract-ocr/tesseract/blob/main/LICENSE",
+      "homepage": "https://tesseract-ocr.github.io/",
+      "license_note": "Apache-2.0. The upstream project publishes SOURCE ONLY on its own releases (5.5.4 has zero assets); every binary here is third-party, though both are the ones tessdoc points to. Language data (tessdata) is separate: installers/AppImage may include only English. Windows build by UB Mannheim; Linux AppImage by AlexanderP.",
+      "platforms": {
+        "darwin-arm64": {
+          "manual": {
+            "page": "https://tesseract-ocr.github.io/tessdoc/Installation.html",
+            "why": "No official or third-party portable macOS binary; tessdoc says use Homebrew or MacPorts."
+          }
+        },
+        "darwin-amd64": {
+          "manual": {
+            "page": "https://tesseract-ocr.github.io/tessdoc/Installation.html",
+            "why": "No official or third-party portable macOS binary; tessdoc says use Homebrew or MacPorts."
+          }
+        },
+        "windows-amd64": {
+          "manual": {
+            "page": "https://github.com/UB-Mannheim/tesseract/wiki",
+            "why": "On Windows it only comes as an installer program, and Asteria doesn't run installers for you."
+          }
+        },
+        "linux-amd64": {
+          "version": "5.5.4 (leptonica 1.87)",
+          "url": "https://github.com/AlexanderP/tesseract-appimage/releases/download/v5.5.4/tesseract-5.5.4_lept-1.87-x86_64.AppImage",
+          "size": 24017400,
+          "sha256": "fc2b2a3e1d49912e03a9cb0744ce4198318801dfc42e2166c81373dbd88587b9",
+          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "signature": null,
+          "format": "appimage",
+          "bins": {
+            "tesseract": "squashfs-root/AppRun"
+          },
+          "bins_verified": false,
+          "unpacked_mb": 24,
+          "notes": "Third-party AppImage repo (AlexanderP/tesseract-appimage) but it is the one linked from tessdoc's Installation page. Single file, chmod +x, needs libfuse2 or APPIMAGE_EXTRACT_AND_RUN=1. Whether tessdata (eng) is bundled was not verified. Older leptonica-1.84 variant also published."
+        },
+        "linux-arm64": {
+          "manual": {
+            "page": "https://tesseract-ocr.github.io/tessdoc/Installation.html",
+            "why": "No arm64 Linux binary published; distro package (apt install tesseract-ocr) or build from source."
+          }
+        }
+      },
+      "tools": [
+        "tesseract"
+      ]
+    }
+  ]
+}

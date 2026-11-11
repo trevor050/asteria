@@ -1,0 +1,34 @@
+{
+  "id": "convert_to_ttml",
+  "name": "Convert to TTML",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to ttml",
+    "dfxp",
+    "srt to ttml",
+    "timed text"
+  ],
+  "category": "subtitles",
+  "icon": "captions",
+  "description": "Save subtitles as TTML/DFXP timed text",
+  "inputTypes": [
+    ".srt",
+    ".vtt",
+    ".ass",
+    ".ssa",
+    ".sbv"
+  ],
+  "outputType": ".ttml",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "subtitles.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

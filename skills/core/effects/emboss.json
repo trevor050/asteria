@@ -1,0 +1,49 @@
+{
+  "id": "emboss",
+  "name": "Emboss",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "relief",
+    "raised",
+    "3d",
+    "bump",
+    "stone",
+    "engrave"
+  ],
+  "category": "filter",
+  "icon": "mountain",
+  "description": "Gray raised relief",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "strength",
+      "label": "Strength",
+      "type": "string",
+      "default": "50",
+      "presets": [
+        "25",
+        "50",
+        "75",
+        "100"
+      ],
+      "min": 1,
+      "max": 100,
+      "unit": "%",
+      "hint": "50 = soft relief · 100 = deep relief"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.emboss"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,29 @@
+{
+  "id": "convert_to_ogg",
+  "name": "Convert to OGG",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "ogg",
+    "vorbis"
+  ],
+  "category": "media",
+  "icon": "arrow-left-right",
+  "description": "Vorbis OGG audio, also from video",
+  "inputTypes": [
+    "@media"
+  ],
+  "outputType": ".ogg",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

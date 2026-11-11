@@ -1,0 +1,28 @@
+{
+  "id": "decompress_xz",
+  "name": "Decompress xz",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "unxz",
+    "xz decompress"
+  ],
+  "category": "archive",
+  "icon": "file-archive",
+  "description": "Unpack a .xz back to the original file",
+  "inputTypes": [
+    ".xz"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.unpack"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

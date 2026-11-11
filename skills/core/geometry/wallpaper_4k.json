@@ -1,0 +1,33 @@
+{
+  "id": "wallpaper_4k",
+  "name": "Wallpaper 4K",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "4k wallpaper",
+    "4k",
+    "desktop wallpaper 4k",
+    "uhd wallpaper"
+  ],
+  "category": "sizes",
+  "icon": "tv",
+  "description": "3840x2160, cropped to fill",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fill",
+    "with": {
+      "size": "3840x2160"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

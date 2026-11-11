@@ -1,0 +1,28 @@
+{
+  "id": "opacity",
+  "name": "Opacity",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["transparency", "transparent", "fade", "alpha", "see through", "make transparent", "semi transparent"],
+  "category": "adjust",
+  "icon": "opacity",
+  "description": "See-through (saves as PNG)",
+  "inputTypes": ["@image"],
+  "outputType": ".png",
+  "params": [
+    {
+      "name": "amount",
+      "label": "Opacity",
+      "type": "string",
+      "default": "70",
+      "presets": ["90", "70", "50", "30", "10"],
+      "min": 0,
+      "max": 100,
+      "unit": "%",
+      "hint": "70 or 70% = 70% opaque · 50 = half see-through · 0 = invisible"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.opacity" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

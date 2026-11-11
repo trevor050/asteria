@@ -1,0 +1,43 @@
+{
+  "id": "extract_pages",
+  "name": "Extract Pages",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "pick pages",
+    "select pages",
+    "keep pages",
+    "pdf pages"
+  ],
+  "category": "pdf",
+  "icon": "file-output",
+  "description": "Keep only some pages",
+  "inputTypes": [
+    "@pdf"
+  ],
+  "outputType": ".pdf",
+  "params": [
+    {
+      "name": "pages",
+      "label": "Pages",
+      "type": "string",
+      "default": "1",
+      "presets": [
+        "1",
+        "1-3",
+        "2-"
+      ],
+      "hint": "1-3, 5, 8- (8 to the end)"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "pdf.extract"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

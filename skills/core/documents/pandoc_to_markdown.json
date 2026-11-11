@@ -1,0 +1,52 @@
+{
+  "id": "pandoc_to_markdown",
+  "name": "Convert to Markdown",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to md",
+    "to markdown",
+    "docx to markdown",
+    "html to markdown"
+  ],
+  "category": "document",
+  "icon": "file-type",
+  "description": "GitHub-flavored Markdown from Word or HTML",
+  "inputTypes": [
+    ".html",
+    ".htm",
+    ".docx",
+    ".odt",
+    ".epub",
+    ".rst",
+    ".tex",
+    ".org",
+    ".textile",
+    ".ipynb"
+  ],
+  "outputType": ".md",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "pandoc",
+    "args": [
+      "--sandbox",
+      "-t",
+      "gfm",
+      "-o",
+      "{{output}}",
+      "{{input}}"
+    ],
+    "timeoutMs": 300000
+  },
+  "requires": [
+    "pandoc"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

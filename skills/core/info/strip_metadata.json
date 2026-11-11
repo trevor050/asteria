@@ -1,0 +1,33 @@
+{
+  "id": "strip_metadata",
+  "name": "Strip Metadata",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "remove exif",
+    "remove location",
+    "remove gps",
+    "privacy",
+    "clean metadata",
+    "scrub",
+    "strip exif"
+  ],
+  "category": "info",
+  "icon": "shield-off",
+  "description": "Remove EXIF, GPS and other metadata",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "info.strip"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

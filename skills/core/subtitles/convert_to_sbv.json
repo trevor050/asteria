@@ -1,0 +1,35 @@
+{
+  "id": "convert_to_sbv",
+  "name": "Convert to SBV",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to sbv",
+    "youtube subtitles",
+    "srt to sbv",
+    "youtube captions"
+  ],
+  "category": "subtitles",
+  "icon": "captions",
+  "description": "Save subtitles in YouTube's SBV format",
+  "inputTypes": [
+    ".srt",
+    ".vtt",
+    ".ass",
+    ".ssa",
+    ".ttml",
+    ".dfxp"
+  ],
+  "outputType": ".sbv",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "subtitles.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

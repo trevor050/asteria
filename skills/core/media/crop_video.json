@@ -1,0 +1,45 @@
+{
+  "id": "crop_video",
+  "name": "Crop Video",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "crop",
+    "square video",
+    "vertical video",
+    "reframe"
+  ],
+  "category": "media",
+  "icon": "crop",
+  "description": "Crop the video to a centered aspect ratio",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "aspect",
+      "label": "Aspect",
+      "type": "string",
+      "default": "1:1",
+      "presets": [
+        "1:1",
+        "9:16",
+        "16:9",
+        "4:5"
+      ],
+      "hint": "1:1 \u00b7 9:16 \u00b7 16:9 \u00b7 4:5 \u00b7 centered \u00b7 default 1:1"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "media.crop"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

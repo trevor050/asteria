@@ -1,0 +1,55 @@
+{
+  "id": "extract_7z",
+  "name": "Extract 7z",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "unrar",
+    "unrar archive",
+    "extract rar",
+    "extract iso",
+    "7zip"
+  ],
+  "category": "archive",
+  "icon": "package-open",
+  "description": "Unpack 7z, RAR, ISO, CAB and similar archives",
+  "inputTypes": [
+    ".rar",
+    ".iso",
+    ".cab",
+    ".arj",
+    ".lzh",
+    ".wim",
+    ".dmg",
+    ".xar",
+    ".cpio",
+    ".rpm",
+    ".deb",
+    ".z",
+    ".lzma"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "7zz",
+    "args": [
+      "x",
+      "-y",
+      "-o{{output}}",
+      "--",
+      "{{input}}"
+    ],
+    "timeoutMs": 600000
+  },
+  "requires": [
+    "7zz"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

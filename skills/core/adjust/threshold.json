@@ -1,0 +1,28 @@
+{
+  "id": "threshold",
+  "name": "Threshold",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["binary", "pure black and white", "two color black white", "lineart", "line art", "bilevel", "halftone cutoff"],
+  "category": "adjust",
+  "icon": "square-split-horizontal",
+  "description": "Pure black and white",
+  "inputTypes": ["@image"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "level",
+      "label": "Level",
+      "type": "string",
+      "default": "50",
+      "presets": ["30", "40", "50", "60", "70"],
+      "min": 0,
+      "max": 100,
+      "unit": "%",
+      "hint": "50 = middle gray · lower = more white · higher = more black"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.threshold" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

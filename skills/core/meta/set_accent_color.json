@@ -3,30 +3,57 @@
   "name": "Accent Color",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["accent", "theme color", "highlight color"],
+  "aliases": [
+    "accent",
+    "theme color",
+    "highlight color"
+  ],
   "category": "meta",
-  "description": "Set the UI accent color",
-  "inputTypes": ["*"],
+  "icon": "paintbrush",
+  "description": "Change the accent color",
+  "inputTypes": [
+    "*"
+  ],
   "outputType": "none",
   "params": [
     {
       "name": "color",
       "type": "string",
       "label": "Color",
-      "default": "99,102,241",
+      "hint": "Slate · Sky · Sage · Sand · Rose · Iris, or any color like #6e8096",
+      "default": "112,128,150",
       "presets": [
-        {"label": "Indigo", "value": "99,102,241"},
-        {"label": "Sky", "value": "14,165,233"},
-        {"label": "Emerald", "value": "16,185,129"},
-        {"label": "Orange", "value": "249,115,22"},
-        {"label": "Red", "value": "239,68,68"},
-        {"label": "Violet", "value": "168,85,247"}
+        {
+          "label": "Slate",
+          "value": "112,128,150"
+        },
+        {
+          "label": "Sky",
+          "value": "104,146,176"
+        },
+        {
+          "label": "Sage",
+          "value": "110,148,122"
+        },
+        {
+          "label": "Sand",
+          "value": "176,148,104"
+        },
+        {
+          "label": "Rose",
+          "value": "178,116,128"
+        },
+        {
+          "label": "Iris",
+          "value": "130,120,180"
+        }
       ]
     }
   ],
-  "driver": "meta",
   "isMeta": true,
-  "executor": {"type": "meta"},
+  "executor": {
+    "type": "meta"
+  },
   "permissions": [],
   "dangerLevel": 0
 }

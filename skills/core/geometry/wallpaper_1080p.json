@@ -1,0 +1,33 @@
+{
+  "id": "wallpaper_1080p",
+  "name": "Wallpaper 1080p",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "1080p wallpaper",
+    "hd wallpaper",
+    "desktop wallpaper",
+    "full hd wallpaper"
+  ],
+  "category": "sizes",
+  "icon": "monitor",
+  "description": "1920x1080, cropped to fill",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fill",
+    "with": {
+      "size": "1920x1080"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

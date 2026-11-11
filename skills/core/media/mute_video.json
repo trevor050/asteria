@@ -1,0 +1,31 @@
+{
+  "id": "mute_video",
+  "name": "Mute Video",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "remove audio",
+    "silence video",
+    "no sound",
+    "strip audio"
+  ],
+  "category": "media",
+  "icon": "volume-x",
+  "description": "Remove the audio track, keep the video",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.mute"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

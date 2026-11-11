@@ -1,0 +1,48 @@
+{
+  "id": "pad",
+  "name": "Pad",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "extend canvas",
+    "add space",
+    "margin",
+    "padding",
+    "canvas",
+    "add margin",
+    "space around"
+  ],
+  "category": "transform",
+  "icon": "square-padding",
+  "description": "Transparent space around",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "amount",
+      "label": "Amount",
+      "type": "string",
+      "default": "10%",
+      "presets": [
+        "5%",
+        "10%",
+        "20%",
+        "24",
+        "64"
+      ],
+      "hint": "10% = of the shorter side · 24 or 24px = pixels"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "geo.pad"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,30 @@
+{
+  "id": "convert_to_gif",
+  "name": "Convert to GIF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "gif",
+    "video to gif",
+    "make gif"
+  ],
+  "category": "media",
+  "icon": "arrow-left-right",
+  "description": "Animated GIF, 12 fps",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": ".gif",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

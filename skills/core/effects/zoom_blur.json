@@ -1,0 +1,48 @@
+{
+  "id": "zoom_blur",
+  "name": "Zoom Blur",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "radial blur",
+    "speed zoom",
+    "zoom",
+    "warp speed",
+    "burst"
+  ],
+  "category": "filter",
+  "icon": "zoom-in",
+  "description": "Rush toward the center",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "strength",
+      "label": "Strength",
+      "type": "string",
+      "default": "15",
+      "presets": [
+        "8",
+        "15",
+        "30",
+        "50"
+      ],
+      "min": 1,
+      "max": 100,
+      "unit": "%",
+      "hint": "15 = subtle · 40 = intense"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.zoomblur"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,53 @@
+{
+  "id": "rotate",
+  "name": "Rotate",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "turn",
+    "rot",
+    "spin",
+    "tilt",
+    "clockwise",
+    "counterclockwise"
+  ],
+  "category": "transform",
+  "icon": "rotate-cw",
+  "priority": 8,
+  "description": "Turn by any angle",
+  "inputTypes": [
+    "@image",
+    "@video"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "angle",
+      "label": "Angle",
+      "type": "string",
+      "default": "90",
+      "presets": [
+        "90",
+        "180",
+        "270",
+        "-90",
+        "15",
+        "-15"
+      ],
+      "min": -360,
+      "max": 360,
+      "unit": "°",
+      "hint": "90 = clockwise · -90 = counterclockwise · 15 or -15 = a tilt (canvas grows, corners transparent)"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "geo.rotate"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -3,15 +3,22 @@
   "name": "Set Output Folder",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["output folder", "destination"],
+  "aliases": [
+    "output folder",
+    "destination"
+  ],
   "category": "meta",
-  "description": "Choose where exports are saved",
-  "inputTypes": ["*"],
+  "icon": "folder-output",
+  "description": "Choose where exports go",
+  "inputTypes": [
+    "*"
+  ],
   "outputType": "none",
   "params": [],
-  "driver": "meta",
   "isMeta": true,
-  "executor": {"type": "meta"},
+  "executor": {
+    "type": "meta"
+  },
   "permissions": [],
   "dangerLevel": 0
 }

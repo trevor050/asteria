@@ -1,0 +1,32 @@
+{
+  "id": "count_colors",
+  "name": "Count Colors",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "unique colors",
+    "unique colours",
+    "how many colors",
+    "how many colours",
+    "colour count",
+    "color count"
+  ],
+  "category": "info",
+  "icon": "hash",
+  "description": "Unique and most common colors (.json)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".json",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "info.countcolors"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

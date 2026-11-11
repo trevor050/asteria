@@ -1,826 +1,1700 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { flushSync, onMount, tick, untrack } from 'svelte'
   import { Clipboard } from '@wailsio/runtime'
-  import { api, AppEvents, FILE_DROP_EVENT } from './lib/api'
-  import type { ParamDef, SessionSnapshot, Skill, SkillResult, WorkingFile } from './lib/api'
+  import { api, events, on } from './lib/api'
+  import type { AddResult, AddonView, FileView, Progress, Result, Settings, State, Suggestion, TrustRequest } from './lib/api'
+  import CommandBar from './lib/CommandBar.svelte'
+  import FileTile from './lib/FileTile.svelte'
+  import QuickLook from './lib/QuickLook.svelte'
+  import Hero from './lib/Hero.svelte'
+  import SettingsPanel from './lib/Settings.svelte'
+  import AddonPrompt from './lib/AddonPrompt.svelte'
+  import { isTyping, plural, shortcut } from './lib/format'
+  import { motionReduced, setAppearance, setOverrides } from './lib/theme'
+  import { loadSkillMeta } from './lib/skillmeta.svelte'
 
-  type SessionSnapshotExt = SessionSnapshot & { accentColor?: string }
+  type Toast = { id: number; text: string; tone: 'info' | 'error'; detail?: string; actions?: { label: string; run: () => void }[] }
 
-  let query = ''
-  let skills: Skill[] = []
-  let files: WorkingFile[] = []
-  let session: SessionSnapshotExt = {
-    mode: 'batch' as any,
-    outputFolder: '',
-    namingPattern: '{name}_{skill}.{ext}',
-    accentColor: '99,102,241'
+  let st = $state<State | null>(null)
+  let files: FileView[] = $state([])
+  let selected: string[] = $state([])
+  let activeId = $state<string | null>(null)
+  let busy = $state(false)
+  let working: string[] = $state([])
+  let progress = $state<Progress | null>(null)
+  let toasts: Toast[] = $state([])
+  let quickId = $state<string | null>(null)
+  let trust = $state<{ req: TrustRequest; s: Suggestion; params: Record<string, unknown> } | null>(null)
+  let menu = $state<{ x: number; y: number } | null>(null)
+  let refreshKey = $state(0)
+  // Skills typed while another one is running run next, in order.
+  let queue: { s: Suggestion; params: Record<string, unknown> }[] = $state([])
+  let bar: CommandBar | undefined = $state()
+  let trayEl: HTMLElement | undefined = $state()
+  // Presentation only: where the newest batch starts (for the staggered
+  // entrance), how many skills exist (shown while dragging files in), and a
+  // short glow after an operation finishes.
+  let addedFrom = $state(0)
+  let skillCount = $state(0)
+  let settingsOpen = $state(false)
+  // An add-on a skill needs: asked for in plain words, then the skill runs.
+  let needAddon = $state<{ addon: AddonView; s?: Suggestion; params?: Record<string, unknown> } | null>(null)
+  async function askForAddon(id: string, s?: Suggestion, params?: Record<string, unknown>) {
+    const all = (await api.Addons()) ?? []
+    const addon = all.find((x) => x.id === id)
+    if (addon) needAddon = { addon, s, params }
   }
-
-  const applyAccent = (color?: string) => {
-    const c = typeof color === 'string' && color.trim() ? color.trim() : '99,102,241'
-    const rgb = parseColorToRgb(c)
-    if (!rgb) return
-    const hover = darkenRgb(rgb.r, rgb.g, rgb.b, 0.10)
-
-    document.documentElement.style.setProperty('--accent', `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`)
-    document.documentElement.style.setProperty('--accent-hover', `rgb(${hover.r}, ${hover.g}, ${hover.b})`)
-    document.documentElement.style.setProperty('--accent-light', `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.16)`)
+  function addonReady() {
+    const n = needAddon
+    needAddon = null
+    void refreshState()
+    // The suggestion was ranked before the add-on existed; it no longer
+    // misses anything, so run it straight away.
+    if (n?.s) run({ ...n.s, missing: [] }, n.params ?? {})
   }
-
-  const parseColorToRgb = (input: string): { r: number; g: number; b: number } | null => {
-    const s = input.trim()
-
-    if (s.startsWith('#')) {
-      const raw = s.replace('#', '').trim()
-      const full = raw.length === 3 ? raw.split('').map((c) => c + c).join('') : raw
-      if (!/^[0-9a-fA-F]{6}$/.test(full)) return null
-      const n = parseInt(full, 16)
-      return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 }
-    }
-
-    const rgbFn = s.match(/^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/i)
-    if (rgbFn) {
-      return clampRgb(parseInt(rgbFn[1], 10), parseInt(rgbFn[2], 10), parseInt(rgbFn[3], 10))
-    }
-
-    const triplet = s.match(/^(\d{1,3})\s*[,\s]\s*(\d{1,3})\s*[,\s]\s*(\d{1,3})$/)
-    if (triplet) {
-      return clampRgb(parseInt(triplet[1], 10), parseInt(triplet[2], 10), parseInt(triplet[3], 10))
-    }
-
-    return null
+  async function refreshState() {
+    const s = await api.GetState()
+    if (st) st = { ...st, tools: s.tools }
+    refreshKey++
   }
-
-  const clampRgb = (r: number, g: number, b: number): { r: number; g: number; b: number } | null => {
-    if ([r, g, b].some((v) => Number.isNaN(v) || v < 0 || v > 255)) return null
-    return { r, g, b }
-  }
-
-  const darkenRgb = (r: number, g: number, b: number, amount: number) => {
-    const f = 1 - Math.min(1, Math.max(0, amount))
-    return {
-      r: Math.round(r * f),
-      g: Math.round(g * f),
-      b: Math.round(b * f)
-    }
-  }
-
-  const isPresetObject = (value: any): value is { label?: any; value?: any } => {
-    return (
-      !!value &&
-      typeof value === 'object' &&
-      (Object.prototype.hasOwnProperty.call(value, 'value') || Object.prototype.hasOwnProperty.call(value, 'label'))
-    )
-  }
-
-  const presetValue = (value: any): string => {
-    if (isPresetObject(value)) return String(value.value ?? value.label ?? '')
-    return String(value)
-  }
-
-  const presetLabel = (value: any): string => {
-    if (isPresetObject(value)) return String(value.label ?? value.value ?? '')
-    return String(value)
-  }
-
-  const presetSwatchCss = (value: any): string => {
-    const rgb = parseColorToRgb(presetValue(value))
-    if (!rgb) return ''
-    return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`
-  }
-
-  const withBusy = async <T,>(text: string, total: number, fn: () => Promise<T>): Promise<T | undefined> => {
-    if (isBusy) return
-    isBusy = true
-    busyText = text
-    busyTotal = total
-    try {
-      return await fn()
-    } finally {
-      isBusy = false
-      busyText = ''
-      busyTotal = 0
-    }
-  }
-
-  let activeFileId: string | null = null
-  let selectedFileIds: Set<string> = new Set()
-  let highlightIndex = 0
-  let isParamMode = false
-  let activeSkill: Skill | null = null
-  let activeParam: ParamDef | null = null
-  let paramValue = ''
-  let isBusy = false
-  let busyText = ''
-  let busyTotal = 0
-  let toast = ''
-  let commandInput: HTMLInputElement | null = null
-  let showDropdown = false
-
-  // Context menu state
-  let contextMenu: { x: number; y: number; fileId: string } | null = null
-
-  $: selectionCount = selectedFileIds.size > 0 ? selectedFileIds.size : activeFileId ? 1 : 0
-
-  const showToast = (message: string) => {
-    toast = message
-    setTimeout(() => (toast = ''), 2400)
-  }
-
-  const loadSession = async () => {
-    try {
-      session = await api.getSession()
-    } catch (e) {
-      console.error('Failed to load session:', e)
-    }
-  }
-
-  const inputTypes = (): string[] => {
-    if (session.mode === 'per_file' && activeFileId) {
-      const file = files.find((item) => item.id === activeFileId)
-      return file ? [file.currentExtension] : []
-    }
-    const types = new Set(files.map((file) => file.currentExtension))
-    return Array.from(types)
-  }
-
-  const refreshSkills = async () => {
-    try {
-      skills = await api.getSkills(query, inputTypes())
-      highlightIndex = 0
-    } catch (e) {
-      console.error('Failed to refresh skills:', e)
-    }
-  }
-
-  const openPicker = async () => {
-    try {
-      const picked = await api.openFilesDialog()
-      if (picked && picked.length) {
-        await addFiles(picked)
-      }
-    } catch (error) {
-      console.error('Failed to open file picker:', error)
-    }
-  }
-
-  const addFiles = async (paths: string[]) => {
-    try {
-      const added = await api.addFiles(paths)
-      if (added && added.length) {
-        files = [...files, ...added]
-        if (!activeFileId) {
-          activeFileId = added[0].id
-        }
-        await refreshSkills()
-      }
-    } catch (e) {
-      console.error('Failed to add files:', e)
-    }
-  }
-
-  const updateFiles = (updated: WorkingFile[]) => {
-    if (!updated || updated.length === 0) return
-    const map = new Map(files.map((file) => [file.id, file]))
-    updated.forEach((file) => map.set(file.id, file))
-    files = Array.from(map.values())
-  }
-
-  const resetCommand = () => {
-    query = ''
-    isParamMode = false
-    activeSkill = null
-    activeParam = null
-    paramValue = ''
-    showDropdown = false
-    refreshSkills()
-  }
-
-  const startParamMode = (skill: Skill) => {
-    activeSkill = skill
-    activeParam = skill.params[0]
-    if (activeParam) {
-      paramValue = String(activeParam.default ?? '')
-      isParamMode = true
-      showDropdown = false
-    } else {
-      isParamMode = false
-    }
-  }
-
-  const selectSkill = async (skill: Skill) => {
-    if (skill.params && skill.params.length > 0) {
-      startParamMode(skill)
+  // Height of the open suggestion list, so the files under it fade out
+  // instead of being sliced.
+  let veil = $state(0)
+  // Processing glow: 'run' while work takes longer than a moment, then a
+  // short 'ok' or 'fail' resolve. Quick operations never light up.
+  let pulse = $state<'off' | 'run' | 'ok' | 'fail'>('off')
+  let pulseTimer: ReturnType<typeof setTimeout> | undefined
+  let runFailed = false
+  // Live preview of a skill being chosen or adjusted, on a reduced copy.
+  let live = $state<{ fileId: string; url: string } | null>(null)
+  let liveSeq = 0
+  let liveTimer: ReturnType<typeof setTimeout> | undefined
+  function preview(s: Suggestion | null, params?: Record<string, unknown>) {
+    clearTimeout(liveTimer)
+    const mine = ++liveSeq
+    const fid = heroFile?.id ?? activeId ?? targets[0]
+    if (!s || !fid || busy) {
+      live = null
       return
     }
-    await applySkill(skill, {})
-  }
-
-  const getTargetFileIds = (): string[] => {
-    // If we have selected files, use those
-    if (selectedFileIds.size > 0) {
-      return Array.from(selectedFileIds)
-    }
-    if (session.mode === 'per_file' && activeFileId) {
-      return [activeFileId]
-    }
-    return files.map((file) => file.id)
-  }
-
-  const getSelectionIds = (): string[] => {
-    if (selectedFileIds.size > 0) {
-      return Array.from(selectedFileIds)
-    }
-    if (activeFileId) {
-      return [activeFileId]
-    }
-    return []
-  }
-
-  const getSelectionFiles = (): WorkingFile[] => {
-    const ids = getSelectionIds()
-    if (!ids.length) return []
-    const idSet = new Set(ids)
-    return files.filter((file) => idSet.has(file.id))
-  }
-
-  const syncActiveToSelection = (selection: Set<string>) => {
-    if (selection.size === 0) return
-    if (!activeFileId || !selection.has(activeFileId)) {
-      const first = files.find((file) => selection.has(file.id))
-      if (first) {
-        activeFileId = first.id
-      }
-    }
-  }
-
-  const handleFileClick = (fileId: string, event: MouseEvent) => {
-    if (event.metaKey || event.ctrlKey) {
-      // Cmd/Ctrl+click: toggle selection
-      const newSelection = new Set(selectedFileIds)
-      if (newSelection.size === 0 && activeFileId) {
-        newSelection.add(activeFileId)
-      }
-      if (newSelection.has(fileId)) {
-        newSelection.delete(fileId)
-      } else {
-        newSelection.add(fileId)
-      }
-      selectedFileIds = newSelection
-      activeFileId = fileId
-    } else if (event.shiftKey && activeFileId) {
-      // Shift+click: range selection
-      const activeIndex = files.findIndex((f) => f.id === activeFileId)
-      const clickedIndex = files.findIndex((f) => f.id === fileId)
-      const start = Math.min(activeIndex, clickedIndex)
-      const end = Math.max(activeIndex, clickedIndex)
-      const newSelection = new Set<string>()
-      for (let i = start; i <= end; i++) {
-        newSelection.add(files[i].id)
-      }
-      selectedFileIds = newSelection
-      activeFileId = fileId
-    } else {
-      // Normal click: select single, clear others
-      selectedFileIds = new Set()
-      activeFileId = fileId
-    }
-  }
-
-  const handleContextMenu = (fileId: string, event: MouseEvent) => {
-    event.preventDefault()
-    // If right-clicking on unselected file, select it
-    if (!selectedFileIds.has(fileId)) {
-      selectedFileIds = new Set([fileId])
-      activeFileId = fileId
-    }
-    contextMenu = { x: event.clientX, y: event.clientY, fileId }
-  }
-
-  const closeContextMenu = () => {
-    contextMenu = null
-  }
-
-  const contextExportSelected = async () => {
-    closeContextMenu()
-    const ids = getSelectionIds()
-    if (ids.length === 0) return
-    try {
-      const outputs = await api.exportFiles(ids)
-      if (outputs && outputs.length) {
-        showToast(`Exported ${outputs.length} file${outputs.length > 1 ? 's' : ''}`)
-      }
-    } catch (error) {
-      showToast('Export failed')
-    }
-  }
-
-  const contextRemoveSelected = () => {
-    closeContextMenu()
-    const ids = getSelectionIds()
-    files = files.filter((f) => !ids.includes(f.id))
-    selectedFileIds = new Set()
-    if (activeFileId && ids.includes(activeFileId)) {
-      activeFileId = files.length > 0 ? files[0].id : null
-    }
-  }
-
-  const contextSelectAll = () => {
-    closeContextMenu()
-    const selection = new Set(files.map((f) => f.id))
-    selectedFileIds = selection
-    syncActiveToSelection(selection)
-  }
-
-  const contextClearSelection = () => {
-    closeContextMenu()
-    selectedFileIds = new Set()
-  }
-
-  const contextInvertSelection = () => {
-    closeContextMenu()
-    if (!files.length) return
-    const current = new Set(getSelectionIds())
-    const next = new Set<string>()
-    files.forEach((file) => {
-      if (!current.has(file.id)) {
-        next.add(file.id)
-      }
-    })
-    selectedFileIds = next
-    syncActiveToSelection(next)
-  }
-
-  const contextCopyNames = async () => {
-    closeContextMenu()
-    const selection = getSelectionFiles()
-    if (!selection.length) return
-    const text = selection.map((file) => `${file.name}${file.currentExtension}`).join('\n')
-    try {
-      await Clipboard.SetText(text)
-      showToast(`Copied ${selection.length} name${selection.length > 1 ? 's' : ''}`)
-    } catch (error) {
-      showToast('Copy failed')
-    }
-  }
-
-  const contextCopyPaths = async () => {
-    closeContextMenu()
-    const selection = getSelectionFiles()
-    if (!selection.length) return
-    const text = selection.map((file) => file.originalPath || file.workingPath).join('\n')
-    try {
-      await Clipboard.SetText(text)
-      showToast(`Copied ${selection.length} path${selection.length > 1 ? 's' : ''}`)
-    } catch (error) {
-      showToast('Copy failed')
-    }
-  }
-
-  const applySkill = async (skill: Skill, params: Record<string, unknown>) => {
-    const targets = getTargetFileIds()
-    await withBusy(`Applying ${skill.name}`, targets.length, async () => {
+    liveTimer = setTimeout(async () => {
       try {
-        const result = await api.executeSkill(targets, skill.id, params)
-        handleSkillResult(result, skill)
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error)
-        showToast(message || 'Something went wrong')
-        console.error(error)
-      } finally {
-        resetCommand()
+        const url = await api.PreviewSkill(fid, s.id, params ?? {}, 1400)
+        if (mine === liveSeq) live = { fileId: fid, url }
+      } catch {
+        if (mine === liveSeq) live = null
       }
+    }, 40)
+  }
+
+  let settings = $derived(st?.settings)
+  let perFile = $derived(settings?.mode === 'per_file')
+  let targets = $derived.by(() => {
+    if (perFile) return activeId ? [activeId] : files.slice(0, 1).map((f) => f.id)
+    if (selected.length) return files.filter((f) => selected.includes(f.id)).map((f) => f.id)
+    return files.map((f) => f.id)
+  })
+  let exportable = $derived(files.filter((f) => targets.includes(f.id) && ((f.steps?.length ?? 0) > 0 || f.origin === 'combined')))
+  let quickFile = $derived(files.find((f) => f.id === quickId) ?? null)
+  // One file, or "Focused file" with several: show it as the subject of the
+  // window instead of a one-item grid.
+  let heroFile = $derived(files.length === 1 ? files[0] : perFile && files.length > 1 ? (files.find((f) => f.id === activeId) ?? files[0]) : null)
+  let heroIndex = $derived(heroFile ? files.findIndex((f) => f.id === heroFile.id) : -1)
+  // What is on screen lags the wanted layout by one view transition, so the
+  // file can morph between its tile and the large preview.
+  let layout = $state<'empty' | 'grid' | 'solo'>('empty')
+  let wantLayout = $derived<'empty' | 'grid' | 'solo'>(heroFile ? 'solo' : files.length ? 'grid' : 'empty')
+  $effect(() => {
+    const want = wantLayout
+    if (untrack(() => layout) === want) return
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown }
+    if (!doc.startViewTransition || motionReduced() || untrack(() => layout) === 'empty') {
+      layout = want
+      return
+    }
+    doc.startViewTransition(() => {
+      layout = want
+      flushSync()
     })
+  })
+  let ffmpeg = $derived(st?.tools?.find((t) => t.name === 'ffmpeg'))
+  let outputLabel = $derived(
+    settings?.outputFolder ? settings.outputFolder.split(/[\\/]/).filter(Boolean).slice(-2).join('/') : 'next to the originals',
+  )
+
+  // ---- toasts --------------------------------------------------------------
+
+  let toastSeq = 0
+  function toast(text: string, opts: Partial<Omit<Toast, 'id' | 'text'>> = {}) {
+    const t: Toast = { id: ++toastSeq, text, tone: opts.tone ?? 'info', detail: opts.detail, actions: opts.actions }
+    toasts = [...toasts.slice(-2), t]
+    const ttl = t.tone === 'error' ? 9000 : t.actions?.length ? 7000 : 3500
+    setTimeout(() => dismiss(t.id), ttl)
+  }
+  function dismiss(id: number) {
+    toasts = toasts.filter((t) => t.id !== id)
   }
 
-  const handleSkillResult = (result: SkillResult, skill: Skill) => {
-    if (result?.session) {
-      session = result.session as SessionSnapshotExt
-      applyAccent(session.accentColor)
+  // ---- appearance ----------------------------------------------------------
+
+  function applySettings(s: Settings) {
+    applyAccent(s.accentColor)
+    setAppearance(s.appearance)
+    setOverrides(s)
+  }
+
+  async function changeSetting(key: string, value: string) {
+    const res = await api.UpdateSettings(key, value)
+    // The sheet shows the result of every change itself; no toast.
+    if (res.outcome) res.outcome.message = ''
+    await handle(res)
+    if (key === 'mode') refreshKey++
+  }
+
+  async function openSkillsFolder() {
+    await handle(await api.Apply([], 'open_skills_folder', {}))
+  }
+
+  function applyAccent(raw?: string) {
+    const m = (raw ?? '').match(/^\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*$/)
+    const hex = (raw ?? '').match(/^#?([0-9a-f]{6})$/i)
+    let rgb = [112, 128, 150]
+    if (m) rgb = [m[1], m[2], m[3]].map((v) => Math.min(255, Number(v)))
+    else if (hex) rgb = [0, 2, 4].map((i) => parseInt(hex[1].slice(i, i + 2), 16))
+    document.documentElement.style.setProperty('--accent-rgb', rgb.join(' '))
+  }
+
+  // ---- files ---------------------------------------------------------------
+
+  function onAdded(res: AddResult) {
+    const added = res.added ?? []
+    if (added.length) {
+      addedFrom = files.length
+      files = [...files, ...added]
+      if (!activeId) activeId = added[0].id
+      refreshKey++
     }
-    if (result?.updatedFiles?.length) {
-      updateFiles(result.updatedFiles)
+    if (res.errors?.length) {
+      toast(`Couldn't add ${plural(res.errors.length, 'file')}`, { tone: 'error', detail: res.errors.slice(0, 3).join('\n') })
     }
-    if (skill.id === 'clear_all') {
-      files = []
-      activeFileId = null
-    }
-    if (result?.message) {
-      showToast(result.message)
+    if (res.duplicates) toast(`${plural(res.duplicates, 'file')} already in the tray`)
+    if (res.truncated) toast('Stopped at 5,000 files from that folder', { tone: 'error' })
+    void tick().then(() => bar?.focus())
+  }
+
+  async function pickFiles() {
+    try {
+      onAdded(await api.PickFiles())
+    } catch (e) {
+      toast(String(e), { tone: 'error' })
     }
   }
 
-  const confirmParam = async () => {
-    if (!activeSkill || !activeParam) return
-    const value = parseParam(activeParam, paramValue)
-    await applySkill(activeSkill, { [activeParam.name]: value })
+  async function syncFiles() {
+    const s = await api.GetState()
+    st = s
+    files = s.files ?? []
+    const ids = new Set(files.map((f) => f.id))
+    selected = selected.filter((id) => ids.has(id))
+    if (activeId && !ids.has(activeId)) activeId = files[0]?.id ?? null
+    if (quickId && !ids.has(quickId)) quickId = null
+    refreshKey++
   }
 
-  const parseParam = (param: ParamDef, raw: string): unknown => {
-    if (param.type === 'int') {
-      return parseInt(raw, 10)
-    }
-    if (param.type === 'float') {
-      return parseFloat(raw)
-    }
-    return raw
+  async function removeFromTray(ids: string[]) {
+    if (!ids.length || busy) return
+    await api.RemoveFiles(ids)
+    files = files.filter((f) => !ids.includes(f.id))
+    selected = selected.filter((id) => !ids.includes(id))
+    if (activeId && ids.includes(activeId)) activeId = files[0]?.id ?? null
+    refreshKey++
   }
 
-  const cyclePreset = () => {
-    if (!activeParam?.presets?.length) return
-    const presets = activeParam.presets.map(presetValue)
-    const currentIndex = presets.indexOf(paramValue)
-    const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % presets.length : 0
-    paramValue = presets[nextIndex]
-  }
+  // ---- running skills -------------------------------------------------------
 
-  const onCommandKeydown = async (event: KeyboardEvent) => {
-    if (event.key === 'Tab' && isParamMode) {
-      event.preventDefault()
-      cyclePreset()
-      return
-    }
-    if (event.key === 'Escape') {
-      event.preventDefault()
-      if (isParamMode) {
-        resetCommand()
-      } else {
-        showDropdown = false
-        query = ''
-      }
-      return
-    }
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      if (isParamMode) {
-        await confirmParam()
+  async function handle(res: Result, s?: Suggestion, params?: Record<string, unknown>) {
+    const out = res.outcome
+    if (res.error) {
+      if (res.errorKind === 'trust' && res.trust && s) {
+        trust = { req: res.trust, s, params: params ?? {} }
         return
       }
-      const selected = skills[highlightIndex]
-      if (selected) {
-        await selectSkill(selected)
+      if (res.errorKind === 'missing-tool' && res.addon && (res.addon.state === 'available' || res.addon.state === 'manual')) {
+        needAddon = { addon: res.addon, s, params }
+        return
       }
+      if (res.errorKind === 'missing-tool' && res.tool) {
+        const hint = res.tool.hint
+        toast(`${s?.name ?? 'This skill'} needs ${res.tool.name}`, {
+          tone: 'error',
+          detail: hint,
+          actions: [{ label: 'Copy command', run: () => void Clipboard.SetText(hint) }],
+        })
+        return
+      }
+      runFailed = true
+      toast(res.error, { tone: 'error' })
+      return
     }
-    if (!isParamMode && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
-      event.preventDefault()
-      if (!skills.length) return
-      const delta = event.key === 'ArrowDown' ? 1 : -1
-      highlightIndex = (highlightIndex + delta + skills.length) % skills.length
+    if (res.settings && st) {
+      st = { ...st, settings: res.settings }
+      applySettings(res.settings)
+    }
+    if (out.added?.length || out.removed?.length) {
+      await syncFiles()
+      if (out.added?.length) activeId = out.added[0].id
+    } else if (out.updated?.length) {
+      const map = new Map(out.updated.map((f) => [f.id, f]))
+      files = files.map((f) => map.get(f.id) ?? f)
+      refreshKey++
+    }
+    if (res.exported?.length) {
+      const first = res.exported[0].outputPath
+      toast(out.message, { actions: [{ label: 'Show in folder', run: () => void api.Reveal(first) }] })
+    } else if (out.message) {
+      const undoable = s && !s.isMeta && (out.updated?.length || out.added?.length) && !out.cancelled
+      toast(out.message, undoable ? { actions: [{ label: 'Undo', run: undo }] } : {})
+    }
+    if (out.failed?.length) {
+      runFailed = true
+      toast(`${plural(out.failed.length, 'file')} failed`, {
+        tone: 'error',
+        detail: out.failed
+          .slice(0, 3)
+          .map((p) => `${p.name}: ${p.reason}`)
+          .join('\n'),
+      })
     }
   }
 
-  const onQueryInput = async () => {
-    showDropdown = true
-    await refreshSkills()
-  }
-
-  const onInputFocus = () => {
-    showDropdown = true
-  }
-
-  const onInputBlur = () => {
-    setTimeout(() => {
-      showDropdown = false
-    }, 150)
-  }
-
-  const removeSkill = async (fileId: string, index: number) => {
-    if (isBusy) return
-    isBusy = true
+  async function busyRun(ids: string[], fn: () => Promise<void>, label = '') {
+    if (busy) {
+      toast('Still working on the last one. Press Esc to cancel it.')
+      return
+    }
+    busy = true
+    working = ids
+    runFailed = false
+    progress = label ? { label, done: 0, total: ids.length, fraction: 0, current: '' } : null
+    clearTimeout(pulseTimer)
+    pulseTimer = setTimeout(() => (pulse = 'run'), 350)
     try {
-      const updated = await api.removeSkill(fileId, index)
-      updateFiles([updated])
-      await refreshSkills()
+      await fn()
+    } catch (e) {
+      runFailed = true
+      toast(String(e), { tone: 'error' })
     } finally {
-      isBusy = false
-    }
-  }
-
-  const toggleMode = async (mode: 'batch' | 'per_file') => {
-    try {
-      const snapshot = await api.setMode(mode)
-      session = snapshot as SessionSnapshotExt
-      applyAccent(session.accentColor)
-      if (mode === 'per_file' && !activeFileId && files.length) {
-        activeFileId = files[0].id
+      busy = false
+      working = []
+      progress = null
+      clearTimeout(pulseTimer)
+      if (pulse === 'run') {
+        pulse = runFailed ? 'fail' : 'ok'
+        pulseTimer = setTimeout(() => (pulse = 'off'), runFailed ? 2600 : 1400)
+      } else {
+        pulse = 'off'
       }
-      await refreshSkills()
-    } catch (error) {
-      console.error('Failed to toggle mode:', error)
+    }
+    const next = queue.shift()
+    if (next) {
+      queue = queue
+      run(next.s, next.params)
     }
   }
 
-  const exportAll = async () => {
+  function run(s: Suggestion, params: Record<string, unknown>) {
+    if (!s.isMeta && !files.length) {
+      toast('Add some files first: drop them here or press ' + shortcut('O'))
+      return
+    }
+    if (s.addon && s.missing?.length) {
+      void askForAddon(s.addon, s, params)
+      return
+    }
+    if (busy) {
+      queue = [...queue, { s, params }]
+      toast(`Queued ${s.name}${Object.values(params)[0] !== undefined ? ' ' + Object.values(params)[0] : ''}`)
+      return
+    }
+    const ids = targets
+    void busyRun(s.isMeta ? [] : ids, async () => {
+      const res = await api.Apply(ids, s.id, params)
+      await handle(res, s, params)
+    }, s.isMeta ? '' : s.name)
+  }
+
+  async function allowAndRun() {
+    if (!trust) return
+    const t = trust
+    trust = null
+    await api.TrustSkill(t.req.skillId)
+    run(t.s, t.params)
+  }
+
+  function removeStep(fileId: string, index: number) {
+    void busyRun([fileId], async () => handle(await api.RemoveStep(fileId, index)), 'Replaying')
+  }
+
+  function undo() {
+    void busyRun([], async () => handle(await api.Undo()))
+  }
+
+  function exportFiles() {
+    if (!exportable.length) {
+      toast('Nothing to export yet: apply a skill first')
+      return
+    }
+    const ids = exportable.map((f) => f.id)
+    void busyRun([], async () => handle(await api.Export(ids)), 'Exporting')
+  }
+
+  async function pickOutput(quiet = false) {
+    const res = await api.PickOutputFolder()
+    if (quiet && res.outcome) res.outcome.message = ''
+    await handle(res)
+  }
+
+  async function resetOutput() {
+    await handle(await api.UpdateSettings('outputFolder', ''))
+  }
+
+  async function setMode(mode: 'batch' | 'per_file') {
+    await handle(await api.UpdateSettings('mode', mode))
+    refreshKey++
+  }
+
+  // ---- selection -----------------------------------------------------------
+
+  function select(id: string, e: MouseEvent) {
+    menu = null
+    if (e.metaKey || e.ctrlKey) {
+      const base = selected.length ? selected : activeId && activeId !== id ? [activeId] : []
+      selected = base.includes(id) ? base.filter((x) => x !== id) : [...base, id]
+    } else if (e.shiftKey && activeId) {
+      const a = files.findIndex((f) => f.id === activeId)
+      const b = files.findIndex((f) => f.id === id)
+      const [lo, hi] = a < b ? [a, b] : [b, a]
+      selected = files.slice(lo, hi + 1).map((f) => f.id)
+    } else {
+      selected = []
+    }
+    activeId = id
+  }
+
+  function moveActive(delta: number) {
     if (!files.length) return
-    const targets = getTargetFileIds()
-    await withBusy('Exporting', targets.length, async () => {
-      try {
-        const outputs = await api.exportFiles(targets)
-        if (outputs && outputs.length) {
-          showToast(`Exported ${outputs.length} file${outputs.length > 1 ? 's' : ''}`)
-        }
-      } catch (error) {
-        showToast('Export failed')
-        console.error(error)
+    const i = Math.max(0, files.findIndex((f) => f.id === activeId))
+    const next = files[Math.min(files.length - 1, Math.max(0, i + delta))]
+    activeId = next.id
+    if (quickId) quickId = next.id
+    trayEl?.querySelector(`[data-id="${next.id}"]`)?.scrollIntoView({ block: 'nearest' })
+  }
+
+  function columns(): number {
+    const tile = trayEl?.querySelector('.grid > *') as HTMLElement | null
+    if (!tile || !trayEl) return 1
+    return Math.max(1, Math.round((trayEl.querySelector('.grid') as HTMLElement).clientWidth / tile.offsetWidth))
+  }
+
+  function openMenu(id: string, e: MouseEvent) {
+    e.preventDefault()
+    if (!selected.includes(id)) {
+      selected = []
+      activeId = id
+    }
+    menu = { x: Math.min(e.clientX, window.innerWidth - 220), y: Math.min(e.clientY, window.innerHeight - 260) }
+  }
+
+  let menuIds = $derived(selected.length ? selected : activeId ? [activeId] : [])
+
+  async function copyPaths() {
+    const paths = files.filter((f) => menuIds.includes(f.id)).map((f) => f.originalPath || f.displayName)
+    await Clipboard.SetText(paths.join('\n'))
+    toast(`Copied ${plural(paths.length, 'path')}`)
+    menu = null
+  }
+
+  async function countSkills() {
+    const all = (await api.Search('', [])) ?? []
+    skillCount = all.filter((s) => !s.isMeta).length
+  }
+
+  let phase = $derived(pulse === 'run' ? 'working' : pulse === 'ok' ? 'settled' : files.length ? 'ready' : 'idle')
+  let soloMulti = $derived(layout === 'solo' && files.length > 1)
+  // The last file shown large, kept while the layout transitions away.
+  let lastHero = $state<FileView | null>(null)
+  $effect(() => {
+    if (heroFile) lastHero = heroFile
+  })
+  let subjectId = $derived(heroFile?.id ?? lastHero?.id ?? activeId)
+
+  // ---- keyboard ------------------------------------------------------------
+
+  function onkeydown(e: KeyboardEvent) {
+    const cmd = e.metaKey || e.ctrlKey
+    const typing = isTyping(e.target)
+    const key = e.key.toLowerCase()
+    if (trust || quickId || needAddon) return
+    if (cmd && e.key === ',') {
+      e.preventDefault()
+      settingsOpen = !settingsOpen
+      if (!settingsOpen) bar?.focus()
+      return
+    }
+    if (settingsOpen) {
+      if (e.key === 'Escape') {
+        settingsOpen = false
+        bar?.focus()
       }
-    })
-  }
-
-  const clearAll = async () => {
-    await withBusy('Clearing', files.length, async () => {
-      try {
-        await api.clearAll()
-        files = []
-        activeFileId = null
-        await refreshSkills()
-      } catch (e) {
-        console.error('Failed to clear:', e)
+      return
+    }
+    if (soloMulti && (e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !cmd && !e.altKey && !(typing && (e.target as HTMLInputElement).value)) {
+      e.preventDefault()
+      moveActive(e.key === 'ArrowRight' ? 1 : -1)
+      return
+    }
+    if (cmd && key === 'o') {
+      e.preventDefault()
+      void pickFiles()
+    } else if (cmd && key === 'k') {
+      e.preventDefault()
+      bar?.focus()
+    } else if (cmd && e.key === 'Enter') {
+      e.preventDefault()
+      exportFiles()
+    } else if (cmd && key === 'z' && !e.shiftKey && !(typing && (e.target as HTMLInputElement).value)) {
+      e.preventDefault()
+      undo()
+    } else if (cmd && key === 'a' && !(typing && (e.target as HTMLInputElement).value)) {
+      e.preventDefault()
+      selected = files.map((f) => f.id)
+    } else if (cmd && key === 'y' && activeId) {
+      e.preventDefault()
+      quickId = activeId
+    } else if (e.key === 'Escape') {
+      if (busy) {
+        e.preventDefault()
+        queue = []
+        void api.Cancel()
+      } else if (menu) {
+        menu = null
+      } else if (selected.length) {
+        selected = []
+      } else if (soloMulti) {
+        void setMode('batch')
       }
-    })
-  }
-
-  const displaySkillName = (skillId: string): string => {
-    const found = skills.find((item) => item.id === skillId)
-    if (found) return found.name
-    return skillId.replace(/_/g, ' ')
-  }
-
-  const truncatePath = (path: string): string => {
-    if (!path) return 'Same as original'
-    const parts = path.split('/')
-    if (parts.length <= 3) return path
-    return '.../' + parts.slice(-2).join('/')
-  }
-
-  onMount(async () => {
-    await loadSession()
-    applyAccent(session.accentColor)
-    await refreshSkills()
-
-    const unsubSkillsUpdated = AppEvents.on('asteria:skills-updated', () => {
-      void refreshSkills()
-    })
-
-    // Listen for native file drop events (Wails runtime). Keep compatible with
-    // both the built-in event name and our backend-emitted event.
-    const onDrop = (ev: { name: string; data: any }) => {
-      const payload = ev?.data
-      const paths = payload?.filenames || payload?.files || payload?.paths || payload
-      if (Array.isArray(paths)) {
-        void addFiles(paths)
+    } else if (!typing) {
+      if (e.key === ' ' && activeId) {
+        e.preventDefault()
+        quickId = activeId
+      } else if (e.key === 'ArrowRight') moveActive(1)
+      else if (e.key === 'ArrowLeft') moveActive(-1)
+      else if (e.key === 'ArrowDown') moveActive(columns())
+      else if (e.key === 'ArrowUp') moveActive(-columns())
+      else if ((e.key === 'Backspace' || e.key === 'Delete') && menuIds.length) {
+        e.preventDefault()
+        void removeFromTray(menuIds)
+      } else if (e.key.length === 1 && !cmd && !e.altKey) {
+        e.preventDefault()
+        bar?.focus(e.key)
       }
     }
-    const unsubFileDrop = AppEvents.on(FILE_DROP_EVENT, onDrop)
-    const unsubFileDropCompat = AppEvents.on('asteria:file-drop', onDrop)
+  }
 
-    const onKey = (event: KeyboardEvent) => {
-      if (event.metaKey && event.key.toLowerCase() === 'k') {
-        event.preventDefault()
-        commandInput?.focus()
-        showDropdown = true
+  onMount(() => {
+    const offs = [
+      on<Progress>(events.progress, (p) => {
+        if (busy) progress = p
+      }),
+      on<AddResult>(events.filesAdded, onAdded),
+      on<string[] | null>(events.skillsChanged, (problems) => {
+        refreshKey++
+        void countSkills()
+        void loadSkillMeta()
+        if (problems?.length) toast(`${plural(problems.length, 'skill')} didn't load`, { tone: 'error', detail: problems.join('\n') })
+        else toast('Skills reloaded')
+      }),
+    ]
+    void (async () => {
+      await syncFiles()
+      if (st) applySettings(st.settings)
+      if (st?.problems?.length) {
+        toast(`${plural(st.problems.length, 'custom skill')} didn't load`, { tone: 'error', detail: st.problems.join('\n') })
       }
-      if (event.metaKey && event.key.toLowerCase() === 'o') {
-        event.preventDefault()
-        openPicker()
-      }
-      if (event.metaKey && event.key.toLowerCase() === 'a' && files.length > 0) {
-        event.preventDefault()
-        selectedFileIds = new Set(files.map((f) => f.id))
-      }
-      if (event.key === 'Escape') {
-        closeContextMenu()
-        selectedFileIds = new Set()
-      }
-    }
-    
-    const onClickOutside = () => {
-      closeContextMenu()
-    }
-
-    window.addEventListener('keydown', onKey)
-    window.addEventListener('click', onClickOutside)
-    
+      bar?.focus()
+      void countSkills()
+      void loadSkillMeta()
+    })()
+    // Test hook: add paths exactly like a drop does (used by the screenshot
+    // and GIF scripts against the server-mode build).
+    ;(window as unknown as { __asteriaAdd: (p: string[]) => Promise<void> }).__asteriaAdd = async (paths) =>
+      onAdded(await api.AddPaths(paths))
+    const closeMenu = () => (menu = null)
+    window.addEventListener('click', closeMenu)
     return () => {
-      window.removeEventListener('keydown', onKey)
-      window.removeEventListener('click', onClickOutside)
-      unsubFileDrop()
-      unsubFileDropCompat()
-      unsubSkillsUpdated()
+      offs.forEach((off) => off())
+      window.removeEventListener('click', closeMenu)
     }
   })
 </script>
 
-<div class="app-shell">
-  <!-- Titlebar - draggable region -->
-  <header class="titlebar" style="--wails-draggable: drag">
-    <span class="titlebar-title">Asteria</span>
-    <div class="mode-toggle" style="--wails-draggable: no-drag">
-      <button 
-        class="mode-btn" 
-        class:active={session.mode === 'batch'} 
-        on:click={() => toggleMode('batch')}
-      >
-        Batch
-      </button>
-      <button 
-        class="mode-btn" 
-        class:active={session.mode === 'per_file'} 
-        on:click={() => toggleMode('per_file')}
-      >
-        Per-file
+<svelte:window {onkeydown} />
+
+<div class="shell" class:mac={st?.platform === 'darwin'} class:solo={layout === 'solo'} data-phase={phase}>
+  <div class="aura" aria-hidden="true">
+    <div class="blob teal"></div>
+    <div class="blob amber"></div>
+    <div class="blob slate"></div>
+  </div>
+  <div class="pulse {pulse}" aria-hidden="true">
+    <div class="hues">
+      {#each [0, 1, 2, 3, 4, 5] as k}<div class="hue" style={`--k:${k}`}></div>{/each}
+    </div>
+    <div class="resolve"></div>
+  </div>
+
+  <header class="titlebar">
+    {#if files.length}
+      <div class="tally">
+        <span>{plural(files.length, 'file')}{selected.length ? `, ${selected.length} selected` : ''}</span>
+        <button type="button" class="quiet" onclick={() => removeFromTray(files.map((f) => f.id))} disabled={busy}>Clear</button>
+      </div>
+    {/if}
+    <div class="end">
+      {#if files.length > 1}
+        <div class="mode" role="radiogroup" aria-label="Show and apply skills to">
+          <button type="button" role="radio" aria-checked={!perFile} class:on={!perFile} onclick={() => setMode('batch')} title="Every file, or the selection">
+            {selected.length ? 'Selected' : 'All files'}
+          </button>
+          <button type="button" role="radio" aria-checked={perFile} class:on={perFile} onclick={() => setMode('per_file')} title="One file at a time (← → to move, Esc for all)"
+            >One by one</button
+          >
+        </div>
+      {/if}
+      <button type="button" class="gear" class:on={settingsOpen} onclick={() => (settingsOpen = !settingsOpen)} aria-label="Settings" title={`Settings (${shortcut(',')})`}>
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5h6M11.5 5h2M2.5 11h2M7.5 11h6" /><circle cx="10" cy="5" r="1.6" /><circle cx="6" cy="11" r="1.6" /></svg>
       </button>
     </div>
   </header>
 
-  <!-- Content area - files preview (now on TOP) -->
-  <section class="content-area" data-file-drop-target>
-    {#if !files.length}
-      <div class="empty-state">
-        <div class="empty-icon">+</div>
-        <div class="empty-title">Drop files here</div>
-        <p class="empty-subtitle">or press <kbd>⌘O</kbd> to browse</p>
-      </div>
-    {:else}
-      <div class="file-grid">
-        {#each files as file}
-          <button
-            class="file-card"
-            class:active={session.mode === 'per_file' && activeFileId === file.id}
-            class:selected={selectedFileIds.has(file.id)}
-            on:click={(e) => handleFileClick(file.id, e)}
-            on:contextmenu={(e) => handleContextMenu(file.id, e)}
-          >
-            <div class="file-preview">
-              {#if file.previewDataUrl}
-                <img src={file.previewDataUrl} alt={file.name} />
-              {:else}
-                <span class="file-preview-fallback">{file.currentExtension.replace('.', '')}</span>
-              {/if}
-            </div>
-            <div class="file-name">{file.name}{file.currentExtension}</div>
-            {#if file.appliedSkills && file.appliedSkills.length > 0}
-              <div class="skill-tags">
-                {#each file.appliedSkills as applied, index}
-                  <span class="skill-tag">
-                    {displaySkillName(applied.skillId)}
-                    <button class="skill-remove" on:click|stopPropagation={() => removeSkill(file.id, index)}>×</button>
-                  </span>
-                {/each}
-              </div>
-            {/if}
-          </button>
-        {/each}
-      </div>
-    {/if}
-  </section>
+  <div class="body">
 
-  <!-- Command bar section (now at BOTTOM, above footer) -->
-  <section class="command-section">
-    {#if isBusy && busyText}
-      <div class="busy-indicator" aria-live="polite">
-        <div class="busy-row">
-          <span class="busy-text">{busyText}{busyTotal > 1 ? ` (${busyTotal})` : ''}</span>
-          <span class="busy-dot"></span>
-        </div>
-        <div class="busy-bar"><div class="busy-bar-inner"></div></div>
-      </div>
-    {/if}
-    {#if isParamMode && activeSkill}
-      <!-- Parameter mode - completely redesigned -->
-      <div class="param-panel">
-        <div class="param-header">
-          <span class="param-skill-name">{activeSkill.name}</span>
-          <button class="param-cancel" on:click={resetCommand}>
-            Cancel <kbd>Esc</kbd>
-          </button>
-        </div>
-        <div class="param-body">
-          <label class="param-label">{activeParam?.label ?? 'Value'}</label>
-          <div class="param-input-row">
-            <input
-              type="text"
-              class="param-input"
-              bind:value={paramValue}
-              bind:this={commandInput}
-              on:keydown={onCommandKeydown}
-              autocomplete="off"
-              autofocus
-            />
-            <span class="param-unit">{activeParam?.unit ?? ''}</span>
-            <button class="param-apply" on:click={confirmParam}>
-              Apply <kbd>↵</kbd>
-            </button>
-          </div>
-          {#if activeParam?.presets?.length}
-            <div class="param-presets">
-              <span class="presets-label">Quick:</span>
-              {#each activeParam.presets as preset}
-                <button 
-                  class="preset-chip" 
-                  class:active={paramValue === presetValue(preset)}
-                  on:click={() => (paramValue = presetValue(preset))}
-                >
-                  {#if activeSkill.id === 'set_accent_color'}
-                    <span class="preset-swatch" style={`--swatch:${presetSwatchCss(preset)}`}></span>
-                    {presetLabel(preset)}
-                  {:else}
-                    {presetLabel(preset)}{activeParam.unit ?? ''}
-                  {/if}
-                </button>
-              {/each}
-            </div>
+  <div class="stage" class:veiled={veil > 0} style={`--veil:${veil}px`}>
+    <main class="tray" data-file-drop-target bind:this={trayEl} aria-label="Files">
+      {#if layout === 'solo' && (heroFile ?? lastHero)}
+        {@const hf = (heroFile ?? lastHero)!}
+        <Hero
+          file={hf}
+          index={Math.max(0, heroIndex)}
+          count={files.length}
+          working={working.includes(hf.id)}
+          onprev={() => moveActive(-1)}
+          onnext={() => moveActive(1)}
+          onopen={() => (quickId = hf.id)}
+          onremovestep={(i) => removeStep(hf.id, i)}
+          preview={live?.fileId === hf.id ? live.url : ''}
+        />
+      {:else if layout === 'empty' || !files.length}
+        <div class="empty">
+          <h1>Drop files to begin</h1>
+          <p class="lead">
+            or <button type="button" class="link" onclick={pickFiles}>choose files</button> <kbd>{shortcut('O')}</kbd>, then type what you want
+          </p>
+          <dl class="examples">
+            <div><dt>heic to jpg</dt><dd>iPhone photos that open everywhere</dd></div>
+            <div><dt>resize 50%</dt><dd>or 1920, or 1920x1080</dd></div>
+            <div><dt>merge pdfs</dt><dd>in the order shown</dd></div>
+            <div><dt>trim 0:05-0:30</dt><dd>audio and video</dd></div>
+            <div><dt>csv to json</dt><dd>and YAML, Markdown</dd></div>
+            <div><dt>zip</dt><dd>or unzip</dd></div>
+          </dl>
+          <p class="local">Nothing is uploaded. Every conversion runs on this computer, and your originals are never changed.</p>
+          {#if ffmpeg && !ffmpeg.found}
+            <p class="note">Audio and video skills need ffmpeg: <code>{ffmpeg.hint}</code></p>
           {/if}
         </div>
-      </div>
-    {:else}
-      <!-- Normal command input -->
-      <div class="command-input-wrapper">
-        <span class="command-icon">⌘</span>
-        <input
-          type="text"
-          class="command-input"
-          bind:value={query}
-          bind:this={commandInput}
-          placeholder={files.length ? 'Search skills...' : 'Drop files or ⌘O to add'}
-          on:keydown={onCommandKeydown}
-          on:input={onQueryInput}
-          on:focus={onInputFocus}
-          on:blur={onInputBlur}
-          autocomplete="off"
-        />
-        {#if isBusy}
-          <div class="spinner"></div>
-        {/if}
+      {:else}
+        <div class="grid" role="listbox" aria-multiselectable="true" aria-label="Files in the tray">
+          {#each files as file, i (file.id)}
+            <FileTile
+              {file}
+              subject={file.id === subjectId}
+              preview={live?.fileId === file.id ? live.url : ''}
+              enter={Math.max(0, Math.min(i - addedFrom, 14))}
+              selected={selected.includes(file.id)}
+              active={activeId === file.id && (perFile || files.length > 1)}
+              working={working.includes(file.id)}
+              onselect={(e) => select(file.id, e)}
+              onopen={() => (quickId = file.id)}
+              onremovestep={(i) => removeStep(file.id, i)}
+              oncontext={(e) => openMenu(file.id, e)}
+            />
+          {/each}
+        </div>
+      {/if}
+    </main>
+    <div class="drop-hint" aria-hidden="true">
+      <p class="drop-title">Let go to add</p>
+      {#if skillCount}<p class="drop-sub">{skillCount} skills ready, all running on this computer</p>{/if}
+    </div>
+  </div>
 
-        <!-- Dropdown suggestions (opens upward now) -->
-        {#if showDropdown && skills.length > 0}
-          <div class="suggestions-dropdown">
-            {#each skills.slice(0, 6) as skill, index}
-              <button
-                class="suggestion-item"
-                class:active={index === highlightIndex}
-                on:mousedown|preventDefault={() => selectSkill(skill)}
-              >
-                <span class="suggestion-name">{skill.name}</span>
-                <span class="suggestion-desc">{skill.description}</span>
-              </button>
-            {/each}
-          </div>
-        {/if}
+  <section class="dock">
+    {#if busy && progress}
+      <div class="progress" aria-live="polite">
+        <span class="label">
+          {progress.label}{#if progress.total > 1}<span class="count">{progress.done} of {progress.total}</span>{/if}{#if progress.current}<span class="cur">{progress.current}</span>{/if}
+        </span>
+        {#if queue.length}<span class="queued">then {queue.map((q) => q.s.name).join(', ')}</span>{/if}
+        <button
+          type="button"
+          class="cancel"
+          onclick={() => {
+            queue = []
+            void api.Cancel()
+          }}>Cancel <kbd>Esc</kbd></button
+        >
+        <div class="track"><div class="fill" style={`transform:scaleX(${Math.max(0.02, progress.fraction || 0)})`}></div></div>
       </div>
     {/if}
+    <div class="row">
+      <CommandBar
+        bind:this={bar}
+        targetIds={targets}
+        hasFiles={files.length > 0}
+        {busy}
+        {refreshKey}
+        onrun={run}
+        onadd={() => void pickFiles()}
+        onpopover={(h) => (veil = h)}
+        onpreview={preview}
+      />
+      {#if files.length}
+        <button
+          type="button"
+          class="export glass"
+          class:ready={exportable.length > 0 && !busy}
+          onclick={exportFiles}
+          disabled={!exportable.length || busy}
+          title="Export changed files"
+        >
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 10.5V2.5M4.75 5.75 8 2.5l3.25 3.25M3 9.5v3a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-3" /></svg>
+          <span>Export{exportable.length ? ` ${exportable.length}` : ''}</span>
+          <kbd>{shortcut('↵')}</kbd>
+        </button>
+      {/if}
+    </div>
+    <div class="dest" class:hidden={!files.length}>
+      <span>Export to</span>
+      <button type="button" class="quiet" onclick={() => void pickOutput()} title={settings?.outputFolder || 'Each export is saved beside its original'}>{outputLabel}</button>
+      {#if settings?.outputFolder}
+        <button type="button" class="x" onclick={resetOutput} aria-label="Export next to originals instead">×</button>
+      {/if}
+    </div>
   </section>
+  </div>
 
-  <!-- Footer bar -->
-  <footer class="footer-bar">
-    <div class="footer-left">
-      <span class="footer-label">Output</span>
-      <span class="footer-value">{truncatePath(session.outputFolder)}</span>
-    </div>
-    <div class="footer-actions">
-      <button class="btn-ghost" on:click={clearAll} disabled={!files.length}>Clear</button>
-      <button class="btn-primary" disabled={!files.length} on:click={exportAll}>
-        Export{selectedFileIds.size > 0 ? ` (${selectedFileIds.size})` : files.length ? ` (${files.length})` : ''}
-      </button>
-    </div>
-  </footer>
-
-  {#if toast}
-    <div class="toast">{toast}</div>
+  {#if needAddon}
+    <AddonPrompt addon={needAddon.addon} task={needAddon.s?.name ?? ''} onclose={() => (needAddon = null)} ondone={addonReady} />
   {/if}
 
-  <!-- Context menu -->
-  {#if contextMenu}
-    <div 
-      class="context-menu" 
-      style="left: {contextMenu.x}px; top: {contextMenu.y}px;"
-      on:click|stopPropagation
-    >
-      <div class="context-menu-label">{selectionCount} selected</div>
-      <button class="context-menu-item" on:click={contextSelectAll}>
-        Select All <kbd>⌘A</kbd>
+  {#if settingsOpen && st && settings}
+    <SettingsPanel
+      {settings}
+      app={st}
+      onchange={(k, v) => void changeSetting(k, v)}
+      onpickfolder={() => void pickOutput(true)}
+      onopenskills={() => void openSkillsFolder()}
+      onclose={() => {
+        settingsOpen = false
+        bar?.focus()
+      }}
+    />
+  {/if}
+
+  {#if toasts.length}
+    <div class="toasts" aria-live="polite">
+      {#each toasts as t (t.id)}
+        <div class="toast glass" class:error={t.tone === 'error'}>
+          <div class="text">
+            {t.text}
+            {#if t.detail}<pre>{t.detail}</pre>{/if}
+          </div>
+          {#each t.actions ?? [] as a}
+            <button
+              type="button"
+              class="act"
+              onclick={() => {
+                a.run()
+                dismiss(t.id)
+              }}>{a.label}</button
+            >
+          {/each}
+          <button type="button" class="x" aria-label="Dismiss" onclick={() => dismiss(t.id)}>×</button>
+        </div>
+      {/each}
+    </div>
+  {/if}
+
+  {#if menu}
+    <div class="menu glass" role="menu" style={`left:${menu.x}px;top:${menu.y}px`}>
+      <button type="button" role="menuitem" onclick={() => ((quickId = activeId), (menu = null))}>Preview <kbd>Space</kbd></button>
+      <button
+        type="button"
+        role="menuitem"
+        onclick={() => {
+          const f = files.find((x) => x.id === activeId)
+          if (f?.originalPath) void api.Reveal(f.originalPath)
+          menu = null
+        }}>Show original in folder</button
+      >
+      <button type="button" role="menuitem" onclick={copyPaths}>Copy {menuIds.length > 1 ? 'paths' : 'path'}</button>
+      <hr />
+      <button type="button" role="menuitem" onclick={() => ((selected = files.map((f) => f.id)), (menu = null))}>Select all <kbd>{shortcut('A')}</kbd></button>
+      <button type="button" role="menuitem" onclick={() => ((selected = files.filter((f) => !menuIds.includes(f.id)).map((f) => f.id)), (menu = null))}>Invert selection</button>
+      <hr />
+      <button type="button" role="menuitem" class="danger" onclick={() => ((menu = null), removeFromTray(menuIds))}>
+        Remove {menuIds.length > 1 ? plural(menuIds.length, 'file') : ''} from tray <kbd>⌫</kbd>
       </button>
-      <button class="context-menu-item" on:click={contextClearSelection}>
-        Clear Selection
-      </button>
-      <button class="context-menu-item" on:click={contextInvertSelection}>
-        Invert Selection
-      </button>
-      <div class="context-menu-separator"></div>
-      <button class="context-menu-item" on:click={contextCopyNames}>
-        Copy Names
-      </button>
-      <button class="context-menu-item" on:click={contextCopyPaths}>
-        Copy Paths
-      </button>
-      <div class="context-menu-separator"></div>
-      <button class="context-menu-item" on:click={contextExportSelected}>
-        Export {selectionCount > 1 ? `(${selectionCount})` : ''}
-      </button>
-      <div class="context-menu-separator"></div>
-      <button class="context-menu-item danger" on:click={contextRemoveSelected}>
-        Remove {selectionCount > 1 ? `(${selectionCount})` : ''}
-      </button>
+    </div>
+  {/if}
+
+  {#if quickFile}
+    <QuickLook
+      file={quickFile}
+      onclose={() => {
+        quickId = null
+        bar?.focus()
+      }}
+      onstep={(d) => moveActive(d)}
+      onreveal={(p) => void api.Reveal(p)}
+    />
+  {/if}
+
+  {#if trust}
+    <div class="scrim">
+      <div class="dialog glass" role="alertdialog" aria-modal="true" aria-labelledby="trust-title">
+        <h2 id="trust-title">Allow “{trust.req.skillName}”?</h2>
+        <p>This skill comes from your skills folder, not from Asteria. It asks for:</p>
+        <ul>
+          {#each trust.req.permissions ?? [] as p}
+            <li>
+              <code>{p}</code>
+              {p === 'tools.exec.any' ? 'run any program' : p === 'network' ? 'use the network' : p === 'files.anywhere' ? 'read and write files outside the tray' : 'system access'}
+            </li>
+          {/each}
+        </ul>
+        {#if trust.req.command}<p>It runs <code>{trust.req.command}</code>. Only allow skills you wrote or trust.</p>{/if}
+        <div class="buttons">
+          <button type="button" class="ghost" onclick={() => (trust = null)}>Cancel</button>
+          <button type="button" class="primary" onclick={allowAndRun}>Allow and run</button>
+        </div>
+      </div>
     </div>
   {/if}
 </div>
+
+<style>
+  .shell {
+    position: relative;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    isolation: isolate;
+  }
+  .body {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .body > .stage {
+    flex: 1 1 auto;
+  }
+  /* One file: the file, its details, the suggestions and the bar form one
+     centered group instead of a tile in a corner and controls far below. */
+  .solo .body {
+    justify-content: center;
+    padding-bottom: 3vh;
+  }
+  .solo .body > .stage {
+    flex: 0 1 auto;
+  }
+  .solo .tray {
+    height: auto;
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+    padding: 0 22px 14px;
+  }
+  .solo .dock {
+    max-width: 760px;
+  }
+  .solo .dock :global(.quick) {
+    justify-content: center;
+    margin-left: 0;
+  }
+  .dock {
+    view-transition-name: dock;
+  }
+
+  /* ---- processing glow ---------------------------------------------------
+     While work runs longer than a moment, a soft glow at the top edge drifts
+     through one hue at a time. Six fixed-color layers cross-fade by opacity
+     only, so it stays on the compositor however busy the page is. */
+  .pulse {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 42vh;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .hues,
+  .resolve {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.1s var(--ease-out);
+  }
+  .pulse.run .hues {
+    opacity: var(--pulse-strength);
+    transition-duration: 0.7s;
+  }
+  .hue {
+    position: absolute;
+    inset: 0 -10%;
+    background: radial-gradient(70% 100% at 50% 0%, rgb(var(--c)), rgb(var(--c) / 0.45) 38%, rgb(var(--c) / 0.12) 68%, transparent);
+    opacity: 0;
+    animation: hue-cycle 7.2s ease-in-out infinite;
+    animation-delay: calc(var(--k) * -1.2s);
+    animation-play-state: paused;
+  }
+  .pulse.run .hue {
+    animation-play-state: running;
+  }
+  .hue:nth-child(1) {
+    --c: var(--hue-1);
+  }
+  .hue:nth-child(2) {
+    --c: var(--hue-2);
+  }
+  .hue:nth-child(3) {
+    --c: var(--hue-3);
+  }
+  .hue:nth-child(4) {
+    --c: var(--hue-4);
+  }
+  .hue:nth-child(5) {
+    --c: var(--hue-5);
+  }
+  .hue:nth-child(6) {
+    --c: var(--hue-6);
+  }
+  @keyframes hue-cycle {
+    0%,
+    33.4%,
+    100% {
+      opacity: 0;
+    }
+    16.7% {
+      opacity: 1;
+    }
+  }
+  .resolve {
+    background: radial-gradient(70% 100% at 50% 0%, rgb(var(--aura-teal)), rgb(var(--aura-teal) / 0.3) 45%, transparent 75%);
+  }
+  .pulse.ok .resolve {
+    opacity: calc(var(--pulse-strength) * 0.8);
+    transition-duration: 0.35s;
+  }
+  .pulse.fail .resolve {
+    background: radial-gradient(70% 100% at 50% 0%, rgb(var(--hue-warn)), rgb(var(--hue-warn) / 0.3) 45%, transparent 75%);
+    opacity: calc(var(--pulse-strength) * 0.75);
+    transition-duration: 0.5s;
+  }
+  /* Reduced motion: no drift, one steady hue while working. */
+  :global(:root[data-motion='reduce']) .hue,
+  :global(:root[data-motion='reduce']) .pulse.run .hue {
+    animation: none;
+    opacity: 0;
+  }
+  :global(:root[data-motion='reduce']) .hue:first-child {
+    opacity: 0.8;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hue,
+    .pulse.run .hue {
+      animation: none;
+      opacity: 0;
+    }
+    .hue:first-child {
+      opacity: 0.8;
+    }
+  }
+
+  /* ---- ambient wash ------------------------------------------------------
+     Three soft radial glows behind the top of the window. They only ever
+     change opacity and transform, so they cost a composite, not a repaint. */
+  .aura {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: var(--aura-strength);
+    transition: opacity 0.9s var(--ease-out);
+  }
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    transition: opacity 1.4s var(--ease-out);
+    will-change: transform;
+  }
+  .teal {
+    width: 72vw;
+    height: 78vh;
+    left: -22vw;
+    top: -40vh;
+    background: radial-gradient(closest-side, rgb(var(--aura-teal)), rgb(var(--aura-teal) / 0.45) 45%, rgb(var(--aura-teal) / 0.12) 75%, transparent);
+    animation: drift-a 42s ease-in-out infinite alternate;
+  }
+  .amber {
+    width: 66vw;
+    height: 74vh;
+    right: -20vw;
+    top: -36vh;
+    background: radial-gradient(closest-side, rgb(var(--aura-amber)), rgb(var(--aura-amber) / 0.42) 45%, rgb(var(--aura-amber) / 0.1) 75%, transparent);
+    animation: drift-b 50s ease-in-out infinite alternate;
+  }
+  .slate {
+    width: 84vw;
+    height: 62vh;
+    left: 8vw;
+    top: -44vh;
+    background: radial-gradient(closest-side, rgb(var(--aura-slate)), rgb(var(--aura-slate) / 0.4) 50%, transparent);
+    animation: drift-c 58s ease-in-out infinite alternate;
+  }
+  @keyframes drift-a {
+    to {
+      transform: translate3d(9vw, 5vh, 0) scale(1.08);
+    }
+  }
+  @keyframes drift-b {
+    to {
+      transform: translate3d(-8vw, 7vh, 0) scale(0.94);
+    }
+  }
+  @keyframes drift-c {
+    to {
+      transform: translate3d(-5vw, 4vh, 0) scale(1.1);
+    }
+  }
+  /* The wash answers what the app is doing. */
+  [data-phase='idle'] .teal {
+    opacity: 0.95;
+  }
+  [data-phase='ready'] .teal,
+  [data-phase='ready'] .amber {
+    opacity: 0.7;
+  }
+  [data-phase='working'] .amber {
+    opacity: 1;
+  }
+  [data-phase='working'] .teal {
+    opacity: 0.55;
+  }
+  [data-phase='settled'] .teal {
+    opacity: 1;
+  }
+  [data-phase='settled'] .amber {
+    opacity: 0.5;
+  }
+  .shell:has(.tray:global(.file-drop-target-active)) .aura {
+    opacity: calc(var(--aura-strength) * 1.8);
+  }
+
+  /* ---- title bar ---------------------------------------------------------- */
+  .titlebar {
+    --wails-draggable: drag;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    height: 50px;
+    padding: 0 14px 0 20px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  /* macOS (hidden inset title bar): the traffic lights sit in a ~50 pt
+     toolbar strip, centered 25 pt down and spanning x 19-77 pt. The header
+     row shares that center line and starts a clear 17 pt after them. */
+  .mac .titlebar {
+    padding-left: 94px;
+    padding-right: 12px;
+  }
+  .tally {
+    --wails-draggable: no-drag;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-variant-numeric: tabular-nums;
+    animation: rise 0.4s var(--ease-out) both;
+  }
+  .export {
+    animation: rise 0.4s var(--ease-out) both;
+  }
+  .end {
+    --wails-draggable: no-drag;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+  .mode {
+    display: flex;
+    gap: 2px;
+    animation: rise 0.4s var(--ease-out) both;
+  }
+  .gear {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+  .gear svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+  }
+  .gear circle {
+    fill: var(--bg);
+  }
+  .gear:hover,
+  .gear.on {
+    background: var(--chip);
+    color: var(--ink);
+  }
+  .mode button {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 12.5px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      background 0.2s var(--ease-out),
+      color 0.2s;
+  }
+  .mode button:hover {
+    color: var(--ink-2);
+  }
+  .mode button.on {
+    background: var(--chip);
+    color: var(--ink);
+  }
+
+  /* ---- tray --------------------------------------------------------------- */
+  .stage {
+    position: relative;
+    min-height: 0;
+  }
+  /* Under the open suggestion list the files fade out instead of being cut
+     through the middle of a line. */
+  .stage::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(var(--veil) + 56px);
+    background: linear-gradient(to bottom, transparent, var(--bg) 56px);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.18s var(--ease-out);
+  }
+  .stage.veiled::after {
+    opacity: 1;
+  }
+  .tray {
+    height: 100%;
+    overflow: auto;
+    padding: 8px 22px 28px;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 10px, #000 calc(100% - 26px), transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 10px, #000 calc(100% - 26px), transparent);
+    transition:
+      opacity 0.25s var(--ease-out),
+      filter 0.25s var(--ease-out);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(178px, 1fr));
+    gap: 20px 14px;
+    align-items: start;
+  }
+
+  .drop-hint {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.985);
+    transition:
+      opacity 0.22s var(--ease-out),
+      transform 0.35s var(--ease-spring);
+  }
+  .drop-hint::before {
+    content: '';
+    position: absolute;
+    inset: 12% 18%;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--accent-soft), transparent);
+  }
+  .drop-title {
+    margin: 0;
+    font-size: clamp(28px, 5vw, 40px);
+    font-weight: 200;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+  .drop-sub {
+    margin: 8px 0 0;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--ink-2);
+  }
+  .stage:has(.tray:global(.file-drop-target-active)) .drop-hint {
+    opacity: 1;
+    transform: none;
+  }
+  .stage:has(.tray:global(.file-drop-target-active)) .tray {
+    opacity: 0.18;
+  }
+
+  /* ---- empty state -------------------------------------------------------- */
+  .empty {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 24px 4px 40px;
+  }
+  .empty > * {
+    animation: rise 0.7s var(--ease-out) both;
+  }
+  .empty > :nth-child(2) {
+    animation-delay: 60ms;
+  }
+  .empty > :nth-child(3) {
+    animation-delay: 120ms;
+  }
+  .empty > :nth-child(n + 4) {
+    animation-delay: 180ms;
+  }
+  .empty h1 {
+    margin: 0;
+    font-size: clamp(32px, 6vw, 46px);
+    font-weight: 200;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+  }
+  .lead {
+    margin: 14px 0 30px;
+    color: var(--ink-2);
+    font-size: 15px;
+    font-weight: 300;
+  }
+  .lead kbd {
+    margin: 0 2px;
+  }
+  .examples {
+    margin: 0;
+    display: grid;
+    gap: 0;
+  }
+  .examples div {
+    display: grid;
+    grid-template-columns: 9.5rem 1fr;
+    align-items: baseline;
+    gap: 16px;
+    padding: 7px 0;
+    border-top: 1px solid var(--line);
+  }
+  .examples div:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  .examples dt {
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--ink);
+  }
+  .examples dd {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .local {
+    margin: 26px 0 0;
+    font-size: 12.5px;
+    color: var(--muted);
+    max-width: 44ch;
+  }
+  .note {
+    margin: 10px 0 0;
+    font-size: 12.5px;
+    color: var(--warn);
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+
+  /* ---- dock --------------------------------------------------------------- */
+  .dock {
+    position: relative;
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 4px 20px 10px;
+  }
+  .row {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+  }
+  /* Same frosted material as the bar; ready reads through ink, a brighter
+     edge and the count, not a loud fill. */
+  .export {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 52px;
+    padding: 0 20px;
+    border-radius: 26px;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 var(--glass-edge);
+    transition:
+      color 0.3s var(--ease-out),
+      border-color 0.3s,
+      background 0.2s,
+      transform 0.25s var(--ease-spring);
+  }
+  .export svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .export kbd {
+    background: transparent;
+    color: inherit;
+    opacity: 0.6;
+    padding: 0;
+  }
+  .export.ready {
+    border-color: var(--line-strong);
+    color: var(--ink);
+    font-weight: 450;
+  }
+  .export.ready svg {
+    color: var(--accent);
+  }
+  .export.ready:hover {
+    --glass-bg: color-mix(in oklab, var(--glass-strong), var(--ink) 6%);
+    transform: translateY(-1px);
+  }
+  .export.ready:active {
+    transform: scale(0.97);
+  }
+  .export:disabled {
+    cursor: default;
+  }
+  .dest {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    margin-top: 7px;
+    padding-left: 18px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .dest.hidden {
+    visibility: hidden;
+  }
+  .dest .quiet {
+    color: var(--ink-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+  }
+
+  .progress {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 0 6px 10px 18px;
+    font-size: 12.5px;
+    color: var(--muted);
+    animation: rise 0.25s var(--ease-out) both;
+  }
+  .progress .label {
+    flex: 1;
+    min-width: 0;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-variant-numeric: tabular-nums;
+  }
+  .progress .count,
+  .progress .cur {
+    margin-left: 10px;
+    color: var(--muted);
+  }
+  .queued {
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 240px;
+  }
+  .cancel {
+    border: 0;
+    background: transparent;
+    color: var(--ink-2);
+    font-size: 12.5px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 4px;
+    border-radius: 6px;
+  }
+  .cancel:hover {
+    color: var(--ink);
+  }
+  .track {
+    position: absolute;
+    left: 18px;
+    right: 6px;
+    bottom: 4px;
+    height: 1px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .fill {
+    height: 100%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    transform-origin: left;
+    transition: transform 0.25s var(--ease-out);
+  }
+
+  /* ---- shared quiet controls --------------------------------------------- */
+  .quiet,
+  .link {
+    border: 0;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .quiet {
+    color: var(--ink-2);
+    transition: color 0.15s;
+  }
+  .quiet:hover {
+    color: var(--ink);
+  }
+  .quiet:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+  .link {
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.2s;
+  }
+  .link:hover {
+    text-decoration-color: var(--accent);
+  }
+  .x {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 15px;
+    line-height: 1;
+    padding: 2px 5px;
+    border-radius: 6px;
+  }
+  .x:hover {
+    color: var(--ink);
+    background: var(--hover);
+  }
+  .primary,
+  .ghost {
+    font-size: 13px;
+    font-weight: 450;
+    border-radius: 10px;
+    padding: 8px 14px;
+    cursor: pointer;
+  }
+  .primary {
+    border: 0;
+    background: var(--primary-bg);
+    color: var(--primary-ink);
+  }
+  .ghost {
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--ink);
+  }
+
+  /* ---- toasts ------------------------------------------------------------- */
+  .toasts {
+    position: fixed;
+    right: 16px;
+    top: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    z-index: 40;
+    max-width: min(400px, calc(100vw - 36px));
+  }
+  .toast {
+    --glass-bg: var(--glass-strong);
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 10px 8px 10px 14px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-pop);
+    font-size: 13px;
+    animation: toast-in 0.32s var(--ease-spring) both;
+  }
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.97);
+    }
+  }
+  .toast .text {
+    flex: 1;
+    min-width: 0;
+    padding: 2px 4px 2px 0;
+  }
+  .toast.error .text::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin: 0 8px 1px 0;
+    border-radius: 50%;
+    background: var(--danger);
+    vertical-align: middle;
+  }
+  .toast pre {
+    margin: 5px 0 0;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--muted);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .toast .act {
+    font-size: 12.5px;
+    font-weight: 450;
+    border: 0;
+    background: var(--chip);
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 4px 10px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+  .toast .act:hover {
+    background: var(--line-strong);
+  }
+
+  /* ---- context menu ------------------------------------------------------- */
+  .menu {
+    --glass-bg: var(--glass-strong);
+    position: fixed;
+    z-index: 45;
+    min-width: 214px;
+    padding: 5px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: var(--shadow-pop);
+    display: flex;
+    flex-direction: column;
+    transform-origin: top left;
+    animation: menu-in 0.16s var(--ease-out) both;
+  }
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+  }
+  .menu button {
+    font-size: 13px;
+    text-align: left;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    padding: 6px 10px;
+    border-radius: 7px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    cursor: default;
+  }
+  .menu button:hover {
+    background: var(--chip);
+  }
+  .menu .danger {
+    color: var(--danger);
+  }
+  .menu hr {
+    border: 0;
+    border-top: 1px solid var(--line);
+    margin: 4px 6px;
+  }
+
+  /* ---- trust dialog ------------------------------------------------------- */
+  .scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: var(--scrim);
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    animation: fade 0.18s ease-out both;
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+  }
+  .dialog {
+    --glass-bg: var(--glass-strong);
+    width: min(440px, 100%);
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-pop);
+    padding: 22px;
+    font-size: 14px;
+    animation: toast-in 0.3s var(--ease-spring) both;
+  }
+  .dialog h2 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .dialog p {
+    margin: 0 0 10px;
+    color: var(--ink-2);
+  }
+  .dialog ul {
+    margin: 0 0 12px;
+    padding-left: 18px;
+    color: var(--ink-2);
+  }
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  @media (max-width: 640px) {
+    .tray {
+      padding: 6px 14px 24px;
+    }
+    .grid {
+      grid-template-columns: repeat(auto-fill, minmax(138px, 1fr));
+      gap: 16px 10px;
+    }
+    .dock {
+      padding: 4px 12px 8px;
+    }
+    .export {
+      padding: 0 14px;
+    }
+    .export kbd {
+      display: none;
+    }
+    .examples div {
+      grid-template-columns: 7.5rem 1fr;
+      gap: 12px;
+    }
+    .examples dd {
+      font-size: 12.5px;
+    }
+    .dest {
+      padding-left: 14px;
+    }
+  }
+  @media (max-height: 560px) {
+    .empty {
+      padding-top: 8px;
+      padding-bottom: 16px;
+    }
+    .lead {
+      margin-bottom: 16px;
+    }
+    .examples div {
+      padding: 4px 0;
+    }
+    .local {
+      display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .blob {
+      animation: none;
+    }
+  }
+</style>

@@ -1,0 +1,38 @@
+{
+  "id": "mesh_info",
+  "name": "Mesh Info",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "model info",
+    "3d info",
+    "mesh stats",
+    "bounding box",
+    "watertight",
+    "volume of model",
+    "stl volume"
+  ],
+  "category": "3d",
+  "icon": "ruler",
+  "description": "Measure size, volume and holes as JSON",
+  "inputTypes": [
+    ".obj",
+    ".stl",
+    ".ply",
+    ".gltf",
+    ".glb",
+    ".3mf"
+  ],
+  "outputType": ".json",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "mesh.info"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

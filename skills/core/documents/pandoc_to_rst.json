@@ -1,0 +1,51 @@
+{
+  "id": "pandoc_to_rst",
+  "name": "Convert to reStructuredText",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to rst",
+    "md to rst"
+  ],
+  "category": "document",
+  "icon": "file-type",
+  "description": "reStructuredText from Markdown or HTML",
+  "inputTypes": [
+    ".md",
+    ".markdown",
+    ".html",
+    ".htm",
+    ".docx",
+    ".odt",
+    ".epub",
+    ".tex",
+    ".org",
+    ".textile",
+    ".ipynb"
+  ],
+  "outputType": ".rst",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "pandoc",
+    "args": [
+      "--sandbox",
+      "-t",
+      "rst",
+      "-o",
+      "{{output}}",
+      "{{input}}"
+    ],
+    "timeoutMs": 300000
+  },
+  "requires": [
+    "pandoc"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

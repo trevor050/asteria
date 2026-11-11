@@ -1,0 +1,51 @@
+{
+  "id": "image_grid",
+  "name": "Image Grid",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "photo grid",
+    "picture grid",
+    "collage",
+    "combine images",
+    "image collage",
+    "grid of photos",
+    "make collage",
+    "join images in grid"
+  ],
+  "category": "compose",
+  "icon": "grid-2x2",
+  "description": "Arrange pictures in a grid",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".png",
+  "params": [
+    {
+      "name": "columns",
+      "label": "Columns",
+      "type": "string",
+      "default": "auto",
+      "presets": [
+        "auto",
+        "2",
+        "3",
+        "4",
+        "3x2"
+      ],
+      "hint": "auto · 3 = three columns · 3x2 = columns x rows"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "compose.grid"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "combine": true,
+  "outputName": "collage"
+}

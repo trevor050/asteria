@@ -1,0 +1,50 @@
+{
+  "id": "halftone",
+  "name": "Halftone",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "half tone",
+    "comic",
+    "newspaper",
+    "print dots",
+    "dots",
+    "pop art",
+    "dot screen"
+  ],
+  "category": "filter",
+  "icon": "grip",
+  "description": "Newspaper print dots",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "size",
+      "label": "Cell size",
+      "type": "string",
+      "default": "1.2%",
+      "presets": [
+        "0.8%",
+        "1.2%",
+        "2%",
+        "3%"
+      ],
+      "min": 0.4,
+      "max": 5,
+      "unit": "%",
+      "hint": "Dot spacing: 1.2% of the width · or pixels like 10"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.halftone"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

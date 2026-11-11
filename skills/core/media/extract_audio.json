@@ -1,0 +1,31 @@
+{
+  "id": "extract_audio",
+  "name": "Extract Audio",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "audio from video",
+    "rip audio",
+    "m4a from video",
+    "strip video"
+  ],
+  "category": "media",
+  "icon": "audio-lines",
+  "description": "Pull the audio out as M4A",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": ".m4a",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.extract_audio"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

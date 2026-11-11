@@ -1,0 +1,30 @@
+{
+  "id": "extract_archive",
+  "name": "Extract Archive",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "unzip",
+    "extract",
+    "untar",
+    "decompress"
+  ],
+  "category": "archive",
+  "icon": "package-open",
+  "description": "Unpack .zip, .tar or .tar.gz",
+  "inputTypes": [
+    "@archive"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.extract"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

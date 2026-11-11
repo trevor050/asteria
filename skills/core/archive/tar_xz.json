@@ -1,0 +1,30 @@
+{
+  "id": "tar_xz",
+  "name": "Tar + xz",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "tar.xz",
+    "txz",
+    "make tar xz"
+  ],
+  "category": "archive",
+  "icon": "archive",
+  "description": "Pack a folder or file into a .tar.xz",
+  "inputTypes": [
+    "*",
+    "folder"
+  ],
+  "outputType": ".tar.xz",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.tarxz"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

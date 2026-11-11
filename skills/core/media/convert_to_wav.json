@@ -1,0 +1,29 @@
+{
+  "id": "convert_to_wav",
+  "name": "Convert to WAV",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "wav",
+    "uncompressed audio"
+  ],
+  "category": "media",
+  "icon": "arrow-left-right",
+  "description": "Uncompressed audio",
+  "inputTypes": [
+    "@media"
+  ],
+  "outputType": ".wav",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

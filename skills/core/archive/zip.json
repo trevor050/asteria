@@ -1,0 +1,32 @@
+{
+  "id": "zip",
+  "name": "Zip",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "compress to zip",
+    "archive",
+    "make zip",
+    "zip files"
+  ],
+  "category": "archive",
+  "priority": 10,
+  "icon": "file-archive",
+  "description": "Pack files and folders into a .zip",
+  "inputTypes": [
+    "*"
+  ],
+  "outputType": ".zip",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.zip"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "outputName": "archive"
+}

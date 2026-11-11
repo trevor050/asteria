@@ -1,0 +1,17 @@
+{
+  "id": "black_and_white",
+  "name": "Black & White",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["b&w", "bw", "black and white", "black white", "mono", "noir", "perceptual grey", "perceptual gray"],
+  "category": "adjust",
+  "icon": "eclipse",
+  "priority": 7,
+  "description": "Black and white by perceived lightness",
+  "inputTypes": ["@image", "@video"],
+  "outputType": "",
+  "params": [],
+  "executor": { "type": "native", "handler": "adjust.lightness" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

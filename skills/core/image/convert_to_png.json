@@ -3,15 +3,29 @@
   "name": "Convert to PNG",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["png", "to png"],
+  "aliases": [
+    "png",
+    "to png",
+    "heic to png",
+    "jpg to png"
+  ],
   "category": "convert",
-  "description": "Convert images to PNG format",
-  "inputTypes": [".jpg", ".jpeg", ".png", ".bmp", ".tif", ".tiff", ".gif"],
+  "icon": "arrow-left-right",
+  "priority": 4,
+  "description": "Lossless, keeps transparency",
+  "inputTypes": [
+    "@image"
+  ],
   "outputType": ".png",
   "params": [],
-  "driver": "image",
-  "isMeta": false,
-  "executor": {"type": "native", "handler": "image.convert_to_png"},
-  "permissions": ["files.read", "files.write", "files.temp"],
+  "executor": {
+    "type": "native",
+    "handler": "image.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
   "dangerLevel": 0
 }

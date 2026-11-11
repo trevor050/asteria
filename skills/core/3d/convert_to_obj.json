@@ -1,0 +1,35 @@
+{
+  "id": "convert_to_obj",
+  "name": "Convert to OBJ",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "stl to obj",
+    "ply to obj",
+    "glb to obj",
+    "3mf to obj",
+    "wavefront"
+  ],
+  "category": "3d",
+  "icon": "box",
+  "description": "Write the mesh as OBJ",
+  "inputTypes": [
+    ".stl",
+    ".ply",
+    ".gltf",
+    ".glb",
+    ".3mf"
+  ],
+  "outputType": ".obj",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "mesh.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

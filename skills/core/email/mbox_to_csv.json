@@ -1,0 +1,30 @@
+{
+  "id": "mbox_to_csv",
+  "name": "Mbox to CSV",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "mailbox csv",
+    "mbox spreadsheet",
+    "list emails"
+  ],
+  "category": "email",
+  "icon": "inbox",
+  "description": "List every email in an .mbox as CSV rows",
+  "inputTypes": [
+    ".mbox",
+    ".mbx"
+  ],
+  "outputType": ".csv",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "email.mboxCSV"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

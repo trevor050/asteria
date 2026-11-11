@@ -1,0 +1,31 @@
+{
+  "id": "extract_tar_bz2",
+  "name": "Extract tar.bz2",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "untar bzip2",
+    "tbz2",
+    "bunzip2 tar"
+  ],
+  "category": "archive",
+  "icon": "package-open",
+  "description": "Unpack a .tar.bz2 or .tbz2 into a folder",
+  "inputTypes": [
+    ".tar.bz2",
+    ".tbz2",
+    ".tbz"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.unpack"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

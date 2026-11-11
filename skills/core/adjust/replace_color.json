@@ -1,0 +1,25 @@
+{
+  "id": "replace_color",
+  "name": "Replace Color",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["change color", "change colour", "swap color", "swap colour", "recolor", "recolour", "color replace", "colour replace", "replace colour"],
+  "category": "adjust",
+  "icon": "replace",
+  "description": "Swap one color for another",
+  "inputTypes": ["@image"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "colors",
+      "label": "Colors",
+      "type": "string",
+      "default": "red blue",
+      "presets": ["red blue", "green purple", "#ff0000 #0000ff", "blue orange"],
+      "hint": "from to · red blue · #ff0000 #0000ff · matches shades near the first color"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.replace" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

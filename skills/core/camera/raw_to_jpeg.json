@@ -1,0 +1,52 @@
+{
+  "id": "raw_to_jpeg",
+  "name": "Convert RAW to JPEG",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "raw jpg",
+    "cr2 to jpg",
+    "nef to jpg",
+    "develop raw"
+  ],
+  "category": "camera",
+  "icon": "camera",
+  "description": "JPEG from a camera RAW file",
+  "inputTypes": [
+    ".cr2",
+    ".cr3",
+    ".nef",
+    ".arw",
+    ".dng",
+    ".orf",
+    ".rw2",
+    ".raf",
+    ".pef",
+    ".srw",
+    ".x3f"
+  ],
+  "outputType": ".jpg",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "magick",
+    "args": [
+      "{{input}}",
+      "-auto-orient",
+      "-quality",
+      "92",
+      "{{output}}"
+    ],
+    "timeoutMs": 120000
+  },
+  "requires": [
+    "magick"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

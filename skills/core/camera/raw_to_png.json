@@ -1,0 +1,49 @@
+{
+  "id": "raw_to_png",
+  "name": "Convert RAW to PNG",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "raw png",
+    "cr2 to png",
+    "arw to png"
+  ],
+  "category": "camera",
+  "icon": "camera",
+  "description": "PNG from a camera RAW file",
+  "inputTypes": [
+    ".cr2",
+    ".cr3",
+    ".nef",
+    ".arw",
+    ".dng",
+    ".orf",
+    ".rw2",
+    ".raf",
+    ".pef",
+    ".srw",
+    ".x3f"
+  ],
+  "outputType": ".png",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "magick",
+    "args": [
+      "{{input}}",
+      "-auto-orient",
+      "{{output}}"
+    ],
+    "timeoutMs": 120000
+  },
+  "requires": [
+    "magick"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,12 @@
+{
+  "name": "asteria-capture",
+  "private": true,
+  "type": "module",
+  "description": "Drives the server-mode build to capture README screenshots and the demo GIF.",
+  "scripts": {
+    "capture": "node capture.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.59.0"
+  }
+}

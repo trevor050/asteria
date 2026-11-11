@@ -1,0 +1,49 @@
+{
+  "id": "shadows",
+  "name": "Shadows",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "lift shadows",
+    "open shadows",
+    "fill light",
+    "brighten shadows",
+    "darken shadows",
+    "dark areas"
+  ],
+  "category": "adjust",
+  "icon": "moon",
+  "description": "Lift or deepen dark areas",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "amount",
+      "label": "Amount",
+      "type": "string",
+      "default": "+50",
+      "presets": [
+        "+25",
+        "+50",
+        "+80",
+        "-40"
+      ],
+      "min": -100,
+      "max": 100,
+      "unit": "",
+      "hint": "+50 = lift shadows · -40 = deepen them · colors keep their hue"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "adjust.shadows"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

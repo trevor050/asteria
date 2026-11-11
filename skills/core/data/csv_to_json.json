@@ -1,0 +1,29 @@
+{
+  "id": "csv_to_json",
+  "name": "CSV to JSON",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "csv json",
+    "to json"
+  ],
+  "category": "data",
+  "icon": "file-json",
+  "description": "Objects keyed by the header row",
+  "inputTypes": [
+    ".csv",
+    ".tsv"
+  ],
+  "outputType": ".json",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

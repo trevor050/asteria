@@ -1,0 +1,156 @@
+name: Release
+
+# Push a tag like v0.2.0 to build installers for macOS, Windows and Linux.
+# The result is a *draft* GitHub release: check the assets, then publish it.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version to build (no release is created for manual runs)
+        required: true
+        default: 0.0.0-test
+
+permissions:
+  contents: read
+
+env:
+  WAILS_VERSION: v3.1.0
+
+jobs:
+  macos:
+    name: macOS (universal)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: go install github.com/wailsapp/wails/v3/cmd/wails3@${{ env.WAILS_VERSION }}
+      - name: Set version
+        id: v
+        run: |
+          VERSION="${{ github.event.inputs.version || github.ref_name }}"
+          VERSION="${VERSION#v}"
+          scripts/set-version.sh "$VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Build universal app and DMG
+        run: |
+          wails3 task darwin:package:universal
+          wails3 task darwin:create:dmg
+          mkdir -p dist
+          mv bin/Asteria.dmg "dist/Asteria-${{ steps.v.outputs.version }}-macos-universal.dmg"
+          ditto -c -k --keepParent bin/Asteria.app "dist/Asteria-${{ steps.v.outputs.version }}-macos-universal.zip"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: release-macos
+          path: dist/*
+
+  windows:
+    name: Windows (x64)
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: go install github.com/wailsapp/wails/v3/cmd/wails3@${{ env.WAILS_VERSION }}
+      - name: Install NSIS
+        run: command -v makensis || choco install nsis -y --no-progress
+      - name: Set version
+        id: v
+        run: |
+          VERSION="${{ github.event.inputs.version || github.ref_name }}"
+          VERSION="${VERSION#v}"
+          scripts/set-version.sh "$VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Build installer
+        run: |
+          export PATH="$PATH:/c/Program Files (x86)/NSIS"
+          wails3 task windows:package
+          mkdir -p dist
+          mv bin/asteria-amd64-installer.exe "dist/Asteria-${{ steps.v.outputs.version }}-windows-x64-setup.exe"
+          cp bin/asteria.exe "dist/Asteria-${{ steps.v.outputs.version }}-windows-x64-portable.exe"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: release-windows
+          path: dist/*
+
+  linux:
+    name: Linux (x64)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential pkg-config libgtk-4-dev libwebkitgtk-6.0-dev libfuse2
+      - run: go install github.com/wailsapp/wails/v3/cmd/wails3@${{ env.WAILS_VERSION }}
+      - name: Set version
+        id: v
+        run: |
+          VERSION="${{ github.event.inputs.version || github.ref_name }}"
+          VERSION="${VERSION#v}"
+          scripts/set-version.sh "$VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+      - name: Build binary and .deb
+        run: |
+          wails3 task linux:create:deb
+          mkdir -p dist
+          mv bin/*.deb "dist/Asteria-${{ steps.v.outputs.version }}-linux-amd64.deb"
+          tar -C bin -czf "dist/Asteria-${{ steps.v.outputs.version }}-linux-amd64.tar.gz" asteria
+      - name: Build AppImage
+        # AppImage tooling is downloaded at build time; a failure here should
+        # not block the .deb and tarball.
+        continue-on-error: true
+        run: |
+          wails3 task linux:create:appimage
+          mv bin/*.AppImage "dist/Asteria-${{ steps.v.outputs.version }}-linux-x86_64.AppImage"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: release-linux
+          path: dist/*
+
+  release:
+    name: Draft GitHub release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [macos, windows, linux]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: release-*
+          path: dist
+          merge-multiple: true
+      - name: Checksums
+        run: cd dist && sha256sum -- * > SHA256SUMS.txt && cat SHA256SUMS.txt
+      - uses: softprops/action-gh-release@v3
+        with:
+          draft: true
+          generate_release_notes: true
+          files: dist/*

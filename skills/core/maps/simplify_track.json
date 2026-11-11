@@ -1,0 +1,48 @@
+{
+  "id": "simplify_track",
+  "name": "Simplify Track",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "simplify gpx",
+    "reduce track points",
+    "douglas peucker",
+    "smaller track",
+    "thin track"
+  ],
+  "category": "maps",
+  "icon": "route",
+  "description": "Drop points that barely change the shape",
+  "inputTypes": [
+    ".gpx",
+    ".geojson",
+    ".kml",
+    ".kmz"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "tolerance",
+      "label": "Tolerance",
+      "type": "string",
+      "default": "10",
+      "presets": [
+        "5",
+        "10",
+        "25"
+      ],
+      "unit": "m",
+      "hint": "10 = drop points within 10 m of the line \u00b7 5 keeps more detail \u00b7 25 is rougher"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "geo.simplify"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

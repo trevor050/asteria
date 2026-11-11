@@ -1,0 +1,30 @@
+{
+  "id": "convert_to_cube",
+  "name": "Convert to CUBE",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "cube",
+    "3dl to cube",
+    "lut to cube",
+    "adobe lut"
+  ],
+  "category": "lut",
+  "icon": "palette",
+  "description": ".cube LUT from a .3dl LUT",
+  "inputTypes": [
+    ".3dl"
+  ],
+  "outputType": ".cube",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "lut.toCube"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

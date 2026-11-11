@@ -1,0 +1,49 @@
+{
+  "id": "palette_swatches",
+  "name": "Palette Swatches",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "palette image",
+    "color swatches",
+    "colour swatches",
+    "palette strip",
+    "swatches"
+  ],
+  "category": "info",
+  "icon": "swatch-book",
+  "description": "Main colors as a swatch strip (.png)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".png",
+  "params": [
+    {
+      "name": "colors",
+      "label": "Colors",
+      "type": "int",
+      "default": 6,
+      "presets": [
+        3,
+        4,
+        6,
+        8,
+        12
+      ],
+      "min": 2,
+      "max": 16,
+      "unit": "",
+      "hint": "2-16 colors · 6 = a good palette · fewer = bolder groups"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "info.paletteimage"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

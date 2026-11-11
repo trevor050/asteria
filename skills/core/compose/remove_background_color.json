@@ -1,0 +1,50 @@
+{
+  "id": "remove_background_color",
+  "name": "Remove Background Color",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "transparent background",
+    "knock out",
+    "chroma key",
+    "remove white background",
+    "remove background",
+    "remove background colour",
+    "remove background color",
+    "cut out background",
+    "green screen"
+  ],
+  "category": "compose",
+  "icon": "eraser",
+  "description": "Make a background color transparent",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".png",
+  "params": [
+    {
+      "name": "color",
+      "label": "Color",
+      "type": "string",
+      "default": "auto",
+      "presets": [
+        "auto",
+        "white",
+        "black",
+        "#00ff00",
+        "#0000ff"
+      ],
+      "hint": "auto = most common corner color · white · #00ff00 · fully clear within a small color distance, fading out beyond it"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "compose.removebg"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

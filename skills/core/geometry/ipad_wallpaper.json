@@ -1,0 +1,31 @@
+{
+  "id": "ipad_wallpaper",
+  "name": "iPad Wallpaper",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "tablet wallpaper",
+    "ipad background"
+  ],
+  "category": "sizes",
+  "icon": "tablet",
+  "description": "2048x2732, cropped to fill",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fill",
+    "with": {
+      "size": "2048x2732"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

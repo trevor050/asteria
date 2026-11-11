@@ -1,0 +1,62 @@
+{
+  "id": "imagemagick_to_png",
+  "name": "Convert to PNG",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "psd to png",
+    "ico to png",
+    "tga to png",
+    "exr to png"
+  ],
+  "category": "convert",
+  "icon": "arrow-left-right",
+  "description": "PNG from PSD, TGA, ICO, EXR and similar",
+  "inputTypes": [
+    ".psd",
+    ".tga",
+    ".pcx",
+    ".ico",
+    ".jp2",
+    ".j2k",
+    ".dds",
+    ".xpm",
+    ".ppm",
+    ".pgm",
+    ".pbm",
+    ".pnm",
+    ".exr",
+    ".hdr",
+    ".avif",
+    ".jxl",
+    ".sgi",
+    ".ras",
+    ".xbm",
+    ".cur"
+  ],
+  "outputType": ".png",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "magick",
+    "args": [
+      "{{input}}",
+      "-auto-orient",
+      "-background",
+      "none",
+      "-flatten",
+      "{{output}}"
+    ],
+    "timeoutMs": 120000
+  },
+  "requires": [
+    "magick"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,47 @@
+{
+  "id": "compress_video",
+  "name": "Compress Video",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "shrink video",
+    "smaller video",
+    "video size",
+    "discord"
+  ],
+  "category": "media",
+  "icon": "fold-vertical",
+  "description": "Smaller H.264 MP4",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": ".mp4",
+  "params": [
+    {
+      "name": "crf",
+      "label": "Strength",
+      "type": "int",
+      "default": 28,
+      "presets": [
+        24,
+        28,
+        32,
+        36
+      ],
+      "hint": "higher = smaller file, lower quality (18-40) · default 28",
+      "min": 18,
+      "max": 40
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "media.compress"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

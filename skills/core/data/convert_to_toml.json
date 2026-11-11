@@ -1,0 +1,39 @@
+{
+  "id": "convert_to_toml",
+  "name": "Convert to TOML",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "json to toml",
+    "yaml to toml",
+    "xml to toml",
+    "ini to toml",
+    "env to toml"
+  ],
+  "category": "data",
+  "icon": "settings",
+  "description": "Write as TOML (needs an object at the top)",
+  "inputTypes": [
+    ".json",
+    ".yaml",
+    ".yml",
+    ".xml",
+    ".ini",
+    ".cfg",
+    ".conf",
+    ".env",
+    ".plist"
+  ],
+  "outputType": ".toml",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.tree"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

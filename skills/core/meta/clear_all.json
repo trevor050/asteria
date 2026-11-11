@@ -1,17 +1,25 @@
 {
   "id": "clear_all",
-  "name": "Clear All",
+  "name": "Clear Tray",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["reset", "clear"],
+  "aliases": [
+    "clear",
+    "reset",
+    "clear all"
+  ],
   "category": "meta",
-  "description": "Clear all files and actions",
-  "inputTypes": ["*"],
+  "icon": "trash-2",
+  "description": "Empty the tray (originals stay)",
+  "inputTypes": [
+    "*"
+  ],
   "outputType": "none",
   "params": [],
-  "driver": "meta",
   "isMeta": true,
-  "executor": {"type": "meta"},
+  "executor": {
+    "type": "meta"
+  },
   "permissions": [],
   "dangerLevel": 1
 }

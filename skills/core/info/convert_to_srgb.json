@@ -1,0 +1,33 @@
+{
+  "id": "convert_to_srgb",
+  "name": "Convert to sRGB",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "srgb",
+    "color profile",
+    "colour profile",
+    "display p3 to srgb",
+    "normalize colors",
+    "p3 to srgb",
+    "adobe rgb to srgb"
+  ],
+  "category": "info",
+  "icon": "arrow-left-right",
+  "description": "Standard colors that look right everywhere",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "info.srgb"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,28 @@
+{
+  "id": "contrast",
+  "name": "Contrast",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["more contrast", "less contrast", "punch", "flatten", "contrasty"],
+  "category": "adjust",
+  "icon": "contrast",
+  "description": "More punch, or flatter with a minus",
+  "inputTypes": ["@image", "@video"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "amount",
+      "label": "Amount",
+      "type": "string",
+      "default": "+25",
+      "presets": ["+10", "+25", "+50", "-20", "-40"],
+      "min": -100,
+      "max": 300,
+      "unit": "%",
+      "hint": "+25 or 125% = punchier · -30 = flatter · -100 = flat gray"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.contrast" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

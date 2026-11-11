@@ -1,0 +1,51 @@
+{
+  "id": "straighten",
+  "name": "Straighten",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "level",
+    "level horizon",
+    "fix tilt",
+    "fix horizon",
+    "deskew",
+    "unrotate"
+  ],
+  "category": "transform",
+  "icon": "rotate-ccw-square",
+  "description": "Fix a slight tilt",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "angle",
+      "label": "Angle",
+      "type": "string",
+      "default": "2",
+      "presets": [
+        "1",
+        "2",
+        "-1",
+        "-2",
+        "5",
+        "-5"
+      ],
+      "min": -45,
+      "max": 45,
+      "unit": "°",
+      "hint": "positive turns clockwise · -2 = counterclockwise · range -45 to 45"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "geo.straighten"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

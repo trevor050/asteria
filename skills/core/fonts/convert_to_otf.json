@@ -1,0 +1,35 @@
+{
+  "id": "convert_to_otf",
+  "name": "Convert to OTF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "otf",
+    "opentype",
+    "woff to otf",
+    "woff2 to otf",
+    "cff font"
+  ],
+  "category": "fonts",
+  "icon": "type",
+  "description": "Desktop OTF font from a CFF WOFF or WOFF2",
+  "inputTypes": [
+    ".woff",
+    ".woff2"
+  ],
+  "outputType": ".otf",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "fonts.sfnt",
+    "with": {
+      "flavor": "otf"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

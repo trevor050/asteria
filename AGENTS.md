@@ -1,131 +1,62 @@
 # AGENTS.md
 
-This file provides guidance to WARP (warp.dev) when working with code in this repository.
-
-## agents.md compatibility note
-
-- This workspace is on a case-insensitive filesystem, so `AGENTS.md` and `agents.md` resolve to the same file.
-- Treat this file as both `AGENTS.md` and `agents.md` for agent-memory purposes.
-
-## Project Overview
-
-This is a Wails desktop application with a Svelte + TypeScript frontend. The active module configuration currently tracks Wails v3 alpha packages in `go.mod`, so treat this repo as a Wails v3-alpha codebase unless explicitly migrated.
+Asteria: local-first desktop file converter. Wails 3.1 (Go) + Svelte 5. Drop files, type a skill in a command bar, preview, export. No telemetry. The ONLY network use is downloading an add-on engine after the user clicks Get, from the manifest URL; `privacy_test.go` enforces it (only `internal/addons/install.go` + `preview.go` may import net packages; processing every pure-Go skill makes zero connections). Keep it that way.
 
 ## Architecture
+- `main.go` app/window/single-instance/drop handler; `app.go` the one bound service (`App`, methods = frontend API); `preview.go` asset middleware serving `/asteria/thumb|file/<fileId>/<stepId|original>` (tray files by id only).
+- `internal/ops`: native handlers registered by name (`image.convert`, `pdf.merge`, `media.trim`...). Handler picks format from the OUTPUT EXTENSION. `ops.UserError` = message shown verbatim; `MissingToolError` for ffmpeg etc.
+- `internal/skills`: JSON skill schema, loader (embedded `skills/core` < disk `skills/core` in a checkout < user dir), validation, ranking (inline values `resize 50%`, `rs50`). Max ONE param per skill (UI contract). Meta skills only in core; handled in `app.go runMeta`.
+- `internal/engine`: Apply (per-file, bounded concurrency per handler, progress, cancel), combine skills -> new tray file, pipelines, RemoveStep replay, Undo stack. One op at a time (`ErrBusy`).
+- `internal/session`: tray. Originals are read-only and never copied; each step writes a new immutable file `<workspace>/<fileId>/NNN-skill.ext`. Export uses O_EXCL + " (n)" suffix, never overwrites.
+- `internal/img`: pixel core for ALL image skills. Working format 16-bit straight-alpha sRGB-encoded (`Image`, `Scale` <1 = preview proxy, `Quality` carried from convert). Spaces: premultiplied linear (`Linear`) for resample/blur/composite, encoded for tone curves, OKLab for sat/hue. ICC matrix/TRC profiles converted to sRGB at decode (`ops.DecodeWorking`). `Reserve` = 1.5 GB working-memory semaphore.
+- Image skills: `Handler.Pixel` (pure, never mutates input), `Live` (fast enough for slider preview), `Video` (ffmpeg -vf equivalent). Contract for writing them: `internal/ops/IMAGE_SKILLS.md`. Families: adjust.go, effects.go, geometry.go, compose.go, imginfo.go (+ `skills/core/<family>/`). Engine (`engine/pixel.go`) feeds each pixel step the lossless previous result from a 640 MB LRU (validated by file mtime/size) or replays the chain from the last non-pixel file; encodes once per step; `Engine.Preview`/`App.PreviewSkill` run on a cached proxy. Engine sets a soft GC limit (1.25 GB) unless GOMEMLIMIT.
+- Tools layer: `internal/tools` Finder resolves engine commands: add-on dir first (`Prefer(addons.BinPath)`), then PATH, then Homebrew/winget/scoop/choco and app-bundle dirs (LibreOffice.app, calibre.app, Program Files\LibreOffice etc.); aliases 7zz->7z->7za (7za can't open RAR/ISO/WIM), gs->gswin64c. ALWAYS start engines with `tools.Command` (own process group killed as a group on Unix, taskkill /T + CREATE_NO_WINDOW on Windows, WaitDelay); plain exec left soffice.bin orphans and hung Wait. Engine handlers in `ops/engines.go` (LibreOffice throwaway profile + runaway-output guard, OCR, Ghostscript pages, Potrace); CLI skills (`executor.type: cli`) are allowed for catalogued engines only and get param defaults from the engine (`fixedArgs`). Pandoc: `--sandbox` always; distro builds without embedded data files are retried without it (`pandocNeedsData`).
+- Add-ons (`internal/addons`, `app_addons.go`, `addons/manifest.json` embedded): one-click per-user installs, no admin, into `<UserConfigDir>/asteria/addons` (Win `%LocalAppData%\asteria\addons`; override `ASTERIA_ADDONS_DIR`). HTTPS only, pinned version/URL/size/sha256 per platform (`sha1_published` too for Potrace), checksum verified before unpack, .part resume, staging + rename, safe unpack (zip/tar.*/7z/dmg via hdiutil/msi via `msiexec /a` admin image/AppImage --appimage-extract/deb-bundle). `manual` entries = official page + reason (Ghostscript AGPL/installer-only, Tesseract mac/win, ImageMagick mac). Check/re-pin against upstream: `node scripts/addons/check.mjs [--deep] [--pin id platform url --version v]`. Live tests: `ASTERIA_ADDON_LIVE=1 ASTERIA_ADDONS_DIR=<scratch> go test ./internal/addons -run Live -v` (real downloads; clean/cancel/offline/corrupt/low-disk/remove). UI: `lib/AddonPrompt.svelte` (asked at first need; retry runs the skill with `missing: []`), Settings > Add-ons page, quick row shows add-on skills with a download mark.
+- Format matrix (`internal/engine/matrix_test.go`): `ASTERIA_MATRIX=1 [ASTERIA_MATRIX_PURE=1] [ASTERIA_MATRIX_OUT=docs/matrix/<os-arch>.json] go test ./internal/engine -run TestMatrix -v`. Runs every non-combine conversion skill on `testdata/formats/sample.<ext>` (skill-specific `<skillid>.<ext>` wins; aliases like .jpeg/.yml reuse the canonical fixture; `*` skills use any-file.txt) and verifies with an independent tool (ImageMagick/ffprobe/poppler/Python/GDAL ogrinfo/Assimp/fontTools/zstd/7-Zip); missing verifier = untested, never pass. Only built-in failures fail the test. Fixtures carry "Asteria matrix check"; engine fixtures from `scripts/fixtures/make-engine-fixtures.sh` (run in Linux with the engines). Publish: run the full matrix per platform into `docs/matrix/<os-arch>.json` (Linux with every engine is the broad one), then `node scripts/formats/build.mjs` merges them into `docs/formats.json` (schema 1: human names from scripts/formats/names.mjs, family, addon, verifiedOn; meant to drive a future landing page) and rewrites the README list/counts (`--check` to verify). Never hand-edit counts.
+- `internal/inspect`: Info summaries (dims/pages/duration/folder listing/text snippet), thumbnails, video poster via ffmpeg.
+- Frontend: `src/App.svelte` (state, keys, toasts, queue), `lib/CommandBar.svelte`, `lib/FileTile.svelte`, `lib/QuickLook.svelte`. Bindings in `frontend/bindings` are generated (gitignored).
+- UI look: tokens in `src/style.css` (dark is the hero). Color lives ONLY in the ambient wash (`.aura` blobs in App.svelte, opacity keyed off `data-phase` idle/ready/working/settled and `:has(.file-drop-target-active)`, the class the Wails runtime puts on the drop target during an OS drag). Everything else is neutral glass (`.glass`, override with `--glass-bg`; solid fallback for no backdrop-filter / reduced transparency). User accent (`--accent-rgb`, set by the Accent Color skill, default indigo from Go settings) is softened via `color-mix` into `--accent`; never use raw `rgb(var(--accent-rgb))` for large fills.
+- No Liquid Glass, native or imitated. The native NSGlassEffectView window (Wails `MacBackdropLiquidGlass`) was tried and removed on 2026-11-11: under a readable veil it showed nothing, and the owner called it a headache. CSS imitations were rejected earlier (8e737dd, reverted 00ad42d). Surfaces are solid; `appearance_darwin.go` only sets the NSWindow appearance from the theme. Command bar/Export are capsules (radius 26), focus halo 0.12.
+- Type: Geist / Geist Mono variable woff2 in `src/assets/fonts` (OFL). Light weights (200-300) only at >=17px; small labels stay 400+ so Windows rendering holds.
+- CommandBar quick actions = `Search('', targets)` filtered to applicable; type-specific skills first, one per `category`, add-on skills included (marked), then generic `*` skills (Suggestion.generic; zip/file info have priority) fill the rest. Param mode swaps the `<input>` element; `refocus()` keeps focus in the bar. Leading control is the + (PickFiles); never reintroduce a sparkle/star glyph anywhere (owner: reads as an AI mark).
+- Theme: `lib/theme.ts` sets `data-theme` (light/dark, resolved from settings.appearance + OS), `data-motion`/`data-transparency` overrides on <html>; CSS tokens: `:root` = light, `:root[data-theme='dark']` = dark. Use `motionReduced()` for JS/Svelte transitions.
+- Layout: `layout` (empty/grid/solo) lags `wantLayout` by one View Transition so the file morphs tile <-> `Hero.svelte` (`view-transition-name: subject`, one element at a time; `lastHero` keeps the hero alive while leaving). Solo = 1 file, or per_file mode with several.
+- Processing glow: `.pulse` in App.svelte, `pulse` state set 350 ms after busy starts (fast ops never light up), ok/fail resolve after. Six fixed-color layers cross-fade by opacity only; hues are `--hue-1..6` tokens per theme.
+- PDF first page: `lib/PdfPage.svelte` lazy-imports pdfjs-dist + worker (`?url`); falls back to a type card.
+- Icons: Lucide (ISC) inner SVG strings in generated `lib/icons.ts`; regenerate with `node scripts/icons/build-icons.mjs` after adding an `icon` to a skill (it fails on unknown or assistant-style names). `Icon.svelte` tints by family via `--fam-*` tokens in style.css (OKLCh, low chroma). Step chips get icons from `lib/skillmeta.svelte.ts` (ListSkills).
+- Ranking is tiered (`matchTier` in ranking.go): usable first (meta commands only on a name-prefix match), then name exact > name prefix > name words > alias exact/prefix/words > fuzzy; priority/usage/family within a tier. `Match.Alias` -> Suggestion.matched, shown in quotes.
+- Descriptions are short phrases (<= ~45 chars); defaults live in the param hint. Spatial effect sizes default to % of width (`args.Length`); video filters get `_width` from RunVideoFilter (`VideoLength`).
+- Settings is a centered modal sheet (`lib/Settings.svelte`, top edge fixed so rows can collapse without a jump; fits 980x680 with no scroll). One segmented style (`--seg-on` token, also Quick Look and Hero compare), one quiet `.btn`. Changes from the sheet don't toast. Accent presets come from the Accent Color skill; default Slate 112,128,150; old saturated presets migrate in `storage.normalize`. Use `shortcut('O')` (format.ts) for shortcut labels: ⌘O on macOS, Ctrl+O elsewhere. Naming presets: `{name}.{ext}`, `{name} {date}.{ext}`, `{name}-{skill}.{ext}` (NOT `{name}_{skill}.{ext}`: that legacy value is normalized back to the default).
 
-### Backend (Go)
-- **Entry point**: `main.go` - Creates Wails app instance, configures window options, and embeds frontend assets
-- **App struct**: `app.go` - Contains application logic and methods exposed to frontend
-- **Module**: `asteria` (defined in `go.mod`)
-- **Go version**: 1.25 (per `go.mod`)
-- **Framework**: Wails v3 alpha (`github.com/wailsapp/wails/v3`)
+## Commands
+- Tools: `go install github.com/wailsapp/wails/v3/cmd/wails3@v3.1.0` (this checkout keeps one in `.tools/`, gitignored). Go 1.26 (pulled by deps), Node 22.
+- Tests: `go test -tags nodynamic -race ./internal/...` (media tests skip without ffmpeg). UI: `cd frontend && npm run check`.
+- Bindings: `wails3 generate bindings -ts -i -clean=true` (needs `frontend/dist` to exist for the embed; touch a file if fresh).
+- Native: `wails3 build` / `wails3 task darwin:package:universal` + `wails3 task darwin:create:dmg` -> `bin/Asteria.app`, `bin/Asteria.dmg`.
+- Browser testing (no native window needed): `go build -tags server,nodynamic -o bin/asteria-server . && HOME=<scratch> ./bin/asteria-server` -> http://127.0.0.1:34217. Page exposes `window.__asteria` (bindings) and `window.__asteriaAdd(paths)` (adds like a drop). Use an isolated HOME or you will read/write the real user settings.
+- README skill list: `node scripts/skill-list.mjs` (from skills/core JSON). Format list/counts: `node scripts/formats/build.mjs` (names in scripts/formats/names.mjs).
+- Root package tests need `-tags nodynamic` (Wails ServerOptions). If `go get` ever moves wails/v3 off v3.1.0, the app package stops building (happened once: check go.mod after adding modules).
+- Screens/GIF/icon: `cd scripts/capture && npm install && node capture.mjs readme|gif|states|perf|icon` (needs `bin/asteria-server` built first, ffmpeg; downloads NASA photos into `.media`). Also `solo` (one-file view with odd shapes), `settings` (changes each setting via UI, restarts the server, asserts persistence: prints PASS/FAIL), `glow` (frames of the processing glow). `states` writes every UI state at 640/1000/1440 widths, both themes, to `scripts/capture/out` (drag-over is simulated by toggling the runtime's class; "no ffmpeg" is a route mock, review only). `ASTERIA_BIN=` points it at another build (before/after shots). Icon: edit `build/appicon.svg`, `node capture.mjs icon`, then `wails3 generate icons -input appicon.png -macfilename darwin/icons.icns -windowsfilename windows/icon.ico` in `build/` (copy icns to `darwin/dmg-file-icon.icns`).
+- Release: push `v*` tag -> `.github/workflows/release.yml` -> draft release. `scripts/set-version.sh X.Y.Z` stamps versions.
 
-### Frontend (Svelte + TypeScript)
-- **Location**: `frontend/` directory
-- **Entry point**: `frontend/src/main.ts` - Mounts Svelte app
-- **Main component**: `frontend/src/App.svelte` - Root Svelte component
-- **Build tool**: Vite with Svelte plugin
-- **TypeScript**: Full TypeScript support with type checking
-
-### Wails Bindings
-- **Location**: `frontend/wailsjs/`
-- **Generated by**: Wails build process
-- **Contains**: TypeScript/JavaScript bindings for calling Go methods from frontend
-- **Example**: `frontend/wailsjs/go/main/App.js` provides typed access to Go App struct methods
-- **Runtime**: `frontend/wailsjs/runtime/` provides Wails runtime APIs (events, dialogs, etc.)
-
-### Key Integration Points
-- Go methods on the `App` struct are automatically exposed to frontend when bound in `main.go`
-- Frontend calls Go methods via generated bindings (e.g., `import {Greet} from '../wailsjs/go/main/App.js'`)
-- Context object (`a.ctx`) in App struct provides access to Wails runtime methods
-- Frontend assets are embedded into the Go binary using `//go:embed all:frontend/dist`
-
-## Development Commands
-
-### Development Mode
-```bash
-wails dev
-```
-- Runs both Go backend and Vite dev server with hot reload
-- Frontend accessible at http://localhost:34115 for browser-based debugging
-- Changes to Go code or Svelte components reload automatically
-
-### Building
-```bash
-wails build
-```
-- Creates production binary in `build/bin/` directory
-- Embeds compiled frontend assets
-- Output binary name: `asteria` (configured in `wails.json`)
-
-### Frontend-Only Commands
-Run these from the project root or `frontend/` directory:
-
-```bash
-# Install frontend dependencies
-npm install
-
-# Run Vite dev server (frontend only, no Go backend)
-npm run dev
-
-# Build frontend assets
-npm run build
-
-# Type check Svelte components
-npm run check
-
-# Preview production build
-npm run preview
-```
-
-### Go Development
-```bash
-# Run Go code (without Wails runtime)
-go run .
-
-# Build Go binary (without frontend)
-go build
-
-# Install/update Go dependencies
-go mod tidy
-
-# Download Go dependencies
-go mod download
-```
-
-## Configuration Files
-
-- **wails.json**: Wails project configuration (app name, frontend commands, author info)
-- **frontend/package.json**: npm dependencies and scripts
-- **frontend/vite.config.ts**: Vite build configuration
-- **frontend/svelte.config.js**: Svelte compiler configuration
-- **frontend/tsconfig.json**: TypeScript configuration for frontend
-- **go.mod**: Go module dependencies
-
-## Project Structure Notes
-
-- `build/bin/`: Compiled binaries (gitignored)
-- `frontend/dist/`: Built frontend assets (gitignored, embedded in binary)
-- `frontend/src/assets/`: Static assets (images, etc.)
-- `frontend/wailsjs/`: Auto-generated Go-to-JS bindings (regenerated on build)
-
-## Adding Go Methods Callable from Frontend
-
-1. Add public method to `App` struct in `app.go`
-2. Run `wails dev` or `wails build` - bindings regenerate automatically
-3. Import generated binding in Svelte: `import {MethodName} from '../wailsjs/go/main/App.js'`
-4. Call method: `MethodName(args).then(result => ...)`
-
-## Important Patterns
-
-- Go methods exposed to frontend must have JSON-serializable parameters and return values
-- Use `a.ctx` in Go methods to access Wails runtime APIs (events, dialogs, window control)
-- Frontend-to-backend communication is asynchronous (Promise-based)
-- Wails dev server runs on port 34115 by default for browser debugging
-
-## Migration Notes
-
-- The original GitHub history used a Tauri + Svelte setup. This codebase now replaces it with Wails v3-alpha + Svelte + TypeScript.
-- Keep `frontend/wailsjs/` committed because bindings are generated and consumed by the frontend.
-- Keep build artifacts and local binaries out of git (`build/bin`, `frontend/dist`, root `asteria` binary).
-- README was rewritten to be a proper contributor-facing quickstart + architecture guide. Keep it updated as commands/versions change.
+## Hazards
+- Pixel handlers default to `pixelOutputExt` so a video input keeps .mp4 (the image rule turned it into .jpg once). New pixel skills that accept @video need an engine-level test, not just `h.Run`.
+- One user param per skill. Word values inline ("dither gameboy") work via the word-split fallback in `Ranker.Rank`; skill `priority` (0-20) picks the family representative before typing. Ranking tests: `TestSearchKeepsTheObviousOnTop`, `TestEmptyQueryRepresentatives`.
+- `engine/skills_bare_test.go` runs every pixel skill's bare command + every preset + on a proxy; new skills must change the test picture or be listed as a documented no-op.
+- Perf (M1 Air): 10-step chain on 24 MP ~10.6 s, slider preview ~70-100 ms warm, Auto Enhance on 300 x 2 MP photos ~21.5 s, peak ~1.8 GB. Measure: `ASTERIA_PERF_IMAGE=<jpg> ASTERIA_PERF_BATCH=<dir> go test -tags nodynamic -run Perf -v ./internal/engine`. Go's JPEG encoder is slow for anything but RGBA/YCbCr (EncodeImage hands it RGBA).
+- Build tag `nodynamic` (default via root Taskfile EXTRA_TAGS) keeps gen2brain/webp from loading a system libwebp.
+- HEIC uses `gen2brain/h265/heic` (pure Go, SIMD). Must pass `heic.Options{AutoRotate: true}`; the image.RegisterFormat wrapper does NOT rotate. The old WASM decoder (gen2brain/heic) was ~10x slower; don't reintroduce.
+- Wails exits a second instance inside `application.New`; workspace cleanup must stay after it (`attach`), or a second launch deletes the running app's work. `SecondInstanceData.Args[0]` is the executable.
+- Go PNG encoder writes 16-bit for YCbCr sources; `EncodeImage` converts first.
+- macOS GUI apps lack shell PATH; `internal/tools` also checks Homebrew/winget/scoop/choco dirs.
+- LibreOffice 26.8.1 (macOS) loops forever exporting a pandoc-made .docx table to text; .docx/.odt -> txt is pure Go now (`doc.text`), and `runLibreOffice` kills output > 256 MB + 64x input.
+- Windows: LibreOffice must run as `program/soffice.com` (soffice.exe never returns for --version); its profile lives in a short path (`<cache>/asteria/lo`, reused) because profiles under the session workspace passed MAX_PATH and LibreOffice failed silently. MSI add-ons unpack with `msiexec /a` (admin image, no elevation; layouts: LibreOffice `program/`, Calibre `PFiles64/Calibre2/`, 7-Zip `Files/7-Zip/`); the image's copy of the .msi is deleted. Proving "no admin": the PC's SSH session is elevated, so run tests through a one-shot `schtasks /it /ru Trevor` task (medium integrity) and log the token state.
+- Windows visual pass driver: pywinauto (UIA `invoke()` on web content found by name; Chromium exposes it lazily). For a real Explorer drag, place Explorer beside the app and check WindowFromPoint before releasing (a drop once landed in Explorer's sidebar and moved a file into ~/Videos).
+- ffmpeg builds without libvorbis/libopus (Homebrew): `runFFmpeg` retries with the built-in vorbis/opus encoders.
+- SVG previews are served raw as image/svg+xml with a CSP (img context: no scripts/external loads); `inspect.SVGSize` gives dims. Don't render SVG via an iframe/innerHTML.
+- Calibre gives empty books from `.htm` (not `.html`); ImageMagick builds without libheif can't verify HEIC (matrix falls back to ffprobe).
+- Linux build needs GTK4 + WebKitGTK 6.0 (`libgtk-4-dev libwebkitgtk-6.0-dev`), Ubuntu 24.04+.
+- pdfcpu must use `api.ConfigurationModeStateless` (otherwise it writes a config dir).
+- Old app versions stored `namingPattern: "{name}_{skill}.{ext}"`; settings normalize it to `{name}.{ext}`.
+- GIF size: the drifting wash changes every pixel; the capture pauses `.blob` animations and uses lossless CDP screencast frames. Lossy recordVideo made a 23 MB GIF.
+- This machine: Screen Recording permission is not granted to agents, so native window screenshots fail; use server mode + Playwright.

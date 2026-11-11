@@ -1,0 +1,33 @@
+{
+  "id": "favicon_set",
+  "name": "Favicon Set",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "favicon",
+    "website icon",
+    "favicon.ico",
+    "site icon",
+    "apple touch icon",
+    "web icons",
+    "make favicon"
+  ],
+  "category": "compose",
+  "icon": "globe",
+  "description": "favicon.ico and website icons",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "compose.favicon"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

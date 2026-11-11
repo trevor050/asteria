@@ -1,0 +1,28 @@
+{
+  "id": "decompress_zst",
+  "name": "Decompress zstd",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "unzstd",
+    "zstd decompress"
+  ],
+  "category": "archive",
+  "icon": "file-archive",
+  "description": "Unpack a .zst back to the original file",
+  "inputTypes": [
+    ".zst"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.unpack"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

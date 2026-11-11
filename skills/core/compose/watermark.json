@@ -1,0 +1,48 @@
+{
+  "id": "watermark",
+  "name": "Watermark",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "watermark text",
+    "add text",
+    "caption",
+    "copyright",
+    "text watermark",
+    "stamp text",
+    "add watermark",
+    "signature"
+  ],
+  "category": "compose",
+  "icon": "type",
+  "description": "Stamp text in the corner",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "text",
+      "label": "Text",
+      "type": "string",
+      "default": "",
+      "presets": [
+        "© Your Name",
+        "Confidential",
+        "Draft",
+        "Sample"
+      ],
+      "hint": "Leave empty for © and this year · any text · size is 4% of the shorter side"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "compose.text"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

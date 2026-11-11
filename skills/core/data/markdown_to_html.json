@@ -1,0 +1,30 @@
+{
+  "id": "markdown_to_html",
+  "name": "Markdown to HTML",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "md html",
+    "to html",
+    "render markdown"
+  ],
+  "category": "data",
+  "icon": "code-xml",
+  "description": "A standalone HTML page",
+  "inputTypes": [
+    ".md",
+    ".markdown"
+  ],
+  "outputType": ".html",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

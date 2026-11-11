@@ -1,0 +1,56 @@
+{
+  "id": "svg_to_png",
+  "name": "Convert SVG to PNG",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "svg png",
+    "rasterize svg",
+    "render svg"
+  ],
+  "category": "vector",
+  "icon": "shapes",
+  "description": "PNG from an SVG at 2x size",
+  "inputTypes": [
+    ".svg"
+  ],
+  "outputType": ".png",
+  "params": [
+    {
+      "name": "zoom",
+      "label": "Zoom",
+      "type": "int",
+      "default": 2,
+      "presets": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "hint": "scale factor (1-8) \u00b7 default 2",
+      "min": 1,
+      "max": 8
+    }
+  ],
+  "executor": {
+    "type": "cli",
+    "command": "resvg",
+    "args": [
+      "--zoom",
+      "{{zoom}}",
+      "{{input}}",
+      "{{output}}"
+    ],
+    "timeoutMs": 120000
+  },
+  "requires": [
+    "resvg"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

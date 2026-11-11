@@ -1,0 +1,19 @@
+{
+  "id": "web_thumbnail",
+  "name": "Web Thumbnail",
+  "version": "1.0.0",
+  "author": "you",
+  "aliases": ["thumb", "blog image"],
+  "category": "transform",
+  "description": "Fit inside 1280 px and save as WebP at 80% quality",
+  "inputTypes": ["@image"],
+  "outputType": ".webp",
+  "params": [],
+  "executor": {
+    "type": "pipeline",
+    "steps": [
+      { "skillId": "resize", "params": { "size": "1280" } },
+      { "skillId": "convert_to_webp", "params": { "quality": 80 } }
+    ]
+  }
+}

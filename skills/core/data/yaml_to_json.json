@@ -1,0 +1,30 @@
+{
+  "id": "yaml_to_json",
+  "name": "YAML to JSON",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "yaml json",
+    "yml json",
+    "to json"
+  ],
+  "category": "data",
+  "icon": "braces",
+  "description": "Pretty-printed JSON",
+  "inputTypes": [
+    ".yaml",
+    ".yml"
+  ],
+  "outputType": ".json",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

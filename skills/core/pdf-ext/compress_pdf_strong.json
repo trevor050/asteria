@@ -1,0 +1,46 @@
+{
+  "id": "compress_pdf_strong",
+  "name": "Shrink PDF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "shrink pdf",
+    "smaller pdf",
+    "reduce pdf size",
+    "ghostscript"
+  ],
+  "category": "pdf",
+  "icon": "file-text",
+  "description": "Much smaller PDF by recompressing images",
+  "inputTypes": [
+    "@pdf"
+  ],
+  "outputType": ".pdf",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "gs",
+    "args": [
+      "-dSAFER",
+      "-dBATCH",
+      "-dNOPAUSE",
+      "-dQUIET",
+      "-sDEVICE=pdfwrite",
+      "-dPDFSETTINGS=/ebook",
+      "-dCompatibilityLevel=1.5",
+      "-sOutputFile={{output}}",
+      "{{input}}"
+    ],
+    "timeoutMs": 300000
+  },
+  "requires": [
+    "gs"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

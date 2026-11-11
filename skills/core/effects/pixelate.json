@@ -1,0 +1,52 @@
+{
+  "id": "pixelate",
+  "name": "Pixelate",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "pixelise",
+    "pixelize",
+    "pixel",
+    "8-bit",
+    "blocky",
+    "censor",
+    "8bit"
+  ],
+  "category": "filter",
+  "icon": "grid-3x3",
+  "priority": 4,
+  "description": "Big square pixels",
+  "inputTypes": [
+    "@image",
+    "@video"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "size",
+      "label": "Block size",
+      "type": "string",
+      "default": "2%",
+      "presets": [
+        "1%",
+        "2%",
+        "4%",
+        "8%"
+      ],
+      "min": 0.5,
+      "max": 10,
+      "unit": "%",
+      "hint": "Block size: 2% of the width · or pixels like 16"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.pixelate"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

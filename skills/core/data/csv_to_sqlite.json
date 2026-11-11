@@ -1,0 +1,30 @@
+{
+  "id": "csv_to_sqlite",
+  "name": "CSV to SQLite",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "csv sqlite",
+    "csv to db",
+    "csv database"
+  ],
+  "category": "data",
+  "icon": "database",
+  "description": "A database with one table and typed columns",
+  "inputTypes": [
+    ".csv",
+    ".tsv"
+  ],
+  "outputType": ".sqlite",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.sqlite"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

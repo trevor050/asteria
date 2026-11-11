@@ -1,0 +1,39 @@
+{
+  "id": "convert_to_plist",
+  "name": "Convert to plist",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "json to plist",
+    "yaml to plist",
+    "toml to plist",
+    "property list"
+  ],
+  "category": "data",
+  "icon": "file-cog",
+  "description": "Write as an XML property list",
+  "inputTypes": [
+    ".json",
+    ".jsonl",
+    ".ndjson",
+    ".yaml",
+    ".yml",
+    ".toml",
+    ".ini",
+    ".cfg",
+    ".conf",
+    ".env"
+  ],
+  "outputType": ".plist",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.tree"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

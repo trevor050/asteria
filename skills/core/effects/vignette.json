@@ -1,0 +1,50 @@
+{
+  "id": "vignette",
+  "name": "Vignette",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "vignetting",
+    "dark corners",
+    "dark edges",
+    "edge darkening",
+    "corner shade"
+  ],
+  "category": "filter",
+  "icon": "circle-dot",
+  "priority": 5,
+  "description": "Darker corners",
+  "inputTypes": [
+    "@image",
+    "@video"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "amount",
+      "label": "Amount",
+      "type": "string",
+      "default": "50",
+      "presets": [
+        "25",
+        "50",
+        "75",
+        "100"
+      ],
+      "min": 1,
+      "max": 100,
+      "unit": "%",
+      "hint": "50 = natural · 100 = corners go black"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.vignette"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

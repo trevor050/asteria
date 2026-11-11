@@ -1,0 +1,35 @@
+{
+  "id": "flip",
+  "name": "Flip",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "flip vertical",
+    "upside down",
+    "turn upside down",
+    "invert vertically",
+    "vertical flip"
+  ],
+  "category": "transform",
+  "icon": "flip-vertical-2",
+  "description": "Upside down",
+  "inputTypes": [
+    "@image",
+    "@video"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.flip",
+    "with": {
+      "axis": "vertical"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

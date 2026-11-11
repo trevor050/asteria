@@ -1,0 +1,16 @@
+{
+  "id": "auto_levels",
+  "name": "Auto Levels",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["autolevels", "auto levels", "stretch channels", "remove color cast", "fix color cast", "auto color"],
+  "category": "adjust",
+  "icon": "chart-column-increasing",
+  "description": "Stretch each channel; clears color casts",
+  "inputTypes": ["@image"],
+  "outputType": "",
+  "params": [],
+  "executor": { "type": "native", "handler": "adjust.autolevels" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

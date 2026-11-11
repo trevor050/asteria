@@ -1,0 +1,29 @@
+{
+  "id": "convert_to_m4a",
+  "name": "Convert to M4A",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "m4a",
+    "aac"
+  ],
+  "category": "media",
+  "icon": "arrow-left-right",
+  "description": "AAC audio",
+  "inputTypes": [
+    "@media"
+  ],
+  "outputType": ".m4a",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

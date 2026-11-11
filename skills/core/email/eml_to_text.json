@@ -1,0 +1,29 @@
+{
+  "id": "eml_to_text",
+  "name": "Email to Text",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "eml to txt",
+    "read email",
+    "email text"
+  ],
+  "category": "email",
+  "icon": "mail",
+  "description": "Turn an .eml into plain text",
+  "inputTypes": [
+    ".eml"
+  ],
+  "outputType": ".txt",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "email.toText"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,50 @@
+{
+  "id": "glitch",
+  "name": "Glitch",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "glitchy",
+    "datamosh",
+    "vhs glitch",
+    "digital glitch",
+    "corrupt",
+    "signal error",
+    "distort"
+  ],
+  "category": "filter",
+  "icon": "vibrate",
+  "description": "Broken digital signal",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "intensity",
+      "label": "Intensity",
+      "type": "string",
+      "default": "50",
+      "presets": [
+        "25",
+        "50",
+        "75",
+        "100"
+      ],
+      "min": 1,
+      "max": 100,
+      "unit": "%",
+      "hint": "50 = glitchy · 100 = broken signal"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.glitch"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

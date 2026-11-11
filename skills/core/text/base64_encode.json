@@ -1,0 +1,30 @@
+{
+  "id": "base64_encode",
+  "name": "Base64 Encode",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to base64",
+    "encode base64",
+    "file to base64",
+    "b64"
+  ],
+  "category": "text",
+  "icon": "binary",
+  "description": "Turn any file into base64 text",
+  "inputTypes": [
+    "*"
+  ],
+  "outputType": ".txt",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "text.base64Encode"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

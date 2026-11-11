@@ -1,0 +1,28 @@
+{
+  "id": "exposure",
+  "name": "Exposure",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["ev", "stops", "exposure compensation", "overexpose", "underexpose", "f-stops"],
+  "category": "adjust",
+  "icon": "aperture",
+  "description": "Brighter or darker in camera stops",
+  "inputTypes": ["@image"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "stops",
+      "label": "Stops",
+      "type": "float",
+      "default": 1,
+      "presets": [0.5, 1, 2, -0.5, -1, -2],
+      "min": -5,
+      "max": 5,
+      "unit": "EV",
+      "hint": "+1 = twice the light · -1 = half · 0.5 = a gentle lift"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.exposure" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

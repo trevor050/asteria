@@ -1,0 +1,25 @@
+{
+  "id": "undo",
+  "name": "Undo",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "undo",
+    "revert",
+    "go back"
+  ],
+  "category": "meta",
+  "icon": "undo-2",
+  "description": "Undo the last skill",
+  "inputTypes": [
+    "*"
+  ],
+  "outputType": "none",
+  "params": [],
+  "isMeta": true,
+  "executor": {
+    "type": "meta"
+  },
+  "permissions": [],
+  "dangerLevel": 0
+}

@@ -1,0 +1,52 @@
+{
+  "id": "hue_rotate",
+  "name": "Hue Rotate",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "hue",
+    "hue shift",
+    "shift hue",
+    "rotate colors",
+    "rotate colours",
+    "color shift",
+    "colour shift"
+  ],
+  "category": "adjust",
+  "icon": "rainbow",
+  "description": "Shift every hue around the wheel",
+  "inputTypes": [
+    "@image",
+    "@video"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "degrees",
+      "label": "Degrees",
+      "type": "string",
+      "default": 45,
+      "presets": [
+        20,
+        45,
+        90,
+        180,
+        -45
+      ],
+      "min": -180,
+      "max": 180,
+      "unit": "°",
+      "hint": "45 = clear shift · 180 = opposite colors · -90 or 270 = the other way round"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "adjust.hue"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

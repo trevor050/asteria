@@ -1,0 +1,49 @@
+{
+  "id": "pixel_art_upscale",
+  "name": "Pixel Art Upscale",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "upscale pixel art",
+    "nearest neighbor",
+    "nearest neighbour",
+    "integer scale",
+    "enlarge pixels",
+    "pixel upscale",
+    "upscale",
+    "sharp upscale"
+  ],
+  "category": "transform",
+  "icon": "image-upscale",
+  "description": "Enlarge with crisp square pixels",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "factor",
+      "label": "Factor",
+      "type": "string",
+      "default": "4x",
+      "presets": [
+        "2x",
+        "3x",
+        "4x",
+        "8x",
+        "16x"
+      ],
+      "hint": "4 or 4x = each pixel becomes a 4x4 block · output is capped at 16384 px per side"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "geo.upscale"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

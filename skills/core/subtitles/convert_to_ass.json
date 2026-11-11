@@ -1,0 +1,34 @@
+{
+  "id": "convert_to_ass",
+  "name": "Convert to ASS",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to ass",
+    "ssa",
+    "srt to ass",
+    "advanced substation alpha"
+  ],
+  "category": "subtitles",
+  "icon": "captions",
+  "description": "Save subtitles as ASS/SSA for fansub players",
+  "inputTypes": [
+    ".srt",
+    ".vtt",
+    ".sbv",
+    ".ttml",
+    ".dfxp"
+  ],
+  "outputType": ".ass",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "subtitles.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

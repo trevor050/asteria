@@ -1,0 +1,34 @@
+{
+  "id": "image_difference",
+  "name": "Image Difference",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "compare stats",
+    "psnr",
+    "ssim",
+    "similarity",
+    "how different",
+    "image similarity"
+  ],
+  "category": "info",
+  "icon": "diff",
+  "description": "PSNR, SSIM and error stats (.json)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".json",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "info.comparestats"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "combine": true,
+  "outputName": "difference"
+}

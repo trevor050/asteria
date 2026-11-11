@@ -1,0 +1,31 @@
+{
+  "id": "flip_video",
+  "name": "Flip Video",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "mirror video",
+    "flip",
+    "mirror",
+    "horizontal flip"
+  ],
+  "category": "media",
+  "icon": "flip-horizontal-2",
+  "description": "Mirror the video left to right",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.flip"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

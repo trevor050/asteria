@@ -1,0 +1,28 @@
+{
+  "id": "sepia",
+  "name": "Sepia",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["vintage", "old photo", "antique", "brown tone", "retro", "old timey", "warm tone"],
+  "category": "adjust",
+  "icon": "palette",
+  "description": "Warm brown vintage tone",
+  "inputTypes": ["@image", "@video"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "amount",
+      "label": "Amount",
+      "type": "string",
+      "default": "100",
+      "presets": ["30", "60", "100"],
+      "min": 0,
+      "max": 100,
+      "unit": "%",
+      "hint": "100 = full sepia · 50% = half strength"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.sepia" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

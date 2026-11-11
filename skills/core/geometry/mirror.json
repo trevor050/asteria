@@ -1,0 +1,35 @@
+{
+  "id": "mirror",
+  "name": "Mirror",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "flip horizontal",
+    "horizontal flip",
+    "mirror image",
+    "reflect",
+    "flip left right"
+  ],
+  "category": "transform",
+  "icon": "flip-horizontal-2",
+  "description": "Left to right",
+  "inputTypes": [
+    "@image",
+    "@video"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.flip",
+    "with": {
+      "axis": "horizontal"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

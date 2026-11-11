@@ -1,0 +1,53 @@
+{
+  "id": "pandoc_to_latex",
+  "name": "Convert to LaTeX",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to latex",
+    "to tex",
+    "md to latex"
+  ],
+  "category": "document",
+  "icon": "file-type",
+  "description": "LaTeX source from Markdown or Word",
+  "inputTypes": [
+    ".md",
+    ".markdown",
+    ".html",
+    ".htm",
+    ".docx",
+    ".odt",
+    ".epub",
+    ".rst",
+    ".org",
+    ".textile",
+    ".ipynb"
+  ],
+  "outputType": ".tex",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "pandoc",
+    "args": [
+      "--sandbox",
+      "--standalone",
+      "-t",
+      "latex",
+      "-o",
+      "{{output}}",
+      "{{input}}"
+    ],
+    "timeoutMs": 300000
+  },
+  "requires": [
+    "pandoc"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

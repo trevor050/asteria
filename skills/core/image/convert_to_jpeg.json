@@ -3,26 +3,48 @@
   "name": "Convert to JPEG",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["jpg", "jpeg", "to jpg", "to jpeg"],
+  "aliases": [
+    "jpg",
+    "jpeg",
+    "to jpg",
+    "heic to jpg",
+    "png to jpg"
+  ],
   "category": "convert",
-  "description": "Convert images to JPEG format",
-  "inputTypes": [".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".gif"],
+  "icon": "arrow-left-right",
+  "priority": 5,
+  "description": "Opens everywhere; transparency turns white",
+  "inputTypes": [
+    "@image"
+  ],
   "outputType": ".jpg",
   "params": [
     {
       "name": "quality",
-      "type": "int",
       "label": "Quality",
+      "type": "int",
+      "hint": "90 = high quality · 75 = smaller file",
       "default": 90,
-      "presets": [95, 90, 85, 80, 70],
-      "min": 40,
-      "max": 100,
-      "unit": "%"
+      "presets": [
+        95,
+        90,
+        80,
+        70,
+        60
+      ],
+      "unit": "%",
+      "min": 1,
+      "max": 100
     }
   ],
-  "driver": "image",
-  "isMeta": false,
-  "executor": {"type": "native", "handler": "image.convert_to_jpeg"},
-  "permissions": ["files.read", "files.write", "files.temp"],
+  "executor": {
+    "type": "native",
+    "handler": "image.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
   "dangerLevel": 0
 }

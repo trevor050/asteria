@@ -1,0 +1,4 @@
+[
+  {"name": "Ada", "age": 36, "tags": ["math", "engines"], "zip": "01234"},
+  {"name": "Grace", "age": 85, "active": true, "address": {"city": "Arlington"}}
+]

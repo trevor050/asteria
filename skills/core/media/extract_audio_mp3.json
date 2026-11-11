@@ -1,0 +1,30 @@
+{
+  "id": "extract_audio_mp3",
+  "name": "Extract Audio as MP3",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "video to mp3",
+    "audio from video mp3",
+    "rip mp3"
+  ],
+  "category": "media",
+  "icon": "audio-lines",
+  "description": "Pull the audio out as MP3",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": ".mp3",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.extract_audio"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

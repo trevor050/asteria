@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  WAILS_VERSION: v3.1.0
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      # ffmpeg is optional for users but the media skill tests need it. The GTK and WebKit
+      # headers are needed to compile the Wails CLI on Linux.
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg build-essential pkg-config libgtk-4-dev libwebkitgtk-6.0-dev
+
+      - name: Go vet
+        run: go vet -tags nodynamic ./internal/...
+
+      - name: Go tests
+        run: go test -tags nodynamic -race ./internal/...
+
+      - name: Install the Wails CLI
+        run: go install github.com/wailsapp/wails/v3/cmd/wails3@${{ env.WAILS_VERSION }}
+
+      - name: Generate bindings
+        run: |
+          mkdir -p frontend/dist && touch frontend/dist/.keep
+          wails3 generate bindings -ts -i -clean=true
+
+      - name: Type-check and build the frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run check
+          npm run build
+
+      - name: Vet the app package
+        run: go vet -tags nodynamic .
+
+      - name: Test the app package (settings, export naming, privacy)
+        run: go test -tags nodynamic .
+
+      # Every built-in conversion must pass the format matrix on a real
+      # sample, checked by an independent tool where one is installed.
+      - name: Format matrix (built-in conversions)
+        run: ASTERIA_MATRIX=1 ASTERIA_MATRIX_PURE=1 go test -tags nodynamic ./internal/engine -run TestMatrix -v
+
+      - name: README format list matches docs/formats.json
+        run: node scripts/formats/build.mjs --check
+
+  build:
+    name: Build (${{ matrix.os }})
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-24.04]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential pkg-config libgtk-4-dev libwebkitgtk-6.0-dev
+
+      - name: Install the Wails CLI
+        run: go install github.com/wailsapp/wails/v3/cmd/wails3@${{ env.WAILS_VERSION }}
+
+      - name: Build the app
+        run: wails3 build
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: asteria-${{ runner.os }}
+          path: bin/
+          retention-days: 7

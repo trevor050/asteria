@@ -1,0 +1,29 @@
+{
+  "id": "convert_to_flac",
+  "name": "Convert to FLAC",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "flac",
+    "lossless audio"
+  ],
+  "category": "media",
+  "icon": "arrow-left-right",
+  "description": "Lossless audio",
+  "inputTypes": [
+    "@media"
+  ],
+  "outputType": ".flac",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

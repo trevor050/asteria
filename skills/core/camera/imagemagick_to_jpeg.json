@@ -1,0 +1,64 @@
+{
+  "id": "imagemagick_to_jpeg",
+  "name": "Convert to JPEG",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "psd to jpg",
+    "tga to jpg",
+    "avif to jpg",
+    "jxl to jpg"
+  ],
+  "category": "convert",
+  "icon": "arrow-left-right",
+  "description": "JPEG from PSD, TGA, ICO, EXR and similar",
+  "inputTypes": [
+    ".psd",
+    ".tga",
+    ".pcx",
+    ".ico",
+    ".jp2",
+    ".j2k",
+    ".dds",
+    ".xpm",
+    ".ppm",
+    ".pgm",
+    ".pbm",
+    ".pnm",
+    ".exr",
+    ".hdr",
+    ".avif",
+    ".jxl",
+    ".sgi",
+    ".ras",
+    ".xbm",
+    ".cur"
+  ],
+  "outputType": ".jpg",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "magick",
+    "args": [
+      "{{input}}",
+      "-auto-orient",
+      "-background",
+      "white",
+      "-flatten",
+      "-quality",
+      "92",
+      "{{output}}"
+    ],
+    "timeoutMs": 120000
+  },
+  "requires": [
+    "magick"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

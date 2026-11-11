@@ -1,0 +1,30 @@
+{
+  "id": "tar_zst",
+  "name": "Tar + zstd",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "tar.zst",
+    "tzst",
+    "make tar zst"
+  ],
+  "category": "archive",
+  "icon": "archive",
+  "description": "Pack a folder or file into a .tar.zst",
+  "inputTypes": [
+    "*",
+    "folder"
+  ],
+  "outputType": ".tar.zst",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.tarzst"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

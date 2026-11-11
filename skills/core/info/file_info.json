@@ -1,0 +1,31 @@
+{
+  "id": "file_info",
+  "name": "File Info",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "what is this file",
+    "identify",
+    "file type",
+    "details",
+    "inspect"
+  ],
+  "category": "info",
+  "priority": 12,
+  "icon": "file-search",
+  "description": "What a file really is, its size and hash",
+  "inputTypes": [
+    "*"
+  ],
+  "outputType": ".json",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "file.info"
+  },
+  "permissions": [
+    "files.read",
+    "files.write"
+  ],
+  "dangerLevel": 0
+}

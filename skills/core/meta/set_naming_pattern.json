@@ -3,22 +3,30 @@
   "name": "Set Naming Pattern",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["file name pattern", "naming pattern"],
+  "aliases": [
+    "file name pattern",
+    "naming pattern"
+  ],
   "category": "meta",
-  "description": "Configure output file names",
-  "inputTypes": ["*"],
+  "icon": "text-cursor-input",
+  "description": "How exported files are named",
+  "inputTypes": [
+    "*"
+  ],
   "outputType": "none",
   "params": [
     {
       "name": "pattern",
       "type": "string",
       "label": "Pattern",
-      "default": "{name}_{skill}.{ext}"
+      "hint": "{name}, {ext}, {skill} and {date} · e.g. {name} {date}.{ext}",
+      "default": "{name}-{skill}.{ext}"
     }
   ],
-  "driver": "meta",
   "isMeta": true,
-  "executor": {"type": "meta"},
+  "executor": {
+    "type": "meta"
+  },
   "permissions": [],
   "dangerLevel": 0
 }

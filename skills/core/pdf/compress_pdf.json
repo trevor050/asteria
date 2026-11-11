@@ -1,0 +1,29 @@
+{
+  "id": "compress_pdf",
+  "name": "Compress PDF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "optimize pdf",
+    "shrink pdf",
+    "smaller pdf"
+  ],
+  "category": "pdf",
+  "icon": "fold-vertical",
+  "description": "Smaller PDF, losslessly",
+  "inputTypes": [
+    "@pdf"
+  ],
+  "outputType": ".pdf",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "pdf.compress"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

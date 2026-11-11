@@ -1,0 +1,32 @@
+{
+  "id": "youtube_thumbnail",
+  "name": "YouTube Thumbnail",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "thumbnail",
+    "yt thumbnail",
+    "video thumbnail"
+  ],
+  "category": "sizes",
+  "icon": "monitor-play",
+  "description": "1280x720, cropped to fill",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fill",
+    "with": {
+      "size": "1280x720"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,31 @@
+{
+  "id": "convert_to_mp4",
+  "name": "Convert to MP4",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "mp4",
+    "mov to mp4",
+    "to mp4",
+    "h264"
+  ],
+  "category": "media",
+  "icon": "arrow-left-right",
+  "description": "H.264 MP4 that plays everywhere",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": ".mp4",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

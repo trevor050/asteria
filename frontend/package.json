@@ -1,25 +1,25 @@
 {
-  "name": "frontend",
+  "name": "asteria-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build:dev": "vite build --minify false --mode development",
+    "build": "vite build --mode production",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
-  "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^1.0.1",
-    "@tsconfig/svelte": "^3.0.0",
-    "svelte": "^3.49.0",
-    "svelte-check": "^2.8.0",
-    "svelte-preprocess": "^4.10.7",
-    "tslib": "^2.4.0",
-    "typescript": "^4.6.4",
-    "vite": "^3.0.7"
-  },
   "dependencies": {
-    "@wailsio/runtime": "^3.0.0-alpha.79"
+    "@wailsio/runtime": "3.1.0",
+    "pdfjs-dist": "^6.5.438"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^7.0.0",
+    "svelte": "^5.46.4",
+    "svelte-check": "^4.4.8",
+    "tslib": "^2.6.2",
+    "typescript": "^5.2.2",
+    "vite": "^8.2.4"
   }
 }

@@ -1,0 +1,35 @@
+{
+  "id": "convert_to_stl",
+  "name": "Convert to STL",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "obj to stl",
+    "ply to stl",
+    "glb to stl",
+    "3mf to stl",
+    "3d print"
+  ],
+  "category": "3d",
+  "icon": "cuboid",
+  "description": "Write the mesh as binary STL for 3D printing",
+  "inputTypes": [
+    ".obj",
+    ".ply",
+    ".gltf",
+    ".glb",
+    ".3mf"
+  ],
+  "outputType": ".stl",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "mesh.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,5 @@
+[app]
+title = "Asteria matrix check"
+port = 8080
+[db]
+host = "localhost"

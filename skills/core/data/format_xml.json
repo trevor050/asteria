@@ -1,0 +1,30 @@
+{
+  "id": "format_xml",
+  "name": "Format XML",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "pretty xml",
+    "prettify xml",
+    "indent xml",
+    "beautify xml"
+  ],
+  "category": "data",
+  "icon": "code-xml",
+  "description": "Indent with 2 spaces",
+  "inputTypes": [
+    ".xml"
+  ],
+  "outputType": ".xml",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.xmlFormat"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

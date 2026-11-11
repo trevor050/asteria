@@ -1,0 +1,33 @@
+{
+  "id": "normalize_loudness",
+  "name": "Normalize Loudness",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "loudnorm",
+    "normalize audio",
+    "even out volume",
+    "ebur128",
+    "lufs",
+    "volume normalize"
+  ],
+  "category": "media",
+  "icon": "volume-2",
+  "description": "Even out volume to -16 LUFS",
+  "inputTypes": [
+    "@media"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.normalize"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

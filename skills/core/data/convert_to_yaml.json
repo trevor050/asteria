@@ -1,0 +1,40 @@
+{
+  "id": "convert_to_yaml",
+  "name": "Convert to YAML",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "toml to yaml",
+    "xml to yaml",
+    "ini to yaml",
+    "env to yaml",
+    "plist to yaml",
+    "jsonl to yaml"
+  ],
+  "category": "data",
+  "icon": "file-code",
+  "description": "Write as readable YAML",
+  "inputTypes": [
+    ".toml",
+    ".xml",
+    ".ini",
+    ".cfg",
+    ".conf",
+    ".env",
+    ".plist",
+    ".jsonl",
+    ".ndjson"
+  ],
+  "outputType": ".yaml",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.tree"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

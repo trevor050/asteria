@@ -1,0 +1,51 @@
+{
+  "id": "dither",
+  "name": "Dither",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "dithering",
+    "floyd steinberg",
+    "retro palette",
+    "1-bit",
+    "gameboy",
+    "game boy",
+    "pico-8",
+    "pico8",
+    "cga",
+    "web safe"
+  ],
+  "category": "filter",
+  "icon": "binary",
+  "description": "Few colors with dotted shading",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "palette",
+      "label": "Palette",
+      "type": "string",
+      "default": "bw",
+      "presets": [
+        "bw",
+        "gameboy",
+        "cga",
+        "pico8",
+        "web"
+      ],
+      "hint": "bw · gameboy · cga · pico8 · web"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.dither"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

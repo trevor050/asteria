@@ -1,88 +1,166 @@
-Skills live in `skills/`.
+# Skills
 
-Core skills
-- Location: `skills/core/`
-- Shipped with the app and embedded into the binary.
-- During development, the app also loads from disk `skills/core/` (so edits hot-reload).
+Everything Asteria can do is a skill: one JSON file that says what it accepts, what it produces and how it runs. The built-in skills in [`core/`](core/) use exactly the same format as the ones you write, so if a built-in does something close to what you want, copy it and change it.
 
-Community skills
-- Location (runtime, per-user): `AppConfigDir()/skills/` (see `internal/storage/skills.go`)
-- Users/orgs can drop JSON skill definitions here (or pack folders later).
+## Adding your own
 
-POC: add a community skill (hot reload)
-1. Find your skills directory on disk (macOS example): `~/Library/Application Support/asteria/skills`
-2. Drop a JSON file anywhere under that folder (subfolders are fine)
-3. The app hot-reloads and the skill appears in search
+1. In Asteria, type `open skills folder` and press Enter. (It's `~/Library/Application Support/asteria/skills` on macOS, `%AppData%\asteria\skills` on Windows and `~/.config/asteria/skills` on Linux.)
+2. Drop a `.json` file in there. Subfolders are fine.
+3. That's it. Asteria watches the folder and picks up new or edited skills immediately. If a file has a mistake, Asteria tells you which file and what's wrong instead of silently ignoring it.
 
-Example (CLI skill)
-This example runs `ffmpeg` and therefore uses the base `tools.exec` permission.
+A skill in your folder with the same `id` as a built-in replaces the built-in.
+
+## A small example
+
+[`examples/web_thumbnail.json`](examples/web_thumbnail.json) chains two built-ins: fit the image inside 1280 px, then save it as WebP at 80% quality.
 
 ```json
 {
-  "id": "audio_mp3_to_wav",
-  "name": "MP3 to WAV",
-  "version": "0.1.0",
-  "author": "community",
-  "aliases": ["mp3 wav", "convert mp3"],
-  "category": "convert",
-  "description": "Convert MP3 to WAV using ffmpeg",
-  "inputTypes": [".mp3"],
-  "outputType": ".wav",
-  "params": [],
-  "driver": "cli",
-  "isMeta": false,
-  "executor": {
-    "type": "cli",
-    "command": "ffmpeg",
-    "args": ["-y", "-i", "{{input}}", "{{output}}"],
-    "timeoutMs": 600000
-  },
-  "permissions": ["files.read", "files.write", "files.temp", "tools.exec"],
-  "dangerLevel": 0
-}
-```
-
-Skill definition format (JSON)
-Each `.json` file describes exactly one skill.
-
-Required fields
-- `id` (string)
-- `name` (string)
-- `version` (string)
-
-Security model (Chrome-like)
-- Base permissions are allowed by default.
-- Elevated permissions require an explicit trust decision for community skills.
-- Core skills are implicitly trusted.
-
-Permissions
-- Base: `files.read`, `files.write`, `files.temp`, `tools.exec`
-- Elevated: `files.anywhere`, `network`, `tools.exec.any`, `system`
-
-Notes
-- The POC currently executes core image skills via the existing Go driver (by `id`).
-- CLI skills are executed by `internal/drivers/cli.go`.
-- Multi-step (pipeline) skills are supported by `executor.type: "pipeline"` and run a list of other skills in order.
-- The JSON format already includes an `executor` block so we can add Lua later without changing the format.
-
-Pipeline example
-This lets you do things like: HEIC -> PNG -> Grayscale -> HEIC.
-
-```json
-{
-  "id": "heic_grayscale",
-  "name": "HEIC Grayscale",
+  "id": "web_thumbnail",
+  "name": "Web Thumbnail",
   "version": "1.0.0",
-  "inputTypes": [".heic", ".heif"],
-  "outputType": ".heic",
-  "driver": "pipeline",
+  "aliases": ["thumb", "blog image"],
+  "category": "transform",
+  "description": "Fit inside 1280 px and save as WebP at 80% quality",
+  "inputTypes": ["@image"],
+  "outputType": ".webp",
   "executor": {
     "type": "pipeline",
     "steps": [
-      {"skillId": "convert_heic_to_png"},
-      {"skillId": "grayscale"},
-      {"skillId": "convert_png_to_heic"}
+      { "skillId": "resize", "params": { "size": "1280" } },
+      { "skillId": "convert_to_webp", "params": { "quality": 80 } }
     ]
   }
 }
 ```
+
+Copy it into your skills folder and type `thumb`.
+
+## Format
+
+| Field | Required | What it does |
+| --- | --- | --- |
+| `id` | yes | Unique id: lower-case letters, digits, `_`, `-`, `.` |
+| `name` | yes | What you see and search for in the command bar |
+| `version` | yes | Any version string, for your own bookkeeping |
+| `inputTypes` | yes | File types it accepts: extensions (`".png"`), groups (`"@image"`), `"folder"` or `"*"` |
+| `outputType` | no | Extension of the result (`".jpg"`), `"folder"`, or empty to keep the input's type |
+| `executor` | yes | How it runs: `native`, `pipeline` or `cli` (see below) |
+| `params` | no | At most **one** parameter the user types (see below) |
+| `aliases` | no | Extra words that should find it (`"jpg"`, `"extract audio"`) |
+| `description`, `category`, `author` | no | Shown in suggestions. `category` is the family the skill is listed under and nudges ranking: `convert`, `transform` (size and shape), `compress`, `adjust` (colour and tone), `filter` (effects), `compose`, `info`, `sizes`, `pdf`, `media`, `archive`, `data` |
+| `icon` | no | A [Lucide](https://lucide.dev/icons) icon name shown next to the skill, e.g. `"crop"`, `"palette"`, `"film"`. Pick one that says what the skill does. Without one, or with a name the app doesn't bundle, the family's icon is used (see below) |
+| `priority` | no | 0-20. Picks which skill stands for its family in the suggestions shown before anything is typed, and breaks ties between equally good matches |
+| `combine` | no | Many files in, one file out. Inferred from native handlers that combine |
+| `outputName` | no | Base name for combined results, e.g. `"merged"` |
+| `requires` | no | External programs it needs. Native handlers and CLI commands add theirs automatically |
+| `permissions` | no | See [Permissions](#permissions) |
+
+Input groups: `@image` (png, jpg, gif, bmp, tiff, webp, heic), `@video`, `@audio`, `@media` (video + audio), `@pdf`, `@archive` (zip, tar, tar.gz), `@data` (csv, tsv, json, yaml, md).
+
+### Parameters
+
+A skill takes zero or one parameter. One value keeps the command bar fast: `resize 50%`, `trim 0:05-0:30` and `extract pages 1-3, 5` are all "skill name, then value".
+
+```json
+"params": [{
+  "name": "size",
+  "label": "Size",
+  "type": "string",
+  "default": "50%",
+  "presets": ["75%", "50%", "25%", "1920"],
+  "unit": "",
+  "hint": "50% · 1920 (width) · x1080 (height) · 1920x1080 (fit inside)"
+}]
+```
+
+Tab cycles through `presets`. Values arrive as typed and the handler validates them, so a bad value gives a readable error on that file instead of a crash.
+
+### `native`: reuse a built-in operation
+
+```json
+"executor": { "type": "native", "handler": "image.convert", "with": { "quality": 60 } }
+```
+
+`with` sets fixed arguments; the user's parameter, if any, is layered on top. For example, a "JPEG for email" skill is `image.convert` with `outputType: ".jpg"` and `with: { "quality": 60 }`.
+
+| Handler | Arguments | Notes |
+| --- | --- | --- |
+| `image.convert` | `quality` (1-100) | Writes the format of `outputType`: png, jpg, webp, heic, gif, bmp, tiff |
+| `image.resize` | `size`, `quality` | `50%`, `1920` (width), `x1080` (height), `1920x1080` (fit inside). Never upscales by pixels |
+| `image.compress` | `quality` | Lossy for JPEG/WebP/HEIC, lossless max for PNG; keeps the original if re-encoding doesn't help |
+| `image.rotate` | `angle` (90, 180, 270) | Clockwise |
+| `image.grayscale` | | |
+| `image.blur` | `radius` | Gaussian |
+| `pdf.from_images` | | Combine. One page per image, sized to the image |
+| `pdf.merge` | | Combine. In tray order |
+| `pdf.split` | | Folder output: `page-001.pdf`, `page-002.pdf`, ... |
+| `pdf.extract` | `pages` | `1-3, 5, 8-`, in the order typed |
+| `pdf.compress` | | Lossless optimization; keeps the original if it can't shrink it |
+| `media.convert` | `crf` | Needs ffmpeg. Encoding follows `outputType`: mp4, webm, gif, mp3, m4a, wav, flac, ogg, opus |
+| `media.compress` | `crf` (18-40) | Needs ffmpeg. H.264 at the given quality |
+| `media.trim` | `range` | Needs ffmpeg. `0:05-0:30`, `-1:00`, `1:00-` |
+| `archive.zip` | | Combine. Folders are zipped with their structure |
+| `archive.extract` | | Folder output. zip, tar, tar.gz, gz. Blocks path traversal and archive bombs |
+| `data.convert` | | csv/tsv → json or md, json → csv or yaml, yaml → json, md → html |
+
+### `pipeline`: run other skills in order
+
+```json
+"executor": { "type": "pipeline", "steps": [{ "skillId": "resize", "params": { "size": "1280" } }, { "skillId": "convert_to_webp" }] }
+```
+
+Each step gets the previous step's output. Step `params` override the user's value. Intermediate files are cleaned up; only the final result becomes a step in the tray.
+
+### `cli`: run a program you have installed
+
+```json
+{
+  "id": "docx_from_markdown",
+  "name": "Markdown to Word",
+  "version": "1.0.0",
+  "inputTypes": [".md"],
+  "outputType": ".docx",
+  "executor": { "type": "cli", "command": "pandoc", "args": ["{{input}}", "-o", "{{output}}"], "timeoutMs": 60000 },
+  "permissions": ["files.read", "files.write", "tools.exec"]
+}
+```
+
+Arguments are passed straight to the program, never through a shell. `{{input}}`, `{{output}}` and `{{<param name>}}` are substituted; a lone `{{inputs}}` argument expands to every input of a combine skill. The program must write `{{output}}`; if it exits non-zero, its last lines of stderr are shown on that file.
+
+Asteria finds programs on your `PATH` and in the usual Homebrew, winget, Scoop and Chocolatey folders (GUI apps on macOS don't inherit your shell's `PATH`). If the program isn't installed, the suggestion says so and Enter shows how to install it.
+
+### Icons
+
+Each row in the command bar starts with the skill's icon, tinted quietly by family. The app bundles the Lucide icons its own skills use plus common ones for yours: `file`, `image`, `video`, `music`, `camera`, `type`, `code`, `terminal`, `globe`, `mail`, `printer`, `lock`, `shield`, `eye`, `search`, `calendar`, `tag`, `table`, `chart-bar`, `scissors`, `paintbrush`, `pen`, `package`, `copy` and the rest listed in [`frontend/src/lib/icons.ts`](../frontend/src/lib/icons.ts). Family defaults:
+
+| Category | Default icon |
+| --- | --- |
+| `convert` | `arrow-left-right` |
+| `transform` | `scaling` |
+| `sizes` | `ratio` |
+| `compress` | `fold-vertical` |
+| `adjust` | `palette` |
+| `filter` | `blend` |
+| `compose` | `layers` |
+| `info` | `info` |
+| `pdf` | `file-text` |
+| `media` | `clapperboard` |
+| `archive` | `archive` |
+| `data` | `braces` |
+| `meta` | `settings-2` |
+
+To bundle another Lucide icon, add it to a skill (or to `EXTRA` in [`scripts/icons/build-icons.mjs`](../scripts/icons/build-icons.mjs)) and run `node scripts/icons/build-icons.mjs`.
+
+## Permissions
+
+Built-in skills are trusted. Skills from your folder declare what they need:
+
+- Base, allowed automatically: `files.read`, `files.write`, `files.temp`, `tools.exec` (running ffmpeg, ffprobe, magick, pandoc, cwebp, gs or qpdf).
+- Elevated, asked once per skill: `tools.exec.any` (any other program), `files.anywhere`, `network`, `system`.
+
+A CLI skill that runs something outside the list above has to declare `tools.exec.any`, and Asteria asks before the first run.
+
+## Where things live
+
+Core skills are embedded in the app binary. When you run Asteria from a source checkout, `skills/core` is also watched, so editing a built-in reloads it without rebuilding.

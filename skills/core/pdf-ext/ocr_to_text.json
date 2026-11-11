@@ -1,0 +1,47 @@
+{
+  "id": "ocr_to_text",
+  "name": "Extract Text (OCR)",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "ocr",
+    "image to text",
+    "read text"
+  ],
+  "category": "pdf",
+  "icon": "scan-text",
+  "description": "Plain text read from an image",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".txt",
+  "params": [
+    {
+      "name": "language",
+      "label": "Language",
+      "type": "string",
+      "default": "eng",
+      "presets": [
+        "eng",
+        "deu",
+        "fra",
+        "spa"
+      ],
+      "hint": "Tesseract code, e.g. fra+eng · default eng"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "engine.ocr"
+  },
+  "requires": [
+    "tesseract"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

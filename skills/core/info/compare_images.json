@@ -1,0 +1,33 @@
+{
+  "id": "compare_images",
+  "name": "Compare Images",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "compare",
+    "diff",
+    "difference",
+    "spot the difference",
+    "image diff"
+  ],
+  "category": "info",
+  "icon": "git-compare",
+  "description": "Mark the differences in red (.png)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".png",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "info.compare"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "combine": true,
+  "outputName": "comparison"
+}

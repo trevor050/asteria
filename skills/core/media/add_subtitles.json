@@ -1,0 +1,36 @@
+{
+  "id": "add_subtitles",
+  "name": "Add Subtitles",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "soft subtitles",
+    "subtitle track",
+    "mux subtitles",
+    "captions",
+    "srt to video"
+  ],
+  "category": "media",
+  "icon": "captions",
+  "description": "Add a subtitle track you can switch off",
+  "inputTypes": [
+    "@video",
+    ".srt",
+    ".vtt",
+    ".ass",
+    ".ssa"
+  ],
+  "outputType": ".mkv",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.add_subtitles"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,32 @@
+{
+  "id": "instagram_portrait",
+  "name": "Instagram Portrait",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "instagram 4:5",
+    "insta portrait",
+    "ig portrait"
+  ],
+  "category": "sizes",
+  "icon": "smartphone",
+  "description": "1080x1350, cropped to fill",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fill",
+    "with": {
+      "size": "1080x1350"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

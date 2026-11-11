@@ -1,0 +1,38 @@
+{
+  "id": "vertical_strip",
+  "name": "Vertical Strip",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "stack images",
+    "stack vertically",
+    "vertical stitch",
+    "one above another",
+    "long screenshot",
+    "merge images vertically",
+    "stitch screenshots"
+  ],
+  "category": "compose",
+  "icon": "gallery-vertical",
+  "description": "Stack pictures top to bottom",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".png",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "compose.strip",
+    "with": {
+      "direction": "vertical"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "combine": true,
+  "outputName": "stack"
+}

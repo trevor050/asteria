@@ -1,0 +1,45 @@
+{
+  "id": "list_archive_contents",
+  "name": "List Archive Contents",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "ls archive",
+    "list zip",
+    "archive contents",
+    "what's in this archive"
+  ],
+  "category": "archive",
+  "icon": "list",
+  "description": "List files in an archive as a .txt",
+  "inputTypes": [
+    ".zip",
+    ".tar",
+    ".tgz",
+    ".tar.gz",
+    ".tar.xz",
+    ".txz",
+    ".tar.zst",
+    ".tzst",
+    ".tar.bz2",
+    ".tbz2",
+    ".tbz",
+    ".7z",
+    ".gz",
+    ".xz",
+    ".zst",
+    ".bz2"
+  ],
+  "outputType": ".txt",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.list"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

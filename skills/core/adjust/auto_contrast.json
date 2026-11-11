@@ -1,0 +1,16 @@
+{
+  "id": "auto_contrast",
+  "name": "Auto Contrast",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["autocontrast", "auto contrast", "stretch contrast", "normalize", "normalise", "fix flat"],
+  "category": "adjust",
+  "icon": "sun-moon",
+  "description": "Stretch brightness to the full range",
+  "inputTypes": ["@image"],
+  "outputType": "",
+  "params": [],
+  "executor": { "type": "native", "handler": "adjust.autocontrast" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

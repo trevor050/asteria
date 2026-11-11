@@ -1,0 +1,48 @@
+{
+  "id": "denoise",
+  "name": "Denoise",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "noise reduction",
+    "remove noise",
+    "clean up",
+    "despeckle",
+    "reduce noise",
+    "smooth noise"
+  ],
+  "category": "filter",
+  "icon": "brush-cleaning",
+  "description": "Smooth noise, keep edges",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "strength",
+      "label": "Strength",
+      "type": "string",
+      "default": "50",
+      "presets": [
+        "25",
+        "50",
+        "75",
+        "100"
+      ],
+      "min": 1,
+      "max": 100,
+      "hint": "25 = light · 100 = strong, can look plasticky · default 50"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.denoise"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

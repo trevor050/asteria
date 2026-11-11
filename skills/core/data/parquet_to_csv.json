@@ -1,0 +1,27 @@
+{
+  "id": "parquet_to_csv",
+  "name": "Parquet to CSV",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "parquet csv"
+  ],
+  "category": "data",
+  "icon": "sheet",
+  "description": "Flat Parquet rows as CSV",
+  "inputTypes": [
+    ".parquet"
+  ],
+  "outputType": ".csv",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.parquet"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

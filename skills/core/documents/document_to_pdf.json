@@ -1,0 +1,39 @@
+{
+  "id": "document_to_pdf",
+  "name": "Convert to PDF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "doc to pdf",
+    "word to pdf",
+    "docx pdf"
+  ],
+  "category": "document",
+  "priority": 15,
+  "icon": "file-text",
+  "description": "PDF from a Word, ODT or RTF document",
+  "inputTypes": [
+    ".docx",
+    ".doc",
+    ".odt",
+    ".rtf",
+    ".wpd",
+    ".wps"
+  ],
+  "outputType": ".pdf",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "engine.libreoffice"
+  },
+  "requires": [
+    "soffice"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

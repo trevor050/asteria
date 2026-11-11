@@ -1,0 +1,37 @@
+{
+  "id": "convert_to_env",
+  "name": "Convert to .env",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "json to env",
+    "yaml to env",
+    "dotenv",
+    "environment file"
+  ],
+  "category": "data",
+  "icon": "key-round",
+  "description": "Write KEY=value lines from a flat object",
+  "inputTypes": [
+    ".json",
+    ".yaml",
+    ".yml",
+    ".toml",
+    ".ini",
+    ".cfg",
+    ".conf",
+    ".plist"
+  ],
+  "outputType": ".env",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.tree"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

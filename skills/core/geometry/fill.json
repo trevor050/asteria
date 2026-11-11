@@ -1,0 +1,46 @@
+{
+  "id": "fill",
+  "name": "Fill",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "cover",
+    "fill size",
+    "fill canvas",
+    "crop to fill",
+    "fit and crop"
+  ],
+  "category": "transform",
+  "icon": "maximize",
+  "description": "Cover an exact size, crop the rest",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "size",
+      "label": "Size",
+      "type": "string",
+      "default": "1080x1080",
+      "presets": [
+        "1080x1080",
+        "1920x1080",
+        "1080x1920",
+        "1200x630",
+        "512x512"
+      ],
+      "hint": "1080x1080 = width x height · picture is scaled to cover, extra is cropped"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fill"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

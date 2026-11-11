@@ -1,0 +1,32 @@
+{
+  "id": "video_contact_sheet",
+  "name": "Video Contact Sheet",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "contact sheet",
+    "video storyboard",
+    "video grid",
+    "filmstrip",
+    "preview grid"
+  ],
+  "category": "media",
+  "icon": "layout-grid",
+  "description": "Grid of 16 frames as one JPG",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": ".jpg",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.contact_sheet"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

@@ -1,17 +1,26 @@
 {
   "id": "switch_to_batch",
-  "name": "Switch to Batch",
+  "name": "Apply to All Files",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["batch", "apply to all"],
+  "aliases": [
+    "batch",
+    "all files",
+    "apply to all",
+    "switch to batch"
+  ],
   "category": "meta",
-  "description": "Apply skills to all files",
-  "inputTypes": ["*"],
+  "icon": "layout-grid",
+  "description": "Skills apply to every selected file",
+  "inputTypes": [
+    "*"
+  ],
   "outputType": "none",
   "params": [],
-  "driver": "meta",
   "isMeta": true,
-  "executor": {"type": "meta"},
+  "executor": {
+    "type": "meta"
+  },
   "permissions": [],
   "dangerLevel": 0
 }

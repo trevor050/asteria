@@ -1,0 +1,26 @@
+{
+  "id": "channel",
+  "name": "Channel",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["red channel", "green channel", "blue channel", "color channel", "colour channel", "single channel", "extract channel"],
+  "category": "adjust",
+  "icon": "rows-3",
+  "description": "One color channel as grayscale",
+  "inputTypes": ["@image", "@video"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "channel",
+      "label": "Channel",
+      "type": "string",
+      "default": "red",
+      "presets": ["red", "green", "blue"],
+      "options": ["red", "green", "blue"],
+      "hint": "red · green · blue (or r, g, b)"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.channel" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

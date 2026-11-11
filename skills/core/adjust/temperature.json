@@ -1,0 +1,51 @@
+{
+  "id": "temperature",
+  "name": "Temperature",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "warm",
+    "warmer",
+    "warmth",
+    "colour temperature",
+    "color temperature",
+    "kelvin",
+    "golden"
+  ],
+  "category": "adjust",
+  "icon": "thermometer",
+  "description": "Warmer, toward orange",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "amount",
+      "label": "Amount",
+      "type": "string",
+      "default": "+40",
+      "presets": [
+        "+20",
+        "+40",
+        "+70",
+        "-40",
+        "-70"
+      ],
+      "min": -100,
+      "max": 100,
+      "unit": "",
+      "hint": "+40 = warmer (orange) · -40 = cooler (blue)"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "adjust.temperature"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

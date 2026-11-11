@@ -1,0 +1,36 @@
+{
+  "id": "convert_to_ttf",
+  "name": "Convert to TTF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "ttf",
+    "truetype",
+    "woff to ttf",
+    "woff2 to ttf",
+    "desktop font",
+    "unpack font"
+  ],
+  "category": "fonts",
+  "icon": "type",
+  "description": "Desktop TTF font from a WOFF or WOFF2",
+  "inputTypes": [
+    ".woff",
+    ".woff2"
+  ],
+  "outputType": ".ttf",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "fonts.sfnt",
+    "with": {
+      "flavor": "ttf"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

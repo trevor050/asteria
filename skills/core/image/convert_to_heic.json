@@ -1,0 +1,48 @@
+{
+  "id": "convert_to_heic",
+  "name": "Convert to HEIC",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "heic",
+    "heif",
+    "to heic",
+    "jpg to heic"
+  ],
+  "category": "convert",
+  "icon": "arrow-left-right",
+  "priority": 3,
+  "description": "About half the size of JPEG",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".heic",
+  "params": [
+    {
+      "name": "quality",
+      "label": "Quality",
+      "type": "int",
+      "hint": "70 = high quality · 50 = smaller file",
+      "default": 70,
+      "presets": [
+        90,
+        80,
+        70,
+        60
+      ],
+      "unit": "%",
+      "min": 1,
+      "max": 100
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "image.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

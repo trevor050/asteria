@@ -1,0 +1,29 @@
+{
+  "id": "decompress_gz",
+  "name": "Decompress gzip",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "gunzip",
+    "ungzip",
+    "unzip gz"
+  ],
+  "category": "archive",
+  "icon": "file-archive",
+  "description": "Unpack a .gz back to the original file",
+  "inputTypes": [
+    ".gz"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.unpack"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

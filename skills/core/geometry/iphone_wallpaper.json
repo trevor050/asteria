@@ -1,0 +1,32 @@
+{
+  "id": "iphone_wallpaper",
+  "name": "iPhone Wallpaper",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "phone wallpaper",
+    "iphone background",
+    "lock screen"
+  ],
+  "category": "sizes",
+  "icon": "smartphone",
+  "description": "1179x2556, cropped to fill",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fill",
+    "with": {
+      "size": "1179x2556"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

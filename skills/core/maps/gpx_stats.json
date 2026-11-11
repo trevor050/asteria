@@ -1,0 +1,35 @@
+{
+  "id": "gpx_stats",
+  "name": "Track Stats",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "gpx stats",
+    "track distance",
+    "elevation gain",
+    "route length",
+    "hike stats",
+    "track info"
+  ],
+  "category": "maps",
+  "icon": "ruler",
+  "description": "Measure distance, climb and time as JSON",
+  "inputTypes": [
+    ".gpx",
+    ".geojson",
+    ".kml",
+    ".kmz"
+  ],
+  "outputType": ".json",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.stats"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

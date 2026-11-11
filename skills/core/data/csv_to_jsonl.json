@@ -1,0 +1,29 @@
+{
+  "id": "csv_to_jsonl",
+  "name": "CSV to JSON Lines",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "csv jsonl",
+    "csv ndjson"
+  ],
+  "category": "data",
+  "icon": "list-tree",
+  "description": "One object per row, keyed by the header",
+  "inputTypes": [
+    ".csv",
+    ".tsv"
+  ],
+  "outputType": ".jsonl",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.tree"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

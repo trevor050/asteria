@@ -1,0 +1,49 @@
+{
+  "id": "cool",
+  "name": "Cooler",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "cool",
+    "cool down",
+    "colder",
+    "cold",
+    "blue tone",
+    "cool tone"
+  ],
+  "category": "adjust",
+  "icon": "snowflake",
+  "description": "Cooler, toward blue",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "amount",
+      "label": "Amount",
+      "type": "string",
+      "default": "-40",
+      "presets": [
+        "-20",
+        "-40",
+        "-70",
+        "-100"
+      ],
+      "min": -100,
+      "max": 0,
+      "unit": "",
+      "hint": "-40 = cooler · -100 = icy"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "adjust.temperature"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

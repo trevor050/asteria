@@ -1,0 +1,32 @@
+{
+  "id": "show_metadata",
+  "name": "Show Metadata",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "exif",
+    "info",
+    "details",
+    "camera info",
+    "where was this taken",
+    "metadata"
+  ],
+  "category": "info",
+  "icon": "info",
+  "description": "Camera, date, GPS and more (.json)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".json",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "info.metadata"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

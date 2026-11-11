@@ -1,0 +1,34 @@
+{
+  "id": "presentation_to_pptx",
+  "name": "PowerPoint Presentation",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to pptx",
+    "to powerpoint",
+    "ppt to pptx"
+  ],
+  "category": "document",
+  "icon": "presentation",
+  "description": "PowerPoint .pptx from PPT or ODP",
+  "inputTypes": [
+    ".ppt",
+    ".odp"
+  ],
+  "outputType": ".pptx",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "engine.libreoffice"
+  },
+  "requires": [
+    "soffice"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

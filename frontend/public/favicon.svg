@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Asteria app icon: two file sheets over the app's ambient glow. Render to build/appicon.png with scripts/capture (node capture.mjs icon). -->
+  <defs>
+    <clipPath id="tile">
+      <rect x="100" y="100" width="824" height="824" rx="186" />
+    </clipPath>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="90" />
+    </filter>
+    <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b1d21" />
+      <stop offset="1" stop-color="#0d0e10" />
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fbfaf6" />
+      <stop offset="1" stop-color="#dcd8cf" />
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.16" />
+      <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.03" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.06" />
+    </linearGradient>
+    <filter id="lift" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity="0.45" />
+    </filter>
+  </defs>
+  <g clip-path="url(#tile)">
+    <rect x="100" y="100" width="824" height="824" fill="url(#base)" />
+    <g filter="url(#soft)" opacity="0.9">
+      <circle cx="250" cy="200" r="260" fill="#4f8592" />
+      <circle cx="800" cy="210" r="250" fill="#a8783e" />
+      <circle cx="540" cy="80" r="220" fill="#5d6a90" />
+    </g>
+    <path d="M362 290H544L632 378V648Q632 678 602 678H362Q332 678 332 648V320Q332 290 362 290Z" fill="#ffffff" fill-opacity="0.07" stroke="#f1eee6" stroke-opacity="0.55" stroke-width="12" stroke-linejoin="round" />
+    <g filter="url(#lift)">
+      <path d="M422 346H604L692 434V704Q692 734 662 734H422Q392 734 392 704V376Q392 346 422 346Z" fill="url(#paper)" />
+      <path d="M604 346V418Q604 434 620 434H692Z" fill="#bdb8ad" />
+    </g>
+  </g>
+  <rect x="101" y="101" width="822" height="822" rx="185" fill="none" stroke="url(#edge)" stroke-width="2" />
+</svg>

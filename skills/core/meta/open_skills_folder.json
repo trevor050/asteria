@@ -1,0 +1,25 @@
+{
+  "id": "open_skills_folder",
+  "name": "Open Skills Folder",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "custom skills",
+    "my skills",
+    "add skill"
+  ],
+  "category": "meta",
+  "icon": "folder-open",
+  "description": "Where your own skills live",
+  "inputTypes": [
+    "*"
+  ],
+  "outputType": "none",
+  "params": [],
+  "isMeta": true,
+  "executor": {
+    "type": "meta"
+  },
+  "permissions": [],
+  "dangerLevel": 0
+}

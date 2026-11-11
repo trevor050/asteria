@@ -1,28 +1,49 @@
 {
   "id": "compress",
-  "name": "Compress",
+  "name": "Compress Image",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["compress file", "reduce size", "shrink"],
+  "aliases": [
+    "cmp",
+    "compress",
+    "reduce size",
+    "smaller file"
+  ],
   "category": "compress",
-  "description": "Reduce file size by lowering quality",
-  "inputTypes": [".jpg", ".jpeg", ".png"],
+  "icon": "fold-vertical",
+  "priority": 10,
+  "description": "Smaller file at a lower quality",
+  "inputTypes": [
+    "@image"
+  ],
   "outputType": "",
   "params": [
     {
       "name": "quality",
-      "type": "int",
       "label": "Quality",
-      "default": 85,
-      "presets": [90, 80, 70, 60],
-      "min": 40,
-      "max": 100,
-      "unit": "%"
+      "type": "int",
+      "hint": "75 = good balance · 50 = smaller file · quality 1-100",
+      "default": 75,
+      "presets": [
+        95,
+        90,
+        80,
+        70,
+        60
+      ],
+      "unit": "%",
+      "min": 1,
+      "max": 100
     }
   ],
-  "driver": "image",
-  "isMeta": false,
-  "executor": {"type": "native", "handler": "image.compress"},
-  "permissions": ["files.read", "files.write", "files.temp"],
+  "executor": {
+    "type": "native",
+    "handler": "image.compress"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
   "dangerLevel": 0
 }

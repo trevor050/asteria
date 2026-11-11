@@ -1,0 +1,49 @@
+{
+  "id": "fill_background",
+  "name": "Fill Background",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "background color",
+    "background colour",
+    "flatten",
+    "remove transparency",
+    "solid background",
+    "add background",
+    "fill transparent",
+    "white background"
+  ],
+  "category": "compose",
+  "icon": "paint-bucket",
+  "description": "Replace transparency with a color",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "color",
+      "label": "Color",
+      "type": "string",
+      "default": "white",
+      "presets": [
+        "white",
+        "black",
+        "#f5f5f5",
+        "#1a1a1a",
+        "#ff8800"
+      ],
+      "hint": "white · #ff8800 · 255,136,0 · any color name"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "compose.background"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

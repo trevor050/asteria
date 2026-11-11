@@ -1,0 +1,16 @@
+{
+  "id": "auto_white_balance",
+  "name": "Auto White Balance",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["white balance", "awb", "auto wb", "fix white balance", "neutralize", "neutralise", "gray world", "remove tint"],
+  "category": "adjust",
+  "icon": "scale",
+  "description": "Neutralize an overall color cast",
+  "inputTypes": ["@image"],
+  "outputType": "",
+  "params": [],
+  "executor": { "type": "native", "handler": "adjust.whitebalance" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

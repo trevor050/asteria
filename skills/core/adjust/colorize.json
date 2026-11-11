@@ -1,0 +1,25 @@
+{
+  "id": "colorize",
+  "name": "Colorize",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["tint with color", "tint with colour", "color overlay", "colour overlay", "wash", "color wash", "colour wash", "tone with color"],
+  "category": "adjust",
+  "icon": "paintbrush",
+  "description": "Wash with one color, keep the shading",
+  "inputTypes": ["@image"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "color",
+      "label": "Color",
+      "type": "string",
+      "default": "#ff9a3c",
+      "presets": ["#ff9a3c", "teal", "#8a5cf6", "pink 70%", "#3c7bff 30%"],
+      "hint": "a color, then optional strength · teal · #ff9a3c 70% · red 30%"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.colorize" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

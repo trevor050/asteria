@@ -1,0 +1,34 @@
+{
+  "id": "sprite_sheet",
+  "name": "Sprite Sheet",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "spritesheet",
+    "sprite atlas",
+    "texture atlas",
+    "pack frames",
+    "game sprites",
+    "tile sheet"
+  ],
+  "category": "compose",
+  "icon": "layout-grid",
+  "description": "Pack pictures into one sheet",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".png",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "compose.spritesheet"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "combine": true,
+  "outputName": "sprites"
+}

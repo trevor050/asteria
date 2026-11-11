@@ -1,0 +1,34 @@
+{
+  "id": "document_to_rtf",
+  "name": "Rich Text",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to rtf",
+    "docx to rtf"
+  ],
+  "category": "document",
+  "icon": "file-type",
+  "description": "Rich Text Format from Word or ODT",
+  "inputTypes": [
+    ".docx",
+    ".doc",
+    ".odt"
+  ],
+  "outputType": ".rtf",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "engine.libreoffice"
+  },
+  "requires": [
+    "soffice"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

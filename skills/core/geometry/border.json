@@ -1,0 +1,50 @@
+{
+  "id": "border",
+  "name": "Border",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "frame",
+    "add border",
+    "outline",
+    "white border",
+    "white frame",
+    "picture frame"
+  ],
+  "category": "transform",
+  "icon": "frame",
+  "description": "White frame around the picture",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "width",
+      "label": "Width",
+      "type": "string",
+      "default": "4%",
+      "presets": [
+        "2%",
+        "4%",
+        "8%",
+        "10",
+        "20"
+      ],
+      "hint": "4% = of the shorter side · 10 or 10px = pixels"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "geo.border",
+    "with": {
+      "color": "white"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

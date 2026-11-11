@@ -1,0 +1,52 @@
+{
+  "id": "sharpen",
+  "name": "Sharpen",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "unsharp mask",
+    "unsharp",
+    "crisp",
+    "sharper",
+    "enhance details",
+    "clarity",
+    "detail"
+  ],
+  "category": "filter",
+  "icon": "focus",
+  "priority": 10,
+  "description": "Crisper edges and detail",
+  "inputTypes": [
+    "@image",
+    "@video"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "amount",
+      "label": "Amount",
+      "type": "string",
+      "default": "+120",
+      "presets": [
+        "+60",
+        "+120",
+        "+200",
+        "+300"
+      ],
+      "min": 0,
+      "max": 400,
+      "unit": "%",
+      "hint": "+120 = crisp · +60 = gentle · +300 = strong"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.sharpen"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

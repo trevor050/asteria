@@ -1,0 +1,33 @@
+{
+  "id": "instagram_square",
+  "name": "Instagram Square",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "instagram",
+    "instagram post",
+    "insta square",
+    "ig square"
+  ],
+  "category": "sizes",
+  "icon": "square",
+  "description": "1080x1080, cropped to fill",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fill",
+    "with": {
+      "size": "1080x1080"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

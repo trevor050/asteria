@@ -1,0 +1,32 @@
+{
+  "id": "docx_to_txt",
+  "name": "Plain Text",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to txt",
+    "document text",
+    "docx to txt",
+    "extract text"
+  ],
+  "category": "document",
+  "priority": 6,
+  "icon": "file-type",
+  "description": "Plain text from a Word or ODT document",
+  "inputTypes": [
+    ".docx",
+    ".odt"
+  ],
+  "outputType": ".txt",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "doc.text"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

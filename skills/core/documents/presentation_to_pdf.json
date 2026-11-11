@@ -1,0 +1,36 @@
+{
+  "id": "presentation_to_pdf",
+  "name": "Convert to PDF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "pptx to pdf",
+    "powerpoint to pdf",
+    "slides pdf"
+  ],
+  "category": "document",
+  "priority": 15,
+  "icon": "presentation",
+  "description": "PDF from a presentation",
+  "inputTypes": [
+    ".pptx",
+    ".ppt",
+    ".odp"
+  ],
+  "outputType": ".pdf",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "engine.libreoffice"
+  },
+  "requires": [
+    "soffice"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

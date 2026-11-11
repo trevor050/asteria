@@ -1,0 +1,6 @@
+title = "Asteria matrix check"
+count = 3
+
+[server]
+host = "localhost"
+ports = [8080, 8081]

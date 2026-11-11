@@ -1,0 +1,44 @@
+{
+  "id": "video_frames",
+  "name": "Video Frames",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "extract frames",
+    "video to images",
+    "frames from video",
+    "video to png"
+  ],
+  "category": "media",
+  "icon": "images",
+  "description": "Save frames as PNGs in a folder",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": "folder",
+  "params": [
+    {
+      "name": "fps",
+      "label": "Frames per second",
+      "type": "string",
+      "default": "1",
+      "presets": [
+        "1",
+        "5",
+        "10"
+      ],
+      "hint": "frames per second, up to 1000 frames \u00b7 default 1"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "media.frames"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

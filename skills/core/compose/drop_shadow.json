@@ -1,0 +1,48 @@
+{
+  "id": "drop_shadow",
+  "name": "Drop Shadow",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "shadow",
+    "add shadow",
+    "box shadow",
+    "soft shadow",
+    "shadow behind"
+  ],
+  "category": "compose",
+  "icon": "layers-2",
+  "description": "Soft shadow behind (saves as PNG)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".png",
+  "params": [
+    {
+      "name": "strength",
+      "label": "Strength",
+      "type": "string",
+      "default": "100%",
+      "presets": [
+        "50%",
+        "100%",
+        "150%",
+        "200%"
+      ],
+      "min": 0,
+      "max": 200,
+      "unit": "%",
+      "hint": "100% = 45% black · 50% = fainter · 200% = darker"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "compose.shadow"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,48 @@
+{
+  "id": "motion_blur",
+  "name": "Motion Blur",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "motion",
+    "speed blur",
+    "horizontal blur",
+    "streak",
+    "movement"
+  ],
+  "category": "filter",
+  "icon": "move-horizontal",
+  "description": "Fast sideways smear",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "length",
+      "label": "Length",
+      "type": "string",
+      "default": "3%",
+      "presets": [
+        "1.5%",
+        "3%",
+        "6%",
+        "10%"
+      ],
+      "min": 0.5,
+      "max": 10,
+      "unit": "%",
+      "hint": "Smear length: 3% of the width · or pixels like 40"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.motionblur"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

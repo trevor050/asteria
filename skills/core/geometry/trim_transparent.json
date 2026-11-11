@@ -1,0 +1,31 @@
+{
+  "id": "trim_transparent",
+  "name": "Trim Transparent",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "trim transparency",
+    "remove transparent",
+    "crop transparent",
+    "crop to content",
+    "autocrop transparent"
+  ],
+  "category": "transform",
+  "icon": "shrink",
+  "description": "Cut away empty edges",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.trimtransparent"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

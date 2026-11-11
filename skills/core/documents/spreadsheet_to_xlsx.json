@@ -1,0 +1,35 @@
+{
+  "id": "spreadsheet_to_xlsx",
+  "name": "Excel Workbook",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to xlsx",
+    "to excel",
+    "csv to excel"
+  ],
+  "category": "document",
+  "icon": "sheet",
+  "description": "Excel .xlsx from XLS, ODS or CSV",
+  "inputTypes": [
+    ".xls",
+    ".ods",
+    ".csv"
+  ],
+  "outputType": ".xlsx",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "engine.libreoffice"
+  },
+  "requires": [
+    "soffice"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,50 @@
+{
+  "id": "vertical_motion_blur",
+  "name": "Vertical Motion Blur",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "vertical blur",
+    "motion blur vertical",
+    "falling blur",
+    "up down blur"
+  ],
+  "category": "filter",
+  "icon": "move-vertical",
+  "description": "Fast up-and-down smear",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "length",
+      "label": "Length",
+      "type": "string",
+      "default": "3%",
+      "presets": [
+        "1.5%",
+        "3%",
+        "6%",
+        "10%"
+      ],
+      "min": 0.5,
+      "max": 10,
+      "unit": "%",
+      "hint": "Smear length: 3% of the width · or pixels like 40"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.motionblur",
+    "with": {
+      "angle": 90
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

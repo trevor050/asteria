@@ -1,0 +1,34 @@
+{
+  "id": "watermark_image",
+  "name": "Watermark Image",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "logo watermark",
+    "add logo",
+    "logo",
+    "image watermark",
+    "stamp logo",
+    "brand watermark"
+  ],
+  "category": "compose",
+  "icon": "stamp",
+  "description": "Second picture as a corner logo",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".png",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "compose.watermarkimage"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "combine": true,
+  "outputName": "watermarked"
+}

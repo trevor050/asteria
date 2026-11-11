@@ -1,0 +1,30 @@
+{
+  "id": "merge_pdfs",
+  "name": "Merge PDFs",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "combine pdf",
+    "join pdf",
+    "merge"
+  ],
+  "category": "pdf",
+  "icon": "merge",
+  "description": "Combine PDFs in order",
+  "inputTypes": [
+    "@pdf"
+  ],
+  "outputType": ".pdf",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "pdf.merge"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "outputName": "merged"
+}

@@ -1,0 +1,5490 @@
+{
+  "generated": "2026-11-11T10:29:24Z",
+  "platform": "darwin/arm64",
+  "engines": {
+    "7zz": "",
+    "ffmpeg": "ffmpeg version 9.0.1 Copyright (c) 2000-2026 the FFmpeg developers",
+    "magick": "Version: ImageMagick 7.1.1-47 Q16-HDRI aarch64 22763 https://imagemagick.org",
+    "pandoc": "pandoc 3.13",
+    "soffice": "LibreOffice 26.8.1.1 bf6ef2662401c7d6dce671ab4deb26ee0af3a7c1",
+    "tesseract": "tesseract 5.5.2"
+  },
+  "conversions": [
+    {
+      "from": ".png",
+      "to": "folder",
+      "skill": "app_icon_set",
+      "skillName": "App Icon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".jpg",
+      "to": "folder",
+      "skill": "app_icon_set",
+      "skillName": "App Icon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".jpeg",
+      "to": "folder",
+      "skill": "app_icon_set",
+      "skillName": "App Icon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".gif",
+      "to": "folder",
+      "skill": "app_icon_set",
+      "skillName": "App Icon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".bmp",
+      "to": "folder",
+      "skill": "app_icon_set",
+      "skillName": "App Icon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".tif",
+      "to": "folder",
+      "skill": "app_icon_set",
+      "skillName": "App Icon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".tiff",
+      "to": "folder",
+      "skill": "app_icon_set",
+      "skillName": "App Icon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".webp",
+      "to": "folder",
+      "skill": "app_icon_set",
+      "skillName": "App Icon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".heic",
+      "to": "folder",
+      "skill": "app_icon_set",
+      "skillName": "App Icon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".heif",
+      "to": "folder",
+      "skill": "app_icon_set",
+      "skillName": "App Icon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".txt",
+      "to": ".bin",
+      "skill": "base64_decode",
+      "skillName": "Base64 Decode",
+      "category": "text",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": "*",
+      "to": ".txt",
+      "skill": "base64_encode",
+      "skillName": "Base64 Encode",
+      "category": "text",
+      "verifiedBy": "Python base64"
+    },
+    {
+      "from": "*",
+      "to": ".txt",
+      "skill": "checksum",
+      "skillName": "Checksum",
+      "category": "text",
+      "verifiedBy": "Python hashlib"
+    },
+    {
+      "from": ".jpg",
+      "to": ".png",
+      "skill": "circle_crop",
+      "skillName": "Circle Crop",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".jpeg",
+      "to": ".png",
+      "skill": "circle_crop",
+      "skillName": "Circle Crop",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".gif",
+      "to": ".png",
+      "skill": "circle_crop",
+      "skillName": "Circle Crop",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".bmp",
+      "to": ".png",
+      "skill": "circle_crop",
+      "skillName": "Circle Crop",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tif",
+      "to": ".png",
+      "skill": "circle_crop",
+      "skillName": "Circle Crop",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tiff",
+      "to": ".png",
+      "skill": "circle_crop",
+      "skillName": "Circle Crop",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".webp",
+      "to": ".png",
+      "skill": "circle_crop",
+      "skillName": "Circle Crop",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heic",
+      "to": ".png",
+      "skill": "circle_crop",
+      "skillName": "Circle Crop",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heif",
+      "to": ".png",
+      "skill": "circle_crop",
+      "skillName": "Circle Crop",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": "*",
+      "to": ".7z",
+      "skill": "compress_to_7z",
+      "skillName": "Compress to 7z",
+      "category": "archive",
+      "engine": "7zz",
+      "verifiedBy": "7-Zip list"
+    },
+    {
+      "from": ".mov",
+      "to": ".mp4",
+      "skill": "compress_video",
+      "skillName": "Compress Video",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mkv",
+      "to": ".mp4",
+      "skill": "compress_video",
+      "skillName": "Compress Video",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".webm",
+      "to": ".mp4",
+      "skill": "compress_video",
+      "skillName": "Compress Video",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".avi",
+      "to": ".mp4",
+      "skill": "compress_video",
+      "skillName": "Compress Video",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".cube",
+      "to": ".3dl",
+      "skill": "convert_to_3dl",
+      "skillName": "Convert to 3DL",
+      "category": "lut",
+      "verifiedBy": "Python LUT parse"
+    },
+    {
+      "from": ".mp4",
+      "to": ".aiff",
+      "skill": "convert_to_aiff",
+      "skillName": "Convert to AIFF",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mov",
+      "to": ".aiff",
+      "skill": "convert_to_aiff",
+      "skillName": "Convert to AIFF",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mkv",
+      "to": ".aiff",
+      "skill": "convert_to_aiff",
+      "skillName": "Convert to AIFF",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".webm",
+      "to": ".aiff",
+      "skill": "convert_to_aiff",
+      "skillName": "Convert to AIFF",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".avi",
+      "to": ".aiff",
+      "skill": "convert_to_aiff",
+      "skillName": "Convert to AIFF",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".wav",
+      "to": ".aiff",
+      "skill": "convert_to_aiff",
+      "skillName": "Convert to AIFF",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".ogg",
+      "to": ".aiff",
+      "skill": "convert_to_aiff",
+      "skillName": "Convert to AIFF",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".opus",
+      "to": ".aiff",
+      "skill": "convert_to_aiff",
+      "skillName": "Convert to AIFF",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".srt",
+      "to": ".ass",
+      "skill": "convert_to_ass",
+      "skillName": "Convert to ASS",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".vtt",
+      "to": ".ass",
+      "skill": "convert_to_ass",
+      "skillName": "Convert to ASS",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".sbv",
+      "to": ".ass",
+      "skill": "convert_to_ass",
+      "skillName": "Convert to ASS",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".ttml",
+      "to": ".ass",
+      "skill": "convert_to_ass",
+      "skillName": "Convert to ASS",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".dfxp",
+      "to": ".ass",
+      "skill": "convert_to_ass",
+      "skillName": "Convert to ASS",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".mp4",
+      "to": ".avi",
+      "skill": "convert_to_avi",
+      "skillName": "Convert to AVI",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mov",
+      "to": ".avi",
+      "skill": "convert_to_avi",
+      "skillName": "Convert to AVI",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mkv",
+      "to": ".avi",
+      "skill": "convert_to_avi",
+      "skillName": "Convert to AVI",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".webm",
+      "to": ".avi",
+      "skill": "convert_to_avi",
+      "skillName": "Convert to AVI",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".3dl",
+      "to": ".cube",
+      "skill": "convert_to_cube",
+      "skillName": "Convert to CUBE",
+      "category": "lut",
+      "verifiedBy": "Python LUT parse"
+    },
+    {
+      "from": ".json",
+      "to": ".env",
+      "skill": "convert_to_env",
+      "skillName": "Convert to .env",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".yaml",
+      "to": ".env",
+      "skill": "convert_to_env",
+      "skillName": "Convert to .env",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".yml",
+      "to": ".env",
+      "skill": "convert_to_env",
+      "skillName": "Convert to .env",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".toml",
+      "to": ".env",
+      "skill": "convert_to_env",
+      "skillName": "Convert to .env",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".ini",
+      "to": ".env",
+      "skill": "convert_to_env",
+      "skillName": "Convert to .env",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".cfg",
+      "to": ".env",
+      "skill": "convert_to_env",
+      "skillName": "Convert to .env",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".conf",
+      "to": ".env",
+      "skill": "convert_to_env",
+      "skillName": "Convert to .env",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".plist",
+      "to": ".env",
+      "skill": "convert_to_env",
+      "skillName": "Convert to .env",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".mp4",
+      "to": ".flac",
+      "skill": "convert_to_flac",
+      "skillName": "Convert to FLAC",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mov",
+      "to": ".flac",
+      "skill": "convert_to_flac",
+      "skillName": "Convert to FLAC",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mkv",
+      "to": ".flac",
+      "skill": "convert_to_flac",
+      "skillName": "Convert to FLAC",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".webm",
+      "to": ".flac",
+      "skill": "convert_to_flac",
+      "skillName": "Convert to FLAC",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".avi",
+      "to": ".flac",
+      "skill": "convert_to_flac",
+      "skillName": "Convert to FLAC",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".wav",
+      "to": ".flac",
+      "skill": "convert_to_flac",
+      "skillName": "Convert to FLAC",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".ogg",
+      "to": ".flac",
+      "skill": "convert_to_flac",
+      "skillName": "Convert to FLAC",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".opus",
+      "to": ".flac",
+      "skill": "convert_to_flac",
+      "skillName": "Convert to FLAC",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".aiff",
+      "to": ".flac",
+      "skill": "convert_to_flac",
+      "skillName": "Convert to FLAC",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mp4",
+      "to": ".gif",
+      "skill": "convert_to_gif",
+      "skillName": "Convert to GIF",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".mov",
+      "to": ".gif",
+      "skill": "convert_to_gif",
+      "skillName": "Convert to GIF",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".mkv",
+      "to": ".gif",
+      "skill": "convert_to_gif",
+      "skillName": "Convert to GIF",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".webm",
+      "to": ".gif",
+      "skill": "convert_to_gif",
+      "skillName": "Convert to GIF",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".avi",
+      "to": ".gif",
+      "skill": "convert_to_gif",
+      "skillName": "Convert to GIF",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".cube",
+      "to": ".png",
+      "skill": "convert_to_hald",
+      "skillName": "Convert to Hald CLUT",
+      "category": "lut",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".3dl",
+      "to": ".png",
+      "skill": "convert_to_hald",
+      "skillName": "Convert to Hald CLUT",
+      "category": "lut",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".png",
+      "to": ".heic",
+      "skill": "convert_to_heic",
+      "skillName": "Convert to HEIC",
+      "category": "convert",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".jpg",
+      "to": ".heic",
+      "skill": "convert_to_heic",
+      "skillName": "Convert to HEIC",
+      "category": "convert",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".jpeg",
+      "to": ".heic",
+      "skill": "convert_to_heic",
+      "skillName": "Convert to HEIC",
+      "category": "convert",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".gif",
+      "to": ".heic",
+      "skill": "convert_to_heic",
+      "skillName": "Convert to HEIC",
+      "category": "convert",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".bmp",
+      "to": ".heic",
+      "skill": "convert_to_heic",
+      "skillName": "Convert to HEIC",
+      "category": "convert",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".tif",
+      "to": ".heic",
+      "skill": "convert_to_heic",
+      "skillName": "Convert to HEIC",
+      "category": "convert",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".tiff",
+      "to": ".heic",
+      "skill": "convert_to_heic",
+      "skillName": "Convert to HEIC",
+      "category": "convert",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".webp",
+      "to": ".heic",
+      "skill": "convert_to_heic",
+      "skillName": "Convert to HEIC",
+      "category": "convert",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".heif",
+      "to": ".heic",
+      "skill": "convert_to_heic",
+      "skillName": "Convert to HEIC",
+      "category": "convert",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".json",
+      "to": ".ini",
+      "skill": "convert_to_ini",
+      "skillName": "Convert to INI",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".yaml",
+      "to": ".ini",
+      "skill": "convert_to_ini",
+      "skillName": "Convert to INI",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".yml",
+      "to": ".ini",
+      "skill": "convert_to_ini",
+      "skillName": "Convert to INI",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".toml",
+      "to": ".ini",
+      "skill": "convert_to_ini",
+      "skillName": "Convert to INI",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".env",
+      "to": ".ini",
+      "skill": "convert_to_ini",
+      "skillName": "Convert to INI",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".plist",
+      "to": ".ini",
+      "skill": "convert_to_ini",
+      "skillName": "Convert to INI",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".png",
+      "to": ".jpg",
+      "skill": "convert_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".jpeg",
+      "to": ".jpg",
+      "skill": "convert_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".gif",
+      "to": ".jpg",
+      "skill": "convert_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".bmp",
+      "to": ".jpg",
+      "skill": "convert_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tif",
+      "to": ".jpg",
+      "skill": "convert_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tiff",
+      "to": ".jpg",
+      "skill": "convert_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".webp",
+      "to": ".jpg",
+      "skill": "convert_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heic",
+      "to": ".jpg",
+      "skill": "convert_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heif",
+      "to": ".jpg",
+      "skill": "convert_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".toml",
+      "to": ".json",
+      "skill": "convert_to_json",
+      "skillName": "Convert to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".xml",
+      "to": ".json",
+      "skill": "convert_to_json",
+      "skillName": "Convert to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".ini",
+      "to": ".json",
+      "skill": "convert_to_json",
+      "skillName": "Convert to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".cfg",
+      "to": ".json",
+      "skill": "convert_to_json",
+      "skillName": "Convert to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".conf",
+      "to": ".json",
+      "skill": "convert_to_json",
+      "skillName": "Convert to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".env",
+      "to": ".json",
+      "skill": "convert_to_json",
+      "skillName": "Convert to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".plist",
+      "to": ".json",
+      "skill": "convert_to_json",
+      "skillName": "Convert to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".jsonl",
+      "to": ".json",
+      "skill": "convert_to_json",
+      "skillName": "Convert to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".ndjson",
+      "to": ".json",
+      "skill": "convert_to_json",
+      "skillName": "Convert to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".json",
+      "to": ".jsonl",
+      "skill": "convert_to_jsonl",
+      "skillName": "Convert to JSON Lines",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".yaml",
+      "to": ".jsonl",
+      "skill": "convert_to_jsonl",
+      "skillName": "Convert to JSON Lines",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".yml",
+      "to": ".jsonl",
+      "skill": "convert_to_jsonl",
+      "skillName": "Convert to JSON Lines",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".toml",
+      "to": ".jsonl",
+      "skill": "convert_to_jsonl",
+      "skillName": "Convert to JSON Lines",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".xml",
+      "to": ".jsonl",
+      "skill": "convert_to_jsonl",
+      "skillName": "Convert to JSON Lines",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".mp4",
+      "to": ".m4a",
+      "skill": "convert_to_m4a",
+      "skillName": "Convert to M4A",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mov",
+      "to": ".m4a",
+      "skill": "convert_to_m4a",
+      "skillName": "Convert to M4A",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mkv",
+      "to": ".m4a",
+      "skill": "convert_to_m4a",
+      "skillName": "Convert to M4A",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".webm",
+      "to": ".m4a",
+      "skill": "convert_to_m4a",
+      "skillName": "Convert to M4A",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".avi",
+      "to": ".m4a",
+      "skill": "convert_to_m4a",
+      "skillName": "Convert to M4A",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".wav",
+      "to": ".m4a",
+      "skill": "convert_to_m4a",
+      "skillName": "Convert to M4A",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".ogg",
+      "to": ".m4a",
+      "skill": "convert_to_m4a",
+      "skillName": "Convert to M4A",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".opus",
+      "to": ".m4a",
+      "skill": "convert_to_m4a",
+      "skillName": "Convert to M4A",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".aiff",
+      "to": ".m4a",
+      "skill": "convert_to_m4a",
+      "skillName": "Convert to M4A",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mp4",
+      "to": ".mkv",
+      "skill": "convert_to_mkv",
+      "skillName": "Convert to MKV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mov",
+      "to": ".mkv",
+      "skill": "convert_to_mkv",
+      "skillName": "Convert to MKV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".webm",
+      "to": ".mkv",
+      "skill": "convert_to_mkv",
+      "skillName": "Convert to MKV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".avi",
+      "to": ".mkv",
+      "skill": "convert_to_mkv",
+      "skillName": "Convert to MKV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mp4",
+      "to": ".mov",
+      "skill": "convert_to_mov",
+      "skillName": "Convert to MOV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mkv",
+      "to": ".mov",
+      "skill": "convert_to_mov",
+      "skillName": "Convert to MOV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".webm",
+      "to": ".mov",
+      "skill": "convert_to_mov",
+      "skillName": "Convert to MOV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".avi",
+      "to": ".mov",
+      "skill": "convert_to_mov",
+      "skillName": "Convert to MOV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mp4",
+      "to": ".mp3",
+      "skill": "convert_to_mp3",
+      "skillName": "Convert to MP3",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mov",
+      "to": ".mp3",
+      "skill": "convert_to_mp3",
+      "skillName": "Convert to MP3",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mkv",
+      "to": ".mp3",
+      "skill": "convert_to_mp3",
+      "skillName": "Convert to MP3",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".webm",
+      "to": ".mp3",
+      "skill": "convert_to_mp3",
+      "skillName": "Convert to MP3",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".avi",
+      "to": ".mp3",
+      "skill": "convert_to_mp3",
+      "skillName": "Convert to MP3",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".wav",
+      "to": ".mp3",
+      "skill": "convert_to_mp3",
+      "skillName": "Convert to MP3",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".ogg",
+      "to": ".mp3",
+      "skill": "convert_to_mp3",
+      "skillName": "Convert to MP3",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".opus",
+      "to": ".mp3",
+      "skill": "convert_to_mp3",
+      "skillName": "Convert to MP3",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".aiff",
+      "to": ".mp3",
+      "skill": "convert_to_mp3",
+      "skillName": "Convert to MP3",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mov",
+      "to": ".mp4",
+      "skill": "convert_to_mp4",
+      "skillName": "Convert to MP4",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mkv",
+      "to": ".mp4",
+      "skill": "convert_to_mp4",
+      "skillName": "Convert to MP4",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".webm",
+      "to": ".mp4",
+      "skill": "convert_to_mp4",
+      "skillName": "Convert to MP4",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".avi",
+      "to": ".mp4",
+      "skill": "convert_to_mp4",
+      "skillName": "Convert to MP4",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mp4",
+      "to": ".ogg",
+      "skill": "convert_to_ogg",
+      "skillName": "Convert to OGG",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mov",
+      "to": ".ogg",
+      "skill": "convert_to_ogg",
+      "skillName": "Convert to OGG",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mkv",
+      "to": ".ogg",
+      "skill": "convert_to_ogg",
+      "skillName": "Convert to OGG",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".webm",
+      "to": ".ogg",
+      "skill": "convert_to_ogg",
+      "skillName": "Convert to OGG",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".avi",
+      "to": ".ogg",
+      "skill": "convert_to_ogg",
+      "skillName": "Convert to OGG",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".wav",
+      "to": ".ogg",
+      "skill": "convert_to_ogg",
+      "skillName": "Convert to OGG",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".opus",
+      "to": ".ogg",
+      "skill": "convert_to_ogg",
+      "skillName": "Convert to OGG",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".aiff",
+      "to": ".ogg",
+      "skill": "convert_to_ogg",
+      "skillName": "Convert to OGG",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mp4",
+      "to": ".opus",
+      "skill": "convert_to_opus",
+      "skillName": "Convert to Opus",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mov",
+      "to": ".opus",
+      "skill": "convert_to_opus",
+      "skillName": "Convert to Opus",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mkv",
+      "to": ".opus",
+      "skill": "convert_to_opus",
+      "skillName": "Convert to Opus",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".webm",
+      "to": ".opus",
+      "skill": "convert_to_opus",
+      "skillName": "Convert to Opus",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".avi",
+      "to": ".opus",
+      "skill": "convert_to_opus",
+      "skillName": "Convert to Opus",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".wav",
+      "to": ".opus",
+      "skill": "convert_to_opus",
+      "skillName": "Convert to Opus",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".ogg",
+      "to": ".opus",
+      "skill": "convert_to_opus",
+      "skillName": "Convert to Opus",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".aiff",
+      "to": ".opus",
+      "skill": "convert_to_opus",
+      "skillName": "Convert to Opus",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".json",
+      "to": ".plist",
+      "skill": "convert_to_plist",
+      "skillName": "Convert to plist",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".jsonl",
+      "to": ".plist",
+      "skill": "convert_to_plist",
+      "skillName": "Convert to plist",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".ndjson",
+      "to": ".plist",
+      "skill": "convert_to_plist",
+      "skillName": "Convert to plist",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".yaml",
+      "to": ".plist",
+      "skill": "convert_to_plist",
+      "skillName": "Convert to plist",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".yml",
+      "to": ".plist",
+      "skill": "convert_to_plist",
+      "skillName": "Convert to plist",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".toml",
+      "to": ".plist",
+      "skill": "convert_to_plist",
+      "skillName": "Convert to plist",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".ini",
+      "to": ".plist",
+      "skill": "convert_to_plist",
+      "skillName": "Convert to plist",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".cfg",
+      "to": ".plist",
+      "skill": "convert_to_plist",
+      "skillName": "Convert to plist",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".conf",
+      "to": ".plist",
+      "skill": "convert_to_plist",
+      "skillName": "Convert to plist",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".env",
+      "to": ".plist",
+      "skill": "convert_to_plist",
+      "skillName": "Convert to plist",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".jpg",
+      "to": ".png",
+      "skill": "convert_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".jpeg",
+      "to": ".png",
+      "skill": "convert_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".gif",
+      "to": ".png",
+      "skill": "convert_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".bmp",
+      "to": ".png",
+      "skill": "convert_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tif",
+      "to": ".png",
+      "skill": "convert_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tiff",
+      "to": ".png",
+      "skill": "convert_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".webp",
+      "to": ".png",
+      "skill": "convert_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heic",
+      "to": ".png",
+      "skill": "convert_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heif",
+      "to": ".png",
+      "skill": "convert_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".srt",
+      "to": ".sbv",
+      "skill": "convert_to_sbv",
+      "skillName": "Convert to SBV",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".vtt",
+      "to": ".sbv",
+      "skill": "convert_to_sbv",
+      "skillName": "Convert to SBV",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".ass",
+      "to": ".sbv",
+      "skill": "convert_to_sbv",
+      "skillName": "Convert to SBV",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".ttml",
+      "to": ".sbv",
+      "skill": "convert_to_sbv",
+      "skillName": "Convert to SBV",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".dfxp",
+      "to": ".sbv",
+      "skill": "convert_to_sbv",
+      "skillName": "Convert to SBV",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".vtt",
+      "to": ".srt",
+      "skill": "convert_to_srt",
+      "skillName": "Convert to SRT",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".ass",
+      "to": ".srt",
+      "skill": "convert_to_srt",
+      "skillName": "Convert to SRT",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".sbv",
+      "to": ".srt",
+      "skill": "convert_to_srt",
+      "skillName": "Convert to SRT",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".ttml",
+      "to": ".srt",
+      "skill": "convert_to_srt",
+      "skillName": "Convert to SRT",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".dfxp",
+      "to": ".srt",
+      "skill": "convert_to_srt",
+      "skillName": "Convert to SRT",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".json",
+      "to": ".toml",
+      "skill": "convert_to_toml",
+      "skillName": "Convert to TOML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".yaml",
+      "to": ".toml",
+      "skill": "convert_to_toml",
+      "skillName": "Convert to TOML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".yml",
+      "to": ".toml",
+      "skill": "convert_to_toml",
+      "skillName": "Convert to TOML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".xml",
+      "to": ".toml",
+      "skill": "convert_to_toml",
+      "skillName": "Convert to TOML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".ini",
+      "to": ".toml",
+      "skill": "convert_to_toml",
+      "skillName": "Convert to TOML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".cfg",
+      "to": ".toml",
+      "skill": "convert_to_toml",
+      "skillName": "Convert to TOML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".conf",
+      "to": ".toml",
+      "skill": "convert_to_toml",
+      "skillName": "Convert to TOML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".env",
+      "to": ".toml",
+      "skill": "convert_to_toml",
+      "skillName": "Convert to TOML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".plist",
+      "to": ".toml",
+      "skill": "convert_to_toml",
+      "skillName": "Convert to TOML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".srt",
+      "to": ".ttml",
+      "skill": "convert_to_ttml",
+      "skillName": "Convert to TTML",
+      "category": "subtitles",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".vtt",
+      "to": ".ttml",
+      "skill": "convert_to_ttml",
+      "skillName": "Convert to TTML",
+      "category": "subtitles",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".ass",
+      "to": ".ttml",
+      "skill": "convert_to_ttml",
+      "skillName": "Convert to TTML",
+      "category": "subtitles",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".sbv",
+      "to": ".ttml",
+      "skill": "convert_to_ttml",
+      "skillName": "Convert to TTML",
+      "category": "subtitles",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".srt",
+      "to": ".vtt",
+      "skill": "convert_to_vtt",
+      "skillName": "Convert to VTT",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".ass",
+      "to": ".vtt",
+      "skill": "convert_to_vtt",
+      "skillName": "Convert to VTT",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".sbv",
+      "to": ".vtt",
+      "skill": "convert_to_vtt",
+      "skillName": "Convert to VTT",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".ttml",
+      "to": ".vtt",
+      "skill": "convert_to_vtt",
+      "skillName": "Convert to VTT",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".dfxp",
+      "to": ".vtt",
+      "skill": "convert_to_vtt",
+      "skillName": "Convert to VTT",
+      "category": "subtitles",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".mp4",
+      "to": ".wav",
+      "skill": "convert_to_wav",
+      "skillName": "Convert to WAV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mov",
+      "to": ".wav",
+      "skill": "convert_to_wav",
+      "skillName": "Convert to WAV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mkv",
+      "to": ".wav",
+      "skill": "convert_to_wav",
+      "skillName": "Convert to WAV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".webm",
+      "to": ".wav",
+      "skill": "convert_to_wav",
+      "skillName": "Convert to WAV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".avi",
+      "to": ".wav",
+      "skill": "convert_to_wav",
+      "skillName": "Convert to WAV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".ogg",
+      "to": ".wav",
+      "skill": "convert_to_wav",
+      "skillName": "Convert to WAV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".opus",
+      "to": ".wav",
+      "skill": "convert_to_wav",
+      "skillName": "Convert to WAV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".aiff",
+      "to": ".wav",
+      "skill": "convert_to_wav",
+      "skillName": "Convert to WAV",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mp4",
+      "to": ".webm",
+      "skill": "convert_to_webm",
+      "skillName": "Convert to WebM",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mov",
+      "to": ".webm",
+      "skill": "convert_to_webm",
+      "skillName": "Convert to WebM",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mkv",
+      "to": ".webm",
+      "skill": "convert_to_webm",
+      "skillName": "Convert to WebM",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".avi",
+      "to": ".webm",
+      "skill": "convert_to_webm",
+      "skillName": "Convert to WebM",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".png",
+      "to": ".webp",
+      "skill": "convert_to_webp",
+      "skillName": "Convert to WebP",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".jpg",
+      "to": ".webp",
+      "skill": "convert_to_webp",
+      "skillName": "Convert to WebP",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".jpeg",
+      "to": ".webp",
+      "skill": "convert_to_webp",
+      "skillName": "Convert to WebP",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".gif",
+      "to": ".webp",
+      "skill": "convert_to_webp",
+      "skillName": "Convert to WebP",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".bmp",
+      "to": ".webp",
+      "skill": "convert_to_webp",
+      "skillName": "Convert to WebP",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tif",
+      "to": ".webp",
+      "skill": "convert_to_webp",
+      "skillName": "Convert to WebP",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tiff",
+      "to": ".webp",
+      "skill": "convert_to_webp",
+      "skillName": "Convert to WebP",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heic",
+      "to": ".webp",
+      "skill": "convert_to_webp",
+      "skillName": "Convert to WebP",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heif",
+      "to": ".webp",
+      "skill": "convert_to_webp",
+      "skillName": "Convert to WebP",
+      "category": "convert",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".json",
+      "to": ".xml",
+      "skill": "convert_to_xml",
+      "skillName": "Convert to XML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".jsonl",
+      "to": ".xml",
+      "skill": "convert_to_xml",
+      "skillName": "Convert to XML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".ndjson",
+      "to": ".xml",
+      "skill": "convert_to_xml",
+      "skillName": "Convert to XML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".yaml",
+      "to": ".xml",
+      "skill": "convert_to_xml",
+      "skillName": "Convert to XML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".yml",
+      "to": ".xml",
+      "skill": "convert_to_xml",
+      "skillName": "Convert to XML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".toml",
+      "to": ".xml",
+      "skill": "convert_to_xml",
+      "skillName": "Convert to XML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".ini",
+      "to": ".xml",
+      "skill": "convert_to_xml",
+      "skillName": "Convert to XML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".cfg",
+      "to": ".xml",
+      "skill": "convert_to_xml",
+      "skillName": "Convert to XML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".conf",
+      "to": ".xml",
+      "skill": "convert_to_xml",
+      "skillName": "Convert to XML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".env",
+      "to": ".xml",
+      "skill": "convert_to_xml",
+      "skillName": "Convert to XML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".plist",
+      "to": ".xml",
+      "skill": "convert_to_xml",
+      "skillName": "Convert to XML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".toml",
+      "to": ".yaml",
+      "skill": "convert_to_yaml",
+      "skillName": "Convert to YAML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".xml",
+      "to": ".yaml",
+      "skill": "convert_to_yaml",
+      "skillName": "Convert to YAML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".ini",
+      "to": ".yaml",
+      "skill": "convert_to_yaml",
+      "skillName": "Convert to YAML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".cfg",
+      "to": ".yaml",
+      "skill": "convert_to_yaml",
+      "skillName": "Convert to YAML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".conf",
+      "to": ".yaml",
+      "skill": "convert_to_yaml",
+      "skillName": "Convert to YAML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".env",
+      "to": ".yaml",
+      "skill": "convert_to_yaml",
+      "skillName": "Convert to YAML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".plist",
+      "to": ".yaml",
+      "skill": "convert_to_yaml",
+      "skillName": "Convert to YAML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".jsonl",
+      "to": ".yaml",
+      "skill": "convert_to_yaml",
+      "skillName": "Convert to YAML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".ndjson",
+      "to": ".yaml",
+      "skill": "convert_to_yaml",
+      "skillName": "Convert to YAML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".png",
+      "to": ".json",
+      "skill": "count_colors",
+      "skillName": "Count Colors",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".jpg",
+      "to": ".json",
+      "skill": "count_colors",
+      "skillName": "Count Colors",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".jpeg",
+      "to": ".json",
+      "skill": "count_colors",
+      "skillName": "Count Colors",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".gif",
+      "to": ".json",
+      "skill": "count_colors",
+      "skillName": "Count Colors",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".bmp",
+      "to": ".json",
+      "skill": "count_colors",
+      "skillName": "Count Colors",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".tif",
+      "to": ".json",
+      "skill": "count_colors",
+      "skillName": "Count Colors",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".tiff",
+      "to": ".json",
+      "skill": "count_colors",
+      "skillName": "Count Colors",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".webp",
+      "to": ".json",
+      "skill": "count_colors",
+      "skillName": "Count Colors",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".heic",
+      "to": ".json",
+      "skill": "count_colors",
+      "skillName": "Count Colors",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".heif",
+      "to": ".json",
+      "skill": "count_colors",
+      "skillName": "Count Colors",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".csv",
+      "to": ".json",
+      "skill": "csv_to_json",
+      "skillName": "CSV to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".tsv",
+      "to": ".json",
+      "skill": "csv_to_json",
+      "skillName": "CSV to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".csv",
+      "to": ".jsonl",
+      "skill": "csv_to_jsonl",
+      "skillName": "CSV to JSON Lines",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".tsv",
+      "to": ".jsonl",
+      "skill": "csv_to_jsonl",
+      "skillName": "CSV to JSON Lines",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".csv",
+      "to": ".md",
+      "skill": "csv_to_markdown",
+      "skillName": "CSV to Markdown Table",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".tsv",
+      "to": ".md",
+      "skill": "csv_to_markdown",
+      "skillName": "CSV to Markdown Table",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".csv",
+      "to": ".sqlite",
+      "skill": "csv_to_sqlite",
+      "skillName": "CSV to SQLite",
+      "category": "data",
+      "verifiedBy": "Python sqlite3"
+    },
+    {
+      "from": ".tsv",
+      "to": ".sqlite",
+      "skill": "csv_to_sqlite",
+      "skillName": "CSV to SQLite",
+      "category": "data",
+      "verifiedBy": "Python sqlite3"
+    },
+    {
+      "from": ".csv",
+      "to": ".tsv",
+      "skill": "csv_to_tsv",
+      "skillName": "CSV to TSV",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".bz2",
+      "to": "folder",
+      "skill": "decompress_bz2",
+      "skillName": "Decompress bzip2",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".gz",
+      "to": "folder",
+      "skill": "decompress_gz",
+      "skillName": "Decompress gzip",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".xz",
+      "to": "folder",
+      "skill": "decompress_xz",
+      "skillName": "Decompress xz",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".zst",
+      "to": "folder",
+      "skill": "decompress_zst",
+      "skillName": "Decompress zstd",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".doc",
+      "to": ".docx",
+      "skill": "document_to_docx",
+      "skillName": "Word document",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".odt",
+      "to": ".docx",
+      "skill": "document_to_docx",
+      "skillName": "Word document",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".rtf",
+      "to": ".docx",
+      "skill": "document_to_docx",
+      "skillName": "Word document",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".docx",
+      "to": ".odt",
+      "skill": "document_to_odt",
+      "skillName": "OpenDocument text",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".doc",
+      "to": ".odt",
+      "skill": "document_to_odt",
+      "skillName": "OpenDocument text",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".rtf",
+      "to": ".odt",
+      "skill": "document_to_odt",
+      "skillName": "OpenDocument text",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".docx",
+      "to": ".pdf",
+      "skill": "document_to_pdf",
+      "skillName": "Convert to PDF",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "poppler pdfinfo + pdftotext"
+    },
+    {
+      "from": ".doc",
+      "to": ".pdf",
+      "skill": "document_to_pdf",
+      "skillName": "Convert to PDF",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "poppler pdfinfo"
+    },
+    {
+      "from": ".odt",
+      "to": ".pdf",
+      "skill": "document_to_pdf",
+      "skillName": "Convert to PDF",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "poppler pdfinfo + pdftotext"
+    },
+    {
+      "from": ".rtf",
+      "to": ".pdf",
+      "skill": "document_to_pdf",
+      "skillName": "Convert to PDF",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "poppler pdfinfo + pdftotext"
+    },
+    {
+      "from": ".docx",
+      "to": ".rtf",
+      "skill": "document_to_rtf",
+      "skillName": "Rich text",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".doc",
+      "to": ".rtf",
+      "skill": "document_to_rtf",
+      "skillName": "Rich text",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".odt",
+      "to": ".rtf",
+      "skill": "document_to_rtf",
+      "skillName": "Rich text",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".doc",
+      "to": ".txt",
+      "skill": "document_to_txt",
+      "skillName": "Plain text",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".rtf",
+      "to": ".txt",
+      "skill": "document_to_txt",
+      "skillName": "Plain text",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".docx",
+      "to": ".txt",
+      "skill": "docx_to_txt",
+      "skillName": "Plain text",
+      "category": "document",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".odt",
+      "to": ".txt",
+      "skill": "docx_to_txt",
+      "skillName": "Plain text",
+      "category": "document",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".jpg",
+      "to": ".png",
+      "skill": "drop_shadow",
+      "skillName": "Drop Shadow",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".jpeg",
+      "to": ".png",
+      "skill": "drop_shadow",
+      "skillName": "Drop Shadow",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".gif",
+      "to": ".png",
+      "skill": "drop_shadow",
+      "skillName": "Drop Shadow",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".bmp",
+      "to": ".png",
+      "skill": "drop_shadow",
+      "skillName": "Drop Shadow",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tif",
+      "to": ".png",
+      "skill": "drop_shadow",
+      "skillName": "Drop Shadow",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tiff",
+      "to": ".png",
+      "skill": "drop_shadow",
+      "skillName": "Drop Shadow",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".webp",
+      "to": ".png",
+      "skill": "drop_shadow",
+      "skillName": "Drop Shadow",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heic",
+      "to": ".png",
+      "skill": "drop_shadow",
+      "skillName": "Drop Shadow",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heif",
+      "to": ".png",
+      "skill": "drop_shadow",
+      "skillName": "Drop Shadow",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".eml",
+      "to": ".html",
+      "skill": "eml_to_html",
+      "skillName": "Email to HTML",
+      "category": "email",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".eml",
+      "to": ".txt",
+      "skill": "eml_to_text",
+      "skillName": "Email to Text",
+      "category": "email",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".wim",
+      "to": "folder",
+      "skill": "extract_7z",
+      "skillName": "Extract 7z",
+      "category": "archive",
+      "engine": "7zz",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".zip",
+      "to": "folder",
+      "skill": "extract_archive",
+      "skillName": "Extract Archive",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".tgz",
+      "to": "folder",
+      "skill": "extract_archive",
+      "skillName": "Extract Archive",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".tar.gz",
+      "to": "folder",
+      "skill": "extract_archive",
+      "skillName": "Extract Archive",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".gz",
+      "to": "folder",
+      "skill": "extract_archive",
+      "skillName": "Extract Archive",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".eml",
+      "to": "folder",
+      "skill": "extract_attachments",
+      "skillName": "Extract Attachments",
+      "category": "email",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".mp4",
+      "to": ".m4a",
+      "skill": "extract_audio",
+      "skillName": "Extract Audio",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mov",
+      "to": ".m4a",
+      "skill": "extract_audio",
+      "skillName": "Extract Audio",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mkv",
+      "to": ".m4a",
+      "skill": "extract_audio",
+      "skillName": "Extract Audio",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".webm",
+      "to": ".m4a",
+      "skill": "extract_audio",
+      "skillName": "Extract Audio",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".avi",
+      "to": ".m4a",
+      "skill": "extract_audio",
+      "skillName": "Extract Audio",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mp4",
+      "to": ".mp3",
+      "skill": "extract_audio_mp3",
+      "skillName": "Extract Audio as MP3",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mov",
+      "to": ".mp3",
+      "skill": "extract_audio_mp3",
+      "skillName": "Extract Audio as MP3",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".mkv",
+      "to": ".mp3",
+      "skill": "extract_audio_mp3",
+      "skillName": "Extract Audio as MP3",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".webm",
+      "to": ".mp3",
+      "skill": "extract_audio_mp3",
+      "skillName": "Extract Audio as MP3",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".avi",
+      "to": ".mp3",
+      "skill": "extract_audio_mp3",
+      "skillName": "Extract Audio as MP3",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ffprobe"
+    },
+    {
+      "from": ".gif",
+      "to": "folder",
+      "skill": "extract_frames",
+      "skillName": "Extract Frames",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".webp",
+      "to": "folder",
+      "skill": "extract_frames",
+      "skillName": "Extract Frames",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".png",
+      "to": ".json",
+      "skill": "extract_palette",
+      "skillName": "Extract Palette",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".jpg",
+      "to": ".json",
+      "skill": "extract_palette",
+      "skillName": "Extract Palette",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".jpeg",
+      "to": ".json",
+      "skill": "extract_palette",
+      "skillName": "Extract Palette",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".gif",
+      "to": ".json",
+      "skill": "extract_palette",
+      "skillName": "Extract Palette",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".bmp",
+      "to": ".json",
+      "skill": "extract_palette",
+      "skillName": "Extract Palette",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".tif",
+      "to": ".json",
+      "skill": "extract_palette",
+      "skillName": "Extract Palette",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".tiff",
+      "to": ".json",
+      "skill": "extract_palette",
+      "skillName": "Extract Palette",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".webp",
+      "to": ".json",
+      "skill": "extract_palette",
+      "skillName": "Extract Palette",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".heic",
+      "to": ".json",
+      "skill": "extract_palette",
+      "skillName": "Extract Palette",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".heif",
+      "to": ".json",
+      "skill": "extract_palette",
+      "skillName": "Extract Palette",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".tar.bz2",
+      "to": "folder",
+      "skill": "extract_tar_bz2",
+      "skillName": "Extract tar.bz2",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".tbz2",
+      "to": "folder",
+      "skill": "extract_tar_bz2",
+      "skillName": "Extract tar.bz2",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".tbz",
+      "to": "folder",
+      "skill": "extract_tar_bz2",
+      "skillName": "Extract tar.bz2",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".tar.xz",
+      "to": "folder",
+      "skill": "extract_tar_xz",
+      "skillName": "Extract tar.xz",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".txz",
+      "to": "folder",
+      "skill": "extract_tar_xz",
+      "skillName": "Extract tar.xz",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".tar.zst",
+      "to": "folder",
+      "skill": "extract_tar_zst",
+      "skillName": "Extract tar.zst",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".tzst",
+      "to": "folder",
+      "skill": "extract_tar_zst",
+      "skillName": "Extract tar.zst",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".png",
+      "to": "folder",
+      "skill": "favicon_set",
+      "skillName": "Favicon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".jpg",
+      "to": "folder",
+      "skill": "favicon_set",
+      "skillName": "Favicon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".jpeg",
+      "to": "folder",
+      "skill": "favicon_set",
+      "skillName": "Favicon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".gif",
+      "to": "folder",
+      "skill": "favicon_set",
+      "skillName": "Favicon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".bmp",
+      "to": "folder",
+      "skill": "favicon_set",
+      "skillName": "Favicon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".tif",
+      "to": "folder",
+      "skill": "favicon_set",
+      "skillName": "Favicon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".tiff",
+      "to": "folder",
+      "skill": "favicon_set",
+      "skillName": "Favicon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".webp",
+      "to": "folder",
+      "skill": "favicon_set",
+      "skillName": "Favicon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".heic",
+      "to": "folder",
+      "skill": "favicon_set",
+      "skillName": "Favicon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".heif",
+      "to": "folder",
+      "skill": "favicon_set",
+      "skillName": "Favicon Set",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": "*",
+      "to": ".json",
+      "skill": "file_info",
+      "skillName": "File info",
+      "category": "info",
+      "verifiedBy": "Python hashlib + json"
+    },
+    {
+      "from": ".ttf",
+      "to": ".json",
+      "skill": "font_info",
+      "skillName": "Font Info",
+      "category": "fonts",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".otf",
+      "to": ".json",
+      "skill": "font_info",
+      "skillName": "Font Info",
+      "category": "fonts",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".woff",
+      "to": ".json",
+      "skill": "font_info",
+      "skillName": "Font Info",
+      "category": "fonts",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".woff2",
+      "to": ".json",
+      "skill": "font_info",
+      "skillName": "Font Info",
+      "category": "fonts",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".geojson",
+      "to": ".csv",
+      "skill": "geo_to_csv",
+      "skillName": "Map Data to CSV",
+      "category": "maps",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".kml",
+      "to": ".csv",
+      "skill": "geo_to_csv",
+      "skillName": "Map Data to CSV",
+      "category": "maps",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".kmz",
+      "to": ".csv",
+      "skill": "geo_to_csv",
+      "skillName": "Map Data to CSV",
+      "category": "maps",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".gpx",
+      "to": ".csv",
+      "skill": "geo_to_csv",
+      "skillName": "Map Data to CSV",
+      "category": "maps",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".gpx",
+      "to": ".json",
+      "skill": "gpx_stats",
+      "skillName": "Track Stats",
+      "category": "maps",
+      "verifiedBy": "Python haversine over the track points"
+    },
+    {
+      "from": ".geojson",
+      "to": ".json",
+      "skill": "gpx_stats",
+      "skillName": "Track Stats",
+      "category": "maps",
+      "verifiedBy": "Python json"
+    },
+    {
+      "from": ".kml",
+      "to": ".json",
+      "skill": "gpx_stats",
+      "skillName": "Track Stats",
+      "category": "maps",
+      "verifiedBy": "Python json"
+    },
+    {
+      "from": ".kmz",
+      "to": ".json",
+      "skill": "gpx_stats",
+      "skillName": "Track Stats",
+      "category": "maps",
+      "verifiedBy": "Python json"
+    },
+    {
+      "from": "*",
+      "to": ".gz",
+      "skill": "gzip_file",
+      "skillName": "Gzip",
+      "category": "archive",
+      "verifiedBy": "Python gzip/lzma/bz2"
+    },
+    {
+      "from": ".psd",
+      "to": ".jpg",
+      "skill": "imagemagick_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tga",
+      "to": ".jpg",
+      "skill": "imagemagick_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".pcx",
+      "to": ".jpg",
+      "skill": "imagemagick_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".ico",
+      "to": ".jpg",
+      "skill": "imagemagick_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".jp2",
+      "to": ".jpg",
+      "skill": "imagemagick_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".dds",
+      "to": ".jpg",
+      "skill": "imagemagick_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".xpm",
+      "to": ".jpg",
+      "skill": "imagemagick_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".ppm",
+      "to": ".jpg",
+      "skill": "imagemagick_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".pgm",
+      "to": ".jpg",
+      "skill": "imagemagick_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".pbm",
+      "to": ".jpg",
+      "skill": "imagemagick_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".sgi",
+      "to": ".jpg",
+      "skill": "imagemagick_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".ras",
+      "to": ".jpg",
+      "skill": "imagemagick_to_jpeg",
+      "skillName": "Convert to JPEG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".psd",
+      "to": ".png",
+      "skill": "imagemagick_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tga",
+      "to": ".png",
+      "skill": "imagemagick_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".pcx",
+      "to": ".png",
+      "skill": "imagemagick_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".ico",
+      "to": ".png",
+      "skill": "imagemagick_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".jp2",
+      "to": ".png",
+      "skill": "imagemagick_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".dds",
+      "to": ".png",
+      "skill": "imagemagick_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".xpm",
+      "to": ".png",
+      "skill": "imagemagick_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".ppm",
+      "to": ".png",
+      "skill": "imagemagick_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".pgm",
+      "to": ".png",
+      "skill": "imagemagick_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".pbm",
+      "to": ".png",
+      "skill": "imagemagick_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".sgi",
+      "to": ".png",
+      "skill": "imagemagick_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".ras",
+      "to": ".png",
+      "skill": "imagemagick_to_png",
+      "skillName": "Convert to PNG",
+      "category": "convert",
+      "engine": "magick",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".json",
+      "to": ".csv",
+      "skill": "json_to_csv",
+      "skillName": "JSON to CSV",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".json",
+      "to": ".sqlite",
+      "skill": "json_to_sqlite",
+      "skillName": "JSON to SQLite",
+      "category": "data",
+      "verifiedBy": "Python sqlite3"
+    },
+    {
+      "from": ".jsonl",
+      "to": ".sqlite",
+      "skill": "json_to_sqlite",
+      "skillName": "JSON to SQLite",
+      "category": "data",
+      "verifiedBy": "Python sqlite3"
+    },
+    {
+      "from": ".ndjson",
+      "to": ".sqlite",
+      "skill": "json_to_sqlite",
+      "skillName": "JSON to SQLite",
+      "category": "data",
+      "verifiedBy": "Python sqlite3"
+    },
+    {
+      "from": ".json",
+      "to": ".yaml",
+      "skill": "json_to_yaml",
+      "skillName": "JSON to YAML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".jsonl",
+      "to": ".csv",
+      "skill": "jsonl_to_csv",
+      "skillName": "JSON Lines to CSV",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".ndjson",
+      "to": ".csv",
+      "skill": "jsonl_to_csv",
+      "skillName": "JSON Lines to CSV",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".zip",
+      "to": ".txt",
+      "skill": "list_archive_contents",
+      "skillName": "List Archive Contents",
+      "category": "archive",
+      "verifiedBy": "listing names the archived file"
+    },
+    {
+      "from": ".tgz",
+      "to": ".txt",
+      "skill": "list_archive_contents",
+      "skillName": "List Archive Contents",
+      "category": "archive",
+      "verifiedBy": "listing names the archived file"
+    },
+    {
+      "from": ".tar.gz",
+      "to": ".txt",
+      "skill": "list_archive_contents",
+      "skillName": "List Archive Contents",
+      "category": "archive",
+      "verifiedBy": "listing names the archived file"
+    },
+    {
+      "from": ".tar.xz",
+      "to": ".txt",
+      "skill": "list_archive_contents",
+      "skillName": "List Archive Contents",
+      "category": "archive",
+      "verifiedBy": "listing names the archived file"
+    },
+    {
+      "from": ".txz",
+      "to": ".txt",
+      "skill": "list_archive_contents",
+      "skillName": "List Archive Contents",
+      "category": "archive",
+      "verifiedBy": "listing names the archived file"
+    },
+    {
+      "from": ".tar.zst",
+      "to": ".txt",
+      "skill": "list_archive_contents",
+      "skillName": "List Archive Contents",
+      "category": "archive",
+      "verifiedBy": "listing names the archived file"
+    },
+    {
+      "from": ".tzst",
+      "to": ".txt",
+      "skill": "list_archive_contents",
+      "skillName": "List Archive Contents",
+      "category": "archive",
+      "verifiedBy": "listing names the archived file"
+    },
+    {
+      "from": ".tar.bz2",
+      "to": ".txt",
+      "skill": "list_archive_contents",
+      "skillName": "List Archive Contents",
+      "category": "archive",
+      "verifiedBy": "listing names the archived file"
+    },
+    {
+      "from": ".tbz2",
+      "to": ".txt",
+      "skill": "list_archive_contents",
+      "skillName": "List Archive Contents",
+      "category": "archive",
+      "verifiedBy": "listing names the archived file"
+    },
+    {
+      "from": ".tbz",
+      "to": ".txt",
+      "skill": "list_archive_contents",
+      "skillName": "List Archive Contents",
+      "category": "archive",
+      "verifiedBy": "listing names the archived file"
+    },
+    {
+      "from": ".7z",
+      "to": ".txt",
+      "skill": "list_archive_contents",
+      "skillName": "List Archive Contents",
+      "category": "archive",
+      "verifiedBy": "listing names the archived file"
+    },
+    {
+      "from": ".gz",
+      "to": ".txt",
+      "skill": "list_archive_contents",
+      "skillName": "List Archive Contents",
+      "category": "archive",
+      "verifiedBy": "listing gives the uncompressed size"
+    },
+    {
+      "from": ".xz",
+      "to": ".txt",
+      "skill": "list_archive_contents",
+      "skillName": "List Archive Contents",
+      "category": "archive",
+      "verifiedBy": "listing gives the uncompressed size"
+    },
+    {
+      "from": ".zst",
+      "to": ".txt",
+      "skill": "list_archive_contents",
+      "skillName": "List Archive Contents",
+      "category": "archive",
+      "verifiedBy": "listing gives the uncompressed size"
+    },
+    {
+      "from": ".bz2",
+      "to": ".txt",
+      "skill": "list_archive_contents",
+      "skillName": "List Archive Contents",
+      "category": "archive",
+      "verifiedBy": "listing gives the uncompressed size"
+    },
+    {
+      "from": ".md",
+      "to": ".html",
+      "skill": "markdown_to_html",
+      "skillName": "Markdown to HTML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".markdown",
+      "to": ".html",
+      "skill": "markdown_to_html",
+      "skillName": "Markdown to HTML",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".mbox",
+      "to": "folder",
+      "skill": "mbox_split",
+      "skillName": "Split Mbox",
+      "category": "email",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".mbx",
+      "to": "folder",
+      "skill": "mbox_split",
+      "skillName": "Split Mbox",
+      "category": "email",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".mbox",
+      "to": ".csv",
+      "skill": "mbox_to_csv",
+      "skillName": "Mbox to CSV",
+      "category": "email",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".mbx",
+      "to": ".csv",
+      "skill": "mbox_to_csv",
+      "skillName": "Mbox to CSV",
+      "category": "email",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".obj",
+      "to": ".json",
+      "skill": "mesh_info",
+      "skillName": "Mesh Info",
+      "category": "3d",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".stl",
+      "to": ".json",
+      "skill": "mesh_info",
+      "skillName": "Mesh Info",
+      "category": "3d",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".ply",
+      "to": ".json",
+      "skill": "mesh_info",
+      "skillName": "Mesh Info",
+      "category": "3d",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".gltf",
+      "to": ".json",
+      "skill": "mesh_info",
+      "skillName": "Mesh Info",
+      "category": "3d",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".glb",
+      "to": ".json",
+      "skill": "mesh_info",
+      "skillName": "Mesh Info",
+      "category": "3d",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".3mf",
+      "to": ".json",
+      "skill": "mesh_info",
+      "skillName": "Mesh Info",
+      "category": "3d",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".png",
+      "to": ".pdf",
+      "skill": "ocr_to_searchable_pdf",
+      "skillName": "Searchable PDF (OCR)",
+      "category": "pdf",
+      "engine": "tesseract",
+      "verifiedBy": "poppler pdfinfo"
+    },
+    {
+      "from": ".jpg",
+      "to": ".pdf",
+      "skill": "ocr_to_searchable_pdf",
+      "skillName": "Searchable PDF (OCR)",
+      "category": "pdf",
+      "engine": "tesseract",
+      "verifiedBy": "poppler pdfinfo"
+    },
+    {
+      "from": ".jpeg",
+      "to": ".pdf",
+      "skill": "ocr_to_searchable_pdf",
+      "skillName": "Searchable PDF (OCR)",
+      "category": "pdf",
+      "engine": "tesseract",
+      "verifiedBy": "poppler pdfinfo"
+    },
+    {
+      "from": ".gif",
+      "to": ".pdf",
+      "skill": "ocr_to_searchable_pdf",
+      "skillName": "Searchable PDF (OCR)",
+      "category": "pdf",
+      "engine": "tesseract",
+      "verifiedBy": "poppler pdfinfo"
+    },
+    {
+      "from": ".webp",
+      "to": ".pdf",
+      "skill": "ocr_to_searchable_pdf",
+      "skillName": "Searchable PDF (OCR)",
+      "category": "pdf",
+      "engine": "tesseract",
+      "verifiedBy": "poppler pdfinfo"
+    },
+    {
+      "from": ".png",
+      "to": ".txt",
+      "skill": "ocr_to_text",
+      "skillName": "Extract text (OCR)",
+      "category": "pdf",
+      "engine": "tesseract",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".jpg",
+      "to": ".txt",
+      "skill": "ocr_to_text",
+      "skillName": "Extract text (OCR)",
+      "category": "pdf",
+      "engine": "tesseract",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".jpeg",
+      "to": ".txt",
+      "skill": "ocr_to_text",
+      "skillName": "Extract text (OCR)",
+      "category": "pdf",
+      "engine": "tesseract",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".gif",
+      "to": ".txt",
+      "skill": "ocr_to_text",
+      "skillName": "Extract text (OCR)",
+      "category": "pdf",
+      "engine": "tesseract",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".webp",
+      "to": ".txt",
+      "skill": "ocr_to_text",
+      "skillName": "Extract text (OCR)",
+      "category": "pdf",
+      "engine": "tesseract",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".jpg",
+      "to": ".png",
+      "skill": "opacity",
+      "skillName": "Opacity",
+      "category": "adjust",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".jpeg",
+      "to": ".png",
+      "skill": "opacity",
+      "skillName": "Opacity",
+      "category": "adjust",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".gif",
+      "to": ".png",
+      "skill": "opacity",
+      "skillName": "Opacity",
+      "category": "adjust",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".bmp",
+      "to": ".png",
+      "skill": "opacity",
+      "skillName": "Opacity",
+      "category": "adjust",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tif",
+      "to": ".png",
+      "skill": "opacity",
+      "skillName": "Opacity",
+      "category": "adjust",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tiff",
+      "to": ".png",
+      "skill": "opacity",
+      "skillName": "Opacity",
+      "category": "adjust",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".webp",
+      "to": ".png",
+      "skill": "opacity",
+      "skillName": "Opacity",
+      "category": "adjust",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heic",
+      "to": ".png",
+      "skill": "opacity",
+      "skillName": "Opacity",
+      "category": "adjust",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heif",
+      "to": ".png",
+      "skill": "opacity",
+      "skillName": "Opacity",
+      "category": "adjust",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".jpg",
+      "to": ".png",
+      "skill": "palette_swatches",
+      "skillName": "Palette Swatches",
+      "category": "info",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".jpeg",
+      "to": ".png",
+      "skill": "palette_swatches",
+      "skillName": "Palette Swatches",
+      "category": "info",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".gif",
+      "to": ".png",
+      "skill": "palette_swatches",
+      "skillName": "Palette Swatches",
+      "category": "info",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".bmp",
+      "to": ".png",
+      "skill": "palette_swatches",
+      "skillName": "Palette Swatches",
+      "category": "info",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tif",
+      "to": ".png",
+      "skill": "palette_swatches",
+      "skillName": "Palette Swatches",
+      "category": "info",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tiff",
+      "to": ".png",
+      "skill": "palette_swatches",
+      "skillName": "Palette Swatches",
+      "category": "info",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".webp",
+      "to": ".png",
+      "skill": "palette_swatches",
+      "skillName": "Palette Swatches",
+      "category": "info",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heic",
+      "to": ".png",
+      "skill": "palette_swatches",
+      "skillName": "Palette Swatches",
+      "category": "info",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heif",
+      "to": ".png",
+      "skill": "palette_swatches",
+      "skillName": "Palette Swatches",
+      "category": "info",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".md",
+      "to": ".docx",
+      "skill": "pandoc_to_docx",
+      "skillName": "Convert to Word",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".markdown",
+      "to": ".docx",
+      "skill": "pandoc_to_docx",
+      "skillName": "Convert to Word",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".html",
+      "to": ".docx",
+      "skill": "pandoc_to_docx",
+      "skillName": "Convert to Word",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".htm",
+      "to": ".docx",
+      "skill": "pandoc_to_docx",
+      "skillName": "Convert to Word",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".epub",
+      "to": ".docx",
+      "skill": "pandoc_to_docx",
+      "skillName": "Convert to Word",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".rst",
+      "to": ".docx",
+      "skill": "pandoc_to_docx",
+      "skillName": "Convert to Word",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".tex",
+      "to": ".docx",
+      "skill": "pandoc_to_docx",
+      "skillName": "Convert to Word",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".org",
+      "to": ".docx",
+      "skill": "pandoc_to_docx",
+      "skillName": "Convert to Word",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".textile",
+      "to": ".docx",
+      "skill": "pandoc_to_docx",
+      "skillName": "Convert to Word",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".ipynb",
+      "to": ".docx",
+      "skill": "pandoc_to_docx",
+      "skillName": "Convert to Word",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".md",
+      "to": ".epub",
+      "skill": "pandoc_to_epub",
+      "skillName": "Convert to EPUB",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".markdown",
+      "to": ".epub",
+      "skill": "pandoc_to_epub",
+      "skillName": "Convert to EPUB",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".html",
+      "to": ".epub",
+      "skill": "pandoc_to_epub",
+      "skillName": "Convert to EPUB",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".htm",
+      "to": ".epub",
+      "skill": "pandoc_to_epub",
+      "skillName": "Convert to EPUB",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".docx",
+      "to": ".epub",
+      "skill": "pandoc_to_epub",
+      "skillName": "Convert to EPUB",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".odt",
+      "to": ".epub",
+      "skill": "pandoc_to_epub",
+      "skillName": "Convert to EPUB",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".rst",
+      "to": ".epub",
+      "skill": "pandoc_to_epub",
+      "skillName": "Convert to EPUB",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".tex",
+      "to": ".epub",
+      "skill": "pandoc_to_epub",
+      "skillName": "Convert to EPUB",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".org",
+      "to": ".epub",
+      "skill": "pandoc_to_epub",
+      "skillName": "Convert to EPUB",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".textile",
+      "to": ".epub",
+      "skill": "pandoc_to_epub",
+      "skillName": "Convert to EPUB",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".ipynb",
+      "to": ".epub",
+      "skill": "pandoc_to_epub",
+      "skillName": "Convert to EPUB",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".docx",
+      "to": ".html",
+      "skill": "pandoc_to_html",
+      "skillName": "Convert to HTML",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".odt",
+      "to": ".html",
+      "skill": "pandoc_to_html",
+      "skillName": "Convert to HTML",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".epub",
+      "to": ".html",
+      "skill": "pandoc_to_html",
+      "skillName": "Convert to HTML",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".rst",
+      "to": ".html",
+      "skill": "pandoc_to_html",
+      "skillName": "Convert to HTML",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".tex",
+      "to": ".html",
+      "skill": "pandoc_to_html",
+      "skillName": "Convert to HTML",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".org",
+      "to": ".html",
+      "skill": "pandoc_to_html",
+      "skillName": "Convert to HTML",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".textile",
+      "to": ".html",
+      "skill": "pandoc_to_html",
+      "skillName": "Convert to HTML",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".ipynb",
+      "to": ".html",
+      "skill": "pandoc_to_html",
+      "skillName": "Convert to HTML",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".md",
+      "to": ".tex",
+      "skill": "pandoc_to_latex",
+      "skillName": "Convert to LaTeX",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".markdown",
+      "to": ".tex",
+      "skill": "pandoc_to_latex",
+      "skillName": "Convert to LaTeX",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".html",
+      "to": ".tex",
+      "skill": "pandoc_to_latex",
+      "skillName": "Convert to LaTeX",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".htm",
+      "to": ".tex",
+      "skill": "pandoc_to_latex",
+      "skillName": "Convert to LaTeX",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".docx",
+      "to": ".tex",
+      "skill": "pandoc_to_latex",
+      "skillName": "Convert to LaTeX",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".odt",
+      "to": ".tex",
+      "skill": "pandoc_to_latex",
+      "skillName": "Convert to LaTeX",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".epub",
+      "to": ".tex",
+      "skill": "pandoc_to_latex",
+      "skillName": "Convert to LaTeX",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".rst",
+      "to": ".tex",
+      "skill": "pandoc_to_latex",
+      "skillName": "Convert to LaTeX",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".org",
+      "to": ".tex",
+      "skill": "pandoc_to_latex",
+      "skillName": "Convert to LaTeX",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".textile",
+      "to": ".tex",
+      "skill": "pandoc_to_latex",
+      "skillName": "Convert to LaTeX",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".ipynb",
+      "to": ".tex",
+      "skill": "pandoc_to_latex",
+      "skillName": "Convert to LaTeX",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".html",
+      "to": ".md",
+      "skill": "pandoc_to_markdown",
+      "skillName": "Convert to Markdown",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".htm",
+      "to": ".md",
+      "skill": "pandoc_to_markdown",
+      "skillName": "Convert to Markdown",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".docx",
+      "to": ".md",
+      "skill": "pandoc_to_markdown",
+      "skillName": "Convert to Markdown",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".odt",
+      "to": ".md",
+      "skill": "pandoc_to_markdown",
+      "skillName": "Convert to Markdown",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".epub",
+      "to": ".md",
+      "skill": "pandoc_to_markdown",
+      "skillName": "Convert to Markdown",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".rst",
+      "to": ".md",
+      "skill": "pandoc_to_markdown",
+      "skillName": "Convert to Markdown",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".tex",
+      "to": ".md",
+      "skill": "pandoc_to_markdown",
+      "skillName": "Convert to Markdown",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".org",
+      "to": ".md",
+      "skill": "pandoc_to_markdown",
+      "skillName": "Convert to Markdown",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".textile",
+      "to": ".md",
+      "skill": "pandoc_to_markdown",
+      "skillName": "Convert to Markdown",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".ipynb",
+      "to": ".md",
+      "skill": "pandoc_to_markdown",
+      "skillName": "Convert to Markdown",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".md",
+      "to": ".odt",
+      "skill": "pandoc_to_odt",
+      "skillName": "Convert to OpenDocument",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".markdown",
+      "to": ".odt",
+      "skill": "pandoc_to_odt",
+      "skillName": "Convert to OpenDocument",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".html",
+      "to": ".odt",
+      "skill": "pandoc_to_odt",
+      "skillName": "Convert to OpenDocument",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".htm",
+      "to": ".odt",
+      "skill": "pandoc_to_odt",
+      "skillName": "Convert to OpenDocument",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".epub",
+      "to": ".odt",
+      "skill": "pandoc_to_odt",
+      "skillName": "Convert to OpenDocument",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".rst",
+      "to": ".odt",
+      "skill": "pandoc_to_odt",
+      "skillName": "Convert to OpenDocument",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".tex",
+      "to": ".odt",
+      "skill": "pandoc_to_odt",
+      "skillName": "Convert to OpenDocument",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".org",
+      "to": ".odt",
+      "skill": "pandoc_to_odt",
+      "skillName": "Convert to OpenDocument",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".textile",
+      "to": ".odt",
+      "skill": "pandoc_to_odt",
+      "skillName": "Convert to OpenDocument",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".ipynb",
+      "to": ".odt",
+      "skill": "pandoc_to_odt",
+      "skillName": "Convert to OpenDocument",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".md",
+      "to": ".rst",
+      "skill": "pandoc_to_rst",
+      "skillName": "Convert to reStructuredText",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".markdown",
+      "to": ".rst",
+      "skill": "pandoc_to_rst",
+      "skillName": "Convert to reStructuredText",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".html",
+      "to": ".rst",
+      "skill": "pandoc_to_rst",
+      "skillName": "Convert to reStructuredText",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".htm",
+      "to": ".rst",
+      "skill": "pandoc_to_rst",
+      "skillName": "Convert to reStructuredText",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".docx",
+      "to": ".rst",
+      "skill": "pandoc_to_rst",
+      "skillName": "Convert to reStructuredText",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".odt",
+      "to": ".rst",
+      "skill": "pandoc_to_rst",
+      "skillName": "Convert to reStructuredText",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".epub",
+      "to": ".rst",
+      "skill": "pandoc_to_rst",
+      "skillName": "Convert to reStructuredText",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".tex",
+      "to": ".rst",
+      "skill": "pandoc_to_rst",
+      "skillName": "Convert to reStructuredText",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".org",
+      "to": ".rst",
+      "skill": "pandoc_to_rst",
+      "skillName": "Convert to reStructuredText",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".textile",
+      "to": ".rst",
+      "skill": "pandoc_to_rst",
+      "skillName": "Convert to reStructuredText",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".ipynb",
+      "to": ".rst",
+      "skill": "pandoc_to_rst",
+      "skillName": "Convert to reStructuredText",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".md",
+      "to": ".txt",
+      "skill": "pandoc_to_txt",
+      "skillName": "Convert to plain text",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".markdown",
+      "to": ".txt",
+      "skill": "pandoc_to_txt",
+      "skillName": "Convert to plain text",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".html",
+      "to": ".txt",
+      "skill": "pandoc_to_txt",
+      "skillName": "Convert to plain text",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".htm",
+      "to": ".txt",
+      "skill": "pandoc_to_txt",
+      "skillName": "Convert to plain text",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".epub",
+      "to": ".txt",
+      "skill": "pandoc_to_txt",
+      "skillName": "Convert to plain text",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".rst",
+      "to": ".txt",
+      "skill": "pandoc_to_txt",
+      "skillName": "Convert to plain text",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".tex",
+      "to": ".txt",
+      "skill": "pandoc_to_txt",
+      "skillName": "Convert to plain text",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".org",
+      "to": ".txt",
+      "skill": "pandoc_to_txt",
+      "skillName": "Convert to plain text",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".textile",
+      "to": ".txt",
+      "skill": "pandoc_to_txt",
+      "skillName": "Convert to plain text",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".ipynb",
+      "to": ".txt",
+      "skill": "pandoc_to_txt",
+      "skillName": "Convert to plain text",
+      "category": "document",
+      "engine": "pandoc",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".parquet",
+      "to": ".csv",
+      "skill": "parquet_to_csv",
+      "skillName": "Parquet to CSV",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".parquet",
+      "to": ".json",
+      "skill": "parquet_to_json",
+      "skillName": "Parquet to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".pptx",
+      "to": ".odp",
+      "skill": "presentation_to_odp",
+      "skillName": "OpenDocument presentation",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".ppt",
+      "to": ".odp",
+      "skill": "presentation_to_odp",
+      "skillName": "OpenDocument presentation",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".pptx",
+      "to": ".pdf",
+      "skill": "presentation_to_pdf",
+      "skillName": "Convert to PDF",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "poppler pdfinfo + pdftotext"
+    },
+    {
+      "from": ".ppt",
+      "to": ".pdf",
+      "skill": "presentation_to_pdf",
+      "skillName": "Convert to PDF",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "poppler pdfinfo"
+    },
+    {
+      "from": ".odp",
+      "to": ".pdf",
+      "skill": "presentation_to_pdf",
+      "skillName": "Convert to PDF",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "poppler pdfinfo + pdftotext"
+    },
+    {
+      "from": ".ppt",
+      "to": ".pptx",
+      "skill": "presentation_to_pptx",
+      "skillName": "PowerPoint presentation",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".odp",
+      "to": ".pptx",
+      "skill": "presentation_to_pptx",
+      "skillName": "PowerPoint presentation",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".jpg",
+      "to": ".png",
+      "skill": "remove_background_color",
+      "skillName": "Remove Background Color",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".jpeg",
+      "to": ".png",
+      "skill": "remove_background_color",
+      "skillName": "Remove Background Color",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".gif",
+      "to": ".png",
+      "skill": "remove_background_color",
+      "skillName": "Remove Background Color",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".bmp",
+      "to": ".png",
+      "skill": "remove_background_color",
+      "skillName": "Remove Background Color",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tif",
+      "to": ".png",
+      "skill": "remove_background_color",
+      "skillName": "Remove Background Color",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tiff",
+      "to": ".png",
+      "skill": "remove_background_color",
+      "skillName": "Remove Background Color",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".webp",
+      "to": ".png",
+      "skill": "remove_background_color",
+      "skillName": "Remove Background Color",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heic",
+      "to": ".png",
+      "skill": "remove_background_color",
+      "skillName": "Remove Background Color",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heif",
+      "to": ".png",
+      "skill": "remove_background_color",
+      "skillName": "Remove Background Color",
+      "category": "compose",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".jpg",
+      "to": ".png",
+      "skill": "round_corners",
+      "skillName": "Round Corners",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".jpeg",
+      "to": ".png",
+      "skill": "round_corners",
+      "skillName": "Round Corners",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".gif",
+      "to": ".png",
+      "skill": "round_corners",
+      "skillName": "Round Corners",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".bmp",
+      "to": ".png",
+      "skill": "round_corners",
+      "skillName": "Round Corners",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tif",
+      "to": ".png",
+      "skill": "round_corners",
+      "skillName": "Round Corners",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".tiff",
+      "to": ".png",
+      "skill": "round_corners",
+      "skillName": "Round Corners",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".webp",
+      "to": ".png",
+      "skill": "round_corners",
+      "skillName": "Round Corners",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heic",
+      "to": ".png",
+      "skill": "round_corners",
+      "skillName": "Round Corners",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".heif",
+      "to": ".png",
+      "skill": "round_corners",
+      "skillName": "Round Corners",
+      "category": "transform",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".png",
+      "to": ".json",
+      "skill": "show_metadata",
+      "skillName": "Show Metadata",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".jpg",
+      "to": ".json",
+      "skill": "show_metadata",
+      "skillName": "Show Metadata",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".jpeg",
+      "to": ".json",
+      "skill": "show_metadata",
+      "skillName": "Show Metadata",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".gif",
+      "to": ".json",
+      "skill": "show_metadata",
+      "skillName": "Show Metadata",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".bmp",
+      "to": ".json",
+      "skill": "show_metadata",
+      "skillName": "Show Metadata",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".tif",
+      "to": ".json",
+      "skill": "show_metadata",
+      "skillName": "Show Metadata",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".tiff",
+      "to": ".json",
+      "skill": "show_metadata",
+      "skillName": "Show Metadata",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".webp",
+      "to": ".json",
+      "skill": "show_metadata",
+      "skillName": "Show Metadata",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".heic",
+      "to": ".json",
+      "skill": "show_metadata",
+      "skillName": "Show Metadata",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".heif",
+      "to": ".json",
+      "skill": "show_metadata",
+      "skillName": "Show Metadata",
+      "category": "info",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".png",
+      "to": "folder",
+      "skill": "split_into_tiles",
+      "skillName": "Split into Tiles",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".jpg",
+      "to": "folder",
+      "skill": "split_into_tiles",
+      "skillName": "Split into Tiles",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".jpeg",
+      "to": "folder",
+      "skill": "split_into_tiles",
+      "skillName": "Split into Tiles",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".gif",
+      "to": "folder",
+      "skill": "split_into_tiles",
+      "skillName": "Split into Tiles",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".bmp",
+      "to": "folder",
+      "skill": "split_into_tiles",
+      "skillName": "Split into Tiles",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".tif",
+      "to": "folder",
+      "skill": "split_into_tiles",
+      "skillName": "Split into Tiles",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".tiff",
+      "to": "folder",
+      "skill": "split_into_tiles",
+      "skillName": "Split into Tiles",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".webp",
+      "to": "folder",
+      "skill": "split_into_tiles",
+      "skillName": "Split into Tiles",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".heic",
+      "to": "folder",
+      "skill": "split_into_tiles",
+      "skillName": "Split into Tiles",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".heif",
+      "to": "folder",
+      "skill": "split_into_tiles",
+      "skillName": "Split into Tiles",
+      "category": "compose",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".pdf",
+      "to": "folder",
+      "skill": "split_pdf",
+      "skillName": "Split PDF",
+      "category": "pdf",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".xlsx",
+      "to": ".csv",
+      "skill": "spreadsheet_to_csv",
+      "skillName": "Spreadsheet to CSV",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".xls",
+      "to": ".csv",
+      "skill": "spreadsheet_to_csv",
+      "skillName": "Spreadsheet to CSV",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".ods",
+      "to": ".csv",
+      "skill": "spreadsheet_to_csv",
+      "skillName": "Spreadsheet to CSV",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".xlsx",
+      "to": ".ods",
+      "skill": "spreadsheet_to_ods",
+      "skillName": "OpenDocument spreadsheet",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".xls",
+      "to": ".ods",
+      "skill": "spreadsheet_to_ods",
+      "skillName": "OpenDocument spreadsheet",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".csv",
+      "to": ".ods",
+      "skill": "spreadsheet_to_ods",
+      "skillName": "OpenDocument spreadsheet",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".xlsx",
+      "to": ".pdf",
+      "skill": "spreadsheet_to_pdf",
+      "skillName": "Convert to PDF",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "poppler pdfinfo + pdftotext"
+    },
+    {
+      "from": ".xls",
+      "to": ".pdf",
+      "skill": "spreadsheet_to_pdf",
+      "skillName": "Convert to PDF",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "poppler pdfinfo + pdftotext"
+    },
+    {
+      "from": ".ods",
+      "to": ".pdf",
+      "skill": "spreadsheet_to_pdf",
+      "skillName": "Convert to PDF",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "poppler pdfinfo + pdftotext"
+    },
+    {
+      "from": ".csv",
+      "to": ".pdf",
+      "skill": "spreadsheet_to_pdf",
+      "skillName": "Convert to PDF",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "poppler pdfinfo + pdftotext"
+    },
+    {
+      "from": ".xls",
+      "to": ".xlsx",
+      "skill": "spreadsheet_to_xlsx",
+      "skillName": "Excel workbook",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".ods",
+      "to": ".xlsx",
+      "skill": "spreadsheet_to_xlsx",
+      "skillName": "Excel workbook",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".csv",
+      "to": ".xlsx",
+      "skill": "spreadsheet_to_xlsx",
+      "skillName": "Excel workbook",
+      "category": "document",
+      "engine": "soffice",
+      "verifiedBy": "zip package + XML text"
+    },
+    {
+      "from": ".sqlite",
+      "to": "folder",
+      "skill": "sqlite_to_csv",
+      "skillName": "SQLite to CSV",
+      "category": "data",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".sqlite3",
+      "to": "folder",
+      "skill": "sqlite_to_csv",
+      "skillName": "SQLite to CSV",
+      "category": "data",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".db",
+      "to": "folder",
+      "skill": "sqlite_to_csv",
+      "skillName": "SQLite to CSV",
+      "category": "data",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".sqlite",
+      "to": ".json",
+      "skill": "sqlite_to_json",
+      "skillName": "SQLite to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".sqlite3",
+      "to": ".json",
+      "skill": "sqlite_to_json",
+      "skillName": "SQLite to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".db",
+      "to": ".json",
+      "skill": "sqlite_to_json",
+      "skillName": "SQLite to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": "*",
+      "to": ".tar.xz",
+      "skill": "tar_xz",
+      "skillName": "Tar + xz",
+      "category": "archive",
+      "verifiedBy": "Python gzip/lzma/bz2"
+    },
+    {
+      "from": "*",
+      "to": ".tar.zst",
+      "skill": "tar_zst",
+      "skillName": "Tar + zstd",
+      "category": "archive",
+      "verifiedBy": "zstd CLI"
+    },
+    {
+      "from": ".tsv",
+      "to": ".csv",
+      "skill": "tsv_to_csv",
+      "skillName": "TSV to CSV",
+      "category": "data",
+      "verifiedBy": "UTF-8 text"
+    },
+    {
+      "from": ".7z",
+      "to": "folder",
+      "skill": "unpack_7z",
+      "skillName": "Unpack 7z",
+      "category": "archive",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".mp4",
+      "to": ".jpg",
+      "skill": "video_contact_sheet",
+      "skillName": "Video Contact Sheet",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".mov",
+      "to": ".jpg",
+      "skill": "video_contact_sheet",
+      "skillName": "Video Contact Sheet",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".mkv",
+      "to": ".jpg",
+      "skill": "video_contact_sheet",
+      "skillName": "Video Contact Sheet",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".webm",
+      "to": ".jpg",
+      "skill": "video_contact_sheet",
+      "skillName": "Video Contact Sheet",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".avi",
+      "to": ".jpg",
+      "skill": "video_contact_sheet",
+      "skillName": "Video Contact Sheet",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".mp4",
+      "to": "folder",
+      "skill": "video_frames",
+      "skillName": "Video Frames",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".mov",
+      "to": "folder",
+      "skill": "video_frames",
+      "skillName": "Video Frames",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".mkv",
+      "to": "folder",
+      "skill": "video_frames",
+      "skillName": "Video Frames",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".webm",
+      "to": "folder",
+      "skill": "video_frames",
+      "skillName": "Video Frames",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".avi",
+      "to": "folder",
+      "skill": "video_frames",
+      "skillName": "Video Frames",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "folder contents"
+    },
+    {
+      "from": ".mp4",
+      "to": ".jpg",
+      "skill": "video_thumbnail",
+      "skillName": "Video Thumbnail",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".mov",
+      "to": ".jpg",
+      "skill": "video_thumbnail",
+      "skillName": "Video Thumbnail",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".mkv",
+      "to": ".jpg",
+      "skill": "video_thumbnail",
+      "skillName": "Video Thumbnail",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".webm",
+      "to": ".jpg",
+      "skill": "video_thumbnail",
+      "skillName": "Video Thumbnail",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": ".avi",
+      "to": ".jpg",
+      "skill": "video_thumbnail",
+      "skillName": "Video Thumbnail",
+      "category": "media",
+      "engine": "ffmpeg",
+      "verifiedBy": "ImageMagick identify"
+    },
+    {
+      "from": "*",
+      "to": ".xz",
+      "skill": "xz_file",
+      "skillName": "Compress to xz",
+      "category": "archive",
+      "verifiedBy": "Python gzip/lzma/bz2"
+    },
+    {
+      "from": ".yaml",
+      "to": ".json",
+      "skill": "yaml_to_json",
+      "skillName": "YAML to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": ".yml",
+      "to": ".json",
+      "skill": "yaml_to_json",
+      "skillName": "YAML to JSON",
+      "category": "data",
+      "verifiedBy": "Python parser"
+    },
+    {
+      "from": "*",
+      "to": ".zst",
+      "skill": "zstd_file",
+      "skillName": "Compress to zstd",
+      "category": "archive",
+      "verifiedBy": "zstd CLI"
+    }
+  ],
+  "failed": [
+    ".avif -\u003e .jpg (imagemagick_to_jpeg): magick failed: magick: unable to load module '/opt/homebrew/Cellar/imagemagick/7.1.1-47/lib/ImageMagick/modules-Q16HDRI/coders/heic.la': file not found @ error/module.c/OpenModule/1293.\nmagick: no decode delegate for this image format `AVIF' @ error/constitute.c/ReadImage/746.",
+    ".avif -\u003e .png (imagemagick_to_png): magick failed: magick: unable to load module '/opt/homebrew/Cellar/imagemagick/7.1.1-47/lib/ImageMagick/modules-Q16HDRI/coders/heic.la': file not found @ error/module.c/OpenModule/1293.\nmagick: no decode delegate for this image format `AVIF' @ error/constitute.c/ReadImage/746."
+  ],
+  "untested": [
+    ".b64 -\u003e .bin (base64_decode): no fixture",
+    ".base64 -\u003e .bin (base64_decode): no fixture",
+    "folder -\u003e .7z (compress_to_7z): no fixture",
+    ".m4v -\u003e .mp4 (compress_video): no fixture",
+    ".wmv -\u003e .mp4 (compress_video): no fixture",
+    ".flv -\u003e .mp4 (compress_video): no fixture",
+    ".mpg -\u003e .mp4 (compress_video): no fixture",
+    ".mpeg -\u003e .mp4 (compress_video): no fixture",
+    ".3gp -\u003e .mp4 (compress_video): no fixture",
+    ".obj -\u003e .3mf (convert_to_3mf): no Assimp here to verify the output",
+    ".stl -\u003e .3mf (convert_to_3mf): no Assimp here to verify the output",
+    ".ply -\u003e .3mf (convert_to_3mf): no Assimp here to verify the output",
+    ".gltf -\u003e .3mf (convert_to_3mf): no Assimp here to verify the output",
+    ".glb -\u003e .3mf (convert_to_3mf): no Assimp here to verify the output",
+    ".m4v -\u003e .aiff (convert_to_aiff): no fixture",
+    ".wmv -\u003e .aiff (convert_to_aiff): no fixture",
+    ".flv -\u003e .aiff (convert_to_aiff): no fixture",
+    ".mpg -\u003e .aiff (convert_to_aiff): no fixture",
+    ".mpeg -\u003e .aiff (convert_to_aiff): no fixture",
+    ".3gp -\u003e .aiff (convert_to_aiff): no fixture",
+    ".mp3 -\u003e .aiff (convert_to_aiff): no fixture",
+    ".m4a -\u003e .aiff (convert_to_aiff): no fixture",
+    ".aac -\u003e .aiff (convert_to_aiff): no fixture",
+    ".flac -\u003e .aiff (convert_to_aiff): no fixture",
+    ".wma -\u003e .aiff (convert_to_aiff): no fixture",
+    ".aif -\u003e .aiff (convert_to_aiff): no fixture",
+    ".m4v -\u003e .avi (convert_to_avi): no fixture",
+    ".wmv -\u003e .avi (convert_to_avi): no fixture",
+    ".flv -\u003e .avi (convert_to_avi): no fixture",
+    ".mpg -\u003e .avi (convert_to_avi): no fixture",
+    ".mpeg -\u003e .avi (convert_to_avi): no fixture",
+    ".3gp -\u003e .avi (convert_to_avi): no fixture",
+    ".m4v -\u003e .flac (convert_to_flac): no fixture",
+    ".wmv -\u003e .flac (convert_to_flac): no fixture",
+    ".flv -\u003e .flac (convert_to_flac): no fixture",
+    ".mpg -\u003e .flac (convert_to_flac): no fixture",
+    ".mpeg -\u003e .flac (convert_to_flac): no fixture",
+    ".3gp -\u003e .flac (convert_to_flac): no fixture",
+    ".mp3 -\u003e .flac (convert_to_flac): no fixture",
+    ".m4a -\u003e .flac (convert_to_flac): no fixture",
+    ".aac -\u003e .flac (convert_to_flac): no fixture",
+    ".wma -\u003e .flac (convert_to_flac): no fixture",
+    ".aif -\u003e .flac (convert_to_flac): no fixture",
+    ".kml -\u003e .geojson (convert_to_geojson): no GDAL (ogrinfo) here to verify the output",
+    ".kmz -\u003e .geojson (convert_to_geojson): no GDAL (ogrinfo) here to verify the output",
+    ".gpx -\u003e .geojson (convert_to_geojson): no GDAL (ogrinfo) here to verify the output",
+    ".zip -\u003e .geojson (convert_to_geojson): no GDAL (ogrinfo) here to verify the output",
+    ".csv -\u003e .geojson (convert_to_geojson): no GDAL (ogrinfo) here to verify the output",
+    ".m4v -\u003e .gif (convert_to_gif): no fixture",
+    ".wmv -\u003e .gif (convert_to_gif): no fixture",
+    ".flv -\u003e .gif (convert_to_gif): no fixture",
+    ".mpg -\u003e .gif (convert_to_gif): no fixture",
+    ".mpeg -\u003e .gif (convert_to_gif): no fixture",
+    ".3gp -\u003e .gif (convert_to_gif): no fixture",
+    ".obj -\u003e .glb (convert_to_glb): no Assimp here to verify the output",
+    ".stl -\u003e .glb (convert_to_glb): no Assimp here to verify the output",
+    ".ply -\u003e .glb (convert_to_glb): no Assimp here to verify the output",
+    ".gltf -\u003e .glb (convert_to_glb): no Assimp here to verify the output",
+    ".3mf -\u003e .glb (convert_to_glb): no Assimp here to verify the output",
+    ".geojson -\u003e .gpx (convert_to_gpx): no GDAL (ogrinfo) here to verify the output",
+    ".kml -\u003e .gpx (convert_to_gpx): no GDAL (ogrinfo) here to verify the output",
+    ".kmz -\u003e .gpx (convert_to_gpx): no GDAL (ogrinfo) here to verify the output",
+    ".csv -\u003e .gpx (convert_to_gpx): no GDAL (ogrinfo) here to verify the output",
+    ".geojson -\u003e .kml (convert_to_kml): no GDAL (ogrinfo) here to verify the output",
+    ".gpx -\u003e .kml (convert_to_kml): no GDAL (ogrinfo) here to verify the output",
+    ".kmz -\u003e .kml (convert_to_kml): no GDAL (ogrinfo) here to verify the output",
+    ".csv -\u003e .kml (convert_to_kml): no GDAL (ogrinfo) here to verify the output",
+    ".m4v -\u003e .m4a (convert_to_m4a): no fixture",
+    ".wmv -\u003e .m4a (convert_to_m4a): no fixture",
+    ".flv -\u003e .m4a (convert_to_m4a): no fixture",
+    ".mpg -\u003e .m4a (convert_to_m4a): no fixture",
+    ".mpeg -\u003e .m4a (convert_to_m4a): no fixture",
+    ".3gp -\u003e .m4a (convert_to_m4a): no fixture",
+    ".mp3 -\u003e .m4a (convert_to_m4a): no fixture",
+    ".aac -\u003e .m4a (convert_to_m4a): no fixture",
+    ".flac -\u003e .m4a (convert_to_m4a): no fixture",
+    ".wma -\u003e .m4a (convert_to_m4a): no fixture",
+    ".aif -\u003e .m4a (convert_to_m4a): no fixture",
+    ".m4v -\u003e .mkv (convert_to_mkv): no fixture",
+    ".wmv -\u003e .mkv (convert_to_mkv): no fixture",
+    ".flv -\u003e .mkv (convert_to_mkv): no fixture",
+    ".mpg -\u003e .mkv (convert_to_mkv): no fixture",
+    ".mpeg -\u003e .mkv (convert_to_mkv): no fixture",
+    ".3gp -\u003e .mkv (convert_to_mkv): no fixture",
+    ".m4v -\u003e .mov (convert_to_mov): no fixture",
+    ".wmv -\u003e .mov (convert_to_mov): no fixture",
+    ".flv -\u003e .mov (convert_to_mov): no fixture",
+    ".mpg -\u003e .mov (convert_to_mov): no fixture",
+    ".mpeg -\u003e .mov (convert_to_mov): no fixture",
+    ".3gp -\u003e .mov (convert_to_mov): no fixture",
+    ".m4v -\u003e .mp3 (convert_to_mp3): no fixture",
+    ".wmv -\u003e .mp3 (convert_to_mp3): no fixture",
+    ".flv -\u003e .mp3 (convert_to_mp3): no fixture",
+    ".mpg -\u003e .mp3 (convert_to_mp3): no fixture",
+    ".mpeg -\u003e .mp3 (convert_to_mp3): no fixture",
+    ".3gp -\u003e .mp3 (convert_to_mp3): no fixture",
+    ".m4a -\u003e .mp3 (convert_to_mp3): no fixture",
+    ".aac -\u003e .mp3 (convert_to_mp3): no fixture",
+    ".flac -\u003e .mp3 (convert_to_mp3): no fixture",
+    ".wma -\u003e .mp3 (convert_to_mp3): no fixture",
+    ".aif -\u003e .mp3 (convert_to_mp3): no fixture",
+    ".m4v -\u003e .mp4 (convert_to_mp4): no fixture",
+    ".wmv -\u003e .mp4 (convert_to_mp4): no fixture",
+    ".flv -\u003e .mp4 (convert_to_mp4): no fixture",
+    ".mpg -\u003e .mp4 (convert_to_mp4): no fixture",
+    ".mpeg -\u003e .mp4 (convert_to_mp4): no fixture",
+    ".3gp -\u003e .mp4 (convert_to_mp4): no fixture",
+    ".stl -\u003e .obj (convert_to_obj): no Assimp here to verify the output",
+    ".ply -\u003e .obj (convert_to_obj): no Assimp here to verify the output",
+    ".gltf -\u003e .obj (convert_to_obj): no Assimp here to verify the output",
+    ".glb -\u003e .obj (convert_to_obj): no Assimp here to verify the output",
+    ".3mf -\u003e .obj (convert_to_obj): no Assimp here to verify the output",
+    ".m4v -\u003e .ogg (convert_to_ogg): no fixture",
+    ".wmv -\u003e .ogg (convert_to_ogg): no fixture",
+    ".flv -\u003e .ogg (convert_to_ogg): no fixture",
+    ".mpg -\u003e .ogg (convert_to_ogg): no fixture",
+    ".mpeg -\u003e .ogg (convert_to_ogg): no fixture",
+    ".3gp -\u003e .ogg (convert_to_ogg): no fixture",
+    ".mp3 -\u003e .ogg (convert_to_ogg): no fixture",
+    ".m4a -\u003e .ogg (convert_to_ogg): no fixture",
+    ".aac -\u003e .ogg (convert_to_ogg): no fixture",
+    ".flac -\u003e .ogg (convert_to_ogg): no fixture",
+    ".wma -\u003e .ogg (convert_to_ogg): no fixture",
+    ".aif -\u003e .ogg (convert_to_ogg): no fixture",
+    ".m4v -\u003e .opus (convert_to_opus): no fixture",
+    ".wmv -\u003e .opus (convert_to_opus): no fixture",
+    ".flv -\u003e .opus (convert_to_opus): no fixture",
+    ".mpg -\u003e .opus (convert_to_opus): no fixture",
+    ".mpeg -\u003e .opus (convert_to_opus): no fixture",
+    ".3gp -\u003e .opus (convert_to_opus): no fixture",
+    ".mp3 -\u003e .opus (convert_to_opus): no fixture",
+    ".m4a -\u003e .opus (convert_to_opus): no fixture",
+    ".aac -\u003e .opus (convert_to_opus): no fixture",
+    ".flac -\u003e .opus (convert_to_opus): no fixture",
+    ".wma -\u003e .opus (convert_to_opus): no fixture",
+    ".aif -\u003e .opus (convert_to_opus): no fixture",
+    ".woff -\u003e .otf (convert_to_otf): no Python fontTools and brotli here to verify the output",
+    ".woff2 -\u003e .otf (convert_to_otf): no Python fontTools and brotli here to verify the output",
+    ".obj -\u003e .ply (convert_to_ply): no Assimp here to verify the output",
+    ".stl -\u003e .ply (convert_to_ply): no Assimp here to verify the output",
+    ".gltf -\u003e .ply (convert_to_ply): no Assimp here to verify the output",
+    ".glb -\u003e .ply (convert_to_ply): no Assimp here to verify the output",
+    ".3mf -\u003e .ply (convert_to_ply): no Assimp here to verify the output",
+    ".ssa -\u003e .sbv (convert_to_sbv): no fixture",
+    ".ssa -\u003e .srt (convert_to_srt): no fixture",
+    ".obj -\u003e .stl (convert_to_stl): no Assimp here to verify the output",
+    ".ply -\u003e .stl (convert_to_stl): no Assimp here to verify the output",
+    ".gltf -\u003e .stl (convert_to_stl): no Assimp here to verify the output",
+    ".glb -\u003e .stl (convert_to_stl): no Assimp here to verify the output",
+    ".3mf -\u003e .stl (convert_to_stl): no Assimp here to verify the output",
+    ".woff -\u003e .ttf (convert_to_ttf): no Python fontTools and brotli here to verify the output",
+    ".woff2 -\u003e .ttf (convert_to_ttf): no Python fontTools and brotli here to verify the output",
+    ".ssa -\u003e .ttml (convert_to_ttml): no fixture",
+    ".ssa -\u003e .vtt (convert_to_vtt): no fixture",
+    ".m4v -\u003e .wav (convert_to_wav): no fixture",
+    ".wmv -\u003e .wav (convert_to_wav): no fixture",
+    ".flv -\u003e .wav (convert_to_wav): no fixture",
+    ".mpg -\u003e .wav (convert_to_wav): no fixture",
+    ".mpeg -\u003e .wav (convert_to_wav): no fixture",
+    ".3gp -\u003e .wav (convert_to_wav): no fixture",
+    ".mp3 -\u003e .wav (convert_to_wav): no fixture",
+    ".m4a -\u003e .wav (convert_to_wav): no fixture",
+    ".aac -\u003e .wav (convert_to_wav): no fixture",
+    ".flac -\u003e .wav (convert_to_wav): no fixture",
+    ".wma -\u003e .wav (convert_to_wav): no fixture",
+    ".aif -\u003e .wav (convert_to_wav): no fixture",
+    ".m4v -\u003e .webm (convert_to_webm): no fixture",
+    ".wmv -\u003e .webm (convert_to_webm): no fixture",
+    ".flv -\u003e .webm (convert_to_webm): no fixture",
+    ".mpg -\u003e .webm (convert_to_webm): no fixture",
+    ".mpeg -\u003e .webm (convert_to_webm): no fixture",
+    ".3gp -\u003e .webm (convert_to_webm): no fixture",
+    ".ttf -\u003e .woff (convert_to_woff): no Python fontTools and brotli here to verify the output",
+    ".otf -\u003e .woff (convert_to_woff): no Python fontTools and brotli here to verify the output",
+    ".woff2 -\u003e .woff (convert_to_woff): no Python fontTools and brotli here to verify the output",
+    ".ttf -\u003e .woff2 (convert_to_woff2): no Python fontTools and brotli here to verify the output",
+    ".otf -\u003e .woff2 (convert_to_woff2): no Python fontTools and brotli here to verify the output",
+    ".woff -\u003e .woff2 (convert_to_woff2): no Python fontTools and brotli here to verify the output",
+    ".wpd -\u003e .docx (document_to_docx): no fixture",
+    ".wps -\u003e .docx (document_to_docx): no fixture",
+    ".wpd -\u003e .pdf (document_to_pdf): no fixture",
+    ".wps -\u003e .pdf (document_to_pdf): no fixture",
+    ".mobi -\u003e .azw3 (ebook_to_azw3): needs ebook-convert",
+    ".fb2 -\u003e .azw3 (ebook_to_azw3): needs ebook-convert",
+    ".lit -\u003e .azw3 (ebook_to_azw3): needs ebook-convert",
+    ".pdb -\u003e .azw3 (ebook_to_azw3): needs ebook-convert",
+    ".epub -\u003e .azw3 (ebook_to_azw3): needs ebook-convert",
+    ".mobi -\u003e .epub (ebook_to_epub): needs ebook-convert",
+    ".azw3 -\u003e .epub (ebook_to_epub): needs ebook-convert",
+    ".azw -\u003e .epub (ebook_to_epub): needs ebook-convert",
+    ".fb2 -\u003e .epub (ebook_to_epub): needs ebook-convert",
+    ".lit -\u003e .epub (ebook_to_epub): needs ebook-convert",
+    ".pdb -\u003e .epub (ebook_to_epub): needs ebook-convert",
+    ".azw3 -\u003e .mobi (ebook_to_mobi): needs ebook-convert",
+    ".azw -\u003e .mobi (ebook_to_mobi): needs ebook-convert",
+    ".fb2 -\u003e .mobi (ebook_to_mobi): needs ebook-convert",
+    ".lit -\u003e .mobi (ebook_to_mobi): needs ebook-convert",
+    ".pdb -\u003e .mobi (ebook_to_mobi): needs ebook-convert",
+    ".epub -\u003e .mobi (ebook_to_mobi): needs ebook-convert",
+    ".epub -\u003e .pdf (ebook_to_pdf): needs ebook-convert",
+    ".mobi -\u003e .pdf (ebook_to_pdf): needs ebook-convert",
+    ".azw3 -\u003e .pdf (ebook_to_pdf): needs ebook-convert",
+    ".fb2 -\u003e .pdf (ebook_to_pdf): needs ebook-convert",
+    ".epub -\u003e .txt (ebook_to_txt): needs ebook-convert",
+    ".mobi -\u003e .txt (ebook_to_txt): needs ebook-convert",
+    ".azw3 -\u003e .txt (ebook_to_txt): needs ebook-convert",
+    ".azw -\u003e .txt (ebook_to_txt): needs ebook-convert",
+    ".fb2 -\u003e .txt (ebook_to_txt): needs ebook-convert",
+    ".lit -\u003e .txt (ebook_to_txt): needs ebook-convert",
+    ".pdb -\u003e .txt (ebook_to_txt): needs ebook-convert",
+    ".rar -\u003e folder (extract_7z): no fixture",
+    ".iso -\u003e folder (extract_7z): no fixture",
+    ".cab -\u003e folder (extract_7z): no fixture",
+    ".arj -\u003e folder (extract_7z): no fixture",
+    ".lzh -\u003e folder (extract_7z): no fixture",
+    ".dmg -\u003e folder (extract_7z): no fixture",
+    ".xar -\u003e folder (extract_7z): no fixture",
+    ".cpio -\u003e folder (extract_7z): no fixture",
+    ".rpm -\u003e folder (extract_7z): no fixture",
+    ".deb -\u003e folder (extract_7z): no fixture",
+    ".z -\u003e folder (extract_7z): no fixture",
+    ".lzma -\u003e folder (extract_7z): no fixture",
+    ".tar -\u003e folder (extract_archive): no fixture",
+    ".m4v -\u003e .m4a (extract_audio): no fixture",
+    ".wmv -\u003e .m4a (extract_audio): no fixture",
+    ".flv -\u003e .m4a (extract_audio): no fixture",
+    ".mpg -\u003e .m4a (extract_audio): no fixture",
+    ".mpeg -\u003e .m4a (extract_audio): no fixture",
+    ".3gp -\u003e .m4a (extract_audio): no fixture",
+    ".m4v -\u003e .mp3 (extract_audio_mp3): no fixture",
+    ".wmv -\u003e .mp3 (extract_audio_mp3): no fixture",
+    ".flv -\u003e .mp3 (extract_audio_mp3): no fixture",
+    ".mpg -\u003e .mp3 (extract_audio_mp3): no fixture",
+    ".mpeg -\u003e .mp3 (extract_audio_mp3): no fixture",
+    ".3gp -\u003e .mp3 (extract_audio_mp3): no fixture",
+    ".j2k -\u003e .jpg (imagemagick_to_jpeg): no fixture",
+    ".pnm -\u003e .jpg (imagemagick_to_jpeg): no fixture",
+    ".exr -\u003e .jpg (imagemagick_to_jpeg): no fixture",
+    ".hdr -\u003e .jpg (imagemagick_to_jpeg): no fixture",
+    ".jxl -\u003e .jpg (imagemagick_to_jpeg): no fixture",
+    ".xbm -\u003e .jpg (imagemagick_to_jpeg): no fixture",
+    ".cur -\u003e .jpg (imagemagick_to_jpeg): no fixture",
+    ".j2k -\u003e .png (imagemagick_to_png): no fixture",
+    ".pnm -\u003e .png (imagemagick_to_png): no fixture",
+    ".exr -\u003e .png (imagemagick_to_png): no fixture",
+    ".hdr -\u003e .png (imagemagick_to_png): no fixture",
+    ".jxl -\u003e .png (imagemagick_to_png): no fixture",
+    ".xbm -\u003e .png (imagemagick_to_png): no fixture",
+    ".cur -\u003e .png (imagemagick_to_png): no fixture",
+    ".tar -\u003e .txt (list_archive_contents): no fixture",
+    ".bmp -\u003e .pdf (ocr_to_searchable_pdf): no fixture",
+    ".tif -\u003e .pdf (ocr_to_searchable_pdf): no fixture",
+    ".tiff -\u003e .pdf (ocr_to_searchable_pdf): no fixture",
+    ".heic -\u003e .pdf (ocr_to_searchable_pdf): no fixture",
+    ".heif -\u003e .pdf (ocr_to_searchable_pdf): no fixture",
+    ".bmp -\u003e .txt (ocr_to_text): no fixture",
+    ".tif -\u003e .txt (ocr_to_text): no fixture",
+    ".tiff -\u003e .txt (ocr_to_text): no fixture",
+    ".heic -\u003e .txt (ocr_to_text): no fixture",
+    ".heif -\u003e .txt (ocr_to_text): no fixture",
+    ".pdf -\u003e folder (pdf_to_images): needs gs",
+    ".ps -\u003e .pdf (ps_to_pdf): needs gs",
+    ".eps -\u003e .pdf (ps_to_pdf): needs gs",
+    ".cr2 -\u003e .jpg (raw_to_jpeg): no fixture",
+    ".cr3 -\u003e .jpg (raw_to_jpeg): no fixture",
+    ".nef -\u003e .jpg (raw_to_jpeg): no fixture",
+    ".arw -\u003e .jpg (raw_to_jpeg): no fixture",
+    ".dng -\u003e .jpg (raw_to_jpeg): no fixture",
+    ".orf -\u003e .jpg (raw_to_jpeg): no fixture",
+    ".rw2 -\u003e .jpg (raw_to_jpeg): no fixture",
+    ".raf -\u003e .jpg (raw_to_jpeg): no fixture",
+    ".pef -\u003e .jpg (raw_to_jpeg): no fixture",
+    ".srw -\u003e .jpg (raw_to_jpeg): no fixture",
+    ".x3f -\u003e .jpg (raw_to_jpeg): no fixture",
+    ".cr2 -\u003e .png (raw_to_png): no fixture",
+    ".cr3 -\u003e .png (raw_to_png): no fixture",
+    ".nef -\u003e .png (raw_to_png): no fixture",
+    ".arw -\u003e .png (raw_to_png): no fixture",
+    ".dng -\u003e .png (raw_to_png): no fixture",
+    ".orf -\u003e .png (raw_to_png): no fixture",
+    ".rw2 -\u003e .png (raw_to_png): no fixture",
+    ".raf -\u003e .png (raw_to_png): no fixture",
+    ".pef -\u003e .png (raw_to_png): no fixture",
+    ".srw -\u003e .png (raw_to_png): no fixture",
+    ".x3f -\u003e .png (raw_to_png): no fixture",
+    ".cr2 -\u003e .tiff (raw_to_tiff): no fixture",
+    ".cr3 -\u003e .tiff (raw_to_tiff): no fixture",
+    ".nef -\u003e .tiff (raw_to_tiff): no fixture",
+    ".arw -\u003e .tiff (raw_to_tiff): no fixture",
+    ".dng -\u003e .tiff (raw_to_tiff): no fixture",
+    ".orf -\u003e .tiff (raw_to_tiff): no fixture",
+    ".rw2 -\u003e .tiff (raw_to_tiff): no fixture",
+    ".raf -\u003e .tiff (raw_to_tiff): no fixture",
+    ".pef -\u003e .tiff (raw_to_tiff): no fixture",
+    ".srw -\u003e .tiff (raw_to_tiff): no fixture",
+    ".x3f -\u003e .tiff (raw_to_tiff): no fixture",
+    ".svg -\u003e .png (svg_to_png): needs resvg",
+    "folder -\u003e .tar.xz (tar_xz): no fixture",
+    "folder -\u003e .tar.zst (tar_zst): no fixture",
+    ".png -\u003e .svg (trace_to_svg): needs potrace",
+    ".jpg -\u003e .svg (trace_to_svg): needs potrace",
+    ".jpeg -\u003e .svg (trace_to_svg): needs potrace",
+    ".gif -\u003e .svg (trace_to_svg): needs potrace",
+    ".bmp -\u003e .svg (trace_to_svg): needs potrace",
+    ".tif -\u003e .svg (trace_to_svg): needs potrace",
+    ".tiff -\u003e .svg (trace_to_svg): needs potrace",
+    ".webp -\u003e .svg (trace_to_svg): needs potrace",
+    ".heic -\u003e .svg (trace_to_svg): needs potrace",
+    ".heif -\u003e .svg (trace_to_svg): needs potrace",
+    ".m4v -\u003e .jpg (video_contact_sheet): no fixture",
+    ".wmv -\u003e .jpg (video_contact_sheet): no fixture",
+    ".flv -\u003e .jpg (video_contact_sheet): no fixture",
+    ".mpg -\u003e .jpg (video_contact_sheet): no fixture",
+    ".mpeg -\u003e .jpg (video_contact_sheet): no fixture",
+    ".3gp -\u003e .jpg (video_contact_sheet): no fixture",
+    ".m4v -\u003e folder (video_frames): no fixture",
+    ".wmv -\u003e folder (video_frames): no fixture",
+    ".flv -\u003e folder (video_frames): no fixture",
+    ".mpg -\u003e folder (video_frames): no fixture",
+    ".mpeg -\u003e folder (video_frames): no fixture",
+    ".3gp -\u003e folder (video_frames): no fixture",
+    ".m4v -\u003e .jpg (video_thumbnail): no fixture",
+    ".wmv -\u003e .jpg (video_thumbnail): no fixture",
+    ".flv -\u003e .jpg (video_thumbnail): no fixture",
+    ".mpg -\u003e .jpg (video_thumbnail): no fixture",
+    ".mpeg -\u003e .jpg (video_thumbnail): no fixture",
+    ".3gp -\u003e .jpg (video_thumbnail): no fixture"
+  ],
+  "summary": {
+    "conversionPairs": 492,
+    "failed": 2,
+    "readFormats": 112,
+    "writeFormats": 57
+  }
+}

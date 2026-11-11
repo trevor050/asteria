@@ -1,0 +1,49 @@
+{
+  "id": "trace_to_svg",
+  "name": "Trace to SVG",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "vectorize",
+    "trace image",
+    "bitmap to svg",
+    "potrace"
+  ],
+  "category": "vector",
+  "icon": "spline",
+  "description": "SVG outline traced from a bitmap",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".svg",
+  "params": [
+    {
+      "name": "threshold",
+      "label": "Threshold",
+      "type": "int",
+      "default": 50,
+      "presets": [
+        30,
+        50,
+        70
+      ],
+      "hint": "darkness cutoff (1-99) \u00b7 default 50",
+      "min": 1,
+      "max": 99
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "engine.trace"
+  },
+  "requires": [
+    "potrace"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

@@ -3,26 +3,45 @@
   "name": "Resize",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["scale", "resize image", "size"],
+  "aliases": [
+    "rs",
+    "scale",
+    "shrink image",
+    "make smaller"
+  ],
   "category": "transform",
-  "description": "Resize by percentage",
-  "inputTypes": [".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".gif"],
+  "icon": "scaling",
+  "priority": 12,
+  "description": "Smaller or larger, same proportions",
+  "inputTypes": [
+    "@image"
+  ],
   "outputType": "",
   "params": [
     {
-      "name": "percent",
-      "type": "int",
-      "label": "Percent",
-      "default": 100,
-      "presets": [90, 75, 50, 25],
-      "min": 10,
-      "max": 300,
-      "unit": "%"
+      "name": "size",
+      "label": "Size",
+      "type": "string",
+      "default": "50%",
+      "presets": [
+        "75%",
+        "50%",
+        "25%",
+        "1920",
+        "1280",
+        "800"
+      ],
+      "hint": "50% · 1920 (width) · x1080 (height) · 1920x1080 (fit inside)"
     }
   ],
-  "driver": "image",
-  "isMeta": false,
-  "executor": {"type": "native", "handler": "image.resize"},
-  "permissions": ["files.read", "files.write", "files.temp"],
+  "executor": {
+    "type": "native",
+    "handler": "image.resize"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
   "dangerLevel": 0
 }

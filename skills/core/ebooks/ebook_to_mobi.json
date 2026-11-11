@@ -1,0 +1,42 @@
+{
+  "id": "ebook_to_mobi",
+  "name": "Convert to MOBI",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to mobi",
+    "epub to mobi"
+  ],
+  "category": "ebook",
+  "icon": "book",
+  "description": "MOBI for older Kindles from an e-book",
+  "inputTypes": [
+    ".azw3",
+    ".azw",
+    ".fb2",
+    ".lit",
+    ".pdb",
+    ".epub"
+  ],
+  "outputType": ".mobi",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "ebook-convert",
+    "args": [
+      "{{input}}",
+      "{{output}}"
+    ],
+    "timeoutMs": 300000
+  },
+  "requires": [
+    "ebook-convert"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}
