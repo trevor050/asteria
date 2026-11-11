@@ -215,3 +215,34 @@ func TestStrongMatchesHideFuzzyNoise(t *testing.T) {
 		}
 	}
 }
+
+func TestHotReloadPicksUpMovedSkillDirectory(t *testing.T) {
+	base := t.TempDir()
+	community := filepath.Join(base, "community")
+	pack := filepath.Join(base, "ready-pack")
+	for _, dir := range []string{community, pack} {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	writeSkill(t, pack, "small.json", `{"id":"pack_resize","name":"Pack Resize","version":"1","inputTypes":["@image"],"executor":{"type":"native","handler":"image.resize","with":{"size":"50%"}}}`)
+	r := coreRegistry(t, community)
+	if err := r.StartHotReload(t.Context()); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.Rename(pack, filepath.Join(community, "new-pack")); err != nil {
+		t.Fatal(err)
+	}
+	deadline := time.NewTimer(2 * time.Second)
+	defer deadline.Stop()
+	for {
+		if _, ok := r.GetByID("pack_resize"); ok {
+			return
+		}
+		select {
+		case <-r.Changes():
+		case <-deadline.C:
+			t.Fatal("moving a folder of JSON skills into the watched folder did not load its skills")
+		}
+	}
+}

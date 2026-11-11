@@ -212,6 +212,9 @@ func (l *Loader) Watch(ctx context.Context) error {
 					// If a new directory is created, watch it.
 					if info, err := os.Stat(event.Name); err == nil && info.IsDir() {
 						_ = watchRecursive(w, event.Name)
+						// A moved-in folder can already contain JSON files;
+						// those files won't emit separate create events.
+						scheduleReload()
 					}
 				}
 				if isWatchableJSONFile(event.Name) {
