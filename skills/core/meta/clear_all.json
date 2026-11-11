@@ -1,14 +1,15 @@
 {
   "id": "clear_all",
-  "name": "Clear All",
+  "name": "Clear Tray",
   "version": "1.0.0",
   "author": "asteria",
   "aliases": [
+    "clear",
     "reset",
-    "clear"
+    "clear all"
   ],
   "category": "meta",
-  "description": "Clear all files and actions",
+  "description": "Remove every file from the tray (your originals stay where they are)",
   "inputTypes": [
     "*"
   ],

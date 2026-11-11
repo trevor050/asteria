@@ -9,7 +9,7 @@
     "write"
   ],
   "category": "meta",
-  "description": "Save outputs to your chosen folder",
+  "description": "Save the changed files; existing files are never overwritten",
   "inputTypes": [
     "*"
   ],
