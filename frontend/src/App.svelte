@@ -1,12 +1,15 @@
 <script lang="ts">
-  import { onMount, tick } from 'svelte'
+  import { flushSync, onMount, tick, untrack } from 'svelte'
   import { Clipboard } from '@wailsio/runtime'
   import { api, events, on } from './lib/api'
-  import type { AddResult, FileView, Progress, Result, State, Suggestion, TrustRequest } from './lib/api'
+  import type { AddResult, FileView, Progress, Result, Settings, State, Suggestion, TrustRequest } from './lib/api'
   import CommandBar from './lib/CommandBar.svelte'
   import FileTile from './lib/FileTile.svelte'
   import QuickLook from './lib/QuickLook.svelte'
+  import Hero from './lib/Hero.svelte'
+  import SettingsPanel from './lib/Settings.svelte'
   import { isTyping, mod, plural } from './lib/format'
+  import { motionReduced, setAppearance, setOverrides } from './lib/theme'
 
   type Toast = { id: number; text: string; tone: 'info' | 'error'; detail?: string; actions?: { label: string; run: () => void }[] }
 
@@ -31,8 +34,15 @@
   // short glow after an operation finishes.
   let addedFrom = $state(0)
   let skillCount = $state(0)
-  let settled = $state(false)
-  let settledTimer: ReturnType<typeof setTimeout> | undefined
+  let settingsOpen = $state(false)
+  // Height of the open suggestion list, so the files under it fade out
+  // instead of being sliced.
+  let veil = $state(0)
+  // Processing glow: 'run' while work takes longer than a moment, then a
+  // short 'ok' or 'fail' resolve. Quick operations never light up.
+  let pulse = $state<'off' | 'run' | 'ok' | 'fail'>('off')
+  let pulseTimer: ReturnType<typeof setTimeout> | undefined
+  let runFailed = false
 
   let settings = $derived(st?.settings)
   let perFile = $derived(settings?.mode === 'per_file')
@@ -43,6 +53,27 @@
   })
   let exportable = $derived(files.filter((f) => targets.includes(f.id) && ((f.steps?.length ?? 0) > 0 || f.origin === 'combined')))
   let quickFile = $derived(files.find((f) => f.id === quickId) ?? null)
+  // One file, or "Focused file" with several: show it as the subject of the
+  // window instead of a one-item grid.
+  let heroFile = $derived(files.length === 1 ? files[0] : perFile && files.length > 1 ? (files.find((f) => f.id === activeId) ?? files[0]) : null)
+  let heroIndex = $derived(heroFile ? files.findIndex((f) => f.id === heroFile.id) : -1)
+  // What is on screen lags the wanted layout by one view transition, so the
+  // file can morph between its tile and the large preview.
+  let layout = $state<'empty' | 'grid' | 'solo'>('empty')
+  let wantLayout = $derived<'empty' | 'grid' | 'solo'>(heroFile ? 'solo' : files.length ? 'grid' : 'empty')
+  $effect(() => {
+    const want = wantLayout
+    if (untrack(() => layout) === want) return
+    const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown }
+    if (!doc.startViewTransition || motionReduced() || untrack(() => layout) === 'empty') {
+      layout = want
+      return
+    }
+    doc.startViewTransition(() => {
+      layout = want
+      flushSync()
+    })
+  })
   let ffmpeg = $derived(st?.tools?.find((t) => t.name === 'ffmpeg'))
   let outputLabel = $derived(
     settings?.outputFolder ? settings.outputFolder.split(/[\\/]/).filter(Boolean).slice(-2).join('/') : 'next to the originals',
@@ -61,7 +92,22 @@
     toasts = toasts.filter((t) => t.id !== id)
   }
 
-  // ---- accent --------------------------------------------------------------
+  // ---- appearance ----------------------------------------------------------
+
+  function applySettings(s: Settings) {
+    applyAccent(s.accentColor)
+    setAppearance(s.appearance)
+    setOverrides(s)
+  }
+
+  async function changeSetting(key: string, value: string) {
+    await handle(await api.UpdateSettings(key, value))
+    if (key === 'mode') refreshKey++
+  }
+
+  async function openSkillsFolder() {
+    await handle(await api.Apply([], 'open_skills_folder', {}))
+  }
 
   function applyAccent(raw?: string) {
     const m = (raw ?? '').match(/^\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*$/)
@@ -136,12 +182,13 @@
         })
         return
       }
+      runFailed = true
       toast(res.error, { tone: 'error' })
       return
     }
     if (res.settings && st) {
       st = { ...st, settings: res.settings }
-      applyAccent(res.settings.accentColor)
+      applySettings(res.settings)
     }
     if (out.added?.length || out.removed?.length) {
       await syncFiles()
@@ -159,6 +206,7 @@
       toast(out.message, undoable ? { actions: [{ label: 'Undo', run: undo }] } : {})
     }
     if (out.failed?.length) {
+      runFailed = true
       toast(`${plural(out.failed.length, 'file')} failed`, {
         tone: 'error',
         detail: out.failed
@@ -176,18 +224,26 @@
     }
     busy = true
     working = ids
+    runFailed = false
     progress = label ? { label, done: 0, total: ids.length, fraction: 0, current: '' } : null
+    clearTimeout(pulseTimer)
+    pulseTimer = setTimeout(() => (pulse = 'run'), 350)
     try {
       await fn()
     } catch (e) {
+      runFailed = true
       toast(String(e), { tone: 'error' })
     } finally {
       busy = false
       working = []
       progress = null
-      settled = true
-      clearTimeout(settledTimer)
-      settledTimer = setTimeout(() => (settled = false), 1600)
+      clearTimeout(pulseTimer)
+      if (pulse === 'run') {
+        pulse = runFailed ? 'fail' : 'ok'
+        pulseTimer = setTimeout(() => (pulse = 'off'), runFailed ? 2600 : 1400)
+      } else {
+        pulse = 'off'
+      }
     }
     const next = queue.shift()
     if (next) {
@@ -307,7 +363,14 @@
     skillCount = all.filter((s) => !s.isMeta).length
   }
 
-  let phase = $derived(busy ? 'working' : settled ? 'settled' : files.length ? 'ready' : 'idle')
+  let phase = $derived(pulse === 'run' ? 'working' : pulse === 'ok' ? 'settled' : files.length ? 'ready' : 'idle')
+  let soloMulti = $derived(layout === 'solo' && files.length > 1)
+  // The last file shown large, kept while the layout transitions away.
+  let lastHero = $state<FileView | null>(null)
+  $effect(() => {
+    if (heroFile) lastHero = heroFile
+  })
+  let subjectId = $derived(heroFile?.id ?? lastHero?.id ?? activeId)
 
   // ---- keyboard ------------------------------------------------------------
 
@@ -316,6 +379,24 @@
     const typing = isTyping(e.target)
     const key = e.key.toLowerCase()
     if (trust || quickId) return
+    if (cmd && e.key === ',') {
+      e.preventDefault()
+      settingsOpen = !settingsOpen
+      if (!settingsOpen) bar?.focus()
+      return
+    }
+    if (settingsOpen) {
+      if (e.key === 'Escape') {
+        settingsOpen = false
+        bar?.focus()
+      }
+      return
+    }
+    if (soloMulti && (e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !cmd && !e.altKey && !(typing && (e.target as HTMLInputElement).value)) {
+      e.preventDefault()
+      moveActive(e.key === 'ArrowRight' ? 1 : -1)
+      return
+    }
     if (cmd && key === 'o') {
       e.preventDefault()
       void pickFiles()
@@ -343,6 +424,8 @@
         menu = null
       } else if (selected.length) {
         selected = []
+      } else if (soloMulti) {
+        void setMode('batch')
       }
     } else if (!typing) {
       if (e.key === ' ' && activeId) {
@@ -377,7 +460,7 @@
     ]
     void (async () => {
       await syncFiles()
-      applyAccent(st?.settings.accentColor)
+      if (st) applySettings(st.settings)
       if (st?.problems?.length) {
         toast(`${plural(st.problems.length, 'custom skill')} didn't load`, { tone: 'error', detail: st.problems.join('\n') })
       }
@@ -399,11 +482,17 @@
 
 <svelte:window {onkeydown} />
 
-<div class="shell" class:mac={st?.platform === 'darwin'} data-phase={phase}>
+<div class="shell" class:mac={st?.platform === 'darwin'} class:solo={layout === 'solo'} data-phase={phase}>
   <div class="aura" aria-hidden="true">
     <div class="blob teal"></div>
     <div class="blob amber"></div>
     <div class="blob slate"></div>
+  </div>
+  <div class="pulse {pulse}" aria-hidden="true">
+    <div class="hues">
+      {#each [0, 1, 2, 3, 4, 5] as k}<div class="hue" style={`--k:${k}`}></div>{/each}
+    </div>
+    <div class="resolve"></div>
   </div>
 
   <header class="titlebar">
@@ -412,18 +501,41 @@
         <span>{plural(files.length, 'file')}{selected.length ? `, ${selected.length} selected` : ''}</span>
         <button type="button" class="quiet" onclick={() => removeFromTray(files.map((f) => f.id))} disabled={busy}>Clear</button>
       </div>
-      <div class="mode" role="radiogroup" aria-label="Apply skills to">
-        <button type="button" role="radio" aria-checked={!perFile} class:on={!perFile} onclick={() => setMode('batch')}>
-          {selected.length ? 'Selected' : 'All files'}
-        </button>
-        <button type="button" role="radio" aria-checked={perFile} class:on={perFile} onclick={() => setMode('per_file')}>Focused file</button>
-      </div>
     {/if}
+    <div class="end">
+      {#if files.length > 1}
+        <div class="mode" role="radiogroup" aria-label="Show and apply skills to">
+          <button type="button" role="radio" aria-checked={!perFile} class:on={!perFile} onclick={() => setMode('batch')} title="Every file, or the selection">
+            {selected.length ? 'Selected' : 'All files'}
+          </button>
+          <button type="button" role="radio" aria-checked={perFile} class:on={perFile} onclick={() => setMode('per_file')} title="One file at a time (← → to move, Esc for all)"
+            >One by one</button
+          >
+        </div>
+      {/if}
+      <button type="button" class="gear" class:on={settingsOpen} onclick={() => (settingsOpen = !settingsOpen)} aria-label="Settings" title={`Settings (${mod},)`}>
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5h6M11.5 5h2M2.5 11h2M7.5 11h6" /><circle cx="10" cy="5" r="1.6" /><circle cx="6" cy="11" r="1.6" /></svg>
+      </button>
+    </div>
   </header>
 
-  <div class="stage">
+  <div class="body">
+
+  <div class="stage" class:veiled={veil > 0} style={`--veil:${veil}px`}>
     <main class="tray" data-file-drop-target bind:this={trayEl} aria-label="Files">
-      {#if !files.length}
+      {#if layout === 'solo' && (heroFile ?? lastHero)}
+        {@const hf = (heroFile ?? lastHero)!}
+        <Hero
+          file={hf}
+          index={Math.max(0, heroIndex)}
+          count={files.length}
+          working={working.includes(hf.id)}
+          onprev={() => moveActive(-1)}
+          onnext={() => moveActive(1)}
+          onopen={() => (quickId = hf.id)}
+          onremovestep={(i) => removeStep(hf.id, i)}
+        />
+      {:else if layout === 'empty' || !files.length}
         <div class="empty">
           <h1>Drop files to begin</h1>
           <p class="lead">
@@ -447,6 +559,7 @@
           {#each files as file, i (file.id)}
             <FileTile
               {file}
+              subject={file.id === subjectId}
               enter={Math.max(0, Math.min(i - addedFrom, 14))}
               selected={selected.includes(file.id)}
               active={activeId === file.id && (perFile || files.length > 1)}
@@ -485,16 +598,26 @@
       </div>
     {/if}
     <div class="row">
-      <CommandBar bind:this={bar} targetIds={targets} hasFiles={files.length > 0} {busy} {refreshKey} onrun={run} />
+      <CommandBar
+        bind:this={bar}
+        targetIds={targets}
+        hasFiles={files.length > 0}
+        {busy}
+        {refreshKey}
+        onrun={run}
+        onadd={() => void pickFiles()}
+        onpopover={(h) => (veil = h)}
+      />
       {#if files.length}
         <button
           type="button"
-          class="export"
+          class="export glass"
           class:ready={exportable.length > 0 && !busy}
           onclick={exportFiles}
           disabled={!exportable.length || busy}
           title="Export changed files"
         >
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 10.5V2.5M4.75 5.75 8 2.5l3.25 3.25M3 9.5v3a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-3" /></svg>
           <span>Export{exportable.length ? ` ${exportable.length}` : ''}</span>
           <kbd>{mod}↵</kbd>
         </button>
@@ -508,6 +631,21 @@
       {/if}
     </div>
   </section>
+  </div>
+
+  {#if settingsOpen && st && settings}
+    <SettingsPanel
+      {settings}
+      app={st}
+      onchange={(k, v) => void changeSetting(k, v)}
+      onpickfolder={() => void pickOutput()}
+      onopenskills={() => void openSkillsFolder()}
+      onclose={() => {
+        settingsOpen = false
+        bar?.focus()
+      }}
+    />
+  {/if}
 
   {#if toasts.length}
     <div class="toasts" aria-live="polite">
@@ -596,8 +734,138 @@
     position: relative;
     height: 100vh;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto 1fr;
     isolation: isolate;
+  }
+  .body {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .body > .stage {
+    flex: 1 1 auto;
+  }
+  /* One file: the file, its details, the suggestions and the bar form one
+     centered group instead of a tile in a corner and controls far below. */
+  .solo .body {
+    justify-content: center;
+    padding-bottom: 3vh;
+  }
+  .solo .body > .stage {
+    flex: 0 1 auto;
+  }
+  .solo .tray {
+    height: auto;
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+    padding: 0 22px 14px;
+  }
+  .solo .dock {
+    max-width: 760px;
+  }
+  .solo .dock :global(.quick) {
+    justify-content: center;
+    margin-left: 0;
+  }
+  .dock {
+    view-transition-name: dock;
+  }
+
+  /* ---- processing glow ---------------------------------------------------
+     While work runs longer than a moment, a soft glow at the top edge drifts
+     through one hue at a time. Six fixed-color layers cross-fade by opacity
+     only, so it stays on the compositor however busy the page is. */
+  .pulse {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 42vh;
+    z-index: -1;
+    pointer-events: none;
+  }
+  .hues,
+  .resolve {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.1s var(--ease-out);
+  }
+  .pulse.run .hues {
+    opacity: var(--pulse-strength);
+    transition-duration: 0.7s;
+  }
+  .hue {
+    position: absolute;
+    inset: 0 -10%;
+    background: radial-gradient(70% 100% at 50% 0%, rgb(var(--c)), rgb(var(--c) / 0.45) 38%, rgb(var(--c) / 0.12) 68%, transparent);
+    opacity: 0;
+    animation: hue-cycle 7.2s ease-in-out infinite;
+    animation-delay: calc(var(--k) * -1.2s);
+    animation-play-state: paused;
+  }
+  .pulse.run .hue {
+    animation-play-state: running;
+  }
+  .hue:nth-child(1) {
+    --c: var(--hue-1);
+  }
+  .hue:nth-child(2) {
+    --c: var(--hue-2);
+  }
+  .hue:nth-child(3) {
+    --c: var(--hue-3);
+  }
+  .hue:nth-child(4) {
+    --c: var(--hue-4);
+  }
+  .hue:nth-child(5) {
+    --c: var(--hue-5);
+  }
+  .hue:nth-child(6) {
+    --c: var(--hue-6);
+  }
+  @keyframes hue-cycle {
+    0%,
+    33.4%,
+    100% {
+      opacity: 0;
+    }
+    16.7% {
+      opacity: 1;
+    }
+  }
+  .resolve {
+    background: radial-gradient(70% 100% at 50% 0%, rgb(var(--aura-teal)), rgb(var(--aura-teal) / 0.3) 45%, transparent 75%);
+  }
+  .pulse.ok .resolve {
+    opacity: calc(var(--pulse-strength) * 0.8);
+    transition-duration: 0.35s;
+  }
+  .pulse.fail .resolve {
+    background: radial-gradient(70% 100% at 50% 0%, rgb(var(--hue-warn)), rgb(var(--hue-warn) / 0.3) 45%, transparent 75%);
+    opacity: calc(var(--pulse-strength) * 0.75);
+    transition-duration: 0.5s;
+  }
+  /* Reduced motion: no drift, one steady hue while working. */
+  :global(:root[data-motion='reduce']) .hue,
+  :global(:root[data-motion='reduce']) .pulse.run .hue {
+    animation: none;
+    opacity: 0;
+  }
+  :global(:root[data-motion='reduce']) .hue:first-child {
+    opacity: 0.8;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hue,
+    .pulse.run .hue {
+      animation: none;
+      opacity: 0;
+    }
+    .hue:first-child {
+      opacity: 0.8;
+    }
   }
 
   /* ---- ambient wash ------------------------------------------------------
@@ -707,12 +975,48 @@
   .export {
     animation: rise 0.4s var(--ease-out) both;
   }
-  .mode {
+  .end {
     --wails-draggable: no-drag;
     display: flex;
-    gap: 2px;
+    align-items: center;
+    gap: 8px;
     margin-left: auto;
+  }
+  .mode {
+    display: flex;
+    gap: 2px;
     animation: rise 0.4s var(--ease-out) both;
+  }
+  .gear {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+  .gear svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    stroke-linecap: round;
+  }
+  .gear circle {
+    fill: var(--bg);
+  }
+  .gear:hover,
+  .gear.on {
+    background: var(--chip);
+    color: var(--ink);
   }
   .mode button {
     border: 0;
@@ -738,6 +1042,23 @@
   .stage {
     position: relative;
     min-height: 0;
+  }
+  /* Under the open suggestion list the files fade out instead of being cut
+     through the middle of a line. */
+  .stage::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(var(--veil) + 56px);
+    background: linear-gradient(to bottom, transparent, var(--bg) 56px);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.18s var(--ease-out);
+  }
+  .stage.veiled::after {
+    opacity: 1;
   }
   .tray {
     height: 100%;
@@ -893,41 +1214,53 @@
     align-items: flex-end;
     gap: 10px;
   }
+  /* Same frosted material as the bar; ready reads through ink, a brighter
+     edge and the count, not a loud fill. */
   .export {
     flex: none;
     display: inline-flex;
     align-items: center;
     gap: 10px;
     height: 52px;
-    padding: 0 16px 0 20px;
+    padding: 0 16px 0 18px;
     border-radius: 16px;
     border: 1px solid var(--line);
-    background: transparent;
     color: var(--muted);
     font-size: 14px;
-    font-weight: 450;
+    font-weight: 400;
     cursor: pointer;
+    box-shadow: inset 0 1px 0 var(--glass-edge);
     transition:
-      background 0.3s var(--ease-out),
       color 0.3s var(--ease-out),
       border-color 0.3s,
+      background 0.2s,
       transform 0.25s var(--ease-spring);
+  }
+  .export svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
   .export kbd {
     background: transparent;
     color: inherit;
-    opacity: 0.7;
+    opacity: 0.6;
     padding: 0;
   }
   .export.ready {
-    background: var(--primary-bg);
-    border-color: transparent;
-    color: var(--primary-ink);
+    border-color: var(--line-strong);
+    color: var(--ink);
+    font-weight: 450;
   }
-  .export.ready kbd {
-    opacity: 0.55;
+  .export.ready svg {
+    color: var(--accent);
   }
   .export.ready:hover {
+    --glass-bg: color-mix(in oklab, var(--glass-strong), var(--ink) 6%);
     transform: translateY(-1px);
   }
   .export.ready:active {

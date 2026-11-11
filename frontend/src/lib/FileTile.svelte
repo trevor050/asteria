@@ -1,5 +1,6 @@
 <script lang="ts">
   import { scale } from 'svelte/transition'
+  import { motionReduced } from './theme'
   import { thumbURL, type FileView } from './api'
   import { size, typeLabel } from './format'
 
@@ -7,6 +8,8 @@
     file: FileView
     /** Position in the newest batch, for the staggered entrance. */
     enter?: number
+    /** The file the one-file view morphs from and to. */
+    subject?: boolean
     selected: boolean
     active: boolean
     working: boolean
@@ -15,7 +18,7 @@
     onremovestep: (index: number) => void
     oncontext: (e: MouseEvent) => void
   }
-  let { file, enter = 0, selected, active, working, onselect, onopen, onremovestep, oncontext }: Props = $props()
+  let { file, enter = 0, subject = false, selected, active, working, onselect, onopen, onremovestep, oncontext }: Props = $props()
 
   let broken = $state(false)
   $effect(() => {
@@ -37,10 +40,9 @@
     return now
   })
   let ratio = $derived(file.origin !== 'combined' && changed && file.originalSize > 0 ? file.size / file.originalSize : 1)
-  // Same-motion check for svelte transitions, which ignore the CSS media query.
-  const still = typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches
-  const chipIn = (node: Element) => scale(node, { start: 0.85, duration: still ? 0 : 220, opacity: 0 })
-  const chipOut = (node: Element) => scale(node, { start: 0.85, duration: still ? 0 : 140 })
+  // Svelte transitions ignore the CSS media query, so ask explicitly.
+  const chipIn = (node: Element) => scale(node, { start: 0.85, duration: motionReduced() ? 0 : 220, opacity: 0 })
+  const chipOut = (node: Element) => scale(node, { start: 0.85, duration: motionReduced() ? 0 : 140 })
 </script>
 
 <div
@@ -58,7 +60,7 @@
   oncontextmenu={oncontext}
   onkeydown={() => {}}
 >
-  <div class="preview" class:folder={file.kind === 'folder'} class:image={showThumb}>
+  <div class="preview" class:folder={file.kind === 'folder'} class:image={showThumb} style:view-transition-name={subject ? 'subject' : undefined}>
     {#if showThumb}
       <img class:checker={file.kind === 'image' && alpha} src={thumbURL(file.id, file.rev)} alt="" loading="lazy" decoding="async" onerror={() => (broken = true)} />
     {:else if snippet}
@@ -178,10 +180,16 @@
       transform: translateX(35%);
     }
   }
+  /* The image box is the picture itself (no letterbox), so the
+     checkerboard only shows behind real transparent pixels. */
   img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
   }
   img.checker {
     background-image:

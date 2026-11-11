@@ -9,8 +9,16 @@
     busy: boolean
     refreshKey: number
     onrun: (s: Suggestion, params: Record<string, unknown>) => void
+    /** Opens the native file picker. */
+    onadd: () => void
+    /** Height of the suggestion list while it is open (0 when closed). */
+    onpopover?: (height: number) => void
   }
-  let { targetIds, hasFiles, busy, refreshKey, onrun }: Props = $props()
+  let { targetIds, hasFiles, busy, refreshKey, onrun, onadd, onpopover }: Props = $props()
+  let popH = $state(0)
+  $effect(() => {
+    onpopover?.(open && !paramSkill && visible.length ? popH : 0)
+  })
 
   let input: HTMLInputElement | undefined = $state()
   let query = $state('')
@@ -200,7 +208,7 @@
 
 <div class="bar" class:focused class:busy class:param={!!paramSkill}>
   {#if open && !paramSkill && visible.length}
-    <ul class="suggestions glass" id="suggestions" role="listbox" aria-label="Skills">
+    <ul class="suggestions glass" id="suggestions" role="listbox" aria-label="Skills" bind:clientHeight={popH}>
       {#each visible as s, i (s.id + s.value)}
         <li
           role="option"
@@ -284,8 +292,14 @@
         />
         {#if param.unit && !paramValue.endsWith(param.unit)}<span class="unit">{param.unit}</span>{/if}
       {:else}
-        <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true"
-          ><path d="M10 1.5c.4 3.9 1.1 6.1 2.3 7.2 1.2 1.2 3.3 1.9 6.2 2.3-2.9.4-5 1.1-6.2 2.3-1.2 1.1-1.9 3.3-2.3 6.2-.4-2.9-1.1-5.1-2.3-6.2C6.5 12.1 4.4 11.4 1.5 11c2.9-.4 5-1.1 6.2-2.3C8.9 7.6 9.6 5.4 10 1.5z" /></svg
+        <button
+          type="button"
+          class="add"
+          onclick={onadd}
+          onmousedown={(e) => e.preventDefault()}
+          aria-label="Add files"
+          title={`Add files (${mod}O)`}
+          ><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" /></svg></button
         >
         <input
           bind:this={input}
@@ -374,26 +388,40 @@
   .focused .field {
     border-color: var(--line-strong);
   }
-  .glyph {
-    width: 17px;
-    height: 17px;
+  .add {
     flex: none;
-    fill: var(--muted);
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    margin-left: -6px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--ink-2);
+    cursor: pointer;
     transition:
-      fill 0.3s,
-      transform 0.5s var(--ease-spring);
+      background 0.15s,
+      color 0.15s,
+      border-color 0.15s,
+      transform 0.3s var(--ease-spring);
   }
-  .focused .glyph {
-    fill: var(--accent);
-    transform: rotate(90deg);
+  .add svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
   }
-  .busy .glyph {
-    animation: turn 2.4s linear infinite;
+  .add:hover {
+    background: var(--chip);
+    color: var(--ink);
+    border-color: transparent;
   }
-  @keyframes turn {
-    to {
-      transform: rotate(360deg);
-    }
+  .add:active {
+    transform: scale(0.92);
   }
   input {
     flex: 1;
@@ -599,10 +627,8 @@
       transform: scale(0.9);
     }
   }
-  @media (prefers-color-scheme: light) {
-    .focused .halo {
-      opacity: 0.4;
-    }
+  :global(:root[data-theme='light']) .focused .halo {
+    opacity: 0.4;
   }
   @media (max-width: 640px) {
     .desc {

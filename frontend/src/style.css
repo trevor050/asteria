@@ -22,12 +22,12 @@
  */
 :root {
   --accent-rgb: 99 102 241;
-  --danger-rgb: 196 76 62;
+  --danger-rgb: 172 60 48;
 
   --bg: #f2f2ef;
   --ink: #1c1c1a;
   --ink-2: #4a4945;
-  --muted: #6b6a65;
+  --muted: #62615c;
   --line: rgb(28 28 26 / 0.09);
   --line-strong: rgb(28 28 26 / 0.16);
   --chip: rgb(28 28 26 / 0.055);
@@ -41,7 +41,7 @@
   --scrim: rgb(30 30 28 / 0.28);
   --accent: color-mix(in oklab, rgb(var(--accent-rgb)) 70%, #1c1c1a);
   --accent-soft: color-mix(in oklab, rgb(var(--accent-rgb)) 14%, transparent);
-  --good: #3f7a52;
+  --good: #33683f;
   --warn: #8a5d1c;
   --danger: rgb(var(--danger-rgb));
   --primary-bg: #1c1c1a;
@@ -52,6 +52,15 @@
   --aura-amber: 222 182 120;
   --aura-slate: 150 162 196;
   --aura-strength: 0.42;
+  /* Processing glow, one hue at a time; much softer in light. */
+  --hue-1: 150 170 226;
+  --hue-2: 142 196 202;
+  --hue-3: 160 204 168;
+  --hue-4: 226 204 146;
+  --hue-5: 226 172 196;
+  --hue-6: 188 174 230;
+  --hue-warn: 224 178 120;
+  --pulse-strength: 0.72;
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.34, 1.36, 0.64, 1);
@@ -59,40 +68,48 @@
   --sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --danger-rgb: 232 150 136;
-    --bg: #0f1012;
-    --ink: #ecebe6;
-    --ink-2: #b4b2ab;
-    --muted: #8b8983;
-    --line: rgb(255 255 255 / 0.07);
-    --line-strong: rgb(255 255 255 / 0.14);
-    --chip: rgb(255 255 255 / 0.065);
-    --hover: rgb(255 255 255 / 0.035);
-    --well: rgb(255 255 255 / 0.03);
-    --check: rgb(255 255 255 / 0.045);
-    --glass: rgb(26 27 30 / 0.56);
-    --glass-strong: rgb(22 23 26 / 0.84);
-    --glass-solid: #18191c;
-    --glass-edge: rgb(255 255 255 / 0.06);
-    --scrim: rgb(4 4 6 / 0.62);
-    --accent: color-mix(in oklab, rgb(var(--accent-rgb)) 55%, #ecebe6);
-    --accent-soft: color-mix(in oklab, rgb(var(--accent-rgb)) 16%, transparent);
-    --good: #a3cbb0;
-    --warn: #d9b57e;
-    --primary-bg: #ecebe6;
-    --primary-ink: #111214;
-    --shadow-pop: 0 24px 60px -16px rgb(0 0 0 / 0.7), 0 2px 10px rgb(0 0 0 / 0.35);
+:root[data-theme='dark'] {
+  color-scheme: dark;
 
-    --aura-teal: 70 112 122;
-    --aura-amber: 150 112 62;
-    --aura-slate: 84 96 128;
-    --aura-strength: 0.5;
-  }
+  --danger-rgb: 232 150 136;
+  --bg: #0f1012;
+  --ink: #ecebe6;
+  --ink-2: #b4b2ab;
+  --muted: #8b8983;
+  --line: rgb(255 255 255 / 0.07);
+  --line-strong: rgb(255 255 255 / 0.14);
+  --chip: rgb(255 255 255 / 0.065);
+  --hover: rgb(255 255 255 / 0.035);
+  --well: rgb(255 255 255 / 0.03);
+  --check: rgb(255 255 255 / 0.045);
+  --glass: rgb(26 27 30 / 0.56);
+  --glass-strong: rgb(22 23 26 / 0.84);
+  --glass-solid: #18191c;
+  --glass-edge: rgb(255 255 255 / 0.06);
+  --scrim: rgb(4 4 6 / 0.62);
+  --accent: color-mix(in oklab, rgb(var(--accent-rgb)) 55%, #ecebe6);
+  --accent-soft: color-mix(in oklab, rgb(var(--accent-rgb)) 16%, transparent);
+  --good: #a3cbb0;
+  --warn: #d9b57e;
+  --primary-bg: #ecebe6;
+  --primary-ink: #111214;
+  --shadow-pop: 0 24px 60px -16px rgb(0 0 0 / 0.7), 0 2px 10px rgb(0 0 0 / 0.35);
+
+  --aura-teal: 70 112 122;
+  --aura-amber: 150 112 62;
+  --aura-slate: 84 96 128;
+  --aura-strength: 0.5;
+  --hue-1: 54 86 196;
+  --hue-2: 34 132 150;
+  --hue-3: 52 150 92;
+  --hue-4: 176 142 52;
+  --hue-5: 176 74 128;
+  --hue-6: 112 78 196;
+  --hue-warn: 168 112 48;
+  --pulse-strength: 0.62;
 }
 
 * {
@@ -178,6 +195,11 @@ button:focus-visible,
     backdrop-filter: none;
   }
 }
+:root[data-transparency='reduce'] .glass {
+  background: var(--glass-solid) !important;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
 
 ::-webkit-scrollbar {
   width: 10px;
@@ -201,4 +223,29 @@ button:focus-visible,
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+:root[data-motion='reduce'] *,
+:root[data-motion='reduce'] *::before,
+:root[data-motion='reduce'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Morph between a file's tile and the one-file view. */
+::view-transition-group(subject),
+::view-transition-group(dock) {
+  animation-duration: 0.42s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.28s;
 }

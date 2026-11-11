@@ -11,7 +11,8 @@
     "check": "svelte-check --tsconfig ./tsconfig.json"
   },
   "dependencies": {
-    "@wailsio/runtime": "3.1.0"
+    "@wailsio/runtime": "3.1.0",
+    "pdfjs-dist": "^6.5.438"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
