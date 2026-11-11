@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	"log"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -36,13 +37,12 @@ func init() {
 
 // engineCmd runs bin with args, failing with the tool's last error lines.
 func engineCmd(ctx context.Context, name, bin, dir string, timeout time.Duration, args ...string) error {
-	for _, a := range args {
-		if strings.HasPrefix(a, "-") {
-			continue
-		}
-		// Paths are absolute; anything else must not look like a path.
-		_ = a
-	}
+	_, err := engineOutput(ctx, name, bin, dir, timeout, args...)
+	return err
+}
+
+// engineOutput is engineCmd that also returns what the tool printed.
+func engineOutput(ctx context.Context, name, bin, dir string, timeout time.Duration, args ...string) (string, error) {
 	c, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 	cmd := tools.Command(c, bin, args...)
@@ -52,10 +52,10 @@ func engineCmd(ctx context.Context, name, bin, dir string, timeout time.Duration
 	cmd.Stderr = &out
 	if err := cmd.Run(); err != nil {
 		if ctx.Err() != nil {
-			return ctx.Err()
+			return out.String(), ctx.Err()
 		}
 		if c.Err() == context.DeadlineExceeded {
-			return Userf("%s took too long and was stopped", name)
+			return out.String(), Userf("%s took too long and was stopped", name)
 		}
 		msg := strings.TrimSpace(out.String())
 		if len(msg) > 400 {
@@ -64,9 +64,9 @@ func engineCmd(ctx context.Context, name, bin, dir string, timeout time.Duration
 		if msg == "" {
 			msg = err.Error()
 		}
-		return Userf("%s failed: %s", name, msg)
+		return out.String(), Userf("%s failed: %s", name, msg)
 	}
-	return nil
+	return out.String(), nil
 }
 
 func absAll(paths ...string) ([]string, error) {
@@ -152,7 +152,7 @@ func runLibreOffice(ctx context.Context, job Job) error {
 			}
 		}
 	}()
-	err = engineCmd(runCtx, "LibreOffice", bin, scratch, 5*time.Minute,
+	printed, err := engineOutput(runCtx, "LibreOffice", bin, scratch, 5*time.Minute,
 		"-env:UserInstallation="+fileURI(profile), "--headless", "--norestore", "--nolockcheck", "--nodefault",
 		"--convert-to", target, "--outdir", outDir, in)
 	select {
@@ -165,6 +165,7 @@ func runLibreOffice(ctx context.Context, job Job) error {
 	}
 	produced, _ := filepath.Glob(filepath.Join(outDir, "*"))
 	if len(produced) != 1 {
+		log.Printf("LibreOffice produced %d files converting %s to %s; it printed: %s", len(produced), filepath.Base(in), target, strings.TrimSpace(printed))
 		return Userf("LibreOffice couldn't convert this file to %s", strings.ToUpper(strings.SplitN(target, ":", 2)[0]))
 	}
 	job.Progress(0.95)
