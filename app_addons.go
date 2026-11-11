@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"errors"
 	"fmt"
+	"log"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -151,6 +152,9 @@ func (a *App) InstallAddon(id string) Result {
 		}
 		var ue *addons.UserError
 		if errors.As(err, &ue) {
+			if ue.Detail != "" {
+				log.Printf("add-on %s: %s", id, ue.Detail)
+			}
 			return Result{Error: ue.Msg, ErrorKind: "user"}
 		}
 		return Result{Error: err.Error(), ErrorKind: "internal"}

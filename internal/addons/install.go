@@ -23,9 +23,19 @@ import (
 )
 
 // UserError is a message meant to be shown as is.
-type UserError struct{ Msg string }
+// UserError is shown to the user as is. Detail keeps the technical cause
+// for logs and tests; it is never shown.
+type UserError struct {
+	Msg    string
+	Detail string
+}
 
-func (e *UserError) Error() string { return e.Msg }
+func (e *UserError) Error() string {
+	if e.Detail != "" {
+		return e.Msg + " [" + e.Detail + "]"
+	}
+	return e.Msg
+}
 
 func userf(format string, a ...any) error { return &UserError{Msg: fmt.Sprintf(format, a...)} }
 
@@ -210,13 +220,15 @@ func (m *Manager) Install(parent context.Context, id string, report func(Progres
 		if errors.Is(ctx.Err(), context.Canceled) {
 			return ErrCancelled
 		}
-		return fmt.Errorf("unpacking %s: %w", e.Name, err)
+		_ = os.Remove(part)
+		return &UserError{Msg: fmt.Sprintf("%s was downloaded but couldn't be set up, so nothing was installed. Please try again later.", e.Name), Detail: err.Error()}
 	}
 	for tool, rel := range a.Bins {
 		p := filepath.Join(staging, filepath.FromSlash(rel))
 		st, err := os.Stat(p)
 		if err != nil || st.IsDir() {
-			return userf("%s was downloaded but %s is missing from it; nothing was installed.", e.Name, tool)
+			_ = os.Remove(part)
+			return &UserError{Msg: fmt.Sprintf("%s was downloaded but couldn't be set up, so nothing was installed. Please try again later.", e.Name), Detail: tool + " missing at " + rel}
 		}
 		if runtime.GOOS != "windows" {
 			_ = os.Chmod(p, st.Mode()|0o111)
@@ -225,7 +237,8 @@ func (m *Manager) Install(parent context.Context, id string, report func(Progres
 
 	report(Progress{Engine: id, Phase: "check"})
 	if err := m.CheckRuns(ctx, staging, a); err != nil {
-		return userf("%s was downloaded but doesn't run on this computer (%v); nothing was installed.", e.Name, err)
+		_ = os.Remove(part)
+		return &UserError{Msg: fmt.Sprintf("%s was downloaded but doesn't run on this computer, so nothing was installed.", e.Name), Detail: err.Error()}
 	}
 	size, _ := dirSize(staging)
 	rec := Installed{Version: a.Version, Platform: Platform(), SHA256: a.SHA256, InstalledAt: time.Now().UTC(), Bytes: size}

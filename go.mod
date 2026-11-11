@@ -15,6 +15,7 @@ require (
 	github.com/pdfcpu/pdfcpu v0.16.4
 	github.com/pelletier/go-toml/v2 v2.4.3
 	github.com/tdewolff/minify/v2 v2.24.25
+	github.com/therootcompany/xz v1.0.1
 	github.com/ulikunitz/xz v0.5.17
 	github.com/wailsapp/wails/v3 v3.1.0
 	github.com/yuin/goldmark v1.8.7

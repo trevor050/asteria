@@ -14,6 +14,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync/atomic"
@@ -256,5 +257,35 @@ func TestRepositoryManifest(t *testing.T) {
 		if e.Name == "" || e.Unlocks == "" || e.License == "" || e.LicenseURL == "" || len(e.Tools) == 0 {
 			t.Errorf("%s: missing name, unlocks, license or tools", e.ID)
 		}
+	}
+}
+
+// Debian packages link to absolute paths under /opt; unpacked per user
+// those links are re-rooted inside the add-on, and plain tarballs still
+// refuse them.
+func TestDebLinksAreRerootedInsideTheAddon(t *testing.T) {
+	var buf bytes.Buffer
+	tw := tar.NewWriter(&buf)
+	_ = tw.WriteHeader(&tar.Header{Name: "opt/app/program/soffice", Mode: 0o755, Size: 2, Typeflag: tar.TypeReg})
+	_, _ = tw.Write([]byte("ok"))
+	_ = tw.WriteHeader(&tar.Header{Name: "usr/bin/app", Linkname: "/opt/app/program/soffice", Typeflag: tar.TypeSymlink})
+	_ = tw.Close()
+
+	dst := t.TempDir()
+	if err := untar(t.Context(), bytes.NewReader(buf.Bytes()), dst, true); err != nil {
+		t.Fatal(err)
+	}
+	if runtime.GOOS != "windows" {
+		b, err := os.ReadFile(filepath.Join(dst, "usr", "bin", "app"))
+		if err != nil || string(b) != "ok" {
+			t.Fatalf("rerooted link reads %q, %v", b, err)
+		}
+		target, _ := os.Readlink(filepath.Join(dst, "usr", "bin", "app"))
+		if filepath.IsAbs(target) {
+			t.Fatalf("link stayed absolute: %s", target)
+		}
+	}
+	if err := untar(t.Context(), bytes.NewReader(buf.Bytes()), t.TempDir(), false); err == nil {
+		t.Fatal("an absolute link outside a package was accepted")
 	}
 }

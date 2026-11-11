@@ -14,6 +14,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -21,7 +22,7 @@ import (
 
 	"github.com/bodgit/sevenzip"
 	"github.com/klauspost/compress/zstd"
-	"github.com/ulikunitz/xz"
+	"github.com/therootcompany/xz"
 )
 
 // Limits that stop a hostile or broken archive from filling the disk.
@@ -211,7 +212,7 @@ func untarCompressed(ctx context.Context, src, dst, comp string) error {
 		return err
 	}
 	defer closeFn()
-	return untar(ctx, r, dst)
+	return untar(ctx, r, dst, false)
 }
 
 func decompressor(r io.Reader, comp string) (io.Reader, func(), error) {
@@ -223,7 +224,9 @@ func decompressor(r io.Reader, comp string) (io.Reader, func(), error) {
 		}
 		return z, func() { z.Close() }, nil
 	case "xz":
-		z, err := xz.NewReader(r)
+		// XZ Embedded's decoder: 7-Zip's Linux and macOS tarballs use a
+		// BCJ filter that other pure-Go readers reject.
+		z, err := xz.NewReader(r, 256<<20)
 		return z, func() {}, err
 	case "zst":
 		z, err := zstd.NewReader(r)
@@ -237,7 +240,9 @@ func decompressor(r io.Reader, comp string) (io.Reader, func(), error) {
 	return r, func() {}, nil
 }
 
-func untar(ctx context.Context, r io.Reader, dst string) error {
+// untar extracts a tar stream into dst. With reroot, absolute link targets
+// are read as paths inside dst (Debian packages link to /opt/...).
+func untar(ctx context.Context, r io.Reader, dst string, reroot bool) error {
 	tr := tar.NewReader(r)
 	var total int64
 	n := 0
@@ -276,7 +281,17 @@ func untar(ctx context.Context, r io.Reader, dst string) error {
 				return err
 			}
 		case tar.TypeSymlink:
-			if err := makeLink(dst, p, h.Linkname); err != nil {
+			target := h.Linkname
+			if reroot && path.IsAbs(target) {
+				// A package's absolute link (/opt/app/program/x) points
+				// inside the package once it lives under dst.
+				rel, err := filepath.Rel(filepath.Dir(p), filepath.Join(dst, filepath.FromSlash(target)))
+				if err != nil {
+					return err
+				}
+				target = filepath.ToSlash(rel)
+			}
+			if err := makeLink(dst, p, target); err != nil {
 				return err
 			}
 		case tar.TypeLink:
@@ -431,7 +446,8 @@ func unpackDebBundle(ctx context.Context, src, dst string) error {
 	defer os.RemoveAll(tmp)
 	var debs []string
 	_ = filepath.WalkDir(tmp, func(p string, d os.DirEntry, err error) error {
-		if err == nil && !d.IsDir() && strings.HasSuffix(p, ".deb") {
+		// Desktop menu entries are of no use to Asteria.
+		if err == nil && !d.IsDir() && strings.HasSuffix(p, ".deb") && !strings.Contains(filepath.Base(p), "-debian-menus") {
 			debs = append(debs, p)
 		}
 		return nil
@@ -481,7 +497,7 @@ func extractDeb(ctx context.Context, deb, dst string) error {
 					return err
 				}
 				defer closeFn()
-				return untar(ctx, r, dst)
+				return untar(ctx, r, dst, true)
 			}
 			return fmt.Errorf("unsupported %s", name)
 		}

@@ -20,6 +20,7 @@ import (
 
 	"github.com/bodgit/sevenzip"
 	"github.com/klauspost/compress/zstd"
+	xzdec "github.com/therootcompany/xz"
 	"github.com/ulikunitz/xz"
 )
 
@@ -92,7 +93,8 @@ func a2Decompress(r io.Reader, kind string) (io.Reader, func(), string, error) {
 		}
 		return gr, func() { _ = gr.Close() }, gr.Name, nil
 	case "xz":
-		xr, err := xz.NewReader(r)
+		// XZ Embedded's decoder handles the BCJ filters some tools use.
+		xr, err := xzdec.NewReader(r, 256<<20)
 		if err != nil {
 			return nil, nil, "", Userf("not a readable xz file: %v", err)
 		}
