@@ -84,7 +84,7 @@ go test -tags nodynamic ./internal/...   # skill tests (media tests run when ffm
 cd frontend && npm run check              # type-check the UI
 ```
 
-The tests run every skill on real files in [`testdata/fixtures`](testdata/fixtures) (a HEIC written by Apple's own encoder, a 3-page PDF, a short video, CSV/JSON/YAML with Unicode) and check the output itself: pixels, page counts, durations, exact text.
+The tests exercise built-in operations on real files in [`testdata/fixtures`](testdata/fixtures) (a HEIC written by Apple's own encoder, a 3-page PDF, a short video, CSV/JSON/YAML with Unicode) and check the output itself: pixels, page counts, durations, exact text.
 
 ### Cutting a release
 
