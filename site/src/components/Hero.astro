@@ -89,7 +89,7 @@ const examples = ['heic to jpg', 'resize 50%', 'merge pdfs', 'trim 0:05-0:30', '
     <div class="cta">
       <DownloadButton />
       <p>
-        <a href="/convert">{summary.conversionPairs} tested conversions</a> between {summary.fileTypesRead} kinds of file
+        <a href="/convert">{summary.conversionPairs} tested conversions</a> from {summary.fileTypesRead} kinds of file
       </p>
     </div>
   </div>
@@ -605,7 +605,7 @@ const examples = ['heic to jpg', 'resize 50%', 'merge pdfs', 'trim 0:05-0:30', '
   let dismissed = false
 
   const exts = () => [...new Set(files.map((f) => f.ext))]
-  const kindName = (ext: string) => (data?.names[ext] ?? (ext ? `${ext.toUpperCase()} file` : 'File'))
+  const kindName = (ext: string) => (ext === 'folder' ? 'Folder of files' : (data?.names[ext] ?? (ext ? `${ext.toUpperCase()} file` : 'File')))
   const addonName = (id: string | null) => (id ? (data?.addons[id] ?? id) : '')
   const icon = (name: string) =>
     `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" style="color:var(--fam-${famTint(name)}, var(--muted))">${data?.icons[name] ?? ''}</svg>`

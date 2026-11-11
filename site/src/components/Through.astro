@@ -5,7 +5,8 @@
 import FileGlyph from './FileGlyph.astro'
 import { pairBySlug } from '../lib/data'
 
-const wanted = ['heic-to-jpg', 'mov-to-gif', 'docx-to-pdf', 'wav-to-mp3', 'epub-to-mobi', 'srt-to-vtt', 'csv-to-json', 'gpx-to-kml']
+// a photo, a video, a document, a song and some data
+const wanted = ['heic-to-jpg', 'mov-to-gif', 'docx-to-pdf', 'wav-to-mp3', 'csv-to-json']
 const examples = wanted.map((s) => pairBySlug.get(s)).filter((p) => !!p)
 const n = examples.length
 ---
@@ -33,7 +34,7 @@ const n = examples.length
                   <FileGlyph kind="paper" ext={p.to} width={96} />
                   <span class="label">
                     <span class="what">{p.toName}</span>
-                    <span class:list={['needs', { addon: p.addon }]}>{p.addon ? `with ${p.addon.name}, a free add-on` : 'built in'}</span>
+                    <span class:list={['needs', { addon: p.addon }]}>{p.addon ? `needs ${p.addon.name}, free` : 'built in'}</span>
                   </span>
                 </span>
                 <span class="visually-hidden">
@@ -143,7 +144,7 @@ const n = examples.length
 
   /* ---- live: pinned, the files travel left to right across the line ---- */
   .through.live {
-    height: calc(100svh + var(--n) * 55svh);
+    height: calc(100svh + var(--n) * 28svh);
     padding: 0;
   }
   .live .pin {
@@ -284,7 +285,7 @@ const n = examples.length
   const still = matchMedia('(prefers-reduced-motion: reduce)')
 
   // Distance between two cards on the lane.
-  const gapPx = () => (innerWidth <= 560 ? innerWidth * 0.82 : Math.min(560, Math.max(260, innerWidth * 0.44)))
+  const gapPx = () => (innerWidth <= 560 ? innerWidth * 0.62 : Math.min(480, Math.max(250, innerWidth * 0.34)))
 
   function setup() {
     if (!section) return

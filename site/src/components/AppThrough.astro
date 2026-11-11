@@ -1,0 +1,199 @@
+---
+// The app comes through the line: its outline on one side, the real app on
+// the other. The line sweeps from the right edge to the left as the page
+// scrolls, and what it has passed over is the real thing. Without motion or
+// without JS it rests halfway: outline left, app right, line between.
+import { Image } from 'astro:assets'
+import shot from '../../../docs/screenshot-dark.png'
+import AppWire from './AppWire.astro'
+---
+
+<section class="appline" aria-labelledby="app-title" data-appline>
+  <div class="pin">
+    <div class="wrap head">
+      <h2 id="app-title">One window, one bar.</h2>
+      <p class="lede">Drop files in, type what you want, <span class="nw">press <kbd>⌘↵</kbd>.</span></p>
+    </div>
+    <div class="wrap">
+      <div class="stage" data-stage>
+        <div class="window" data-window>
+          <div class="layer wire-layer">
+            <div class="fit"><AppWire /></div>
+          </div>
+          <div class="layer real" data-real>
+            <div class="layer real-in" data-real-in>
+              <div class="fit">
+                <Image
+                  src={shot}
+                  widths={[640, 1000, 1400, 2000]}
+                  sizes="(min-width: 1260px) 1180px, (max-width: 640px) 200vw, calc(100vw - 2 * var(--gutter))"
+                  alt="Asteria with eight files: four space photos resized and converted to WebP, each with its size before and after, two PDFs, a video and a JSON file, while trim 0:01-0:04 is typed in the command bar."
+                  loading="lazy"
+                  decoding="async"
+                  format="webp"
+                  quality={82}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="beam sweep" data-sweep aria-hidden="true"><i></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .appline {
+    position: relative;
+    padding-block: clamp(24px, 4vw, 48px) clamp(48px, 8vw, 96px);
+    /* the part of the screenshot that shows: all of it, or a crop on phones */
+    --crop-x: 0;
+    --crop-w: 2000;
+  }
+  .nw {
+    white-space: nowrap;
+  }
+  .head {
+    text-align: center;
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+  }
+  .stage {
+    position: relative;
+    width: min(100%, calc((100svh - 300px) * var(--crop-w) / 1320));
+    min-width: min(100%, 560px);
+    margin: clamp(28px, 4.5vh, 48px) auto 0;
+  }
+  .window {
+    position: relative;
+    aspect-ratio: var(--crop-w) / 1320;
+    overflow: hidden;
+    border-radius: clamp(10px, 1.4vw, 18px);
+    /* one hairline for the window's edge; the outline draws its own frame */
+    box-shadow:
+      0 0 0 1px rgb(255 255 255 / 0.1),
+      0 40px 80px -40px rgb(0 0 0 / 0.9);
+    background: #121316;
+  }
+  .layer {
+    position: absolute;
+    inset: 0;
+  }
+  /* The drawing and the screenshot share one box, cropped the same way. */
+  .fit {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--crop-x) / var(--crop-w) * -100%);
+    width: calc(2000 / var(--crop-w) * 100%);
+  }
+  .fit :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  /* Resting state: the line halfway, the real app to its right. The two
+     counter-translations keep the picture still while its clip moves. */
+  .real {
+    overflow: hidden;
+    transform: translateX(50%);
+  }
+  .real-in {
+    transform: translateX(-50%);
+  }
+  .sweep {
+    position: absolute;
+    top: -36px;
+    bottom: -36px;
+    left: 50%;
+    margin-left: -1px;
+  }
+
+  /* live: pinned while the line crosses the window */
+  .appline.live {
+    height: calc(100svh + 120svh);
+    padding: 0;
+  }
+  .live .pin {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .live .sweep {
+    left: 0;
+    will-change: transform, opacity;
+  }
+  .live .real,
+  .live .real-in {
+    will-change: transform;
+  }
+
+  @media (max-width: 640px) {
+    .appline {
+      /* phones: the left half of the window, where the files, the
+         suggestions and the bar are */
+      --crop-x: 40;
+      --crop-w: 960;
+    }
+    .stage {
+      width: min(100%, calc((100svh - 260px) * var(--crop-w) / 1320));
+      min-width: 0;
+    }
+    .sweep {
+      top: -22px;
+      bottom: -22px;
+    }
+  }
+</style>
+
+<script>
+  // One passive scroll listener, one frame: three transforms and an opacity.
+  const section = document.querySelector<HTMLElement>('[data-appline]')
+  const still = matchMedia('(prefers-reduced-motion: reduce)')
+  const clamp = (v: number) => Math.max(0, Math.min(1, v))
+  const smooth = (t: number) => t * t * (3 - 2 * t)
+
+  if (section && !still.matches) {
+    section.classList.add('live')
+    const stage = section.querySelector<HTMLElement>('[data-stage]')!
+    const real = section.querySelector<HTMLElement>('[data-real]')!
+    const realIn = section.querySelector<HTMLElement>('[data-real-in]')!
+    const sweep = section.querySelector<HTMLElement>('[data-sweep]')!
+    let frame = 0
+    let width = stage.clientWidth
+    const apply = () => {
+      frame = 0
+      const r = section.getBoundingClientRect()
+      const span = r.height - innerHeight
+      const p = clamp(-r.top / Math.max(1, span))
+      // hold the outline briefly, sweep right to left, hold the finished app
+      const t = smooth(clamp((p - 0.08) / 0.8))
+      const x = width * (1 - t)
+      real.style.transform = `translateX(${x.toFixed(1)}px)`
+      realIn.style.transform = `translateX(${(-x).toFixed(1)}px)`
+      sweep.style.transform = `translateX(${x.toFixed(1)}px)`
+      // the line rests at the left edge once it is through, then fades back
+      sweep.style.opacity = String(1 - 0.75 * clamp((p - 0.9) / 0.1))
+    }
+    const request = () => {
+      if (!frame) frame = requestAnimationFrame(apply)
+    }
+    addEventListener('scroll', request, { passive: true })
+    addEventListener('resize', () => {
+      width = stage.clientWidth
+      request()
+    })
+    new ResizeObserver(() => {
+      width = stage.clientWidth
+      request()
+    }).observe(stage)
+    apply()
+  }
+  still.addEventListener('change', () => location.reload())
+</script>
