@@ -1,0 +1,29 @@
+{
+  "id": "zstd_file",
+  "name": "Compress to zstd",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "zstd",
+    "zst",
+    "make zst"
+  ],
+  "category": "archive",
+  "icon": "file-archive",
+  "description": "Compress a file into a .zst",
+  "inputTypes": [
+    "*"
+  ],
+  "outputType": ".zst",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.zstd"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

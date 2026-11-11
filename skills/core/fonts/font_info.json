@@ -1,0 +1,35 @@
+{
+  "id": "font_info",
+  "name": "Font Info",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "font details",
+    "font report",
+    "font glyphs",
+    "font license",
+    "font metadata",
+    "inspect font"
+  ],
+  "category": "fonts",
+  "icon": "baseline",
+  "description": "Font names, license and coverage as JSON",
+  "inputTypes": [
+    ".ttf",
+    ".otf",
+    ".woff",
+    ".woff2"
+  ],
+  "outputType": ".json",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "fonts.info"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

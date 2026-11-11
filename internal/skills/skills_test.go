@@ -209,7 +209,7 @@ func TestSplitInline(t *testing.T) {
 }
 
 func TestFileType(t *testing.T) {
-	if FileType("Backup.TAR.GZ", false) != ".tar.gz" || FileType("a.JPG", false) != ".jpg" || FileType("x", true) != "folder" {
+	if FileType("Backup.TAR.GZ", false) != ".tar.gz" || FileType("src.tar.zst", false) != ".tar.zst" || FileType("a.JPG", false) != ".jpg" || FileType("x", true) != "folder" {
 		t.Fatal("FileType")
 	}
 }

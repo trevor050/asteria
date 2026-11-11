@@ -1,0 +1,28 @@
+{
+  "id": "decompress_bz2",
+  "name": "Decompress bzip2",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "bunzip2",
+    "bzip2 decompress"
+  ],
+  "category": "archive",
+  "icon": "file-archive",
+  "description": "Unpack a .bz2 back to the original file",
+  "inputTypes": [
+    ".bz2"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.unpack"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

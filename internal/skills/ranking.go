@@ -53,6 +53,9 @@ func DefaultRanker() *Ranker {
 		CategoryOrder: map[string]float64{
 			"convert": 40, "transform": 35, "compress": 30, "adjust": 29, "pdf": 28, "media": 26,
 			"archive": 24, "data": 22, "filter": 20, "compose": 18, "info": 16, "sizes": 14, "meta": 0,
+			// Families of other file types mostly compete among themselves.
+			"camera": 39, "document": 38, "ebook": 37, "3d": 37, "maps": 37, "fonts": 36,
+			"subtitles": 34, "vector": 33, "email": 32, "lut": 27, "text": 21,
 		},
 	}
 }

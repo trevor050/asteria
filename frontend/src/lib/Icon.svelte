@@ -2,12 +2,13 @@
   // A skill's icon: its own Lucide pictogram, or its family's, drawn thin and
   // tinted quietly by family so a long list can be scanned by shape and hue.
   import { familyIcons, icons } from './icons'
+  import { tintFamily } from './families'
 
   type Props = { name?: string; family?: string; size?: number; tint?: boolean }
   let { name = '', family = '', size = 16, tint = true }: Props = $props()
 
   let key = $derived(icons[name] ? name : (familyIcons[family] ?? 'file'))
-  let fam = $derived(familyIcons[family] ? family : 'meta')
+  let fam = $derived(familyIcons[family] ? (tintFamily[family] ?? family) : 'meta')
 </script>
 
 <svg
@@ -69,5 +70,8 @@
   }
   .tint[data-family='data'] {
     --fam: var(--fam-data);
+  }
+  .tint[data-family='document'] {
+    --fam: var(--fam-document);
   }
 </style>

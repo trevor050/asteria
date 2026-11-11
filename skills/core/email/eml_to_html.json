@@ -1,0 +1,29 @@
+{
+  "id": "eml_to_html",
+  "name": "Email to HTML",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "eml to html",
+    "view email",
+    "email web page"
+  ],
+  "category": "email",
+  "icon": "mail",
+  "description": "Turn an .eml into a safe offline HTML page",
+  "inputTypes": [
+    ".eml"
+  ],
+  "outputType": ".html",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "email.toHTML"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

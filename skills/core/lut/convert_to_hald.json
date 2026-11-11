@@ -1,0 +1,47 @@
+{
+  "id": "convert_to_hald",
+  "name": "Convert to Hald CLUT",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "hald",
+    "hald clut",
+    "lut to png",
+    "cube to png",
+    "3dl to png"
+  ],
+  "category": "lut",
+  "icon": "swatch-book",
+  "description": "Hald CLUT PNG from a .cube or .3dl LUT",
+  "inputTypes": [
+    ".cube",
+    ".3dl"
+  ],
+  "outputType": ".png",
+  "params": [
+    {
+      "name": "level",
+      "label": "Level",
+      "type": "int",
+      "default": 8,
+      "presets": [
+        6,
+        8,
+        10
+      ],
+      "hint": "Hald level (2-11), image side = level^3 · default 8 = 512 px",
+      "min": 2,
+      "max": 11
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "lut.toHald"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

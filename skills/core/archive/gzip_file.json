@@ -1,0 +1,29 @@
+{
+  "id": "gzip_file",
+  "name": "Gzip",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "gz",
+    "compress gzip",
+    "make gz"
+  ],
+  "category": "archive",
+  "icon": "file-archive",
+  "description": "Compress a file into a .gz",
+  "inputTypes": [
+    "*"
+  ],
+  "outputType": ".gz",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.gzip"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

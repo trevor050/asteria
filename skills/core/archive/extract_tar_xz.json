@@ -1,0 +1,30 @@
+{
+  "id": "extract_tar_xz",
+  "name": "Extract tar.xz",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "untar xz",
+    "unxz tar",
+    "txz"
+  ],
+  "category": "archive",
+  "icon": "package-open",
+  "description": "Unpack a .tar.xz or .txz into a folder",
+  "inputTypes": [
+    ".tar.xz",
+    ".txz"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.unpack"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

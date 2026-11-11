@@ -1,0 +1,30 @@
+{
+  "id": "extract_tar_zst",
+  "name": "Extract tar.zst",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "untar zstd",
+    "tzst",
+    "unzstd tar"
+  ],
+  "category": "archive",
+  "icon": "package-open",
+  "description": "Unpack a .tar.zst or .tzst into a folder",
+  "inputTypes": [
+    ".tar.zst",
+    ".tzst"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.unpack"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

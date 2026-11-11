@@ -1,0 +1,29 @@
+{
+  "id": "unpack_7z",
+  "name": "Unpack 7z",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "7zip",
+    "un7z",
+    "extract 7z"
+  ],
+  "category": "archive",
+  "icon": "package-open",
+  "description": "Unpack a .7z into a folder, no 7-Zip needed",
+  "inputTypes": [
+    ".7z"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.unpack"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

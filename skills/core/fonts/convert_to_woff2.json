@@ -1,0 +1,33 @@
+{
+  "id": "convert_to_woff2",
+  "name": "Convert to WOFF2",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "woff2",
+    "web font",
+    "ttf to woff2",
+    "otf to woff2",
+    "font to woff2"
+  ],
+  "category": "fonts",
+  "icon": "file-type",
+  "description": "WOFF2 web font from TTF, OTF or WOFF",
+  "inputTypes": [
+    ".ttf",
+    ".otf",
+    ".woff"
+  ],
+  "outputType": ".woff2",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "fonts.woff2"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

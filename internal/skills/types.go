@@ -21,14 +21,17 @@ var TypeGroups = map[string][]string{
 }
 
 // FileType returns the type token used to match a file against inputTypes:
-// its lower-case extension (".tar.gz" counts as one), or "folder".
+// its lower-case extension (".tar.gz" and the other compressed tar
+// suffixes count as one), or "folder".
 func FileType(name string, isDir bool) string {
 	if isDir {
 		return OutputFolder
 	}
 	lower := strings.ToLower(name)
-	if strings.HasSuffix(lower, ".tar.gz") {
-		return ".tar.gz"
+	for _, compound := range []string{".tar.gz", ".tar.xz", ".tar.zst", ".tar.bz2"} {
+		if strings.HasSuffix(lower, compound) {
+			return compound
+		}
 	}
 	return strings.ToLower(filepath.Ext(name))
 }

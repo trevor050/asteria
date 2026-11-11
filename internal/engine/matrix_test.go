@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -73,6 +74,15 @@ func TestMatrix(t *testing.T) {
 			fixtures[skills.FileType(f, false)] = f // formats/ wins (read second)
 		}
 	}
+	// Other spellings of the same format read the canonical fixture under
+	// their own extension (the copy made for each run carries it).
+	for alias, canon := range formatAliases {
+		if _, ok := fixtures[alias]; !ok && fixtures[canon] != "" {
+			fixtures[alias] = fixtures[canon]
+		}
+	}
+	// Skills that take any file are run once on a plain note.
+	fixtures["*"] = "../../testdata/formats/any-file.txt"
 	rep := matrixReport{Generated: time.Now().UTC().Format(time.RFC3339), Platform: runtime.GOOS + "/" + runtime.GOARCH, Engines: map[string]string{}, Summary: map[string]int{}}
 	seenUntested := map[string]bool{}
 	var pureFailed []string
@@ -82,6 +92,9 @@ func TestMatrix(t *testing.T) {
 		if sk.IsMeta || sk.Combine || sk.OutputType == "" || sk.OutputType == "none" {
 			continue
 		}
+		if os.Getenv("ASTERIA_MATRIX_PURE") != "" && len(sk.Requires) > 0 {
+			continue // built-in conversions only (quick local check)
+		}
 		missing := ""
 		for _, tool := range sk.Requires {
 			if _, ok := finder.Lookup(tool); !ok {
@@ -89,15 +102,18 @@ func TestMatrix(t *testing.T) {
 			}
 		}
 		for _, in := range sk.InputTypes {
-			if in == "*" || in == sk.OutputType {
+			if in == sk.OutputType {
 				continue
 			}
 			key := in + " -> " + sk.OutputType + " (" + sk.ID + ")"
 			src, ok := fixtures[in]
 			// A skill may need particular content (OCR needs text):
 			// testdata/formats/<skill>.<ext> overrides the generic fixture.
-			if special := filepath.Join("../../testdata/formats", sk.ID+in); fileExists(special) {
-				src, ok = special, true
+			for _, ext := range []string{in, formatAliases[in]} {
+				if special := filepath.Join("../../testdata/formats", sk.ID+ext); ext != "" && fileExists(special) {
+					src, ok = special, true
+					break
+				}
 			}
 			if !ok || missing != "" {
 				if !seenUntested[key] {
@@ -111,6 +127,11 @@ func TestMatrix(t *testing.T) {
 				continue
 			}
 			by, err := runAndVerify(t, e, sk, src, in)
+			var nv noVerifier
+			if errors.As(err, &nv) {
+				rep.Untested = append(rep.Untested, key+": "+nv.Error())
+				continue
+			}
 			if err != nil {
 				rep.Failed = append(rep.Failed, key+": "+err.Error())
 				if len(sk.Requires) == 0 {
@@ -130,7 +151,9 @@ func TestMatrix(t *testing.T) {
 	}
 	readable, writable, pairs := map[string]bool{}, map[string]bool{}, map[string]bool{}
 	for _, r := range rep.Conversions {
-		readable[r.From] = true
+		if r.From != "*" {
+			readable[r.From] = true
+		}
 		writable[r.To] = true
 		pairs[r.From+">"+r.To] = true
 	}
@@ -156,13 +179,25 @@ func TestMatrix(t *testing.T) {
 	}
 }
 
+// formatAliases are other spellings of a format with its own fixture.
+var formatAliases = map[string]string{
+	".jpeg": ".jpg", ".tiff": ".tif", ".heif": ".heic", ".yml": ".yaml", ".ndjson": ".jsonl",
+	".tgz": ".tar.gz", ".txz": ".tar.xz", ".tzst": ".tar.zst", ".tbz2": ".tar.bz2", ".tbz": ".tar.bz2",
+	".mbx": ".mbox", ".sqlite3": ".sqlite", ".db": ".sqlite", ".markdown": ".md", ".dfxp": ".ttml",
+	".cfg": ".ini", ".conf": ".ini", ".htm": ".html",
+}
+
 func runAndVerify(t *testing.T, e *env, sk skills.Skill, src, in string) (string, error) {
 	t.Helper()
 	b, err := os.ReadFile(src)
 	if err != nil {
 		return "", err
 	}
-	p := filepath.Join(e.src, fmt.Sprintf("m-%s-%d%s", sk.ID, time.Now().UnixNano(), in))
+	ext := in
+	if in == "*" {
+		ext = skills.FileType(src, false)
+	}
+	p := filepath.Join(e.src, fmt.Sprintf("m-%s-%d%s", sk.ID, time.Now().UnixNano(), ext))
 	if err := os.WriteFile(p, b, 0o644); err != nil {
 		return "", err
 	}
@@ -184,7 +219,51 @@ func runAndVerify(t *testing.T, e *env, sk skills.Skill, src, in string) (string
 		return "", fmt.Errorf("no output (%d skipped)", len(out.Skipped))
 	}
 	cur := f.Current()
-	return verify(cur.Path, sk.OutputType, sourceHasMarker(src, in))
+	if check, ok := skillChecks[sk.ID]; ok {
+		if _, err := verify(cur.Path, sk.OutputType, false); err != nil {
+			return "", err
+		}
+		return check(p, cur.Path)
+	}
+	return verify(cur.Path, sk.OutputType, sourceHasMarker(src, ext))
+}
+
+// skillChecks verify skills whose output is about the input rather than a
+// copy of its content, each against Python's own implementation.
+var skillChecks = map[string]func(in, out string) (string, error){
+	"base64_encode": pyCompare("import base64,sys;a=open(sys.argv[1],'rb').read();b=base64.b64decode(open(sys.argv[2]).read());assert a==b", "Python base64"),
+	"checksum":      pyCompare("import hashlib,sys;h=hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest();assert h in open(sys.argv[2]).read().lower()", "Python hashlib"),
+	"file_info":     pyCompare("import hashlib,json,sys;h=hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest();assert json.load(open(sys.argv[2]))['sha256']==h", "Python hashlib + json"),
+	"list_archive_contents": func(in, out string) (string, error) {
+		b, _ := os.ReadFile(out)
+		switch filepath.Ext(in) {
+		case ".gz", ".xz", ".zst", ".bz2":
+			if strings.Contains(in, ".tar.") {
+				break
+			}
+			// A single compressed file: the listing gives its real size.
+			if !strings.Contains(string(b), fmt.Sprint(len(marker)+1)) {
+				return "", fmt.Errorf("listing doesn't give the %d-byte size", len(marker)+1)
+			}
+			return "listing gives the uncompressed size", nil
+		}
+		if !strings.Contains(string(b), "note.txt") {
+			return "", fmt.Errorf("listing doesn't name note.txt")
+		}
+		return "listing names the archived file", nil
+	},
+}
+
+func pyCompare(script, by string) func(in, out string) (string, error) {
+	return func(in, out string) (string, error) {
+		if _, err := exec.LookPath("python3"); err != nil {
+			return "", errNoVerifier("python3")
+		}
+		if b, err := exec.Command("python3", "-c", script, in, out).CombinedOutput(); err != nil {
+			return "", fmt.Errorf("%s: %s", by, lastLine(string(b)))
+		}
+		return by, nil
+	}
 }
 
 // sourceHasMarker: text-bearing fixtures carry the marker; outputs of
@@ -195,11 +274,30 @@ func sourceHasMarker(src, ext string) bool {
 		".mp3", ".wav", ".flac", ".m4a", ".ogg", ".opus":
 		return false
 	}
+	switch ext {
+	// Every compressed fixture holds a note with the marker.
+	case ".gz", ".xz", ".zst", ".bz2", ".tar.gz", ".tgz", ".tar.xz", ".tar.zst", ".tar.bz2", ".7z", ".zip":
+		return true
+	}
 	b, _ := os.ReadFile(src)
 	if bytes.Contains(b, []byte(marker)) {
 		return true
 	}
 	return strings.Contains(zipText(src), marker)
+}
+
+// folderHasMarker looks for the marker in any file under dir.
+func folderHasMarker(dir string) bool {
+	found := false
+	_ = filepath.WalkDir(dir, func(p string, d os.DirEntry, err error) error {
+		if err != nil || d.IsDir() || found {
+			return nil
+		}
+		b, _ := os.ReadFile(p)
+		found = bytes.Contains(b, []byte(marker)) || strings.Contains(zipText(p), marker)
+		return nil
+	})
+	return found
 }
 
 func verify(path, ext string, wantMarker bool) (string, error) {
@@ -223,7 +321,10 @@ func verify(path, ext string, wantMarker bool) (string, error) {
 		if n == 0 {
 			return "", fmt.Errorf("empty folder")
 		}
-		return "folder listing", nil
+		if wantMarker && !folderHasMarker(path) {
+			return "", fmt.Errorf("marker text missing from the extracted files")
+		}
+		return "folder contents", nil
 	}
 	if st.Size() == 0 {
 		return "", fmt.Errorf("empty output")
@@ -303,7 +404,7 @@ func verify(path, ext string, wantMarker bool) (string, error) {
 			}
 			return "Python sqlite3", nil
 		}
-		return "", fmt.Errorf("no python3 to verify")
+		return "", errNoVerifier("python3")
 	case ".mobi", ".azw3", ".azw":
 		b := []byte(text())
 		if len(b) < 68 || string(b[60:68]) != "BOOKMOBI" {
@@ -324,12 +425,52 @@ func verify(path, ext string, wantMarker bool) (string, error) {
 			}
 			return "7-Zip list", nil
 		}
-		return "", fmt.Errorf("no 7-Zip to verify")
+		return "", errNoVerifier("7-Zip")
 	case ".zip":
 		if _, err := zip.OpenReader(path); err != nil {
 			return "", err
 		}
 		return "zip reader", nil
+	case ".gz", ".tgz", ".tar.gz", ".xz", ".txz", ".tar.xz", ".bz2", ".tar.bz2":
+		// Python's own decompressors; a tar inside is checked by tarfile.
+		if !have("python3") {
+			return "", errNoVerifier("python3")
+		}
+		out, err := run("python3", "-c", pyDecompress, path)
+		if err != nil {
+			return "", fmt.Errorf("python: %s", strings.TrimSpace(out))
+		}
+		return needMarker(out, "Python gzip/lzma/bz2")
+	case ".zst", ".tzst", ".tar.zst":
+		if !have("zstd") {
+			return "", errNoVerifier("zstd")
+		}
+		out, err := run("zstd", "-dc", "--", path)
+		if err != nil {
+			return "", fmt.Errorf("zstd: %s", strings.TrimSpace(out))
+		}
+		return needMarker(out, "zstd CLI")
+	case ".ttf", ".otf", ".woff", ".woff2":
+		if !have("python3") {
+			return "", errNoVerifier("python3")
+		}
+		if _, err := run("python3", "-c", "import fontTools, brotli"); err != nil {
+			return "", errNoVerifier("Python fontTools and brotli")
+		}
+		out, err := run("python3", "-c", "import sys;from fontTools.ttLib import TTFont;f=TTFont(sys.argv[1]);n=len(f.getGlyphOrder());assert n>1;f['cmap'];print(n)", path)
+		if err != nil {
+			return "", fmt.Errorf("fontTools: %s", lastLine(out))
+		}
+		return "fontTools", nil
+	case ".cube", ".3dl":
+		if !have("python3") {
+			return "", errNoVerifier("python3")
+		}
+		out, err := run("python3", "-c", pyLUT, path)
+		if err != nil {
+			return "", fmt.Errorf("python: %s", lastLine(out))
+		}
+		return "Python LUT parse", nil
 	}
 	// Plain text formats (csv, tsv, md, txt, srt, vtt, ass, sbv, ini, env, rst, tex...).
 	s := text()
@@ -337,6 +478,47 @@ func verify(path, ext string, wantMarker bool) (string, error) {
 		return "", fmt.Errorf("not UTF-8 text")
 	}
 	return needMarker(s, "UTF-8 text")
+}
+
+// noVerifier means no independent checker is installed here: the
+// conversion is reported as untested, not passed or failed.
+type noVerifier string
+
+func (n noVerifier) Error() string { return "no " + string(n) + " here to verify the output" }
+
+func errNoVerifier(what string) error { return noVerifier(what) }
+
+// pyDecompress prints the decompressed text, or for a tarball the text of
+// its members.
+const pyDecompress = `import sys,gzip,lzma,bz2,tarfile,io
+p=sys.argv[1]
+raw=open(p,'rb').read()
+if raw[:2]==b'\x1f\x8b': data=gzip.decompress(raw)
+elif raw[:6]==b'\xfd7zXZ\x00': data=lzma.decompress(raw)
+elif raw[:3]==b'BZh': data=bz2.decompress(raw)
+else: raise SystemExit('unknown compression')
+if len(data)>262 and data[257:262]==b'ustar':
+  t=tarfile.open(fileobj=io.BytesIO(data))
+  data=b''.join(t.extractfile(m).read() for m in t.getmembers() if m.isfile())
+sys.stdout.write(data.decode('utf-8','replace'))`
+
+// pyLUT checks a .cube or .3dl has a full grid of in-range entries.
+const pyLUT = `import sys,re
+p=sys.argv[1];L=[l.strip() for l in open(p,encoding='utf-8') if l.strip() and not l.startswith('#')]
+if p.lower().endswith('.cube'):
+  n=int([l.split()[1] for l in L if l.startswith('LUT_3D_SIZE')][0])
+  rows=[l for l in L if re.match(r'^[-0-9.eE]+\s+[-0-9.eE]+\s+[-0-9.eE]+$',l)]
+  assert len(rows)==n**3,(len(rows),n)
+  assert all(-0.01<=float(v)<=1.01 for r in rows for v in r.split())
+else:
+  n=len(L[0].split());rows=L[1:]
+  assert len(rows)==n**3,(len(rows),n)
+  mx=max(int(v) for r in rows for v in r.split());assert 0<mx<65536
+print(n)`
+
+func lastLine(s string) string {
+	lines := strings.Split(strings.TrimSpace(s), "\n")
+	return lines[len(lines)-1]
 }
 
 func pyCheck(ext string) string {

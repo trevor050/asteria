@@ -1,0 +1,30 @@
+{
+  "id": "mbox_split",
+  "name": "Split Mbox",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "mbox to eml",
+    "unpack mbox",
+    "split mailbox"
+  ],
+  "category": "email",
+  "icon": "mails",
+  "description": "Split an .mbox into one .eml per message",
+  "inputTypes": [
+    ".mbox",
+    ".mbx"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "email.mboxSplit"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

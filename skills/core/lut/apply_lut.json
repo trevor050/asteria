@@ -1,0 +1,39 @@
+{
+  "id": "apply_lut",
+  "name": "Apply LUT",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "lut",
+    "color grade",
+    "colour grade",
+    "cube",
+    "3dl",
+    "hald",
+    "film look",
+    "grade",
+    "cinematic look"
+  ],
+  "category": "lut",
+  "icon": "film",
+  "description": "Grade photos with a LUT dropped beside them",
+  "inputTypes": [
+    "@image",
+    ".cube",
+    ".3dl"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "lut.applyBatch"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "combine": true,
+  "outputName": "graded"
+}

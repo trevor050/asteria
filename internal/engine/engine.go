@@ -541,7 +541,11 @@ func (e *Engine) execute(ctx context.Context, f *session.File, skill skills.Skil
 }
 
 func displayNameFor(name, typ string) string {
-	stem := strings.TrimSuffix(name, filepath.Ext(name))
+	ext := skills.FileType(name, false)
+	if len(ext) > len(name) || !strings.EqualFold(name[len(name)-len(ext):], ext) {
+		ext = filepath.Ext(name)
+	}
+	stem := name[:len(name)-len(ext)]
 	if typ == skills.OutputFolder {
 		return stem
 	}

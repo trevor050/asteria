@@ -6,7 +6,8 @@
 # it in the format matrix where possible, so a conversion can't pass by
 # reading back its own quirks. Run on Linux with: pandoc, libreoffice,
 # calibre (ebook-convert), imagemagick, ghostscript, poppler-utils, 7zip,
-# ffmpeg. Outputs are committed; rerun only to refresh them.
+# ffmpeg, python3-fonttools, python3-brotli (and pyarrow for Parquet).
+# Outputs are committed; rerun only to refresh them.
 set -euo pipefail
 cd "$(dirname "$0")/../../testdata/formats"
 M="Asteria matrix check"
@@ -66,10 +67,37 @@ rm -f sample.cab sample.wim
 
 # Long-tail raster: ImageMagick from a known picture.
 convert -size 96x64 gradient:'#1f3f4d-#e0a85e' "$tmp/base.png"
-for ext in psd tga pcx ico jp2 dds xpm ppm pgm pbm sgi ras; do
+for ext in tif bmp psd tga pcx ico jp2 dds xpm ppm pgm pbm sgi ras; do
   convert "$tmp/base.png" "sample.$ext" 2>/dev/null || echo "skip $ext"
 done
 convert "$tmp/base.png" -quality 60 sample.avif 2>/dev/null || echo "skip avif"
+
+# Fonts: fontTools (python3-fonttools, python3-brotli) builds a small CFF
+# OpenType font from scratch and the WOFF/WOFF2 flavours of the TrueType
+# fixture, independently of Asteria's own font code.
+python3 - <<'PY'
+from fontTools.fontBuilder import FontBuilder
+from fontTools.pens.t2CharStringPen import T2CharStringPen
+from fontTools.ttLib import TTFont
+fb = FontBuilder(1000, isTTF=False)
+fb.setupGlyphOrder([".notdef", "A"])
+fb.setupCharacterMap({0x41: "A"})
+def box():
+    pen = T2CharStringPen(600, None)
+    pen.moveTo((50, 0)); pen.lineTo((550, 0)); pen.lineTo((300, 700)); pen.closePath()
+    return pen.getCharString()
+fb.setupCFF("AsteriaSample", {"FullName": "Asteria Sample"}, {".notdef": box(), "A": box()}, {})
+fb.setupHorizontalMetrics({".notdef": (600, 50), "A": (600, 50)})
+fb.setupHorizontalHeader(ascent=800, descent=-200)
+fb.setupNameTable({"familyName": "Asteria Sample", "styleName": "Regular"})
+fb.setupOS2(); fb.setupPost()
+fb.save("sample.otf")
+for flavor in ("woff", "woff2"):
+    f = TTFont("sample.ttf"); f.flavor = flavor; f.save("sample." + flavor)
+PY
+
+# Parquet: pyarrow if present (pip install pyarrow in a venv).
+python3 -c "import pyarrow as pa, pyarrow.parquet as pq; pq.write_table(pa.table({'name': ['first', 'second'], 'note': ['$M', 'two']}), 'sample.parquet')" || echo "skip parquet"
 
 # A picture with the marker for OCR is made by the Mac script (fonts differ).
 # Audio and video samples for the wider ffmpeg skills.

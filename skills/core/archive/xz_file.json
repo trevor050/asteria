@@ -1,0 +1,29 @@
+{
+  "id": "xz_file",
+  "name": "Compress to xz",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "xz",
+    "make xz",
+    "lzma"
+  ],
+  "category": "archive",
+  "icon": "file-archive",
+  "description": "Compress a file into a .xz",
+  "inputTypes": [
+    "*"
+  ],
+  "outputType": ".xz",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "archive.xz"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

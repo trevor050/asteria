@@ -1,0 +1,29 @@
+{
+  "id": "extract_attachments",
+  "name": "Extract Attachments",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "email attachments",
+    "save attachments",
+    "eml attachments"
+  ],
+  "category": "email",
+  "icon": "paperclip",
+  "description": "Save an email's attachments into a folder",
+  "inputTypes": [
+    ".eml"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "email.attachments"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

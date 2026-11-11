@@ -14,7 +14,6 @@
   "icon": "package-open",
   "description": "Unpack 7z, RAR, ISO, CAB and similar archives",
   "inputTypes": [
-    ".7z",
     ".rar",
     ".iso",
     ".cab",

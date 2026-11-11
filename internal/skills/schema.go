@@ -2,19 +2,19 @@ package skills
 
 // Skill is one JSON skill definition. See skills/README.md for the format.
 type Skill struct {
-	Version     string     `json:"version,omitempty"`
-	Author      string     `json:"author,omitempty"`
-	ID          string     `json:"id"`
-	Name        string     `json:"name"`
-	Aliases     []string   `json:"aliases"`
-	Category    string     `json:"category"`
+	Version  string   `json:"version,omitempty"`
+	Author   string   `json:"author,omitempty"`
+	ID       string   `json:"id"`
+	Name     string   `json:"name"`
+	Aliases  []string `json:"aliases"`
+	Category string   `json:"category"`
 	// Priority nudges ranking within a category (0 by default, up to 20):
 	// it picks which skill represents its family in the suggestions shown
 	// before anything is typed, and breaks ties between equal text matches.
 	Priority float64 `json:"priority,omitempty"`
 	// Icon names a Lucide icon from the app's bundled set (see
 	// skills/README.md). Empty or unknown names show the family's icon.
-	Icon string `json:"icon,omitempty"`
+	Icon        string     `json:"icon,omitempty"`
 	Description string     `json:"description"`
 	InputTypes  []string   `json:"inputTypes"`
 	OutputType  string     `json:"outputType"`

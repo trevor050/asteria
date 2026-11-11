@@ -34,6 +34,7 @@
   --fam-media: oklch(var(--fam-l) var(--fam-c) 145);
   --fam-archive: oklch(var(--fam-l) calc(var(--fam-c) * 0.7) 75);
   --fam-data: oklch(var(--fam-l) var(--fam-c) 220);
+  --fam-document: oklch(var(--fam-l) var(--fam-c) 280);
   --danger-rgb: 172 60 48;
 
   --bg: #f2f2ef;

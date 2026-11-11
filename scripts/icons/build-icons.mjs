@@ -19,6 +19,8 @@ export const familyIcons = {
   convert: 'arrow-left-right', transform: 'scaling', sizes: 'ratio', compress: 'fold-vertical',
   adjust: 'palette', filter: 'blend', compose: 'layers', info: 'info', pdf: 'file-text',
   media: 'clapperboard', archive: 'archive', data: 'braces', meta: 'settings-2',
+  document: 'file-type', ebook: 'book-open', text: 'text', subtitles: 'captions', email: 'mail',
+  camera: 'aperture', vector: 'pen-tool', fonts: 'type', lut: 'swatch-book', maps: 'map', '3d': 'box',
 }
 // Common pictograms available to user-written skills.
 const EXTRA = [
