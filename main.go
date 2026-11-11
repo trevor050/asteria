@@ -49,7 +49,10 @@ func main() {
 					window.Restore()
 					window.Focus()
 				}
-				svc.addFromArgs(data.Args)
+				// Args is the second process's full argv; skip the program path.
+				if len(data.Args) > 1 {
+					svc.addFromArgs(data.Args[1:])
+				}
 			},
 		},
 		Server:     application.ServerOptions{Host: "127.0.0.1", Port: 34217},

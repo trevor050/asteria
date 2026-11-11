@@ -43,8 +43,9 @@ type App struct {
 	usage    *storage.UsageStore
 	trust    *storage.TrustStore
 
-	skillsDir string
-	exportMu  sync.Mutex
+	skillsDir    string
+	sessionsRoot string
+	exportMu     sync.Mutex
 }
 
 // NewApp wires the backend together. It never touches the network.
@@ -73,7 +74,6 @@ func NewApp(embedded fs.FS) (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	session.CleanupStale(sessionsRoot, ws.Root)
 
 	// In a source checkout, edits to skills/core hot-reload without a rebuild.
 	diskCore := ""
@@ -97,6 +97,7 @@ func NewApp(embedded fs.FS) (*App, error) {
 		trust:     trust,
 		skillsDir: skillsDir,
 	}
+	a.sessionsRoot = sessionsRoot
 	a.engine = engine.New(engine.Options{
 		Registry: registry,
 		Store:    store,
@@ -110,9 +111,12 @@ func NewApp(embedded fs.FS) (*App, error) {
 	return a, nil
 }
 
+// attach runs after application.New, i.e. after the single-instance check:
+// a second launch has already handed its files over and exited by now.
 func (a *App) attach(app *application.App, window application.Window) {
 	a.app = app
 	a.window = window
+	session.CleanupStale(a.sessionsRoot, a.store.Workspace().Root)
 	_ = a.registry.StartHotReload(app.Context())
 	go func() {
 		for range a.registry.Changes() {

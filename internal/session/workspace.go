@@ -22,12 +22,14 @@ func SessionsRoot() (string, error) {
 	return filepath.Join(base, "asteria", "sessions"), nil
 }
 
-// NewWorkspace creates a fresh workspace under root.
+// NewWorkspace picks a fresh workspace directory under root. Nothing is
+// created on disk until the first file needs it, so a second app instance
+// that exits immediately leaves no trace.
 func NewWorkspace(root string) (*Workspace, error) {
-	dir := filepath.Join(root, fmt.Sprintf("%s-%d", time.Now().Format("20060102-150405"), os.Getpid()))
-	if err := os.MkdirAll(dir, 0o700); err != nil {
-		return nil, err
+	if root == "" {
+		return nil, fmt.Errorf("no workspace root")
 	}
+	dir := filepath.Join(root, fmt.Sprintf("%s-%d", time.Now().Format("20060102-150405"), os.Getpid()))
 	return &Workspace{Root: dir}, nil
 }
 
@@ -42,7 +44,9 @@ func (w *Workspace) Close() error { return os.RemoveAll(w.Root) }
 
 // CleanupStale removes workspaces left behind by earlier runs (for example
 // after a crash) and the pre-0.1 "workspace" directory. Asteria runs as a
-// single instance, so any other session directory is stale.
+// single instance, so any other session directory is stale. Only call it
+// after the single-instance lock is held, or a second launch would delete
+// the running instance's work.
 func CleanupStale(sessionsRoot string, keep string) {
 	entries, err := os.ReadDir(sessionsRoot)
 	if err == nil {
