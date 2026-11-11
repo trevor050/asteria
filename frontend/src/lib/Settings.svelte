@@ -351,7 +351,7 @@
       <div class="row">
         <span class="text">
           <span class="label">Add-ons</span>
-          <span class="help">{addonCount ? `${addonCount} ready · ` : ''}Office files, ebooks, video and more</span>
+          <span class="help">Open Office files, ebooks, video and more{addonCount ? ` · ${addonCount} set up` : ''}</span>
         </span>
         <button type="button" class="btn" onclick={() => (page = 'addons')}>Manage</button>
       </div>
