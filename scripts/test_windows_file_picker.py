@@ -40,15 +40,21 @@ def main():
         native_dialog.wait("visible", timeout=10)
         dialog = Desktop(backend="uia").window(handle=native_dialog.handle)
         report["stage"] = "inspect-picker"
-        primary = dialog.child_window(auto_id="1", control_type="Button")
+        primary = dialog.child_window(auto_id="1", control_type="SplitButton")
+        if not primary.exists(timeout=0.2):
+            primary = dialog.child_window(auto_id="1", control_type="Button")
         report["primaryButton"] = primary.window_text()
         assert report["primaryButton"] == "Open", "Add files opened a folder-only dialog: " + report["primaryButton"]
         # Set the real common-dialog filename field, then use its Open button.
         report["stage"] = "select-file"
         filename = dialog.child_window(auto_id="1148", control_type="Edit")
-        filename.set_edit_text(str(args.input))
-        primary.click_input()
-        dialog.wait_not("visible", timeout=10)
+        filename.click_input()
+        keyboard.send_keys("^a", vk_packet=False)
+        escapes = {"{": "{{}", "}": "{}}", "+": "{+}", "^": "{^}", "%": "{%}", "~": "{~}", "(": "{(}", ")": "{)}"}
+        text = "".join(escapes.get(char, char) for char in str(args.input))
+        keyboard.send_keys(text, with_spaces=True, pause=0.01)
+        keyboard.send_keys("{ENTER}", vk_packet=False)
+        native_dialog.wait_not("visible", timeout=10)
         report["stage"] = "verify-tray"
         deadline = time.monotonic() + 10
         while time.monotonic() < deadline:
@@ -61,8 +67,11 @@ def main():
     except Exception as exc:
         report["error"] = str(exc)
     finally:
-        if dialog is not None and dialog.exists() and dialog.is_visible():
-            dialog.child_window(auto_id="2", control_type="Button").click_input()
+        try:
+            if dialog is not None and native_dialog.exists() and native_dialog.is_visible():
+                dialog.child_window(auto_id="2", control_type="Button").click_input()
+        except Exception as exc:
+            report["cleanupError"] = str(exc)
         args.report.parent.mkdir(parents=True, exist_ok=True)
         args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     return 0 if report["passed"] else 1
