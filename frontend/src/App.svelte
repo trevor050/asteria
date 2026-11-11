@@ -486,19 +486,21 @@
     {/if}
     <div class="row">
       <CommandBar bind:this={bar} targetIds={targets} hasFiles={files.length > 0} {busy} {refreshKey} onrun={run} />
-      <button
-        type="button"
-        class="export"
-        class:ready={exportable.length > 0 && !busy}
-        onclick={exportFiles}
-        disabled={!exportable.length || busy}
-        title="Export changed files"
-      >
-        <span>Export{exportable.length ? ` ${exportable.length}` : ''}</span>
-        <kbd>{mod}↵</kbd>
-      </button>
+      {#if files.length}
+        <button
+          type="button"
+          class="export"
+          class:ready={exportable.length > 0 && !busy}
+          onclick={exportFiles}
+          disabled={!exportable.length || busy}
+          title="Export changed files"
+        >
+          <span>Export{exportable.length ? ` ${exportable.length}` : ''}</span>
+          <kbd>{mod}↵</kbd>
+        </button>
+      {/if}
     </div>
-    <div class="dest">
+    <div class="dest" class:hidden={!files.length}>
       <span>Export to</span>
       <button type="button" class="quiet" onclick={pickOutput} title={settings?.outputFolder || 'Each export is saved beside its original'}>{outputLabel}</button>
       {#if settings?.outputFolder}
@@ -700,6 +702,9 @@
     align-items: baseline;
     gap: 12px;
     font-variant-numeric: tabular-nums;
+    animation: rise 0.4s var(--ease-out) both;
+  }
+  .export {
     animation: rise 0.4s var(--ease-out) both;
   }
   .mode {
@@ -940,6 +945,9 @@
     padding-left: 18px;
     font-size: 12px;
     color: var(--muted);
+  }
+  .dest.hidden {
+    visibility: hidden;
   }
   .dest .quiet {
     color: var(--ink-2);

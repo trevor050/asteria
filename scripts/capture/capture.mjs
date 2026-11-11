@@ -228,12 +228,9 @@ async function states(browser, label = '') {
 async function perf(browser) {
   // A few hundred files: measure how long adding and scrolling takes.
   const many = join(media, 'many')
-  mkdirSync(many, { recursive: true })
-  const srcs = files()
-  for (let i = 0; i < 300; i++) {
-    const s = srcs[i % 4]
-    const d = join(many, `photo ${String(i).padStart(3, '0')}.jpg`)
-    if (!existsSync(d)) copyFileSync(s, d)
+  if (!existsSync(join(many, 'frame 300.jpg'))) {
+    mkdirSync(many, { recursive: true })
+    execFileSync('ffmpeg', ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'testsrc2=s=800x600:d=10:r=30', '-q:v', '4', join(many, 'frame %03d.jpg')])
   }
   const { ctx, page } = await open(browser, { theme: 'dark', w: 1000, h: 680, scale: 1 })
   const t0 = Date.now()
@@ -273,9 +270,17 @@ async function readme(browser) {
     await add(page, files())
     await command(page, 'resize 1920')
     await command(page, 'webp 80')
-    await page.locator('[data-id]').nth(6).click()
-    await page.keyboard.press('Meta+k')
-    await page.keyboard.type('trim 0:01-0:04', { delay: 30 })
+    if (theme === 'dark') {
+      // Typing: what will happen, before Enter.
+      await page.locator('[data-id]').nth(6).click()
+      await page.keyboard.press('Meta+k')
+      await page.keyboard.type('trim 0:01-0:04', { delay: 30 })
+    } else {
+      // Idle: the likely next steps for these files, one click away.
+      await page.locator('[data-id]').nth(0).click()
+      await page.keyboard.press('Meta+k')
+    }
+    await page.waitForFunction(() => !document.querySelector('.toast'), null, { timeout: 15000 })
     await sleep(500)
     await page.screenshot({ path: join(docs, `screenshot-${theme}.png`) })
     console.log('  docs/screenshot-' + theme + '.png')
@@ -288,44 +293,105 @@ async function gif(browser) {
   const frames = join(here, '.frames')
   rmSync(frames, { recursive: true, force: true })
   mkdirSync(frames)
-  const ctx = await browser.newContext({
-    viewport: { width: 960, height: 640 },
-    colorScheme: 'dark',
-    recordVideo: { dir: frames, size: { width: 960, height: 640 } },
-  })
+  const ctx = await browser.newContext({ viewport: { width: 960, height: 640 }, colorScheme: 'dark' })
   const page = await ctx.newPage()
+  // Lossless frames from the compositor, emitted only when something
+  // changes; a lossy video would make every frame differ and bloat the GIF.
+  const shots = []
+  const cdp = await ctx.newCDPSession(page)
+  cdp.on('Page.screencastFrame', async ({ data, metadata, sessionId }) => {
+    shots.push({ data, t: metadata.timestamp })
+    await cdp.send('Page.screencastFrameAck', { sessionId }).catch(() => {})
+  })
   await page.goto(url)
   await page.waitForFunction(() => typeof window.__asteriaAdd === 'function')
-  await sleep(1500)
+  // The ambient wash drifts over ~45 s, too slowly to see in a short clip,
+  // but it changes every pixel of every frame; hold it still so the GIF
+  // only stores what the UI actually changes.
+  await page.addStyleTag({ content: '.blob { animation-play-state: paused !important; }' })
+  await sleep(300)
+  await cdp.send('Page.startScreencast', { format: 'png', everyNthFrame: 1 })
+  await sleep(1600)
+  // Drop: files arrive and the likely next steps appear under them.
   await add(page, files().slice(0, 6))
-  await sleep(1200)
-  await command(page, 'resize 1920')
+  await sleep(1400)
+  // One click: Resize opens its presets; type a value and apply.
+  await page.getByRole('button', { name: 'Resize', exact: true }).click()
   await sleep(900)
-  await command(page, 'webp 80')
-  await sleep(1200)
+  await page.keyboard.type('1920', { delay: 90 })
+  await sleep(400)
+  await page.keyboard.press('Enter')
+  await idle(page)
+  await sleep(700)
+  // Typing: a value inline runs it straight away.
+  await page.keyboard.type('webp 80', { delay: 90 })
+  await sleep(700)
+  await page.keyboard.press('Enter')
+  await idle(page)
+  await sleep(900)
+  // Select the two PDFs and merge them.
   await page.locator('[data-id]').nth(4).click()
   await page.locator('[data-id]').nth(5).click({ modifiers: ['Meta'] })
-  await sleep(500)
-  await command(page, 'merge pdf')
-  await sleep(1400)
+  await sleep(400)
+  await page.keyboard.press('Meta+k')
+  await page.keyboard.type('merge', { delay: 90 })
+  await sleep(700)
+  await page.keyboard.press('Enter')
+  await idle(page)
+  await sleep(1000)
+  // Quick Look, flip between the original and the result.
   await page.locator('[data-id]').first().click()
   await page.keyboard.press(' ')
   await sleep(1300)
   await page.keyboard.press('o')
-  await sleep(1300)
+  await sleep(1200)
   await page.keyboard.press('o')
-  await sleep(800)
+  await sleep(900)
   await page.keyboard.press('Escape')
-  await sleep(1000)
-  const video = await page.video().path()
+  await sleep(600)
+  await page.keyboard.press('Meta+Enter')
+  await idle(page)
+  await sleep(1500)
+  await cdp.send('Page.stopScreencast')
+  const end = shots.at(-1).t + 1.5
+  let list = 'ffconcat version 1.0\n'
+  shots.forEach((f, i) => {
+    const name = `f${String(i).padStart(5, '0')}.png`
+    writeFileSync(join(frames, name), Buffer.from(f.data, 'base64'))
+    const next = shots[i + 1]?.t ?? end
+    list += `file ${name}\nduration ${Math.max(0.02, next - f.t).toFixed(3)}\n`
+  })
+  list += `file f${String(shots.length - 1).padStart(5, '0')}.png\n`
+  writeFileSync(join(frames, 'list.txt'), list)
   await ctx.close()
+  const input = ['-f', 'concat', '-i', join(frames, 'list.txt')]
   const palette = join(frames, 'palette.png')
-  const filters = 'fps=15,scale=960:-1:flags=lanczos'
-  execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', video, '-vf', `${filters},palettegen=max_colors=192:stats_mode=diff`, palette])
-  execFileSync('ffmpeg', ['-v', 'error', '-y', '-i', video, '-i', palette, '-lavfi', `${filters}[x];[x][1:v]paletteuse=dither=sierra2_4a:diff_mode=rectangle`, join(docs, 'demo.gif')])
+  const filters = 'fps=12,scale=760:-1:flags=lanczos,mpdecimate'
+  execFileSync('ffmpeg', ['-v', 'error', '-y', ...input, '-vf', `${filters},palettegen=max_colors=160:stats_mode=full`, palette])
+  execFileSync('ffmpeg', ['-v', 'error', '-y', ...input, '-i', palette, '-lavfi', `${filters}[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=4:diff_mode=rectangle`, '-fps_mode', 'vfr', join(docs, 'demo.gif')])
   rmSync(frames, { recursive: true, force: true })
   cleanExports()
   console.log('  docs/demo.gif')
+}
+
+// Renders build/appicon.svg to build/appicon.png (Chromium handles the SVG
+// blur filters); then run \`wails3 task common:generate:icons\` or the
+// command in build/Taskfile.yml to refresh the .icns and .ico.
+async function icon(browser) {
+  const { readFileSync } = await import('node:fs')
+  const svg = readFileSync(join(root, 'build/appicon.svg'), 'utf8')
+  const page = await browser.newPage({ viewport: { width: 1024, height: 1024 } })
+  await page.setContent(`<style>html,body{margin:0;background:transparent}</style>${svg}`)
+  await page.locator('svg').screenshot({ path: join(root, 'build/appicon.png'), omitBackground: true })
+  await page.close()
+  console.log('  build/appicon.png')
+}
+
+if (mode === 'icon') {
+  const browser = await chromium.launch()
+  await icon(browser)
+  await browser.close()
+  process.exit(0)
 }
 
 await prepareMedia()

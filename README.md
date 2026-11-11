@@ -2,7 +2,7 @@
 
 Your new favorite way to convert a file. Drop files in, type what you want, see the result, export. Nothing leaves your computer.
 
-![Asteria converting iPhone photos to JPEG, resizing them, merging two PDFs and comparing a result with its original](docs/demo.gif)
+![Asteria resizing four photos with one click, converting them to WebP, merging two PDFs, comparing a result with its original and exporting](docs/demo.gif)
 
 Every "convert X to Y" task usually ends with uploading a file to some random website, waiting through ads, and hoping it gives you back what you sent. Asteria is the opposite: a small desktop app with a Spotlight-style command bar. Type `heic to jpg`, `resize 50%`, `merge pdfs` or `trim 0:05-0:30`, watch the preview update, and press <kbd>⌘</kbd><kbd>↵</kbd> to save. It's not a chatbot, it's a tool router with taste.
 
@@ -23,6 +23,7 @@ Images, PDFs, archives and data are handled by Go code built into the app, inclu
 ## How it works
 
 - **Everything is a skill.** Converting, resizing, exporting, switching modes and picking an output folder all live in the same command bar.
+- **It shows you what's next.** Drop files and the likely skills for those exact files sit right above the bar, one click away, next to a real count of everything that applies. Mixed tray? You get a spread: convert, resize, compress, merge.
 - **Skills apply instantly and stack.** Each file shows the chain it went through (`Convert to JPEG 85%` → `Resize 1920`) with its size and dimensions before and after.
 - **Removing a skill replays the rest.** Delete a step from the middle of a chain and Asteria rebuilds from the step before it. <kbd>⌘</kbd><kbd>Z</kbd> undoes the last skill you applied.
 - **Your originals are never touched.** Skills work on copies in a private workspace. Export writes new files next to the originals (or to a folder you pick) and never overwrites anything: `photo.jpg` becomes `photo (1).jpg` if the name is taken.
@@ -43,7 +44,10 @@ Images, PDFs, archives and data are handled by Go code built into the app, inclu
 
 Skills you type while another is running are queued and run in order.
 
-![The Asteria window in dark mode, trimming a video from the command bar](docs/screenshot-dark.png)
+<p>
+  <img src="docs/screenshot-dark.png" width="49%" alt="Asteria in dark mode: four photos resized and converted to WebP with their sizes before and after, and the command bar previewing a trim of the selected video">
+  <img src="docs/screenshot-light.png" width="49%" alt="Asteria in light mode: the same tray, with the likely next steps for these files shown above the command bar">
+</p>
 
 ## Everything stays on your computer
 
@@ -84,6 +88,8 @@ go test -tags nodynamic ./internal/...   # skill tests (media tests run when ffm
 cd frontend && npm run check              # type-check the UI
 ```
 
+The screenshots and the GIF above come from the real app, driven by a headless Chromium against the server-mode build: `go build -tags server,nodynamic -o bin/asteria-server .`, then `cd scripts/capture && npm install && node capture.mjs readme gif` (needs ffmpeg; the demo photos are NASA's, public domain). `node capture.mjs states` captures every UI state at three window sizes in both themes.
+
 The tests exercise built-in operations on real files in [`testdata/fixtures`](testdata/fixtures) (a HEIC written by Apple's own encoder, a 3-page PDF, a short video, CSV/JSON/YAML with Unicode) and check the output itself: pixels, page counts, durations, exact text.
 
 ### Cutting a release
@@ -104,7 +110,8 @@ internal/session              tray files, workspace, collision-safe export
 internal/skills               skill format, loader, hot reload, search ranking
 internal/inspect              dimensions, page counts, durations, thumbnails
 skills/core                   built-in skills (JSON, embedded in the app)
-frontend/                     Svelte 5 UI
+frontend/                     Svelte 5 UI (type: Geist and Geist Mono, OFL)
+scripts/capture               screenshots, demo GIF and app icon render
 build/                        icons, platform config and Taskfiles
 ```
 

@@ -132,7 +132,12 @@
     }
   }
   .tile.selected {
-    background: var(--accent-soft);
+    background: color-mix(in oklab, rgb(var(--accent-rgb)) 8%, transparent);
+  }
+  .tile.selected .preview {
+    box-shadow:
+      0 0 0 2px var(--bg),
+      0 0 0 3.5px color-mix(in oklab, var(--accent) 45%, transparent);
   }
   .preview {
     position: relative;
@@ -162,7 +167,7 @@
     content: '';
     position: absolute;
     inset: 0 -100%;
-    background: linear-gradient(100deg, transparent 35%, rgb(255 255 255 / 0.16) 50%, transparent 65%);
+    background: linear-gradient(100deg, transparent 40%, rgb(255 255 255 / 0.09) 50%, transparent 60%);
     animation: sweep 1.3s var(--ease-out) infinite;
   }
   @keyframes sweep {
