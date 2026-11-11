@@ -208,13 +208,11 @@
     border-radius: 999px;
     background: var(--chip);
   }
-  .compare button.on {
-    background: var(--primary-bg);
-    color: var(--primary-ink);
-  }
+  .compare button.on,
   .compare button.on:hover {
-    background: var(--primary-bg);
-    color: var(--primary-ink);
+    background: var(--seg-on);
+    color: var(--ink);
+    box-shadow: var(--seg-on-shadow);
   }
   .actions .close {
     font-size: 19px;

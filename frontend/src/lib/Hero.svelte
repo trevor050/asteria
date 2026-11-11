@@ -452,9 +452,9 @@
     cursor: pointer;
   }
   .compare button.on {
-    background: var(--glass-solid);
+    background: var(--seg-on);
     color: var(--ink);
-    box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
+    box-shadow: var(--seg-on-shadow);
   }
   .name {
     margin: 0;

@@ -8,7 +8,7 @@
   import QuickLook from './lib/QuickLook.svelte'
   import Hero from './lib/Hero.svelte'
   import SettingsPanel from './lib/Settings.svelte'
-  import { isTyping, mod, plural } from './lib/format'
+  import { isTyping, plural, shortcut } from './lib/format'
   import { motionReduced, setAppearance, setOverrides } from './lib/theme'
   import { loadSkillMeta } from './lib/skillmeta.svelte'
 
@@ -123,7 +123,10 @@
   }
 
   async function changeSetting(key: string, value: string) {
-    await handle(await api.UpdateSettings(key, value))
+    const res = await api.UpdateSettings(key, value)
+    // The sheet shows the result of every change itself; no toast.
+    if (res.outcome) res.outcome.message = ''
+    await handle(res)
     if (key === 'mode') refreshKey++
   }
 
@@ -134,7 +137,7 @@
   function applyAccent(raw?: string) {
     const m = (raw ?? '').match(/^\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*[, ]\s*(\d{1,3})\s*$/)
     const hex = (raw ?? '').match(/^#?([0-9a-f]{6})$/i)
-    let rgb = [99, 102, 241]
+    let rgb = [112, 128, 150]
     if (m) rgb = [m[1], m[2], m[3]].map((v) => Math.min(255, Number(v)))
     else if (hex) rgb = [0, 2, 4].map((i) => parseInt(hex[1].slice(i, i + 2), 16))
     document.documentElement.style.setProperty('--accent-rgb', rgb.join(' '))
@@ -276,7 +279,7 @@
 
   function run(s: Suggestion, params: Record<string, unknown>) {
     if (!s.isMeta && !files.length) {
-      toast('Add some files first: drop them here or press ' + mod + 'O')
+      toast('Add some files first: drop them here or press ' + shortcut('O'))
       return
     }
     if (busy) {
@@ -316,8 +319,10 @@
     void busyRun([], async () => handle(await api.Export(ids)), 'Exporting')
   }
 
-  async function pickOutput() {
-    await handle(await api.PickOutputFolder())
+  async function pickOutput(quiet = false) {
+    const res = await api.PickOutputFolder()
+    if (quiet && res.outcome) res.outcome.message = ''
+    await handle(res)
   }
 
   async function resetOutput() {
@@ -537,7 +542,7 @@
           >
         </div>
       {/if}
-      <button type="button" class="gear" class:on={settingsOpen} onclick={() => (settingsOpen = !settingsOpen)} aria-label="Settings" title={`Settings (${mod},)`}>
+      <button type="button" class="gear" class:on={settingsOpen} onclick={() => (settingsOpen = !settingsOpen)} aria-label="Settings" title={`Settings (${shortcut(',')})`}>
         <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 5h6M11.5 5h2M2.5 11h2M7.5 11h6" /><circle cx="10" cy="5" r="1.6" /><circle cx="6" cy="11" r="1.6" /></svg>
       </button>
     </div>
@@ -564,7 +569,7 @@
         <div class="empty">
           <h1>Drop files to begin</h1>
           <p class="lead">
-            or <button type="button" class="link" onclick={pickFiles}>choose files</button> <kbd>{mod}O</kbd>, then type what you want
+            or <button type="button" class="link" onclick={pickFiles}>choose files</button> <kbd>{shortcut('O')}</kbd>, then type what you want
           </p>
           <dl class="examples">
             <div><dt>heic to jpg</dt><dd>iPhone photos that open everywhere</dd></div>
@@ -646,13 +651,13 @@
         >
           <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 10.5V2.5M4.75 5.75 8 2.5l3.25 3.25M3 9.5v3a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-3" /></svg>
           <span>Export{exportable.length ? ` ${exportable.length}` : ''}</span>
-          <kbd>{mod}↵</kbd>
+          <kbd>{shortcut('↵')}</kbd>
         </button>
       {/if}
     </div>
     <div class="dest" class:hidden={!files.length}>
       <span>Export to</span>
-      <button type="button" class="quiet" onclick={pickOutput} title={settings?.outputFolder || 'Each export is saved beside its original'}>{outputLabel}</button>
+      <button type="button" class="quiet" onclick={() => void pickOutput()} title={settings?.outputFolder || 'Each export is saved beside its original'}>{outputLabel}</button>
       {#if settings?.outputFolder}
         <button type="button" class="x" onclick={resetOutput} aria-label="Export next to originals instead">×</button>
       {/if}
@@ -665,7 +670,7 @@
       {settings}
       app={st}
       onchange={(k, v) => void changeSetting(k, v)}
-      onpickfolder={() => void pickOutput()}
+      onpickfolder={() => void pickOutput(true)}
       onopenskills={() => void openSkillsFolder()}
       onclose={() => {
         settingsOpen = false
@@ -712,7 +717,7 @@
       >
       <button type="button" role="menuitem" onclick={copyPaths}>Copy {menuIds.length > 1 ? 'paths' : 'path'}</button>
       <hr />
-      <button type="button" role="menuitem" onclick={() => ((selected = files.map((f) => f.id)), (menu = null))}>Select all <kbd>{mod}A</kbd></button>
+      <button type="button" role="menuitem" onclick={() => ((selected = files.map((f) => f.id)), (menu = null))}>Select all <kbd>{shortcut('A')}</kbd></button>
       <button type="button" role="menuitem" onclick={() => ((selected = files.filter((f) => !menuIds.includes(f.id)).map((f) => f.id)), (menu = null))}>Invert selection</button>
       <hr />
       <button type="button" role="menuitem" class="danger" onclick={() => ((menu = null), removeFromTray(menuIds))}>

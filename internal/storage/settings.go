@@ -4,14 +4,24 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 )
 
 const (
 	defaultNaming = "{name}.{ext}"
 	legacyNaming  = "{name}_{skill}.{ext}"
-	defaultAccent = "99,102,241"
+	defaultAccent = "112,128,150"
 )
+
+var legacyAccents = map[string]string{
+	"99,102,241": "112,128,150", // indigo -> slate
+	"14,165,233": "104,146,176", // sky -> sky
+	"16,185,129": "110,148,122", // emerald -> sage
+	"249,115,22": "176,148,104", // orange -> sand
+	"239,68,68":  "178,116,128", // red -> rose
+	"168,85,247": "130,120,180", // violet -> iris
+}
 
 // Settings are the user's persistent preferences.
 type Settings struct {
@@ -36,6 +46,11 @@ func (s *Settings) normalize() {
 	}
 	if s.AccentColor == "" {
 		s.AccentColor = defaultAccent
+	}
+	// The first palette was saturated; each old preset maps to its muted
+	// counterpart (indigo, the old default, becomes the new default).
+	if v, ok := legacyAccents[strings.ReplaceAll(s.AccentColor, " ", "")]; ok {
+		s.AccentColor = v
 	}
 	if s.Mode != "per_file" {
 		s.Mode = "batch"

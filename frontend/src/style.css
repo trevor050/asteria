@@ -21,7 +21,7 @@
  * toward the ink so any choice sits inside the palette.
  */
 :root {
-  --accent-rgb: 99 102 241;
+  --accent-rgb: 112 128 150;
   --fam-convert: oklch(var(--fam-l) var(--fam-c) 255);
   --fam-transform: oklch(var(--fam-l) var(--fam-c) 195);
   --fam-sizes: oklch(var(--fam-l) var(--fam-c) 175);
@@ -75,6 +75,8 @@
   --pulse-strength: 0.72;
   /* Family tints for skill icons: same hues in both themes, low chroma so a
      long list reads as quiet groups, never a rainbow. */
+  --seg-on: #ffffff;
+  --seg-on-shadow: 0 1px 2px rgb(0 0 0 / 0.12), 0 0 0 0.5px rgb(0 0 0 / 0.06);
   --fam-l: 0.52;
   --fam-c: 0.075;
 
@@ -126,6 +128,8 @@
   --hue-6: 112 78 196;
   --hue-warn: 168 112 48;
   --pulse-strength: 0.62;
+  --seg-on: rgb(255 255 255 / 0.13);
+  --seg-on-shadow: 0 1px 2px rgb(0 0 0 / 0.3), inset 0 0.5px 0 rgb(255 255 255 / 0.08);
   --fam-l: 0.8;
   --fam-c: 0.065;
 }

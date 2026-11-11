@@ -491,6 +491,22 @@ async function readme(browser) {
   }
 }
 
+// Only the settings screenshot (same scene as the README set).
+async function settingsShot(browser) {
+  await restart()
+  const { ctx, page } = await open(browser, { theme: 'dark', w: 1000, h: 660, scale: 2 })
+  await add(page, files())
+  await command(page, 'resize 1920')
+  await command(page, 'webp 80')
+  await page.keyboard.press('Escape')
+  await page.waitForFunction(() => !document.querySelector('.toast'), null, { timeout: 15000 })
+  await page.keyboard.press('Meta+,')
+  await sleep(700)
+  await page.screenshot({ path: join(docs, 'screenshot-settings.png') })
+  console.log('  docs/screenshot-settings.png')
+  await ctx.close()
+}
+
 async function gif(browser) {
   await restart()
   const frames = join(here, '.frames')
@@ -633,6 +649,7 @@ try {
   if (mode === 'perf' || mode === 'all') await perf(browser)
   if (mode === 'readme' || mode === 'all') await readme(browser)
   if (mode === 'gif' || mode === 'all') await gif(browser)
+  if (mode === 'settingsshot') await settingsShot(browser)
   if (mode === 'solo' || mode === 'all') await solo(browser)
   if (mode === 'settings' || mode === 'all') await settings(browser)
   if (mode === 'glow' || mode === 'all') await glow(browser)

@@ -23,6 +23,11 @@ export function typeLabel(t: string): string {
 export const isMac = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform)
 export const mod = isMac ? '⌘' : 'Ctrl'
 
+/** A shortcut as the platform writes it: ⌘O on macOS, Ctrl+O elsewhere. */
+export function shortcut(key: string): string {
+  return isMac ? `⌘${key}` : `Ctrl+${key}`
+}
+
 /** True when an event target is a text field the user is typing in. */
 export function isTyping(el: EventTarget | null): boolean {
   if (!(el instanceof HTMLElement)) return false

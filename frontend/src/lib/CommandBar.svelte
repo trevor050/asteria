@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tick } from 'svelte'
   import { api, type ParamDef, type Suggestion } from './api'
-  import { mod, plural, typeLabel } from './format'
+  import { plural, shortcut, typeLabel } from './format'
   import { familyName, familyRank } from './families'
   import Icon from './Icon.svelte'
 
@@ -275,7 +275,7 @@
 
   let placeholder = $derived(
     !hasFiles
-      ? `Drop files, or ${mod}O to add`
+      ? `Drop files, or ${shortcut('O')} to add`
       : targetIds.length === 1
         ? 'What should happen to this file?'
         : `What should happen to ${targetIds.length} files?`,
@@ -420,7 +420,7 @@
           onclick={onadd}
           onmousedown={(e) => e.preventDefault()}
           aria-label="Add files"
-          title={`Add files (${mod}O)`}
+          title={`Add files (${shortcut('O')})`}
           ><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" /></svg></button
         >
         <input

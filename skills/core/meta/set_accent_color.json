@@ -20,32 +20,32 @@
       "name": "color",
       "type": "string",
       "label": "Color",
-      "hint": "Indigo · Sky · Emerald · Orange · Red · Violet, or any color like #ff8800",
-      "default": "99,102,241",
+      "hint": "Slate · Sky · Sage · Sand · Rose · Iris, or any color like #6e8096",
+      "default": "112,128,150",
       "presets": [
         {
-          "label": "Indigo",
-          "value": "99,102,241"
+          "label": "Slate",
+          "value": "112,128,150"
         },
         {
           "label": "Sky",
-          "value": "14,165,233"
+          "value": "104,146,176"
         },
         {
-          "label": "Emerald",
-          "value": "16,185,129"
+          "label": "Sage",
+          "value": "110,148,122"
         },
         {
-          "label": "Orange",
-          "value": "249,115,22"
+          "label": "Sand",
+          "value": "176,148,104"
         },
         {
-          "label": "Red",
-          "value": "239,68,68"
+          "label": "Rose",
+          "value": "178,116,128"
         },
         {
-          "label": "Violet",
-          "value": "168,85,247"
+          "label": "Iris",
+          "value": "130,120,180"
         }
       ]
     }
