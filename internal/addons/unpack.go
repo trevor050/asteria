@@ -411,9 +411,17 @@ func unpackMSI(ctx context.Context, src, dst string) error {
 	defer os.Rename(msi, src)
 	abs, _ := filepath.Abs(dst)
 	logf := filepath.Join(filepath.Dir(msi), "msiexec.log")
+	defer os.Remove(logf)
 	cmd := tools.Command(ctx, filepath.Join(os.Getenv("SystemRoot"), "System32", "msiexec.exe"), "/a", msi, "/qn", "/norestart", "TARGETDIR="+abs, "/l*v", logf)
 	if out, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("msiexec /a: %v: %s", err, bytes.TrimSpace(out))
+		log, _ := os.ReadFile(logf)
+		return fmt.Errorf("msiexec /a: %v: %s %s", err, bytes.TrimSpace(out), lastLines(log))
+	}
+	// An administrative image keeps a copy of the package itself; it is
+	// never needed again.
+	copies, _ := filepath.Glob(filepath.Join(abs, "*.msi"))
+	for _, c := range copies {
+		_ = os.Remove(c)
 	}
 	return nil
 }

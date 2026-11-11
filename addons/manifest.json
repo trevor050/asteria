@@ -317,10 +317,10 @@
           },
           "format": "msi",
           "bins": {
-            "soffice": "LibreOffice/program/soffice.exe"
+            "soffice": "program/soffice.exe"
           },
-          "bins_verified": false,
-          "unpacked_mb": 1000,
+          "bins_verified": true,
+          "unpacked_mb": 1250,
           "notes": "Extract with: msiexec /a <msi> /qn TARGETDIR=\"<user dir>\" (administrative install = file extraction, no registry/system changes). TDF wiki documents 'msiexec /a ... TARGETDIR=' and says admin rights are needed only when targeting system folders like Program Files. NOT TESTED unelevated; test on the Windows PC. Fallback if msiexec prompts UAC: a pure-Go MSI/CAB extractor or manual. soffice.exe path under TARGETDIR is expected, not verified.",
           "experimental": true,
           "manual_fallback": {
@@ -422,7 +422,7 @@
           "bins": {
             "7zz": "Files/7-Zip/7z.exe"
           },
-          "bins_verified": false,
+          "bins_verified": true,
           "unpacked_mb": 6,
           "notes": "Official MSI, unpacked per user with msiexec /a (administrative install image: no elevation, nothing registered). 7z.exe needs 7z.dll beside it, so the full package is used rather than the 7za-only \"extra\" archive (which cannot open RAR, ISO or WIM)."
         },
@@ -673,10 +673,10 @@
           "signature": null,
           "format": "msi",
           "bins": {
-            "ebook-convert": "Calibre2/ebook-convert.exe"
+            "ebook-convert": "PFiles64/Calibre2/ebook-convert.exe"
           },
-          "bins_verified": false,
-          "unpacked_mb": 1100,
+          "bins_verified": true,
+          "unpacked_mb": 640,
           "notes": "Administrative extraction (msiexec /a) into the add-ons folder; nothing is installed or registered."
         },
         "linux-amd64": {
