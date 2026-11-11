@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check Ctrl+O in an already-running native Asteria window.
+r"""Check Ctrl+O in an already-running native Asteria window.
 
 Run on the interactive Windows desktop with pywinauto and Pillow installed:
   python scripts/test_windows_file_picker.py --pid PID --input C:\path\photo.png --report result.json
