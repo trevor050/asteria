@@ -1,0 +1,38 @@
+{
+  "id": "image_strip",
+  "name": "Image Strip",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "horizontal strip",
+    "side by side",
+    "join images",
+    "stitch images",
+    "combine side by side",
+    "film strip",
+    "panorama strip",
+    "merge images horizontally"
+  ],
+  "category": "compose",
+  "description": "Join the pictures side by side at the same height, in the order shown",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".png",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "compose.strip",
+    "with": {
+      "direction": "horizontal"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "combine": true,
+  "outputName": "strip"
+}

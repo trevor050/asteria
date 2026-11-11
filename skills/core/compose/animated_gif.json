@@ -1,0 +1,52 @@
+{
+  "id": "animated_gif",
+  "name": "Animated GIF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "gif from images",
+    "animation",
+    "slideshow gif",
+    "create gif",
+    "images to gif",
+    "animate images",
+    "flipbook"
+  ],
+  "category": "compose",
+  "description": "Turn the pictures into a looping GIF, 0.5 seconds per frame, in the order shown",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".gif",
+  "params": [
+    {
+      "name": "delay",
+      "label": "Delay",
+      "type": "float",
+      "default": "0.5",
+      "presets": [
+        "0.1",
+        "0.2",
+        "0.5",
+        "1",
+        "2"
+      ],
+      "min": 0.02,
+      "max": 10,
+      "unit": "s",
+      "hint": "seconds per frame · 0.1 = fast · 2 = slow slideshow"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "compose.gif"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "combine": true,
+  "outputName": "animation"
+}

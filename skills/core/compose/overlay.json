@@ -1,0 +1,34 @@
+{
+  "id": "overlay",
+  "name": "Overlay",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "place on top",
+    "layer images",
+    "put image on image",
+    "combine two images",
+    "superimpose",
+    "composite",
+    "image over image"
+  ],
+  "category": "compose",
+  "description": "Place the second picture centred on the first (select exactly two, base first)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".png",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "compose.overlay"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "combine": true,
+  "outputName": "overlay"
+}

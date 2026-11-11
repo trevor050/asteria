@@ -1,0 +1,48 @@
+{
+  "id": "contact_sheet",
+  "name": "Contact Sheet",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "contact sheet",
+    "proof sheet",
+    "thumbnail sheet",
+    "index sheet",
+    "grid with names",
+    "filenames grid"
+  ],
+  "category": "compose",
+  "description": "A grid of the pictures with each file name underneath, on a white page",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".png",
+  "params": [
+    {
+      "name": "columns",
+      "label": "Columns",
+      "type": "string",
+      "default": "auto",
+      "presets": [
+        "auto",
+        "3",
+        "4",
+        "5",
+        "4x3"
+      ],
+      "hint": "auto · 4 = four columns · 4x3 = columns x rows"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "compose.contactsheet"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "combine": true,
+  "outputName": "contact sheet"
+}

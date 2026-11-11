@@ -1,0 +1,51 @@
+{
+  "id": "animated_webp",
+  "name": "Animated WebP",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "make animated webp",
+    "webp animation",
+    "webp from images",
+    "animated image",
+    "smaller animation",
+    "slideshow webp"
+  ],
+  "category": "compose",
+  "description": "Turn the pictures into a looping animated WebP (smaller than GIF), 0.5 seconds per frame",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".webp",
+  "params": [
+    {
+      "name": "delay",
+      "label": "Delay",
+      "type": "float",
+      "default": "0.5",
+      "presets": [
+        "0.1",
+        "0.2",
+        "0.5",
+        "1",
+        "2"
+      ],
+      "min": 0.02,
+      "max": 10,
+      "unit": "s",
+      "hint": "seconds per frame · 0.1 = fast · 2 = slow slideshow"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "compose.webpanim"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "combine": true,
+  "outputName": "animation"
+}

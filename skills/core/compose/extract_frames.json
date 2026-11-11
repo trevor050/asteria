@@ -1,0 +1,33 @@
+{
+  "id": "extract_frames",
+  "name": "Extract Frames",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "gif frames",
+    "split gif",
+    "gif to images",
+    "animation to images",
+    "frames",
+    "unpack gif",
+    "webp frames"
+  ],
+  "category": "compose",
+  "description": "Save every frame of an animated GIF or WebP as its own PNG in a folder",
+  "inputTypes": [
+    ".gif",
+    ".webp"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "compose.frames"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}
