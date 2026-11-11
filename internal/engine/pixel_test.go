@@ -6,6 +6,7 @@ import (
 
 	"asteria/internal/img"
 	"asteria/internal/ops"
+	"asteria/internal/tools"
 )
 
 // A chain of image steps encodes each step once but feeds the next step the
@@ -89,5 +90,24 @@ func TestPreviewRunsOnAProxyWithoutTouchingTheTray(t *testing.T) {
 	}
 	if _, _, err := e.eng.Preview(context.Background(), f.ID(), "compress", nil, 64); err == nil {
 		t.Fatal("compress is not a pixel op and must not preview")
+	}
+}
+
+// Pixel skills that also run on video keep the video's format through the
+// engine (regression: the image output rule once turned .mp4 into .jpg).
+func TestPixelSkillOnVideoKeepsVideoFormat(t *testing.T) {
+	if _, ok := tools.NewFinder().Lookup("ffmpeg"); !ok {
+		t.Skip("ffmpeg not installed")
+	}
+	e := newEnv(t, "")
+	f := e.add("clip.mp4", "")
+	for _, id := range []string{"saturate", "mirror", "grayscale"} {
+		out, err := e.eng.Apply(context.Background(), []string{f.ID()}, id, nil, nil)
+		if err != nil || len(out.Updated) != 1 {
+			t.Fatalf("%s on video: %v %+v", id, err, out)
+		}
+		if typ := f.Current().Type; typ != ".mp4" {
+			t.Fatalf("%s produced %s, want .mp4", id, typ)
+		}
 	}
 }

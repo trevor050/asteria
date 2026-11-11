@@ -40,15 +40,24 @@ var imageOutputExts = map[string]bool{
 func init() {
 	for _, h := range []Handler{
 		{Name: "image.convert", Pixel: pixConvert, OutputExt: imageOutputExt},
-		{Name: "image.resize", Pixel: pixResize, OutputExt: imageOutputExt},
+		{Name: "image.resize", Pixel: pixResize, OutputExt: pixelOutputExt},
 		{Name: "image.compress", Run: imageCompress, OutputExt: imageOutputExt},
-		{Name: "image.rotate", Pixel: pixRotate, OutputExt: imageOutputExt, Video: videoRotate},
-		{Name: "image.grayscale", Pixel: pixGrayscale, OutputExt: imageOutputExt, Live: true, Video: func(Args) (string, error) { return "hue=s=0", nil }},
-		{Name: "image.blur", Pixel: pixBlur, OutputExt: imageOutputExt, Live: true, Video: videoBlur},
+		{Name: "image.rotate", Pixel: pixRotate, OutputExt: pixelOutputExt, Video: videoRotate},
+		{Name: "image.grayscale", Pixel: pixGrayscale, OutputExt: pixelOutputExt, Live: true, Video: func(Args) (string, error) { return "hue=s=0", nil }},
+		{Name: "image.blur", Pixel: pixBlur, OutputExt: pixelOutputExt, Live: true, Video: videoBlur},
 	} {
 		h.Concurrency = 3
 		register(h)
 	}
+}
+
+// pixelOutputExt is imageOutputExt for images, and keeps a video's own
+// extension when a pixel skill also runs on video through ffmpeg.
+func pixelOutputExt(planned, input string) string {
+	if IsVideoType(planned) || IsVideoType(input) {
+		return planned
+	}
+	return imageOutputExt(planned, input)
 }
 
 // imageOutputExt keeps the planned extension when we can encode it and falls

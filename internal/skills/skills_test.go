@@ -282,6 +282,11 @@ func TestSearchKeepsTheObviousOnTop(t *testing.T) {
 		{"jpg", ".png", "convert_to_jpeg", ""},
 		{"compress", ".jpg", "compress", ""},
 		{"saturate", ".mp4", "saturate", ""},
+		{"dither gameboy", ".png", "dither", "gameboy"},
+		{"watermark Draft copy", ".jpg", "watermark", "Draft copy"},
+		{"replace color red blue", ".jpg", "replace_color", "red blue"},
+		{"duotone navy gold", ".jpg", "duotone", "navy gold"},
+		{"swap channels grb", ".jpg", "swap_channels", "grb"},
 	}
 	for _, c := range cases {
 		m := top(t, r, c.q, c.types)

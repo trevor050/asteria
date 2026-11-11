@@ -115,7 +115,7 @@ func register(h Handler) {
 			h.Run = standalonePixel(h)
 		}
 		if h.OutputExt == nil {
-			h.OutputExt = imageOutputExt
+			h.OutputExt = pixelOutputExt
 		}
 		if h.Concurrency == 0 {
 			h.Concurrency = 3

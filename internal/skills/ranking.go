@@ -97,7 +97,34 @@ func (r *Ranker) Rank(all []Skill, query string, ctx Context) []Match {
 			matches = r.rankText(all, m[1], m[2], ctx)
 		}
 	}
+	if value == "" && strings.Contains(query, " ") && bestRaw(all, query) < strongMatch {
+		// Word values: "dither gameboy", "watermark Draft", "replace color
+		// red blue". When the whole query names nothing, take the longest
+		// leading words that clearly name a skill with a parameter and use
+		// the rest as its value.
+		toks := strings.Fields(query)
+		for k := len(toks) - 1; k >= 1; k-- {
+			head := strings.Join(toks[:k], " ")
+			best := 0.0
+			for _, s := range all {
+				if len(s.Params) > 0 {
+					best = math.Max(best, matchScore(s, head))
+				}
+			}
+			if best >= strongMatch {
+				return r.rankText(all, head, strings.Join(toks[k:], " "), ctx)
+			}
+		}
+	}
 	return matches
+}
+
+func bestRaw(all []Skill, q string) float64 {
+	best := 0.0
+	for _, s := range all {
+		best = math.Max(best, matchScore(s, q))
+	}
+	return best
 }
 
 func (r *Ranker) rankEmpty(all []Skill, ctx Context) []Match {
