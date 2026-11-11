@@ -1,0 +1,71 @@
+{
+  "id": "line_endings_lf",
+  "name": "Line Endings to LF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "unix line endings",
+    "lf",
+    "crlf to lf",
+    "dos2unix",
+    "windows to unix line endings"
+  ],
+  "category": "text",
+  "icon": "wrap-text",
+  "description": "Use Unix (LF) line endings",
+  "inputTypes": [
+    ".txt",
+    ".csv",
+    ".tsv",
+    ".srt",
+    ".vtt",
+    ".md",
+    ".html",
+    ".htm",
+    ".xml",
+    ".json",
+    ".yaml",
+    ".yml",
+    ".ini",
+    ".log",
+    ".ass",
+    ".ssa",
+    ".sbv",
+    ".tex",
+    ".rst",
+    ".toml",
+    ".env",
+    ".properties",
+    ".sql",
+    ".js",
+    ".ts",
+    ".css",
+    ".go",
+    ".py",
+    ".java",
+    ".c",
+    ".h",
+    ".cpp",
+    ".cs",
+    ".rb",
+    ".php",
+    ".sh",
+    ".bat",
+    ".ps1"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "text.lineEndings",
+    "with": {
+      "ending": "lf"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

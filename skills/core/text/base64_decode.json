@@ -1,0 +1,32 @@
+{
+  "id": "base64_decode",
+  "name": "Base64 Decode",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "from base64",
+    "decode base64",
+    "base64 to file",
+    "b64 decode"
+  ],
+  "category": "text",
+  "icon": "text",
+  "description": "Turn base64 text back into a file",
+  "inputTypes": [
+    ".txt",
+    ".b64",
+    ".base64"
+  ],
+  "outputType": ".bin",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "text.base64Decode"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

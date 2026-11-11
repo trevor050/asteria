@@ -1,0 +1,52 @@
+{
+  "id": "retime_subtitles",
+  "name": "Retime Subtitles",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "fix subtitle framerate",
+    "subtitle fps",
+    "subtitle speed",
+    "23.976 to 25",
+    "stretch subtitles",
+    "framerate fix"
+  ],
+  "category": "subtitles",
+  "icon": "timer",
+  "description": "Rescale subtitle times for a new frame rate",
+  "inputTypes": [
+    ".srt",
+    ".vtt",
+    ".ass",
+    ".ssa",
+    ".sbv",
+    ".ttml",
+    ".dfxp"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "speed",
+      "label": "Frame rates",
+      "type": "string",
+      "default": "23.976 25",
+      "presets": [
+        "23.976 25",
+        "25 23.976",
+        "24 25",
+        "1.001"
+      ],
+      "hint": "23.976 25 = from fps to fps · 1.001 = multiply times · default 23.976 25"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "subtitles.retime"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

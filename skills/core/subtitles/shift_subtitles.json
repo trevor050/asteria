@@ -1,0 +1,53 @@
+{
+  "id": "shift_subtitles",
+  "name": "Shift Subtitles",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "subtitle delay",
+    "subtitles out of sync",
+    "subtitle offset",
+    "delay subtitles",
+    "sync subtitles",
+    "retime subtitles later"
+  ],
+  "category": "subtitles",
+  "icon": "clock",
+  "description": "Move all subtitles earlier or later",
+  "inputTypes": [
+    ".srt",
+    ".vtt",
+    ".ass",
+    ".ssa",
+    ".sbv",
+    ".ttml",
+    ".dfxp"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "offset",
+      "label": "Offset",
+      "type": "string",
+      "default": "+1s",
+      "presets": [
+        "+1s",
+        "-1s",
+        "+0.5s",
+        "-500ms",
+        "+2s"
+      ],
+      "hint": "+1.5s later · -500ms earlier · -0:02.3 · default +1s"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "subtitles.shift"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

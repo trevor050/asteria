@@ -1,0 +1,55 @@
+{
+  "id": "checksum",
+  "name": "Checksum",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "hash",
+    "sha256",
+    "sha-256",
+    "md5",
+    "sha1",
+    "sha512",
+    "file hash",
+    "verify file",
+    "sha256sum"
+  ],
+  "category": "text",
+  "icon": "fingerprint",
+  "description": "Write a hash of the file as a checksum text",
+  "inputTypes": [
+    "*"
+  ],
+  "outputType": ".txt",
+  "params": [
+    {
+      "name": "algorithm",
+      "label": "Algorithm",
+      "type": "string",
+      "default": "sha256",
+      "presets": [
+        "sha256",
+        "sha512",
+        "sha1",
+        "md5"
+      ],
+      "options": [
+        "sha256",
+        "sha512",
+        "sha1",
+        "md5"
+      ],
+      "hint": "sha256 (default) · sha512 · sha1 · md5"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "text.checksum"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

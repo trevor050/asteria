@@ -1,0 +1,36 @@
+{
+  "id": "convert_to_srt",
+  "name": "Convert to SRT",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to srt",
+    "subtitles to srt",
+    "vtt to srt",
+    "ass to srt",
+    "srt subtitles"
+  ],
+  "category": "subtitles",
+  "icon": "captions",
+  "description": "Save subtitles as SubRip (.srt)",
+  "inputTypes": [
+    ".vtt",
+    ".ass",
+    ".ssa",
+    ".sbv",
+    ".ttml",
+    ".dfxp"
+  ],
+  "outputType": ".srt",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "subtitles.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

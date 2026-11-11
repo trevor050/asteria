@@ -1,0 +1,36 @@
+{
+  "id": "convert_to_vtt",
+  "name": "Convert to VTT",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to vtt",
+    "webvtt",
+    "subtitles to vtt",
+    "srt to vtt",
+    "web subtitles"
+  ],
+  "category": "subtitles",
+  "icon": "captions",
+  "description": "Save subtitles as WebVTT for web video",
+  "inputTypes": [
+    ".srt",
+    ".ass",
+    ".ssa",
+    ".sbv",
+    ".ttml",
+    ".dfxp"
+  ],
+  "outputType": ".vtt",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "subtitles.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}
