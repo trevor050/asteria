@@ -165,11 +165,15 @@ type State struct {
 	Tools     []ToolStatus     `json:"tools"`
 	Platform  string           `json:"platform"`
 	Version   string           `json:"version"`
+	// NativeGlass is true when the window shows macOS Liquid Glass behind
+	// the interface (macOS 26+, native build).
+	NativeGlass bool `json:"nativeGlass"`
 }
 
 // GetState returns the tray, settings and environment.
 func (a *App) GetState() State {
 	settings, _ := a.settings.Load()
+	applyWindowAppearance(a.window, settings.Appearance)
 	a.tools.Reset()
 	statuses := []ToolStatus{}
 	for _, name := range []string{"ffmpeg", "ffprobe"} {
@@ -177,13 +181,14 @@ func (a *App) GetState() State {
 		statuses = append(statuses, ToolStatus{Name: name, Found: ok, Path: p, Hint: tools.InstallHint(name)})
 	}
 	return State{
-		Files:     a.store.Views(),
-		Settings:  settings,
-		SkillsDir: a.skillsDir,
-		Problems:  a.registry.Problems(),
-		Tools:     statuses,
-		Platform:  runtime.GOOS,
-		Version:   Version,
+		Files:       a.store.Views(),
+		Settings:    settings,
+		SkillsDir:   a.skillsDir,
+		Problems:    a.registry.Problems(),
+		Tools:       statuses,
+		Platform:    runtime.GOOS,
+		NativeGlass: nativeGlass(),
+		Version:     Version,
 	}
 }
 
@@ -631,6 +636,7 @@ func (a *App) UpdateSettings(key, value string) Result {
 		switch key {
 		case "appearance":
 			s.Appearance = value
+			applyWindowAppearance(a.window, value)
 		case "reduceMotion":
 			s.ReduceMotion = value == "true"
 		case "reduceTransparency":

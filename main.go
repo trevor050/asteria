@@ -64,7 +64,13 @@ func main() {
 		MinWidth:  560,
 		MinHeight: 440,
 		Mac: application.MacWindow{
-			Backdrop:                application.MacBackdropTranslucent,
+			// Real Liquid Glass behind the interface on macOS 26; Wails
+			// falls back to the translucent material on older versions.
+			Backdrop: application.MacBackdropLiquidGlass,
+			LiquidGlass: application.MacLiquidGlass{
+				Style:    application.LiquidGlassStyleAutomatic,
+				Material: application.NSVisualEffectMaterialAuto,
+			},
 			TitleBar:                application.MacTitleBarHiddenInset,
 			InvisibleTitleBarHeight: 44,
 		},

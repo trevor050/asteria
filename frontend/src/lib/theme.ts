@@ -27,6 +27,19 @@ export function setOverrides(o: { reduceMotion?: boolean; reduceTransparency?: b
   root.dataset.transparency = o.reduceTransparency ? 'reduce' : ''
 }
 
+/** Native Liquid Glass sits behind the page (macOS 26, native build): the
+ *  page then leaves its background clear. Cached like the theme so the
+ *  first paint matches. */
+export function setNativeGlass(on: boolean) {
+  root.dataset.glass = on ? 'native' : ''
+  try {
+    localStorage.setItem('asteria.glass', on ? '1' : '')
+  } catch {}
+}
+try {
+  root.dataset.glass = localStorage.getItem('asteria.glass') ? 'native' : ''
+} catch {}
+
 /** True when motion should be minimal, by OS setting or the app override. */
 export function motionReduced(): boolean {
   return motionQuery.matches || root.dataset.motion === 'reduce'

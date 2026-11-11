@@ -47,11 +47,28 @@
   --hover: rgb(28 28 26 / 0.035);
   --well: rgb(28 28 26 / 0.04);
   --check: rgb(28 28 26 / 0.06);
-  --glass: rgb(255 255 253 / 0.62);
-  --glass-strong: rgb(252 252 250 / 0.86);
+  /* Liquid Glass: a clear fill, a specular rim where light catches the top
+     edge, a softer one refracted out of the bottom, a hairline outline and
+     a faint sheen. Bigger surfaces read thicker (more blur, deeper shadow). */
+  --glass: rgb(255 255 255 / 0.48);
+  --glass-strong: rgb(253 253 252 / 0.74);
   --glass-solid: #fbfbf9;
-  --glass-edge: rgb(255 255 255 / 0.7);
-  --scrim: rgb(30 30 28 / 0.28);
+  --glass-edge: rgb(255 255 255 / 0.85);
+  --lg-rim-top: rgb(255 255 255 / 0.95);
+  --lg-rim-bottom: rgb(255 255 255 / 0.4);
+  --lg-rim: rgb(20 20 18 / 0.07);
+  --lg-sheen: rgb(255 255 255 / 0.55);
+  --lg-shadow: 0 1px 2px rgb(20 20 18 / 0.05), 0 10px 28px -10px rgb(20 20 18 / 0.2);
+  --lg-shadow-deep: 0 2px 6px rgb(20 20 18 / 0.06), 0 30px 70px -20px rgb(20 20 18 / 0.32);
+  --lg-blur: 26px;
+  --lg-sat: 1.8;
+  --page-native: rgb(246 246 243 / 0.42);
+  /* Inside a glass sheet: grouped platters and glass controls. */
+  --lg-platter: rgb(255 255 255 / 0.5);
+  --lg-control: rgb(255 255 255 / 0.62);
+  --lg-control-hover: rgb(255 255 255 / 0.85);
+  --lg-track: rgb(20 20 18 / 0.09);
+  --scrim: rgb(30 30 28 / 0.16);
   --accent: color-mix(in oklab, rgb(var(--accent-rgb)) 70%, #1c1c1a);
   --accent-soft: color-mix(in oklab, rgb(var(--accent-rgb)) 14%, transparent);
   --good: #33683f;
@@ -76,8 +93,8 @@
   --pulse-strength: 0.72;
   /* Family tints for skill icons: same hues in both themes, low chroma so a
      long list reads as quiet groups, never a rainbow. */
-  --seg-on: #ffffff;
-  --seg-on-shadow: 0 1px 2px rgb(0 0 0 / 0.12), 0 0 0 0.5px rgb(0 0 0 / 0.06);
+  --seg-on: linear-gradient(168deg, #ffffff, rgb(255 255 255 / 0.82));
+  --seg-on-shadow: inset 0 1px 0 rgb(255 255 255 / 1), inset 0 -0.5px 0 rgb(0 0 0 / 0.04), 0 1px 3px rgb(0 0 0 / 0.12), 0 0 0 0.5px rgb(0 0 0 / 0.06);
   --fam-l: 0.52;
   --fam-c: 0.075;
 
@@ -104,11 +121,22 @@
   --hover: rgb(255 255 255 / 0.035);
   --well: rgb(255 255 255 / 0.03);
   --check: rgb(255 255 255 / 0.045);
-  --glass: rgb(26 27 30 / 0.56);
-  --glass-strong: rgb(22 23 26 / 0.84);
+  --glass: rgb(44 46 52 / 0.36);
+  --glass-strong: rgb(28 29 34 / 0.66);
   --glass-solid: #18191c;
-  --glass-edge: rgb(255 255 255 / 0.06);
-  --scrim: rgb(4 4 6 / 0.62);
+  --glass-edge: rgb(255 255 255 / 0.16);
+  --lg-rim-top: rgb(255 255 255 / 0.24);
+  --lg-rim-bottom: rgb(255 255 255 / 0.07);
+  --lg-rim: rgb(255 255 255 / 0.09);
+  --lg-sheen: rgb(255 255 255 / 0.07);
+  --lg-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 14px 34px -14px rgb(0 0 0 / 0.7);
+  --lg-shadow-deep: 0 2px 8px rgb(0 0 0 / 0.35), 0 36px 80px -24px rgb(0 0 0 / 0.8);
+  --page-native: rgb(14 15 18 / 0.5);
+  --lg-platter: rgb(255 255 255 / 0.045);
+  --lg-control: rgb(255 255 255 / 0.08);
+  --lg-control-hover: rgb(255 255 255 / 0.14);
+  --lg-track: rgb(255 255 255 / 0.12);
+  --scrim: rgb(4 4 6 / 0.42);
   --accent: color-mix(in oklab, rgb(var(--accent-rgb)) 55%, #ecebe6);
   --accent-soft: color-mix(in oklab, rgb(var(--accent-rgb)) 16%, transparent);
   --good: #a3cbb0;
@@ -129,8 +157,8 @@
   --hue-6: 112 78 196;
   --hue-warn: 168 112 48;
   --pulse-strength: 0.62;
-  --seg-on: rgb(255 255 255 / 0.13);
-  --seg-on-shadow: 0 1px 2px rgb(0 0 0 / 0.3), inset 0 0.5px 0 rgb(255 255 255 / 0.08);
+  --seg-on: linear-gradient(168deg, rgb(255 255 255 / 0.2), rgb(255 255 255 / 0.1));
+  --seg-on-shadow: inset 0 1px 0 rgb(255 255 255 / 0.22), inset 0 -0.5px 0 rgb(255 255 255 / 0.05), 0 1px 3px rgb(0 0 0 / 0.4);
   --fam-l: 0.8;
   --fam-c: 0.065;
 }
@@ -199,12 +227,21 @@ button:focus-visible,
   outline-offset: 2px;
 }
 
-/* Glass that degrades: without backdrop blur, or when the user asks for less
-   transparency, surfaces become solid. */
+/* Liquid Glass surfaces. Everything floating (the command bar, chips,
+   sheets, menus, toasts) uses this one material; it degrades to a solid
+   surface without backdrop blur or when the user asks for less
+   transparency. --lg-rims is reusable by components that add their own
+   shadow. */
+:root {
+  --lg-rims: inset 0 1px 0 0 var(--lg-rim-top), inset 0 -1px 0 0 var(--lg-rim-bottom), inset 0 0 0 0.5px var(--lg-rim);
+}
 .glass {
-  background: var(--glass-bg, var(--glass));
-  -webkit-backdrop-filter: blur(22px) saturate(1.15);
-  backdrop-filter: blur(22px) saturate(1.15);
+  background:
+    linear-gradient(168deg, var(--lg-sheen), transparent 42%),
+    var(--glass-bg, var(--glass));
+  -webkit-backdrop-filter: blur(var(--lg-blur, 26px)) saturate(var(--lg-sat, 1.8));
+  backdrop-filter: blur(var(--lg-blur, 26px)) saturate(var(--lg-sat, 1.8));
+  box-shadow: var(--lg-rims), var(--glass-shadow, var(--lg-shadow));
 }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .glass {
@@ -222,6 +259,31 @@ button:focus-visible,
   background: var(--glass-solid) !important;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
+}
+
+/* Native macOS Liquid Glass sits behind the page: leave it clear, with a
+   light veil so text keeps its contrast whatever is behind the window. */
+:root[data-glass='native'],
+:root[data-glass='native'] body {
+  background: var(--page-native);
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root[data-glass='native'],
+  :root[data-glass='native'] body {
+    background: var(--bg);
+  }
+}
+:root[data-glass='native'][data-transparency='reduce'],
+:root[data-glass='native'][data-transparency='reduce'] body {
+  background: var(--bg);
+}
+
+/* Press feedback, on pointer-down. */
+.press {
+  transition: transform 0.12s var(--ease-out, ease-out);
+}
+.press:active {
+  transform: scale(0.96);
 }
 
 ::-webkit-scrollbar {

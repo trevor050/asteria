@@ -502,7 +502,7 @@
     pointer-events: none;
   }
   .focused .halo {
-    opacity: 0.55;
+    opacity: 0.12;
     transform: none;
   }
   .busy .halo {
@@ -510,7 +510,7 @@
   }
   @keyframes breathe {
     50% {
-      opacity: 0.25;
+      opacity: 0.05;
     }
   }
   .field {
@@ -519,18 +519,23 @@
     align-items: center;
     gap: 12px;
     height: 52px;
-    padding: 0 16px 0 18px;
-    border-radius: 16px;
-    border: 1px solid var(--line);
-    box-shadow:
-      inset 0 1px 0 var(--glass-edge),
-      0 10px 30px -18px rgb(0 0 0 / 0.5);
+    padding: 0 16px 0 14px;
+    /* A floating capsule of the thicker glass. */
+    border-radius: 26px;
+    --lg-blur: 32px;
+    /* Neutral glass: barely lifts the wash's colors through the field. */
+    --lg-sat: 1.1;
+    --glass-bg: var(--glass-strong);
+    --glass-shadow: var(--lg-shadow-deep);
     transition:
-      border-color 0.3s var(--ease-out),
+      box-shadow 0.3s var(--ease-out),
       transform 0.4s var(--ease-spring);
   }
   .focused .field {
-    border-color: var(--line-strong);
+    box-shadow:
+      var(--lg-rims),
+      0 0 0 0.5px var(--line-strong),
+      var(--lg-shadow-deep);
   }
   .add {
     flex: none;
@@ -608,33 +613,64 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     margin: 0 0 8px 8px;
   }
+  /* Small capsules of clear glass, lighter than the bar they sit above. */
   .quick button {
     display: inline-flex;
     align-items: center;
     gap: 7px;
     border: 0;
-    background: transparent;
+    background:
+      linear-gradient(168deg, var(--lg-sheen), transparent 50%),
+      var(--glass);
+    -webkit-backdrop-filter: blur(18px) saturate(1.7);
+    backdrop-filter: blur(18px) saturate(1.7);
+    box-shadow: var(--lg-rims), 0 4px 14px -8px rgb(0 0 0 / 0.35);
     color: var(--ink-2);
     font-size: 13px;
     font-weight: 400;
-    padding: 5px 11px;
+    padding: 6px 13px 6px 11px;
     border-radius: 999px;
     cursor: pointer;
     animation: rise 0.36s var(--ease-out) both;
     animation-delay: calc(var(--i) * 40ms);
     transition:
       background 0.15s,
-      color 0.15s;
+      color 0.15s,
+      transform 0.12s var(--ease-out);
   }
   .quick button:hover {
-    background: var(--chip);
+    background:
+      linear-gradient(168deg, var(--lg-sheen), transparent 50%),
+      var(--glass-strong);
     color: var(--ink);
   }
+  .quick button:active {
+    transform: scale(0.96);
+  }
   .quick .all {
+    background: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
     color: var(--muted);
+  }
+  .quick .all:hover {
+    background: var(--chip);
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .quick button:not(.all) {
+      background: var(--glass-solid);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+  :global(:root[data-transparency='reduce']) .quick button:not(.all) {
+    background: var(--glass-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
   .quick .addon {
     display: inline-flex;
@@ -652,9 +688,9 @@
     margin: 0;
     padding: 6px;
     list-style: none;
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    box-shadow: var(--shadow-pop);
+    border-radius: 22px;
+    --lg-blur: 34px;
+    --glass-shadow: var(--lg-shadow-deep);
     display: flex;
     flex-direction: column-reverse;
     z-index: 20;

@@ -388,7 +388,10 @@
     }
   }
   .sheet {
-    --glass-bg: color-mix(in oklab, var(--glass-solid) 94%, transparent);
+    /* The thickest glass: big surface, more blur, deeper shadow. */
+    --glass-bg: var(--glass-strong);
+    --lg-blur: 40px;
+    --glass-shadow: var(--lg-shadow-deep);
     --c-w: 252px;
     width: min(468px, 100%);
     max-height: calc(100vh - 48px);
@@ -396,9 +399,7 @@
     overscroll-behavior: contain;
     scrollbar-width: none;
     padding: 6px 24px 8px;
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    box-shadow: var(--shadow-pop);
+    border-radius: 28px;
     outline: none;
     animation: sheet-in 0.3s var(--ease-spring) both;
   }
@@ -443,14 +444,23 @@
     stroke-width: 1.5;
     stroke-linecap: round;
   }
+  .close {
+    background: var(--lg-control);
+    box-shadow: var(--lg-rims);
+  }
   .close:hover {
-    background: var(--hover);
+    background: var(--lg-control-hover);
     color: var(--ink);
   }
 
+  /* Grouped platters, as in the system settings: rows sit on a slightly
+     lighter layer of the sheet's glass instead of between hairlines. */
   section {
-    padding: 14px 0 12px;
-    border-top: 1px solid var(--line);
+    margin: 0 0 10px;
+    padding: 12px 14px 8px;
+    border-radius: 20px;
+    background: var(--lg-platter);
+    box-shadow: inset 0 1px 0 var(--lg-rim-bottom), inset 0 0 0 0.5px var(--lg-rim);
   }
   h3 {
     margin: 0 0 2px;
@@ -497,10 +507,11 @@
     flex: none;
     display: flex;
     width: var(--c-w);
-    height: 28px;
-    padding: 2px;
+    height: 30px;
+    padding: 3px;
     border-radius: 999px;
-    background: var(--chip);
+    background: var(--lg-track);
+    box-shadow: inset 0 0.5px 1.5px rgb(0 0 0 / 0.12);
   }
   .seg button {
     flex: 1;
@@ -561,7 +572,8 @@
     height: 18px;
     margin: 0;
     border-radius: 999px;
-    background: var(--line-strong);
+    background: var(--lg-track);
+    box-shadow: inset 0 0.5px 1.5px rgb(0 0 0 / 0.14);
     position: relative;
     cursor: pointer;
     transition: background 0.2s var(--ease-out);
@@ -574,8 +586,9 @@
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: var(--glass-solid);
-    box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+    /* A small glass knob catching the light. */
+    background: linear-gradient(168deg, #fff, rgb(255 255 255 / 0.86));
+    box-shadow: inset 0 -0.5px 0 rgb(0 0 0 / 0.06), 0 1px 3px rgb(0 0 0 / 0.28), 0 0 0 0.5px rgb(0 0 0 / 0.05);
     transition: transform 0.25s var(--ease-spring);
   }
   input[type='checkbox']:checked {
@@ -613,26 +626,32 @@
     align-items: center;
     gap: 8px;
   }
+  /* Glass capsule buttons: a clear fill with a specular rim. */
   .btn {
     flex: none;
     height: 28px;
-    padding: 0 12px;
-    border: 1px solid var(--line-strong);
+    padding: 0 13px;
+    border: 0;
     border-radius: 999px;
-    background: transparent;
+    background: var(--lg-control);
+    box-shadow: var(--lg-rims), 0 1px 3px rgb(0 0 0 / 0.08);
     color: var(--ink);
     font-size: 12px;
     white-space: nowrap;
     cursor: pointer;
     transition:
       background 0.15s,
-      border-color 0.15s;
+      transform 0.12s var(--ease-out);
   }
   .btn:hover {
-    background: var(--hover);
+    background: var(--lg-control-hover);
+  }
+  .btn:active {
+    transform: scale(0.96);
   }
   .btn.quiet {
-    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
     color: var(--ink-2);
     margin-right: -12px;
   }

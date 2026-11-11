@@ -10,7 +10,7 @@
   import SettingsPanel from './lib/Settings.svelte'
   import AddonPrompt from './lib/AddonPrompt.svelte'
   import { isTyping, plural, shortcut } from './lib/format'
-  import { motionReduced, setAppearance, setOverrides } from './lib/theme'
+  import { motionReduced, setAppearance, setNativeGlass, setOverrides } from './lib/theme'
   import { loadSkillMeta } from './lib/skillmeta.svelte'
 
   type Toast = { id: number; text: string; tone: 'info' | 'error'; detail?: string; actions?: { label: string; run: () => void }[] }
@@ -193,6 +193,7 @@
   async function syncFiles() {
     const s = await api.GetState()
     st = s
+    setNativeGlass(!!s.nativeGlass)
     files = s.files ?? []
     const ids = new Set(files.map((f) => f.id))
     selected = selected.filter((id) => ids.has(id))
@@ -560,7 +561,7 @@
         <button type="button" class="quiet" onclick={() => removeFromTray(files.map((f) => f.id))} disabled={busy}>Clear</button>
       </div>
     {/if}
-    <div class="end">
+    <div class="end glass">
       {#if files.length > 1}
         <div class="mode" role="radiogroup" aria-label="Show and apply skills to">
           <button type="button" role="radio" aria-checked={!perFile} class:on={!perFile} onclick={() => setMode('batch')} title="Every file, or the selection">
@@ -1010,6 +1011,10 @@
   [data-phase='settled'] .amber {
     opacity: 0.5;
   }
+  /* Over native Liquid Glass the wash is only a tint. */
+  :global(:root[data-glass='native']) .aura {
+    opacity: calc(var(--aura-strength, 0.5) * 0.6);
+  }
   .shell:has(.tray:global(.file-drop-target-active)) .aura {
     opacity: calc(var(--aura-strength) * 1.8);
   }
@@ -1044,12 +1049,16 @@
   .export {
     animation: rise 0.4s var(--ease-out) both;
   }
+  /* The header controls float as one glass capsule, like a toolbar group. */
   .end {
     --wails-draggable: no-drag;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 2px;
     margin-left: auto;
+    padding: 3px;
+    border-radius: 999px;
+    --lg-blur: 20px;
   }
   .mode {
     display: flex;
@@ -1080,7 +1089,7 @@
     stroke-linecap: round;
   }
   .gear circle {
-    fill: var(--bg);
+    fill: none;
   }
   .gear:hover,
   .gear.on {
@@ -1103,7 +1112,8 @@
     color: var(--ink-2);
   }
   .mode button.on {
-    background: var(--chip);
+    background: var(--seg-on, var(--chip));
+    box-shadow: var(--seg-on-shadow, none);
     color: var(--ink);
   }
 
@@ -1291,14 +1301,15 @@
     align-items: center;
     gap: 10px;
     height: 52px;
-    padding: 0 16px 0 18px;
-    border-radius: 16px;
-    border: 1px solid var(--line);
+    padding: 0 20px 0 20px;
+    border-radius: 26px;
+    border: 0;
     color: var(--muted);
     font-size: 14px;
     font-weight: 400;
     cursor: pointer;
-    box-shadow: inset 0 1px 0 var(--glass-edge);
+    --lg-blur: 32px;
+    --glass-shadow: var(--lg-shadow-deep);
     transition:
       color 0.3s var(--ease-out),
       border-color 0.3s,
@@ -1321,7 +1332,6 @@
     padding: 0;
   }
   .export.ready {
-    border-color: var(--line-strong);
     color: var(--ink);
     font-weight: 450;
   }
@@ -1503,9 +1513,8 @@
     align-items: flex-start;
     gap: 6px;
     padding: 10px 8px 10px 14px;
-    border-radius: 14px;
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow-pop);
+    border-radius: 18px;
+    --glass-shadow: var(--lg-shadow-deep);
     font-size: 13px;
     animation: toast-in 0.32s var(--ease-spring) both;
   }
@@ -1561,9 +1570,8 @@
     z-index: 45;
     min-width: 214px;
     padding: 5px;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    box-shadow: var(--shadow-pop);
+    border-radius: 16px;
+    --glass-shadow: var(--lg-shadow-deep);
     display: flex;
     flex-direction: column;
     transform-origin: top left;
@@ -1620,9 +1628,8 @@
   .dialog {
     --glass-bg: var(--glass-strong);
     width: min(440px, 100%);
-    border-radius: 18px;
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow-pop);
+    border-radius: 26px;
+    --glass-shadow: var(--lg-shadow-deep);
     padding: 22px;
     font-size: 14px;
     animation: toast-in 0.3s var(--ease-spring) both;
