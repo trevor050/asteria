@@ -420,7 +420,12 @@ func hasFilter(t *testing.T, f *tools.Finder, name string) bool {
 
 func frameMD5(t *testing.T, f *tools.Finder, path string) string {
 	t.Helper()
-	out := ffRun(t, f, "-ss", "1", "-i", path, "-frames:v", "1", "-f", "md5", "-")
+	// The md5 muxer writes to its output, so give it a file (stdout isn't
+	// captured by ffRun).
+	sum := filepath.Join(t.TempDir(), "frame.md5")
+	ffRun(t, f, "-ss", "1", "-i", path, "-frames:v", "1", "-f", "md5", sum)
+	b, _ := os.ReadFile(sum)
+	out := string(b)
 	m := regexp.MustCompile(`MD5=([0-9a-f]+)`).FindStringSubmatch(out)
 	if m == nil {
 		t.Fatalf("no md5 in %q", out)
