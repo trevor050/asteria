@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte'
   import { slide } from 'svelte/transition'
-  import { Clipboard } from '@wailsio/runtime'
-  import { api, type Settings, type State } from './api'
+  import { api, events, on, type AddonView, type Settings, type State } from './api'
+  import { bytes } from './format'
   import { motionReduced } from './theme'
 
   type Props = {
@@ -16,8 +16,31 @@
   let { settings, app, onchange, onpickfolder, onopenskills, onclose }: Props = $props()
 
   let sheet: HTMLElement | undefined = $state()
+  let page = $state<'main' | 'addons'>('main')
+  let addons: AddonView[] = $state([])
+  let used = $state(0)
+  let busyAddon = $state<{ id: string; frac: number; text: string } | null>(null)
+  let addonError = $state<{ id: string; msg: string } | null>(null)
+  let addonCount = $derived(addons.filter((a) => a.state === 'installed' || a.state === 'system').length)
+
+  async function loadAddons() {
+    addons = (await api.Addons()) ?? []
+    used = await api.AddonsUsedBytes()
+  }
+  async function getAddon(a: AddonView) {
+    addonError = null
+    busyAddon = { id: a.id, frac: 0, text: 'Starting' }
+    const res = await api.InstallAddon(a.id)
+    busyAddon = null
+    if (res.error && res.errorKind !== 'cancelled') addonError = { id: a.id, msg: res.error }
+    await loadAddons()
+  }
+  async function removeAddon(a: AddonView) {
+    const res = await api.RemoveAddon(a.id)
+    if (res.error) addonError = { id: a.id, msg: res.error }
+    await loadAddons()
+  }
   let accents: { label: string; value: string }[] = $state([])
-  let copied = $state(false)
 
   function today() {
     const d = new Date()
@@ -37,7 +60,6 @@
     { value: '{name}-{skill}.{ext}', label: 'Add step', example: 'photo-resize.jpg' },
   ]
   let naming = $derived(names.find((n) => n.value === settings.namingPattern))
-  let ffmpeg = $derived(app.tools?.find((t) => t.name === 'ffmpeg'))
   let accentNow = $derived(settings.accentColor.replace(/\s/g, ''))
 
   // A folder as people read it: home-relative, the folder itself in full,
@@ -56,6 +78,14 @@
   })
 
   onMount(() => {
+    void loadAddons()
+    const off = on<{ engine: string; phase: string; done: number; total: number }>(events.addonProgress, (p) => {
+      if (!busyAddon || p.engine !== busyAddon.id) return
+      busyAddon =
+        p.phase === 'download'
+          ? { id: p.engine, frac: p.total ? p.done / p.total : 0, text: `${bytes(p.done)} of ${bytes(p.total)}` }
+          : { id: p.engine, frac: 1, text: p.phase === 'verify' ? 'Checking' : p.phase === 'unpack' ? 'Unpacking' : 'Testing' }
+    })
     // Focus the sheet itself: keyboard users Tab in, nobody sees a ring
     // they did not ask for.
     sheet?.focus()
@@ -64,6 +94,7 @@
       const p = (all ?? []).find((s) => s.id === 'set_accent_color')?.params?.[0]?.presets ?? []
       accents = p.map((x) => x as unknown as { label: string; value: string })
     })
+    return off
   })
 
   // Keyboard: Esc closes, Tab stays inside the sheet, arrows move within a
@@ -72,7 +103,8 @@
     if (e.key === 'Escape') {
       e.preventDefault()
       e.stopPropagation()
-      onclose()
+      if (page === 'addons') page = 'main'
+      else onclose()
       return
     }
     if (e.key === 'Tab' && sheet) {
@@ -106,12 +138,7 @@
     } else if (settings.outputFolder) onchange('outputFolder', '')
   }
 
-  async function copyHint() {
-    if (!ffmpeg) return
-    await Clipboard.SetText(ffmpeg.hint)
-    copied = true
-    setTimeout(() => (copied = false), 1600)
-  }
+
 
   const reveal = (node: Element) => slide(node, { duration: motionReduced() ? 0 : 180 })
 </script>
@@ -120,6 +147,53 @@
 <div class="scrim" role="presentation" onclick={onclose}>
   <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
   <div class="sheet glass" role="dialog" aria-modal="true" aria-labelledby="settings-title" tabindex="-1" bind:this={sheet} {onkeydown} onclick={(e) => e.stopPropagation()}>
+    {#if page === 'addons'}
+      <header>
+        <button type="button" class="back" onclick={() => (page = 'main')} aria-label="Back to settings">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" /></svg>
+        </button>
+        <h2 id="settings-title" class="grow">Add-ons</h2>
+        <button type="button" class="close" onclick={onclose} aria-label="Close settings" title="Close (Esc)">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" /></svg>
+        </button>
+      </header>
+      <p class="intro">Free tools that let Asteria open more kinds of files. Each one is downloaded from its official site only when you click Get.</p>
+      <section class="addons" aria-label="Add-ons">
+        {#each addons as a (a.id)}
+          <div class="row addon">
+            <span class="text">
+              <span class="label">{a.unlocks}</span>
+              <span class="help">
+                {a.name}{#if a.version}&nbsp;{a.version}{/if} · {a.publisher} ·
+                <button type="button" class="inline" onclick={() => void api.OpenAddonPage(a.id, 'license')}>{a.license}</button>
+              </span>
+              {#if addonError?.id === a.id}<span class="help err">{addonError.msg}</span>{/if}
+            </span>
+            {#if busyAddon?.id === a.id}
+              <span class="actions busy">
+                <span class="mini"><span style={`transform:scaleX(${Math.max(0.03, busyAddon.frac)})`}></span></span>
+                <span class="status">{busyAddon.text}</span>
+                <button type="button" class="btn quiet" onclick={() => void api.CancelAddon(a.id)}>Cancel</button>
+              </span>
+            {:else if a.state === 'installed'}
+              <span class="actions">
+                <span class="status">{bytes(a.diskBytes)}</span>
+                <button type="button" class="btn" onclick={() => removeAddon(a)}>Remove</button>
+              </span>
+            {:else if a.state === 'system'}
+              <span class="status" title={a.path}><span class="dot ok" aria-hidden="true"></span>On this computer</span>
+            {:else if a.state === 'available'}
+              <button type="button" class="btn" disabled={!!busyAddon} onclick={() => getAddon(a)}>Get · {bytes(a.downloadBytes)}</button>
+            {:else}
+              <button type="button" class="btn" title={a.manualWhy} onclick={() => void api.OpenAddonPage(a.id, 'download')}>Download page</button>
+            {/if}
+          </div>
+        {/each}
+      </section>
+      <footer>
+        <span>{used ? `Add-ons use ${bytes(used)} on this computer` : 'No add-ons installed yet'}</span>
+      </footer>
+    {:else}
     <header>
       <h2 id="settings-title">Settings</h2>
       <button type="button" class="close" onclick={onclose} aria-label="Close settings" title="Close (Esc)">
@@ -276,21 +350,10 @@
       </div>
       <div class="row">
         <span class="text">
-          <span class="label">ffmpeg</span>
-          {#if ffmpeg?.found}
-            <span class="help">Used for audio and video</span>
-          {:else}
-            <span class="help mono">{ffmpeg?.hint ?? 'Install ffmpeg for audio and video'}</span>
-          {/if}
+          <span class="label">Add-ons</span>
+          <span class="help">{addonCount ? `${addonCount} ready · ` : ''}Office files, ebooks, video and more</span>
         </span>
-        {#if ffmpeg?.found}
-          <span class="status" title={ffmpeg.path}><span class="dot ok" aria-hidden="true"></span>Found</span>
-        {:else}
-          <span class="actions">
-            <span class="status"><span class="dot warn" aria-hidden="true"></span>Not found</span>
-            {#if ffmpeg?.hint}<button type="button" class="btn" onclick={copyHint}>{copied ? 'Copied' : 'Copy command'}</button>{/if}
-          </span>
-        {/if}
+        <button type="button" class="btn" onclick={() => (page = 'addons')}>Manage</button>
       </div>
     </section>
 
@@ -298,6 +361,7 @@
       <span>Asteria {app.version}, free and open source</span>
       <button type="button" class="btn quiet" onclick={() => void api.OpenLink('repository')}>Source</button>
     </footer>
+    {/if}
   </div>
 </div>
 
@@ -426,10 +490,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-  .mono {
-    font-family: var(--mono);
-    font-size: 11px;
   }
 
   /* Segmented control: the only "pick one of a few" style. */
@@ -597,10 +657,82 @@
   .dot.ok {
     background: var(--good);
   }
-  .dot.warn {
-    background: var(--warn);
-  }
 
+  .back {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    margin-left: -8px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ink-2);
+    cursor: pointer;
+  }
+  .back svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .back:hover {
+    background: var(--hover);
+  }
+  .grow {
+    flex: 1;
+    margin-left: 6px;
+  }
+  .intro {
+    margin: 0 0 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .addons .row {
+    min-height: 52px;
+  }
+  .inline {
+    border: 0;
+    padding: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 2px;
+    cursor: pointer;
+  }
+  .err {
+    color: var(--danger);
+    white-space: normal;
+  }
+  .busy {
+    min-width: 0;
+  }
+  .mini {
+    display: block;
+    width: 70px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--chip);
+    overflow: hidden;
+  }
+  .mini span {
+    display: block;
+    height: 100%;
+    background: var(--accent);
+    transform-origin: left;
+    transition: transform 0.2s var(--ease-out);
+  }
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
   footer {
     display: flex;
     align-items: center;

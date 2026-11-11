@@ -1,7 +1,7 @@
 import { Events } from '@wailsio/runtime'
 import { App } from '../../bindings/asteria'
 
-export type { AddResult, Result, State, Suggestion, ToolStatus, TrustRequest } from '../../bindings/asteria/models'
+export type { AddResult, AddonView, Result, State, Suggestion, ToolStatus, TrustRequest } from '../../bindings/asteria/models'
 export type { View as FileView, Step, ExportResult } from '../../bindings/asteria/internal/session/models'
 export type { Info } from '../../bindings/asteria/internal/inspect/models'
 export type { Outcome, Problem } from '../../bindings/asteria/internal/engine/models'
@@ -17,6 +17,7 @@ export const events = {
   progress: 'asteria:progress',
   filesAdded: 'asteria:files-added',
   skillsChanged: 'asteria:skills-changed',
+  addonProgress: 'asteria:addon-progress',
 } as const
 
 export function on<T>(name: string, fn: (data: T) => void): () => void {

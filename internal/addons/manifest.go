@@ -42,10 +42,13 @@ type Engine struct {
 
 // Artifact is one downloadable build, or a manual route.
 type Artifact struct {
-	Version        string            `json:"version,omitempty"`
-	URL            string            `json:"url,omitempty"`
-	Size           int64             `json:"size,omitempty"`
-	SHA256         string            `json:"sha256,omitempty"`
+	Version string `json:"version,omitempty"`
+	URL     string `json:"url,omitempty"`
+	Size    int64  `json:"size,omitempty"`
+	SHA256  string `json:"sha256,omitempty"`
+	// SHA1Published is checked too when a project publishes only SHA-1
+	// (the SHA-256 above was then pinned after the SHA-1 matched).
+	SHA1Published  string            `json:"sha1_published,omitempty"`
 	ChecksumSource string            `json:"checksum_source,omitempty"`
 	Signature      *Signature        `json:"signature,omitempty"`
 	Format         string            `json:"format,omitempty"`

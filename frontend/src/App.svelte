@@ -2,12 +2,13 @@
   import { flushSync, onMount, tick, untrack } from 'svelte'
   import { Clipboard } from '@wailsio/runtime'
   import { api, events, on } from './lib/api'
-  import type { AddResult, FileView, Progress, Result, Settings, State, Suggestion, TrustRequest } from './lib/api'
+  import type { AddResult, AddonView, FileView, Progress, Result, Settings, State, Suggestion, TrustRequest } from './lib/api'
   import CommandBar from './lib/CommandBar.svelte'
   import FileTile from './lib/FileTile.svelte'
   import QuickLook from './lib/QuickLook.svelte'
   import Hero from './lib/Hero.svelte'
   import SettingsPanel from './lib/Settings.svelte'
+  import AddonPrompt from './lib/AddonPrompt.svelte'
   import { isTyping, plural, shortcut } from './lib/format'
   import { motionReduced, setAppearance, setOverrides } from './lib/theme'
   import { loadSkillMeta } from './lib/skillmeta.svelte'
@@ -36,6 +37,24 @@
   let addedFrom = $state(0)
   let skillCount = $state(0)
   let settingsOpen = $state(false)
+  // An add-on a skill needs: asked for in plain words, then the skill runs.
+  let needAddon = $state<{ addon: AddonView; s?: Suggestion; params?: Record<string, unknown> } | null>(null)
+  async function askForAddon(id: string, s?: Suggestion, params?: Record<string, unknown>) {
+    const all = (await api.Addons()) ?? []
+    const addon = all.find((x) => x.id === id)
+    if (addon) needAddon = { addon, s, params }
+  }
+  function addonReady() {
+    const n = needAddon
+    needAddon = null
+    void refreshState()
+    if (n?.s) run(n.s, n.params ?? {})
+  }
+  async function refreshState() {
+    const s = await api.GetState()
+    if (st) st = { ...st, tools: s.tools }
+    refreshKey++
+  }
   // Height of the open suggestion list, so the files under it fade out
   // instead of being sliced.
   let veil = $state(0)
@@ -198,6 +217,10 @@
         trust = { req: res.trust, s, params: params ?? {} }
         return
       }
+      if (res.errorKind === 'missing-tool' && res.addon && (res.addon.state === 'available' || res.addon.state === 'manual')) {
+        needAddon = { addon: res.addon, s, params }
+        return
+      }
       if (res.errorKind === 'missing-tool' && res.tool) {
         const hint = res.tool.hint
         toast(`${s?.name ?? 'This skill'} needs ${res.tool.name}`, {
@@ -280,6 +303,10 @@
   function run(s: Suggestion, params: Record<string, unknown>) {
     if (!s.isMeta && !files.length) {
       toast('Add some files first: drop them here or press ' + shortcut('O'))
+      return
+    }
+    if (s.addon && s.missing?.length) {
+      void askForAddon(s.addon, s, params)
       return
     }
     if (busy) {
@@ -405,7 +432,7 @@
     const cmd = e.metaKey || e.ctrlKey
     const typing = isTyping(e.target)
     const key = e.key.toLowerCase()
-    if (trust || quickId) return
+    if (trust || quickId || needAddon) return
     if (cmd && e.key === ',') {
       e.preventDefault()
       settingsOpen = !settingsOpen
@@ -664,6 +691,10 @@
     </div>
   </section>
   </div>
+
+  {#if needAddon}
+    <AddonPrompt addon={needAddon.addon} task={needAddon.s?.name ?? ''} onclose={() => (needAddon = null)} ondone={addonReady} />
+  {/if}
 
   {#if settingsOpen && st && settings}
     <SettingsPanel

@@ -10,6 +10,14 @@ export function size(n: number): string {
   return i === 0 ? `${v} B` : `${v >= 100 ? v.toFixed(0) : v.toFixed(1)} ${units[i]}`
 }
 
+/** Decimal sizes as people see them on a download page. */
+export function bytes(n: number): string {
+  if (!n || n < 0) return '0 MB'
+  if (n >= 1e9) return `${(n / 1e9).toFixed(1)} GB`
+  if (n >= 1e6) return `${Math.round(n / 1e6)} MB`
+  return `${Math.max(1, Math.round(n / 1e3))} KB`
+}
+
 export function plural(n: number, word: string): string {
   return `${n} ${word}${n === 1 ? '' : 's'}`
 }

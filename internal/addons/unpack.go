@@ -18,6 +18,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/bodgit/sevenzip"
 	"github.com/klauspost/compress/zstd"
 	"github.com/ulikunitz/xz"
 )
@@ -44,6 +45,8 @@ func unpack(ctx context.Context, a Artifact, src, dst string) error {
 		return untarCompressed(ctx, src, dst, "bz2")
 	case "tar":
 		return untarCompressed(ctx, src, dst, "")
+	case "7z":
+		return un7z(ctx, src, dst)
 	case "binary":
 		// The download is the program itself; it goes where bins says.
 		for _, rel := range a.Bins {
@@ -141,6 +144,53 @@ func unzip(ctx context.Context, src, dst string) error {
 			return err
 		}
 		err = writeFile(p, rc, mode.Perm()|0o600, int64(f.UncompressedSize64))
+		rc.Close()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func un7z(ctx context.Context, src, dst string) error {
+	r, err := sevenzip.OpenReader(src)
+	if err != nil {
+		return err
+	}
+	defer r.Close()
+	if len(r.File) > maxEntries {
+		return errors.New("archive has too many entries")
+	}
+	var total int64
+	for _, f := range r.File {
+		if err := ctx.Err(); err != nil {
+			return err
+		}
+		p, err := safeJoin(dst, f.Name)
+		if err != nil {
+			return err
+		}
+		if f.FileInfo().IsDir() {
+			if err := os.MkdirAll(p, 0o755); err != nil {
+				return err
+			}
+			continue
+		}
+		if f.Mode()&os.ModeSymlink != 0 {
+			continue // Windows archives don't need links
+		}
+		total += int64(f.UncompressedSize)
+		if total > maxTotalSize {
+			return errors.New("archive unpacks to more than 8 GB")
+		}
+		if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
+			return err
+		}
+		rc, err := f.Open()
+		if err != nil {
+			return err
+		}
+		err = writeFile(p, rc, f.Mode().Perm()|0o600, int64(f.UncompressedSize))
 		rc.Close()
 		if err != nil {
 			return err

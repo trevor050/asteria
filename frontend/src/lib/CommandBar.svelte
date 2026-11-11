@@ -56,7 +56,10 @@
     for (const s of ready) if (picked.length < 4 && !picked.includes(s)) picked.push(s)
     return ready.filter((s) => picked.includes(s))
   })
-  let showQuick = $derived(hasFiles && !busy && !query && !paramSkill && !open && quick.length > 0)
+  // Skills that fit but need an add-on first: offered in plain words when
+  // nothing else fits, instead of an empty row.
+  let needs = $derived(fitting.find((s) => s.addon && s.missing?.length) ?? null)
+  let showQuick = $derived(hasFiles && !busy && !query && !paramSkill && !open && (quick.length > 0 || !!needs))
 
   // Browsing: every skill that fits, grouped by family.
   let browse = $state(false)
@@ -351,6 +354,11 @@
           title={tip(s)}><Icon name={s.icon} family={s.category} size={14} />{s.name}</button
         >
       {/each}
+      {#if !quick.length && needs}
+        <button type="button" class="offer" onmousedown={(e) => e.preventDefault()} onclick={() => onrun(needs!, {})}
+          ><Icon name={needs.icon} family={needs.category} size={14} />{needs.name} needs {needs.missing?.[0]} (free) · Get it</button
+        >
+      {/if}
       {#if fitting.length > quick.length}
         <button type="button" class="all" style={`--i:${quick.length}`} onmousedown={(e) => e.preventDefault()} onclick={showAll}
           >All {fitting.length} skills</button
@@ -613,6 +621,10 @@
   }
   .quick .all {
     color: var(--muted);
+  }
+  .quick .offer {
+    color: var(--ink);
+    background: var(--chip);
   }
 
   /* ---- suggestions -------------------------------------------------------- */

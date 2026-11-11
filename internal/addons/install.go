@@ -3,6 +3,7 @@ package addons
 import (
 	"context"
 	"crypto/rand"
+	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
@@ -190,6 +191,11 @@ func (m *Manager) Install(parent context.Context, id string, report func(Progres
 	if err != nil {
 		return err
 	}
+	if a.SHA1Published != "" {
+		if s1, err := fileSHA1(part); err != nil || !strings.EqualFold(s1, a.SHA1Published) {
+			sum = "mismatch"
+		}
+	}
 	if !strings.EqualFold(sum, a.SHA256) {
 		_ = os.Remove(part)
 		return userf("The %s download didn't match its published checksum, so it was deleted and nothing was installed. Please try again later.", e.Name)
@@ -259,6 +265,12 @@ func (m *Manager) Remove(id string) (int64, error) {
 		_ = os.Remove(p)
 	}
 	return size, nil
+}
+
+// EngineBytes is the disk space one installed engine takes.
+func (m *Manager) EngineBytes(id string) int64 {
+	n, _ := dirSize(m.dir(id))
+	return n
 }
 
 // UsedBytes is the disk space taken by installed engines.
@@ -375,6 +387,19 @@ func networkError(raw string, err error) error {
 		return userf("Couldn't reach %s. Check your internet connection and try again.", host)
 	}
 	return userf("The download from %s failed (%v). Try again to resume it.", host, err)
+}
+
+func fileSHA1(path string) (string, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+	h := sha1.New()
+	if _, err := io.Copy(h, f); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(h.Sum(nil)), nil
 }
 
 func fileSHA256(path string) (string, error) {

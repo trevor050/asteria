@@ -21,6 +21,29 @@ type Finder struct {
 	cache map[string]string
 	// extraDirs is searched after PATH. Overridable in tests.
 	extraDirs []string
+	// preferred is asked first: engines the user added from Asteria.
+	preferred func(name string) (string, bool)
+}
+
+// Prefer makes the finder ask fn before PATH and the usual install
+// locations (Asteria's own add-ons win over system copies).
+func (f *Finder) Prefer(fn func(name string) (string, bool)) {
+	f.mu.Lock()
+	f.preferred = fn
+	f.cache = map[string]string{}
+	f.mu.Unlock()
+}
+
+// FromAddon reports whether a found tool came from Asteria's add-ons.
+func (f *Finder) FromAddon(name string) bool {
+	f.mu.Lock()
+	fn := f.preferred
+	f.mu.Unlock()
+	if fn == nil {
+		return false
+	}
+	_, ok := fn(strings.ToLower(strings.TrimSpace(name)))
+	return ok
 }
 
 // NewFinder returns a Finder that searches PATH plus platform defaults.
@@ -65,6 +88,14 @@ func (f *Finder) Reset() {
 }
 
 func (f *Finder) resolve(name string) string {
+	f.mu.Lock()
+	pref := f.preferred
+	f.mu.Unlock()
+	if pref != nil {
+		if p, ok := pref(name); ok {
+			return p
+		}
+	}
 	envKey := "ASTERIA_" + strings.ToUpper(strings.NewReplacer("-", "_", ".", "_").Replace(name))
 	if v := strings.TrimSpace(os.Getenv(envKey)); v != "" && isExecutable(v) {
 		return v
@@ -103,7 +134,12 @@ func defaultDirs() []string {
 	home, _ := os.UserHomeDir()
 	switch runtime.GOOS {
 	case "darwin":
-		return []string{"/opt/homebrew/bin", "/usr/local/bin", "/opt/local/bin", filepath.Join(home, "bin")}
+		dirs := []string{"/opt/homebrew/bin", "/usr/local/bin", "/opt/local/bin", filepath.Join(home, "bin")}
+		// Apps installed the usual way keep their command-line tools inside.
+		for _, app := range []string{"LibreOffice.app/Contents/MacOS", "calibre.app/Contents/MacOS", "Inkscape.app/Contents/MacOS"} {
+			dirs = append(dirs, filepath.Join("/Applications", app), filepath.Join(home, "Applications", app))
+		}
+		return dirs
 	case "windows":
 		dirs := []string{}
 		if v := os.Getenv("LOCALAPPDATA"); v != "" {
@@ -117,8 +153,22 @@ func defaultDirs() []string {
 			dirs = append(dirs, filepath.Join(home, "scoop", "shims"))
 		}
 		dirs = append(dirs, `C:\ProgramData\chocolatey\bin`)
-		if v := os.Getenv("ProgramFiles"); v != "" {
-			dirs = append(dirs, filepath.Join(v, "ffmpeg", "bin"))
+		for _, pf := range []string{os.Getenv("ProgramFiles"), os.Getenv("ProgramFiles(x86)"), os.Getenv("LOCALAPPDATA") + `\Programs`} {
+			if pf == "" {
+				continue
+			}
+			dirs = append(dirs,
+				filepath.Join(pf, "ffmpeg", "bin"),
+				filepath.Join(pf, "LibreOffice", "program"),
+				filepath.Join(pf, "Calibre2"),
+				filepath.Join(pf, "Pandoc"),
+				filepath.Join(pf, "7-Zip"),
+				filepath.Join(pf, "Tesseract-OCR"),
+				filepath.Join(pf, "Inkscape", "bin"))
+			for _, pattern := range []string{`gs\gs*\bin`, `ImageMagick-*`} {
+				found, _ := filepath.Glob(filepath.Join(pf, pattern))
+				dirs = append(dirs, found...)
+			}
 		}
 		return dirs
 	default:

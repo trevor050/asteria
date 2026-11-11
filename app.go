@@ -9,12 +9,14 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"slices"
 	"sort"
 	"strings"
 	"sync"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
 
+	"asteria/internal/addons"
 	"asteria/internal/engine"
 	"asteria/internal/inspect"
 	"asteria/internal/ops"
@@ -46,6 +48,7 @@ type App struct {
 
 	skillsDir    string
 	sessionsRoot string
+	addons       *addons.Manager
 	exportMu     sync.Mutex
 }
 
@@ -88,6 +91,11 @@ func NewApp(embedded fs.FS) (*App, error) {
 		CommunityRoot: skillsDir,
 	})
 	finder := tools.NewFinder()
+	addonMgr, err := newAddons()
+	if err != nil {
+		return nil, err
+	}
+	finder.Prefer(addonMgr.BinPath)
 	store := session.NewStore(ws)
 	a := &App{
 		registry:  registry,
@@ -97,6 +105,7 @@ func NewApp(embedded fs.FS) (*App, error) {
 		usage:     usage,
 		trust:     trust,
 		skillsDir: skillsDir,
+		addons:    addonMgr,
 	}
 	a.sessionsRoot = sessionsRoot
 	a.engine = engine.New(engine.Options{
@@ -193,7 +202,9 @@ type Suggestion struct {
 	Value       string            `json:"value"`
 	Applies     int               `json:"applies"`
 	Missing     []string          `json:"missing"`
-	Community   bool              `json:"community"`
+	// Addon names the add-on that provides the first missing tool.
+	Addon     string `json:"addon"`
+	Community bool   `json:"community"`
 	// Live is true when the skill can preview on the fly while its value is
 	// being adjusted (PreviewSkill).
 	Live bool `json:"live"`
@@ -240,7 +251,16 @@ func (a *App) Search(query string, fileIDs []string) []Suggestion {
 		}
 		for _, tool := range s.Requires {
 			if _, ok := a.tools.Lookup(tool); !ok {
-				sug.Missing = append(sug.Missing, tool)
+				name := tool
+				if e, ok := a.addons.Manifest.ForTool(tool); ok {
+					name = e.Name
+					if sug.Addon == "" {
+						sug.Addon = e.ID
+					}
+				}
+				if !slices.Contains(sug.Missing, name) {
+					sug.Missing = append(sug.Missing, name)
+				}
 			}
 		}
 		out = append(out, sug)
@@ -388,13 +408,15 @@ func (a *App) RemoveFiles(ids []string) {
 
 // Result wraps an engine outcome plus a structured error for the UI.
 type Result struct {
-	Outcome   engine.Outcome         `json:"outcome"`
-	Error     string                 `json:"error"`
-	ErrorKind string                 `json:"errorKind"` // user, missing-tool, trust, busy, internal
-	Tool      *ToolStatus            `json:"tool,omitempty"`
-	Trust     *TrustRequest          `json:"trust,omitempty"`
-	Settings  *storage.Settings      `json:"settings,omitempty"`
-	Exported  []session.ExportResult `json:"exported,omitempty"`
+	Outcome   engine.Outcome `json:"outcome"`
+	Error     string         `json:"error"`
+	ErrorKind string         `json:"errorKind"` // user, missing-tool, trust, busy, internal
+	Tool      *ToolStatus    `json:"tool,omitempty"`
+	// Addon is the one-click add-on that provides a missing tool.
+	Addon    *AddonView             `json:"addon,omitempty"`
+	Trust    *TrustRequest          `json:"trust,omitempty"`
+	Settings *storage.Settings      `json:"settings,omitempty"`
+	Exported []session.ExportResult `json:"exported,omitempty"`
 }
 
 // TrustRequest asks the user to allow a community skill's permissions.
@@ -418,6 +440,10 @@ func (a *App) wrap(out engine.Outcome, err error) Result {
 	case errors.As(err, &mt):
 		r.ErrorKind = "missing-tool"
 		r.Tool = &ToolStatus{Name: mt.Tool, Hint: tools.InstallHint(mt.Tool)}
+		r.Addon = a.AddonForTool(mt.Tool)
+		if r.Addon != nil {
+			r.Error = r.Addon.Name + " is needed for this"
+		}
 	case errors.As(err, &tr):
 		r.ErrorKind = "trust"
 		r.Trust = &TrustRequest{SkillID: tr.SkillID, SkillName: tr.SkillName, Permissions: tr.Permissions, Command: tr.Command}

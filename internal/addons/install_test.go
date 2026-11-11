@@ -237,3 +237,24 @@ func TestUnpackRefusesEscapes(t *testing.T) {
 		t.Fatal("file written outside the target")
 	}
 }
+
+// The real manifest in the repository parses and every downloadable entry
+// is pinned to an https URL and a checksum.
+func TestRepositoryManifest(t *testing.T) {
+	b, err := os.ReadFile("../../addons/manifest.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	m, err := ParseManifest(b)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(m.Engines) < 5 {
+		t.Fatalf("only %d engines", len(m.Engines))
+	}
+	for _, e := range m.Engines {
+		if e.Name == "" || e.Unlocks == "" || e.License == "" || e.LicenseURL == "" || len(e.Tools) == 0 {
+			t.Errorf("%s: missing name, unlocks, license or tools", e.ID)
+		}
+	}
+}

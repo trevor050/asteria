@@ -39,7 +39,7 @@ func init() {
 type MissingToolError struct{ Tool string }
 
 func (e *MissingToolError) Error() string {
-	return fmt.Sprintf("%s is not installed. Install it with: %s", e.Tool, tools.InstallHint(e.Tool))
+	return fmt.Sprintf("%s is not installed", e.Tool)
 }
 
 // MediaInfo is the subset of ffprobe output Asteria uses.
