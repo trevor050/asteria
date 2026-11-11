@@ -1,0 +1,33 @@
+{
+  "id": "circle_crop",
+  "name": "Circle Crop",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "circle",
+    "avatar",
+    "round",
+    "profile picture",
+    "profile pic",
+    "circular crop",
+    "round crop",
+    "pfp"
+  ],
+  "category": "transform",
+  "description": "Crop the centre to a circle with transparent corners; saves as PNG",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".png",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.circle"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

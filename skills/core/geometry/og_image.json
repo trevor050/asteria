@@ -1,0 +1,33 @@
+{
+  "id": "og_image",
+  "name": "OG Image",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "open graph",
+    "link preview",
+    "social preview",
+    "social card",
+    "share image"
+  ],
+  "category": "sizes",
+  "description": "Scale and centre-crop to Open Graph link-preview image (1200x630)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fill",
+    "with": {
+      "size": "1200x630"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

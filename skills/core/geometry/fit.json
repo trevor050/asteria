@@ -1,0 +1,45 @@
+{
+  "id": "fit",
+  "name": "Fit",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "letterbox",
+    "fit inside",
+    "contain",
+    "fit to size",
+    "fit canvas"
+  ],
+  "category": "transform",
+  "description": "Fit inside an exact size (1080x1080 by default), keeping the aspect ratio and filling the rest with transparency",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "size",
+      "label": "Size",
+      "type": "string",
+      "default": "1080x1080",
+      "presets": [
+        "1080x1080",
+        "1920x1080",
+        "1080x1920",
+        "1200x630",
+        "512x512"
+      ],
+      "hint": "1080x1080 = width x height · picture is scaled to fit, bars are transparent"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fit"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

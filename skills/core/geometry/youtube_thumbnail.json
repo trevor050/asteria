@@ -1,0 +1,31 @@
+{
+  "id": "youtube_thumbnail",
+  "name": "YouTube Thumbnail",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "thumbnail",
+    "yt thumbnail",
+    "video thumbnail"
+  ],
+  "category": "sizes",
+  "description": "Scale and centre-crop to YouTube thumbnail (1280x720)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fill",
+    "with": {
+      "size": "1280x720"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

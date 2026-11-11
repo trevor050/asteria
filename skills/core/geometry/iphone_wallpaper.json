@@ -1,0 +1,31 @@
+{
+  "id": "iphone_wallpaper",
+  "name": "iPhone Wallpaper",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "phone wallpaper",
+    "iphone background",
+    "lock screen"
+  ],
+  "category": "sizes",
+  "description": "Scale and centre-crop to iPhone wallpaper (1179x2556)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fill",
+    "with": {
+      "size": "1179x2556"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

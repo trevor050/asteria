@@ -1,0 +1,30 @@
+{
+  "id": "trim_transparent",
+  "name": "Trim Transparent",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "trim transparency",
+    "remove transparent",
+    "crop transparent",
+    "crop to content",
+    "autocrop transparent"
+  ],
+  "category": "transform",
+  "description": "Crop to the box around everything that is not transparent",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.trimtransparent"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

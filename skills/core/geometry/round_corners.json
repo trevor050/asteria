@@ -1,0 +1,45 @@
+{
+  "id": "round_corners",
+  "name": "Round Corners",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "rounded corners",
+    "rounded",
+    "soften corners",
+    "corner radius",
+    "curved corners"
+  ],
+  "category": "transform",
+  "description": "Round the corners with a smooth edge (8% of the shorter side by default); saves as PNG",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".png",
+  "params": [
+    {
+      "name": "radius",
+      "label": "Radius",
+      "type": "string",
+      "default": "8%",
+      "presets": [
+        "4%",
+        "8%",
+        "15%",
+        "25%",
+        "50%"
+      ],
+      "hint": "8% = of the shorter side · 24 or 24px = pixels · 50% = pill/circle"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "geo.roundcorners"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

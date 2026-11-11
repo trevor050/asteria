@@ -1,0 +1,30 @@
+{
+  "id": "ipad_wallpaper",
+  "name": "iPad Wallpaper",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "tablet wallpaper",
+    "ipad background"
+  ],
+  "category": "sizes",
+  "description": "Scale and centre-crop to iPad wallpaper (2048x2732)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fill",
+    "with": {
+      "size": "2048x2732"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

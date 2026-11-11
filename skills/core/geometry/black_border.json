@@ -1,0 +1,47 @@
+{
+  "id": "black_border",
+  "name": "Black Border",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "black frame",
+    "dark border",
+    "black outline",
+    "add black border"
+  ],
+  "category": "transform",
+  "description": "Add a black border around the picture (4% of the shorter side by default)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "width",
+      "label": "Width",
+      "type": "string",
+      "default": "4%",
+      "presets": [
+        "2%",
+        "4%",
+        "8%",
+        "10",
+        "20"
+      ],
+      "hint": "4% = of the shorter side · 10 or 10px = pixels"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "geo.border",
+    "with": {
+      "color": "black"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

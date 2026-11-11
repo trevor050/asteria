@@ -1,0 +1,45 @@
+{
+  "id": "stretch",
+  "name": "Stretch",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "squash",
+    "distort",
+    "force size",
+    "exact size",
+    "stretch to fit"
+  ],
+  "category": "transform",
+  "description": "Resize to an exact size (1080x1080 by default), ignoring the aspect ratio",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "size",
+      "label": "Size",
+      "type": "string",
+      "default": "1080x1080",
+      "presets": [
+        "1080x1080",
+        "1920x1080",
+        "1080x1920",
+        "1200x630",
+        "512x512"
+      ],
+      "hint": "1080x1080 = width x height · picture is distorted to fit"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "geo.stretch"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

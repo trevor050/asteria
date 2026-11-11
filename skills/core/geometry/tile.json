@@ -1,0 +1,46 @@
+{
+  "id": "tile",
+  "name": "Tile",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "repeat",
+    "pattern",
+    "grid",
+    "repeat pattern",
+    "mosaic",
+    "duplicate"
+  ],
+  "category": "transform",
+  "description": "Repeat the picture in a grid (2x2 by default, up to 10x10)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "grid",
+      "label": "Grid",
+      "type": "string",
+      "default": "2x2",
+      "presets": [
+        "2x2",
+        "3x3",
+        "4x4",
+        "3x1",
+        "1x3"
+      ],
+      "hint": "3x3 = columns x rows · output is the grid times the picture size"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "geo.tile"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

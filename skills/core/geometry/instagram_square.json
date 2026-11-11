@@ -1,0 +1,32 @@
+{
+  "id": "instagram_square",
+  "name": "Instagram Square",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "instagram",
+    "instagram post",
+    "insta square",
+    "ig square"
+  ],
+  "category": "sizes",
+  "description": "Scale and centre-crop to Instagram square post (1080x1080)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fill",
+    "with": {
+      "size": "1080x1080"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

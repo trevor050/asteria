@@ -1,0 +1,32 @@
+{
+  "id": "trim_borders",
+  "name": "Trim Borders",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "autocrop",
+    "auto crop",
+    "trim whitespace",
+    "remove border",
+    "remove borders",
+    "remove white space",
+    "crop borders"
+  ],
+  "category": "transform",
+  "description": "Remove uniform borders that match the top-left pixel colour",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.trimborders"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

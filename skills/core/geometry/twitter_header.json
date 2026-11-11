@@ -1,0 +1,32 @@
+{
+  "id": "twitter_header",
+  "name": "Twitter Header",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "x header",
+    "twitter banner",
+    "x banner",
+    "twitter cover"
+  ],
+  "category": "sizes",
+  "description": "Scale and centre-crop to Twitter/X header (1500x500)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.fill",
+    "with": {
+      "size": "1500x500"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

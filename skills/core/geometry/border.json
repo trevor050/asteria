@@ -1,0 +1,49 @@
+{
+  "id": "border",
+  "name": "Border",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "frame",
+    "add border",
+    "outline",
+    "white border",
+    "white frame",
+    "picture frame"
+  ],
+  "category": "transform",
+  "description": "Add a white border around the picture (4% of the shorter side by default)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "width",
+      "label": "Width",
+      "type": "string",
+      "default": "4%",
+      "presets": [
+        "2%",
+        "4%",
+        "8%",
+        "10",
+        "20"
+      ],
+      "hint": "4% = of the shorter side · 10 or 10px = pixels"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "geo.border",
+    "with": {
+      "color": "white"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -4,38 +4,44 @@
   "version": "1.0.0",
   "author": "asteria",
   "aliases": [
-    "rotate",
     "turn",
-    "rot"
+    "rot",
+    "spin",
+    "tilt",
+    "clockwise",
+    "counterclockwise"
   ],
   "category": "transform",
-  "description": "Rotate clockwise by 90, 180 or 270 degrees",
+  "priority": 8,
+  "description": "Rotate clockwise by any angle (90 by default); quarter turns are lossless, other angles grow the canvas",
   "inputTypes": [
-    "@image"
+    "@image",
+    "@video"
   ],
   "outputType": "",
   "params": [
     {
       "name": "angle",
       "label": "Angle",
-      "type": "int",
-      "default": 90,
+      "type": "string",
+      "default": "90",
       "presets": [
-        90,
-        180,
-        270
-      ],
-      "unit": "°",
-      "options": [
         "90",
         "180",
-        "270"
-      ]
+        "270",
+        "-90",
+        "15",
+        "-15"
+      ],
+      "min": -360,
+      "max": 360,
+      "unit": "°",
+      "hint": "90 = clockwise · -90 = anticlockwise · 15 or -15 = a tilt (canvas grows, corners transparent)"
     }
   ],
   "executor": {
     "type": "native",
-    "handler": "image.rotate"
+    "handler": "geo.rotate"
   },
   "permissions": [
     "files.read",

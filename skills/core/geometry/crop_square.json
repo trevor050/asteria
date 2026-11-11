@@ -1,0 +1,32 @@
+{
+  "id": "crop_square",
+  "name": "Crop Square",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "square",
+    "square crop",
+    "1:1",
+    "make square"
+  ],
+  "category": "transform",
+  "description": "Crop to the largest centred square",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.crop",
+    "with": {
+      "size": "1:1"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}
