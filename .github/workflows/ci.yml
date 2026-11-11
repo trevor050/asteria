@@ -32,9 +32,10 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
-      # ffmpeg is optional for users but the media skill tests need it.
+      # ffmpeg is optional for users but the media skill tests need it. The GTK and WebKit
+      # headers are needed to compile the Wails CLI on Linux.
       - name: Install ffmpeg
-        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg build-essential pkg-config libgtk-4-dev libwebkitgtk-6.0-dev
 
       - name: Go vet
         run: go vet -tags nodynamic ./internal/...
