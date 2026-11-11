@@ -5,7 +5,7 @@
   "author": "asteria",
   "aliases": ["autolevels", "auto levels", "stretch channels", "remove color cast", "fix color cast", "auto color"],
   "category": "adjust",
-  "description": "Stretch each colour channel to full range, ignoring the extreme 0.5% (also removes colour casts)",
+  "description": "Stretch each color channel to full range, ignoring the extreme 0.5% (also removes color casts)",
   "inputTypes": ["@image"],
   "outputType": "",
   "params": [],

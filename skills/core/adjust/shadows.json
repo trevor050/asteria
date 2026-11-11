@@ -18,7 +18,7 @@
       "min": -100,
       "max": 100,
       "unit": "",
-      "hint": "+30 = lift shadows · -30 = deepen them · colours keep their hue"
+      "hint": "+30 = lift shadows · -30 = deepen them · colors keep their hue"
     }
   ],
   "executor": { "type": "native", "handler": "adjust.shadows" },

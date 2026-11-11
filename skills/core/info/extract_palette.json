@@ -12,7 +12,7 @@
     "dominant colours"
   ],
   "category": "info",
-  "description": "Write a .json file listing the 6 main colours (hex, RGB and share of the picture), largest first",
+  "description": "Write a .json file listing the 6 main colors (hex, RGB and share of the picture), largest first",
   "inputTypes": [
     "@image"
   ],
@@ -20,7 +20,7 @@
   "params": [
     {
       "name": "colors",
-      "label": "Colours",
+      "label": "Colors",
       "type": "int",
       "default": 6,
       "presets": [
@@ -33,7 +33,7 @@
       "min": 2,
       "max": 16,
       "unit": "",
-      "hint": "2-16 colours · 6 = a good palette · fewer = bolder groups"
+      "hint": "2-16 colors · 6 = a good palette · fewer = bolder groups"
     }
   ],
   "executor": {

@@ -13,7 +13,7 @@
     "distort"
   ],
   "category": "filter",
-  "description": "Slide slices sideways and split colour channels (50% by default)",
+  "description": "Slide slices sideways and split color channels (50% by default)",
   "inputTypes": [
     "@image"
   ],

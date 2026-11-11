@@ -5,7 +5,7 @@
   "author": "asteria",
   "aliases": ["change color", "change colour", "swap color", "swap colour", "recolor", "recolour", "color replace", "colour replace", "replace colour"],
   "category": "adjust",
-  "description": "Replace one colour with another, keeping shading (red to blue by default); similar colours follow, with a soft edge",
+  "description": "Replace one color with another, keeping shading (red to blue by default); similar colors follow, with a soft edge",
   "inputTypes": ["@image"],
   "outputType": "",
   "params": [
@@ -15,7 +15,7 @@
       "type": "string",
       "default": "red blue",
       "presets": ["red blue", "green purple", "#ff0000 #0000ff", "blue orange"],
-      "hint": "from to · red blue · #ff0000 #0000ff · matches shades near the first colour"
+      "hint": "from to · red blue · #ff0000 #0000ff · matches shades near the first color"
     }
   ],
   "executor": { "type": "native", "handler": "adjust.replace" },

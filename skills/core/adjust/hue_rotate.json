@@ -5,7 +5,7 @@
   "author": "asteria",
   "aliases": ["hue", "hue shift", "shift hue", "rotate colors", "rotate colours", "color shift", "colour shift"],
   "category": "adjust",
-  "description": "Rotate all hues around the colour wheel (30 degrees by default), keeping lightness and colourfulness",
+  "description": "Rotate all hues around the color wheel (30 degrees by default), keeping lightness and colorfulness",
   "inputTypes": ["@image", "@video"],
   "outputType": "",
   "params": [
@@ -18,7 +18,7 @@
       "min": -180,
       "max": 180,
       "unit": "°",
-      "hint": "30 = slight shift · 180 = opposite colours · -90 or 270 = the other way round"
+      "hint": "30 = slight shift · 180 = opposite colors · -90 or 270 = the other way round"
     }
   ],
   "executor": { "type": "native", "handler": "adjust.hue" },

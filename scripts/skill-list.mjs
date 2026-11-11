@@ -10,7 +10,7 @@ const families = [
   ['transform', 'Size and shape'],
   ['sizes', 'Social and wallpaper sizes'],
   ['compress', 'Compress'],
-  ['adjust', 'Colour and tone'],
+  ['adjust', 'Color and tone'],
   ['filter', 'Effects'],
   ['compose', 'Compose and output'],
   ['info', 'Info and cleanup'],

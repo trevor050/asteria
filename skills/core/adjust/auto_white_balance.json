@@ -5,7 +5,7 @@
   "author": "asteria",
   "aliases": ["white balance", "awb", "auto wb", "fix white balance", "neutralize", "neutralise", "gray world", "remove tint"],
   "category": "adjust",
-  "description": "Remove an overall colour cast so the picture averages out neutral, keeping its brightness",
+  "description": "Remove an overall color cast so the picture averages out neutral, keeping its brightness",
   "inputTypes": ["@image"],
   "outputType": "",
   "params": [],

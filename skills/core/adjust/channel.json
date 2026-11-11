@@ -5,7 +5,7 @@
   "author": "asteria",
   "aliases": ["red channel", "green channel", "blue channel", "color channel", "colour channel", "single channel", "extract channel"],
   "category": "adjust",
-  "description": "Show one colour channel as a greyscale picture (red by default)",
+  "description": "Show one color channel as a greyscale picture (red by default)",
   "inputTypes": ["@image", "@video"],
   "outputType": "",
   "params": [

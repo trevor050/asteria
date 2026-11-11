@@ -5,7 +5,7 @@
   "author": "asteria",
   "aliases": ["posterise", "reduce colors", "reduce colours", "color levels", "banding", "poster"],
   "category": "adjust",
-  "description": "Reduce each colour channel to a few flat levels (4 by default) for a poster look",
+  "description": "Reduce each color channel to a few flat levels (4 by default) for a poster look",
   "inputTypes": ["@image"],
   "outputType": "",
   "params": [

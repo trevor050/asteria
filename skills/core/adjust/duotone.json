@@ -5,7 +5,7 @@
   "author": "asteria",
   "aliases": ["two tone", "two color", "two colour", "gradient map", "dual tone", "spotify"],
   "category": "adjust",
-  "description": "Recolour the picture with a gradient from a shadow colour to a highlight colour (navy to peach by default)",
+  "description": "Recolor the picture with a gradient from a shadow color to a highlight color (navy to peach by default)",
   "inputTypes": ["@image"],
   "outputType": "",
   "params": [

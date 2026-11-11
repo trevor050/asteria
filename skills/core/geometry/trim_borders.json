@@ -13,7 +13,7 @@
     "crop borders"
   ],
   "category": "transform",
-  "description": "Remove uniform borders that match the top-left pixel colour",
+  "description": "Remove uniform borders that match the top-left pixel color",
   "inputTypes": [
     "@image"
   ],

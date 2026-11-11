@@ -14,7 +14,7 @@
     "white background"
   ],
   "category": "compose",
-  "description": "Put the picture on a solid colour (white by default) so nothing is transparent",
+  "description": "Put the picture on a solid color (white by default) so nothing is transparent",
   "inputTypes": [
     "@image"
   ],
@@ -22,7 +22,7 @@
   "params": [
     {
       "name": "color",
-      "label": "Colour",
+      "label": "Color",
       "type": "string",
       "default": "white",
       "presets": [
@@ -32,7 +32,7 @@
         "#1a1a1a",
         "#ff8800"
       ],
-      "hint": "white · #ff8800 · 255,136,0 · any colour name"
+      "hint": "white · #ff8800 · 255,136,0 · any color name"
     }
   ],
   "executor": {

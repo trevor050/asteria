@@ -2,28 +2,43 @@
 
 Your new favorite way to convert a file. Drop files in, type what you want, see the result, export. Nothing leaves your computer.
 
-![Asteria resizing four photos with one click, converting them to WebP, merging two PDFs, comparing a result with its original and exporting](docs/demo.gif)
+![Asteria enhancing a photo with one click, dragging saturation with a live preview, adding a vignette, making a collage of four photos, browsing every skill by family and exporting](docs/demo.gif)
 
-Every "convert X to Y" task usually ends with uploading a file to some random website, waiting through ads, and hoping it gives you back what you sent. Asteria is the opposite: a small desktop app with a Spotlight-style command bar. Type `heic to jpg`, `resize 50%`, `merge pdfs` or `trim 0:05-0:30`, watch the preview update, and press <kbd>⌘</kbd><kbd>↵</kbd> to save. It's not a chatbot, it's a tool router with taste.
+Every "convert X to Y" task usually ends with uploading a file to some random website, waiting through ads, and hoping it gives you back what you sent. Asteria is the opposite: a small desktop app with a Spotlight-style command bar. Type `heic to jpg`, `resize 50%`, `saturate 150%`, `dither gameboy`, `merge pdfs` or `trim 0:05-0:30`, watch the preview update, and press <kbd>⌘</kbd><kbd>↵</kbd> to save. It's not a chatbot, it's a tool router with taste.
 
 It's an open-source take on Filestar-style batch file tools, and it grew out of [MoonCow](https://github.com/trevor050/mooncow), my command palette for Firefox: same idea of a fast, keyboard-first bar that answers small tasks in place, applied to the files on your disk.
 
 ## What it does
 
-| | Type something like | Skills |
-| --- | --- | --- |
-| Images | `heic to jpg`, `resize 1920`, `compress 70`, `rotate 90` | Convert to JPEG, PNG, WebP or HEIC · Resize · Compress · Rotate · Grayscale · Blur |
-| PDF | `merge pdfs`, `extract pages 1-3, 5`, `split` | Merge · Split into pages · Extract pages · Compress · Images to PDF |
-| Audio and video | `mp4`, `extract audio`, `gif`, `trim 0:05-0:30` | Convert to MP4, WebM, GIF, MP3, M4A, WAV, FLAC · Compress video · Trim |
-| Archives | `zip`, `unzip` | Zip files and folders · Extract zip, tar, tar.gz |
-| Data | `csv to json`, `yaml to json`, `md to html` | CSV ⇄ JSON · JSON ⇄ YAML · CSV to Markdown table · Markdown to HTML |
+Over a hundred skills, most of them for pictures: the fun part is stacking them (`enhance`, then `saturate +30`, `vignette`, `crop 4:5`) and watching it happen.
 
-Images, PDFs, archives and data are handled by Go code built into the app, including HEIC (iPhone photos) and WebP. Audio and video use [ffmpeg](https://ffmpeg.org) if it's installed. If it isn't, those skills say so in the suggestions and tell you the one command to install it (`brew install ffmpeg`, `winget install Gyan.FFmpeg`, `sudo apt install ffmpeg`).
+| Family | Skills |
+| --- | --- |
+| Convert (4) | Convert to HEIC · Convert to JPEG · Convert to PNG · Convert to WebP |
+| Size and shape (19) | Black Border · Border · Circle Crop · Crop · Crop Square · Fill · Fit · Flip\* · Mirror\* · Pad · Pixel Art Upscale · Resize · Rotate\* · Round Corners · Straighten · Stretch · Tile · Trim Borders · Trim Transparent |
+| Social and wallpaper sizes (11) | Instagram Portrait · Instagram Square · iPad Wallpaper · iPhone Wallpaper · LinkedIn Banner · OG Image · Story · Twitter Header · Wallpaper 1080p · Wallpaper 4K · YouTube Thumbnail |
+| Compress (1) | Compress Image |
+| Color and tone (29) | Auto Contrast · Auto Enhance · Auto Levels · Auto White Balance · Black & White\* · Brightness · Channel\* · Colorize · Contrast\* · Cooler · Duotone · Exposure · Gamma\* · Grayscale\* · Highlights · Hue Rotate\* · Invert\* · Levels · Opacity · Posterize · Replace Color · Saturate\* · Sepia\* · Shadows · Swap Channels\* · Temperature · Threshold · Tint (green-magenta) · Vibrance |
+| Effects (20) | Add Noise\* · Blur\* · Box Blur\* · Chromatic Aberration · Denoise · Dither · Edge Detect\* · Emboss · Film Grain · Glitch · Glow · Halftone · Mosaic · Motion Blur · Pixelate\* · Scanlines · Sharpen\* · Vertical Motion Blur · Vignette\* · Zoom Blur |
+| Compose and output (17) | Animated GIF · Animated WebP · App Icon Set · Contact Sheet · Drop Shadow · Extract Frames · Favicon Set · Fill Background · Image Grid · Image Strip · Overlay · Remove Background Color · Split into Tiles · Sprite Sheet · Vertical Strip · Watermark · Watermark Image |
+| Info and cleanup (8) | Compare Images · Convert to sRGB · Count Colors · Extract Palette · Image Difference · Palette Swatches · Show Metadata · Strip Metadata |
+| PDF (5) | Compress PDF · Extract Pages · Images to PDF · Merge PDFs · Split PDF |
+| Audio and video (9) | Compress Video · Convert to FLAC · Convert to GIF · Convert to M4A · Convert to MP3 · Convert to MP4 · Convert to WAV · Convert to WebM · Trim |
+| Archives (2) | Extract Archive · Zip |
+| Data (6) | CSV to JSON · CSV to Markdown Table · JSON to CSV · JSON to YAML · Markdown to HTML · YAML to JSON |
+
+131 skills. \* also works on video (needs ffmpeg).
+
+Some things to type: `heic to jpg`, `resize 1920`, `crop 16:9`, `rotate -3`, `straighten 2`, `saturate 150%`, `temperature -20`, `duotone navy gold`, `pixelate 16`, `dither gameboy`, `glitch`, `round corners`, `watermark Draft`, `strip metadata`, `image grid`, `animated gif`, `favicon set`, `instagram story`, `merge pdfs`, `extract pages 1-3, 5`, `trim 0:05-0:30`, `csv to json`.
+
+Images, PDFs, archives and data are handled by Go code built into the app, including HEIC (iPhone photos) and WebP. Image skills share one pixel core: 16-bit, color-managed (Display P3 photos are converted, not washed out), blurs and resizing in linear light, and a chain of edits is kept lossless in memory so a JPEG is only re-encoded once per step, never compounded. Audio and video use [ffmpeg](https://ffmpeg.org) if it's installed. If it isn't, those skills say so in the suggestions and tell you the one command to install it (`brew install ffmpeg`, `winget install Gyan.FFmpeg`, `sudo apt install ffmpeg`).
 
 ## How it works
 
 - **Everything is a skill.** Converting, resizing, exporting, switching modes and picking an output folder all live in the same command bar.
 - **One file gets the whole window.** Drop a single file and it's shown large and centered, uncropped, with its size, dimensions and steps right under it and the bar right under that. A PDF shows its first page, a CSV shows as a table. Add more and it settles into the grid; "One by one" brings the big view back for any file (<kbd>←</kbd> <kbd>→</kbd> to move, <kbd>Esc</kbd> for all of them).
+- **Drag a value, see it live.** Pick a skill with a number (saturation, exposure, blur, vignette...) and a slider appears; the picture updates as you drag, on a quick preview copy, and nothing is applied until <kbd>↵</kbd>. Hovering a suggestion previews it too.
+- **Everything that fits, by family.** "All N skills" lists every skill that applies to your files, grouped into color and tone, effects, size and shape, compose, info and so on.
 - **It shows you what's next.** Drop files and the likely skills for those exact files sit right above the bar, one click away, next to a real count of everything that applies. Mixed tray? You get a spread: convert, resize, compress, merge.
 - **Skills apply instantly and stack.** Each file shows the chain it went through (`Convert to JPEG 85%` → `Resize 1920`) with its size and dimensions before and after.
 - **Removing a skill replays the rest.** Delete a step from the middle of a chain and Asteria rebuilds from the step before it. <kbd>⌘</kbd><kbd>Z</kbd> undoes the last skill you applied.
@@ -48,13 +63,14 @@ Skills you type while another is running are queued and run in order.
 
 <p>
   <img src="docs/screenshot-single-dark.png" width="49%" alt="One photo in dark mode: shown large and centered, its size before and after a resize, the step chip, and the likely next steps right above the command bar">
+  <img src="docs/screenshot-live.png" width="49%" alt="Saturation being dragged on a slider with the photo previewing the change live">
+</p>
+<p>
   <img src="docs/screenshot-dark.png" width="49%" alt="Eight files in dark mode: four photos resized and converted to WebP with their sizes before and after, and the command bar previewing a trim of the selected video">
+  <img src="docs/screenshot-skills.png" width="49%" alt="Every skill that fits the files, grouped by family">
 </p>
 <p>
-  <img src="docs/screenshot-single-light.png" width="49%" alt="The same one-photo view in light mode">
-  <img src="docs/screenshot-light.png" width="49%" alt="The tray in light mode, with the likely next steps for these files shown above the command bar">
-</p>
-<p>
+  <img src="docs/screenshot-single-light.png" width="49%" alt="The one-photo view in light mode">
   <img src="docs/screenshot-settings.png" width="49%" alt="The settings panel: theme, accent, reduced motion and transparency, export folder and file names">
 </p>
 

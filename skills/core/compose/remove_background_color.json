@@ -1,6 +1,6 @@
 {
   "id": "remove_background_color",
-  "name": "Remove Background Colour",
+  "name": "Remove Background Color",
   "version": "1.0.0",
   "author": "asteria",
   "aliases": [
@@ -15,7 +15,7 @@
     "green screen"
   ],
   "category": "compose",
-  "description": "Make the background colour transparent with a soft edge (finds it from the corners by default)",
+  "description": "Make the background color transparent with a soft edge (finds it from the corners by default)",
   "inputTypes": [
     "@image"
   ],
@@ -23,7 +23,7 @@
   "params": [
     {
       "name": "color",
-      "label": "Colour",
+      "label": "Color",
       "type": "string",
       "default": "auto",
       "presets": [
@@ -33,7 +33,7 @@
         "#00ff00",
         "#0000ff"
       ],
-      "hint": "auto = most common corner colour · white · #00ff00 · fully clear within a small colour distance, fading out beyond it"
+      "hint": "auto = most common corner color · white · #00ff00 · fully clear within a small color distance, fading out beyond it"
     }
   ],
   "executor": {

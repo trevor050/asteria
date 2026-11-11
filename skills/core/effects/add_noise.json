@@ -13,7 +13,7 @@
     "color noise"
   ],
   "category": "filter",
-  "description": "Add colour noise over the picture (12 by default)",
+  "description": "Add color noise over the picture (12 by default)",
   "inputTypes": [
     "@image",
     "@video"

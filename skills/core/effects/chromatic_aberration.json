@@ -33,7 +33,7 @@
       "min": 1,
       "max": 60,
       "unit": "px",
-      "hint": "Colour fringe at the corners, in pixels"
+      "hint": "Color fringe at the corners, in pixels"
     }
   ],
   "executor": {
