@@ -1,0 +1,35 @@
+{
+  "id": "convert_to_ply",
+  "name": "Convert to PLY",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "obj to ply",
+    "stl to ply",
+    "glb to ply",
+    "3mf to ply",
+    "point cloud mesh"
+  ],
+  "category": "3d",
+  "icon": "scan",
+  "description": "Write the mesh as binary PLY",
+  "inputTypes": [
+    ".obj",
+    ".stl",
+    ".gltf",
+    ".glb",
+    ".3mf"
+  ],
+  "outputType": ".ply",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "mesh.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

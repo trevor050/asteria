@@ -1,0 +1,36 @@
+{
+  "id": "convert_to_glb",
+  "name": "Convert to GLB",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "obj to glb",
+    "stl to glb",
+    "ply to glb",
+    "gltf to glb",
+    "3mf to glb",
+    "web 3d"
+  ],
+  "category": "3d",
+  "icon": "rotate-3d",
+  "description": "Write the mesh as a single-file glTF binary",
+  "inputTypes": [
+    ".obj",
+    ".stl",
+    ".ply",
+    ".gltf",
+    ".3mf"
+  ],
+  "outputType": ".glb",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "mesh.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

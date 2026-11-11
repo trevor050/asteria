@@ -1,0 +1,34 @@
+{
+  "id": "geo_to_csv",
+  "name": "Map Data to CSV",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "geojson to csv",
+    "kml to csv",
+    "gpx to csv",
+    "coordinates csv",
+    "lat lon csv"
+  ],
+  "category": "maps",
+  "icon": "map",
+  "description": "List map points and vertices as CSV rows",
+  "inputTypes": [
+    ".geojson",
+    ".kml",
+    ".kmz",
+    ".gpx"
+  ],
+  "outputType": ".csv",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"sort"
 	"strings"
@@ -243,6 +244,18 @@ var skillChecks = map[string]func(in, out string) (string, error){
 	"base64_encode": pyCompare("import base64,sys;a=open(sys.argv[1],'rb').read();b=base64.b64decode(open(sys.argv[2]).read());assert a==b", "Python base64"),
 	"checksum":      pyCompare("import hashlib,sys;h=hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest();assert h in open(sys.argv[2]).read().lower()", "Python hashlib"),
 	"file_info":     pyCompare("import hashlib,json,sys;h=hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest();assert json.load(open(sys.argv[2]))['sha256']==h", "Python hashlib + json"),
+	// GPX: Python sums the haversine distance over the track points itself.
+	"gpx_stats": func(in, out string) (string, error) {
+		if !strings.HasSuffix(in, ".gpx") {
+			return pyCompare("import json,sys;d=json.load(open(sys.argv[2]));assert d['distanceMeters']>=0", "Python json")(in, out)
+		}
+		return pyCompare(`import json,math,sys,re
+pts=[(float(a),float(b)) for a,b in re.findall(r'<trkpt[^>]*lat="([-0-9.]+)"[^>]*lon="([-0-9.]+)"',open(sys.argv[1]).read())]
+R=6371008.8
+d=sum(2*R*math.asin(math.sqrt(math.sin(math.radians(b[0]-a[0])/2)**2+math.cos(math.radians(a[0]))*math.cos(math.radians(b[0]))*math.sin(math.radians(b[1]-a[1])/2)**2)) for a,b in zip(pts,pts[1:]))
+got=json.load(open(sys.argv[2]))['distanceMeters']
+assert d>0 and abs(got-d)<=max(1,d*0.005),(got,d)`, "Python haversine over the track points")(in, out)
+	},
 	"list_archive_contents": func(in, out string) (string, error) {
 		b, _ := os.ReadFile(out)
 		switch filepath.Ext(in) {
@@ -391,7 +404,7 @@ func verify(path, ext string, wantMarker bool) (string, error) {
 			return "", fmt.Errorf("ffprobe: %s", strings.TrimSpace(out))
 		}
 		return "ffprobe", nil
-	case ".docx", ".xlsx", ".pptx", ".odt", ".ods", ".odp", ".epub", ".3mf":
+	case ".docx", ".xlsx", ".pptx", ".odt", ".ods", ".odp", ".epub":
 		s := zipText(path)
 		if s == "" {
 			return "", fmt.Errorf("not a valid package")
@@ -471,6 +484,35 @@ func verify(path, ext string, wantMarker bool) (string, error) {
 			return "", fmt.Errorf("fontTools: %s", lastLine(out))
 		}
 		return "fontTools", nil
+	case ".geojson", ".kml", ".gpx", ".kmz":
+		// GDAL reads all four; it must find at least one feature.
+		if !have("ogrinfo") {
+			return "", errNoVerifier("GDAL (ogrinfo)")
+		}
+		out, err := run("ogrinfo", "-ro", "-al", "-so", path)
+		if err != nil || !strings.Contains(out, "Feature Count") {
+			return "", fmt.Errorf("ogrinfo: %s", lastLine(out))
+		}
+		if strings.Contains(out, "Feature Count: 0") && !strings.Contains(out, "Feature Count: 1") && !strings.Contains(out, "Feature Count: 2") {
+			return "", fmt.Errorf("ogrinfo found no features")
+		}
+		if ext == ".kmz" {
+			return "GDAL ogrinfo", nil
+		}
+		return needMarker(text(), "GDAL ogrinfo")
+	case ".obj", ".stl", ".ply", ".glb", ".gltf", ".3mf":
+		// Assimp reads every mesh format; the output must hold triangles.
+		if !have("assimp") {
+			return "", errNoVerifier("Assimp")
+		}
+		out, err := run("assimp", "info", path)
+		if err != nil {
+			return "", fmt.Errorf("assimp: %s", lastLine(out))
+		}
+		if !regexp.MustCompile(`(?m)^Faces:\s+[1-9]`).MatchString(out) {
+			return "", fmt.Errorf("assimp found no faces")
+		}
+		return "Assimp", nil
 	case ".cube", ".3dl":
 		if !have("python3") {
 			return "", errNoVerifier("python3")
@@ -557,7 +599,7 @@ func zipText(path string) string {
 	defer zr.Close()
 	var b strings.Builder
 	for _, f := range zr.File {
-		if !(strings.HasSuffix(f.Name, ".xml") || strings.HasSuffix(f.Name, ".xhtml") || strings.HasSuffix(f.Name, ".html") || strings.HasSuffix(f.Name, ".model")) {
+		if !(strings.HasSuffix(f.Name, ".xml") || strings.HasSuffix(f.Name, ".xhtml") || strings.HasSuffix(f.Name, ".html") || strings.HasSuffix(f.Name, ".model") || strings.HasSuffix(f.Name, ".kml")) {
 			continue
 		}
 		rc, err := f.Open()

@@ -1,0 +1,35 @@
+{
+  "id": "convert_to_geojson",
+  "name": "Convert to GeoJSON",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "kml to geojson",
+    "gpx to geojson",
+    "shapefile to geojson",
+    "csv to geojson",
+    "map json"
+  ],
+  "category": "maps",
+  "icon": "globe",
+  "description": "Write map features as GeoJSON",
+  "inputTypes": [
+    ".kml",
+    ".kmz",
+    ".gpx",
+    ".zip",
+    ".csv"
+  ],
+  "outputType": ".geojson",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

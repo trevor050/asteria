@@ -1,0 +1,34 @@
+{
+  "id": "convert_to_gpx",
+  "name": "Convert to GPX",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "geojson to gpx",
+    "kml to gpx",
+    "csv to gpx",
+    "gps track",
+    "garmin"
+  ],
+  "category": "maps",
+  "icon": "mountain",
+  "description": "Write points and tracks as GPX for GPS apps",
+  "inputTypes": [
+    ".geojson",
+    ".kml",
+    ".kmz",
+    ".csv"
+  ],
+  "outputType": ".gpx",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

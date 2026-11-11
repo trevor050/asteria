@@ -1,0 +1,33 @@
+{
+  "id": "convert_to_kml",
+  "name": "Convert to KML",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "geojson to kml",
+    "gpx to kml",
+    "google earth",
+    "csv to kml"
+  ],
+  "category": "maps",
+  "icon": "map-pinned",
+  "description": "Write map features as KML for Google Earth",
+  "inputTypes": [
+    ".geojson",
+    ".gpx",
+    ".kmz",
+    ".csv"
+  ],
+  "outputType": ".kml",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "geo.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

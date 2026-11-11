@@ -1,0 +1,35 @@
+{
+  "id": "convert_to_3mf",
+  "name": "Convert to 3MF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "obj to 3mf",
+    "stl to 3mf",
+    "ply to 3mf",
+    "glb to 3mf",
+    "3d print package"
+  ],
+  "category": "3d",
+  "icon": "boxes",
+  "description": "Write the mesh as a 3MF print package",
+  "inputTypes": [
+    ".obj",
+    ".stl",
+    ".ply",
+    ".gltf",
+    ".glb"
+  ],
+  "outputType": ".3mf",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "mesh.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

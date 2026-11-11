@@ -1,0 +1,76 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Asteria matrix check",
+    "kind": "cafe"
+   },
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     2.3522,
+     48.8566,
+     35.5
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Seine walk"
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      2.3522,
+      48.8566
+     ],
+     [
+      2.3601,
+      48.8602
+     ],
+     [
+      2.3699,
+      48.8641
+     ]
+    ]
+   }
+  },
+  {
+   "type": "Feature",
+   "properties": {
+    "name": "Tuileries"
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       2.322,
+       48.863
+      ],
+      [
+       2.33,
+       48.863
+      ],
+      [
+       2.33,
+       48.87
+      ],
+      [
+       2.322,
+       48.87
+      ],
+      [
+       2.322,
+       48.863
+      ]
+     ]
+    ]
+   }
+  }
+ ]
+}
