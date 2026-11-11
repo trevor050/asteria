@@ -8,6 +8,10 @@ type Skill struct {
 	Name        string     `json:"name"`
 	Aliases     []string   `json:"aliases"`
 	Category    string     `json:"category"`
+	// Priority nudges ranking within a category (0 by default, up to 20):
+	// it picks which skill represents its family in the suggestions shown
+	// before anything is typed, and breaks ties between equal text matches.
+	Priority float64 `json:"priority,omitempty"`
 	Description string     `json:"description"`
 	InputTypes  []string   `json:"inputTypes"`
 	OutputType  string     `json:"outputType"`

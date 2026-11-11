@@ -5,6 +5,7 @@
   "author": "asteria",
   "aliases": ["saturation", "more color", "vivid", "desaturate", "less color", "colorful"],
   "category": "adjust",
+  "priority": 8,
   "description": "Make colours richer (+40% by default) or duller with a negative amount",
   "inputTypes": ["@image", "@video"],
   "outputType": "",

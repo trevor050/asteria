@@ -48,7 +48,8 @@ Copy it into your skills folder and type `thumb`.
 | `executor` | yes | How it runs: `native`, `pipeline` or `cli` (see below) |
 | `params` | no | At most **one** parameter the user types (see below) |
 | `aliases` | no | Extra words that should find it (`"jpg"`, `"extract audio"`) |
-| `description`, `category`, `author` | no | Shown in suggestions; category also nudges ranking |
+| `description`, `category`, `author` | no | Shown in suggestions. `category` is the family the skill is listed under and nudges ranking: `convert`, `transform` (size and shape), `compress`, `adjust` (colour and tone), `filter` (effects), `compose`, `info`, `sizes`, `pdf`, `media`, `archive`, `data` |
+| `priority` | no | 0-20. Picks which skill stands for its family in the suggestions shown before anything is typed, and breaks ties between equally good matches |
 | `combine` | no | Many files in, one file out. Inferred from native handlers that combine |
 | `outputName` | no | Base name for combined results, e.g. `"merged"` |
 | `requires` | no | External programs it needs. Native handlers and CLI commands add theirs automatically |

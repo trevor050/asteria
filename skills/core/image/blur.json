@@ -8,6 +8,7 @@
     "gaussian"
   ],
   "category": "filter",
+  "priority": 6,
   "description": "Apply a gaussian blur",
   "inputTypes": [
     "@image"

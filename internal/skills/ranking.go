@@ -49,7 +49,7 @@ func DefaultRanker() *Ranker {
 		NoOpPenalty:     500,
 		CategoryOrder: map[string]float64{
 			"convert": 40, "transform": 35, "compress": 30, "adjust": 29, "pdf": 28, "media": 26,
-			"archive": 24, "data": 22, "filter": 20, "compose": 18, "info": 16, "meta": 0,
+			"archive": 24, "data": 22, "filter": 20, "compose": 18, "info": 16, "sizes": 14, "meta": 0,
 		},
 	}
 }
@@ -106,7 +106,7 @@ func (r *Ranker) rankEmpty(all []Skill, ctx Context) []Match {
 		if !s.IsMeta && len(ctx.InputTypes) > 0 && !acceptsAny(s, ctx.InputTypes) {
 			continue
 		}
-		score := r.CategoryOrder[s.Category] + r.frecency(s.ID, ctx.Usage)
+		score := r.CategoryOrder[s.Category] + clampPriority(s.Priority) + r.frecency(s.ID, ctx.Usage)
 		if s.IsMeta {
 			score -= 200
 		}
@@ -145,7 +145,7 @@ func (r *Ranker) rankText(all []Skill, text, value string, ctx Context) []Match 
 		if r.isNoOp(s, ctx) {
 			ms -= r.NoOpPenalty
 		}
-		score := ms + r.CategoryOrder[s.Category]/4 + r.frecency(s.ID, ctx.Usage)
+		score := ms + r.CategoryOrder[s.Category]/4 + clampPriority(s.Priority)/2 + r.frecency(s.ID, ctx.Usage)
 		m := Match{Skill: s, Score: score}
 		if value != "" && len(s.Params) > 0 {
 			m.Value = value
@@ -155,6 +155,8 @@ func (r *Ranker) rankText(all []Skill, text, value string, ctx Context) []Match 
 	sortMatches(out)
 	return out
 }
+
+func clampPriority(p float64) float64 { return math.Max(0, math.Min(20, p)) }
 
 // isNoOp is true for a "Convert to X" skill when every file already is X,
 // e.g. "Convert to PNG" on a batch of PNGs.

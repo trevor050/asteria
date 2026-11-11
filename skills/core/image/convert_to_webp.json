@@ -8,6 +8,7 @@
     "to webp"
   ],
   "category": "convert",
+  "priority": 6,
   "description": "Save images as WebP, usually much smaller than JPEG",
   "inputTypes": [
     "@image"

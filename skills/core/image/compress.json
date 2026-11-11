@@ -10,6 +10,7 @@
     "smaller file"
   ],
   "category": "compress",
+  "priority": 10,
   "description": "Re-encode JPEG/WebP at a lower quality; PNG gets lossless max compression",
   "inputTypes": [
     "@image"

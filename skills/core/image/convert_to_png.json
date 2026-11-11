@@ -10,6 +10,7 @@
     "jpg to png"
   ],
   "category": "convert",
+  "priority": 4,
   "description": "Save images as lossless PNG",
   "inputTypes": [
     "@image"

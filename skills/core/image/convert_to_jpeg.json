@@ -11,6 +11,7 @@
     "png to jpg"
   ],
   "category": "convert",
+  "priority": 5,
   "description": "Save images as JPEG (transparency becomes white)",
   "inputTypes": [
     "@image"
