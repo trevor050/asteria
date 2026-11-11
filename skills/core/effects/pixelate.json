@@ -1,0 +1,51 @@
+{
+  "id": "pixelate",
+  "name": "Pixelate",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "pixelise",
+    "pixelize",
+    "pixel",
+    "8-bit",
+    "blocky",
+    "censor",
+    "8bit"
+  ],
+  "category": "filter",
+  "priority": 4,
+  "description": "Turn the picture into big square pixels (12px blocks by default)",
+  "inputTypes": [
+    "@image",
+    "@video"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "size",
+      "label": "Block size",
+      "type": "string",
+      "default": "12",
+      "presets": [
+        "6",
+        "12",
+        "24",
+        "48"
+      ],
+      "min": 2,
+      "max": 200,
+      "unit": "px",
+      "hint": "Block size in pixels"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.pixelate"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

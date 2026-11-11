@@ -1,0 +1,48 @@
+{
+  "id": "edge_detect",
+  "name": "Edge Detect",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "edges",
+    "edge",
+    "outline",
+    "outlines",
+    "sobel",
+    "line art",
+    "find edges"
+  ],
+  "category": "filter",
+  "description": "Show only the edges as white lines on black",
+  "inputTypes": [
+    "@image",
+    "@video"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "strength",
+      "label": "Strength",
+      "type": "string",
+      "default": "100",
+      "presets": [
+        "50",
+        "100"
+      ],
+      "min": 1,
+      "max": 100,
+      "unit": "%",
+      "hint": "100 = bright edges · 30 = only strong edges"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.edges"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

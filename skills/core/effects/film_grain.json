@@ -1,0 +1,47 @@
+{
+  "id": "film_grain",
+  "name": "Film Grain",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "grain",
+    "film",
+    "analog",
+    "35mm",
+    "vintage grain",
+    "luminance noise"
+  ],
+  "category": "filter",
+  "description": "Add soft film grain that changes brightness only (20 by default)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "amount",
+      "label": "Amount",
+      "type": "string",
+      "default": "20",
+      "presets": [
+        "10",
+        "20",
+        "40",
+        "70"
+      ],
+      "min": 1,
+      "max": 100,
+      "hint": "20 = subtle · 60 = gritty"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.grain"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,48 @@
+{
+  "id": "glow",
+  "name": "Glow",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "bloom",
+    "dreamy",
+    "soft glow",
+    "orton",
+    "haze",
+    "soft focus"
+  ],
+  "category": "filter",
+  "description": "Make bright areas bleed a soft light (40% by default)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "strength",
+      "label": "Strength",
+      "type": "string",
+      "default": "40",
+      "presets": [
+        "20",
+        "40",
+        "70",
+        "100"
+      ],
+      "min": 1,
+      "max": 100,
+      "unit": "%",
+      "hint": "40 = dreamy · 100 = blown-out bloom"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.glow"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

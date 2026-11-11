@@ -1,0 +1,48 @@
+{
+  "id": "scanlines",
+  "name": "Scanlines",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "crt",
+    "retro tv",
+    "old tv",
+    "tv lines",
+    "scan lines",
+    "television"
+  ],
+  "category": "filter",
+  "description": "Darken every other pair of rows with a faint RGB mask, like a CRT (35% by default)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "amount",
+      "label": "Darkness",
+      "type": "string",
+      "default": "35",
+      "presets": [
+        "15",
+        "35",
+        "55",
+        "80"
+      ],
+      "min": 1,
+      "max": 100,
+      "unit": "%",
+      "hint": "35 = tasteful · 80 = heavy"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.scanlines"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

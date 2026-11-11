@@ -1,0 +1,49 @@
+{
+  "id": "chromatic_aberration",
+  "name": "Chromatic Aberration",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "aberration",
+    "rgb split",
+    "color fringe",
+    "colour fringe",
+    "lens fringing",
+    "chromatic",
+    "fringing"
+  ],
+  "category": "filter",
+  "description": "Split red and blue apart toward the edges like a cheap lens (4px by default)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "shift",
+      "label": "Shift",
+      "type": "string",
+      "default": "4",
+      "presets": [
+        "2",
+        "4",
+        "8",
+        "16"
+      ],
+      "min": 1,
+      "max": 60,
+      "unit": "px",
+      "hint": "Colour fringe at the corners, in pixels"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.aberration"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

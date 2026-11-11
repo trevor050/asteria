@@ -1,0 +1,49 @@
+{
+  "id": "halftone",
+  "name": "Halftone",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "half tone",
+    "comic",
+    "newspaper",
+    "print dots",
+    "dots",
+    "pop art",
+    "dot screen"
+  ],
+  "category": "filter",
+  "description": "Black dots on white sized by darkness, like a newspaper print (8px cells by default)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "size",
+      "label": "Cell size",
+      "type": "string",
+      "default": "8",
+      "presets": [
+        "5",
+        "8",
+        "12",
+        "20"
+      ],
+      "min": 3,
+      "max": 60,
+      "unit": "px",
+      "hint": "Dot grid spacing in pixels"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "effect.halftone"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}
