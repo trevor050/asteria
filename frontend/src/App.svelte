@@ -956,13 +956,17 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    height: 46px;
+    height: 50px;
     padding: 0 14px 0 20px;
     font-size: 12.5px;
     color: var(--muted);
   }
+  /* macOS (hidden inset title bar): the traffic lights sit in a ~50 pt
+     toolbar strip, centered 25 pt down and spanning x 19-77 pt. The header
+     row shares that center line and starts a clear 17 pt after them. */
   .mac .titlebar {
-    padding-left: 88px;
+    padding-left: 94px;
+    padding-right: 12px;
   }
   .tally {
     --wails-draggable: no-drag;
@@ -1420,7 +1424,7 @@
   .toasts {
     position: fixed;
     right: 16px;
-    top: 50px;
+    top: 56px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;

@@ -209,7 +209,7 @@
     --glass-bg: var(--glass-strong);
     position: fixed;
     z-index: 55;
-    top: 50px;
+    top: 56px;
     right: 12px;
     bottom: 12px;
     width: min(380px, calc(100vw - 24px));
