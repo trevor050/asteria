@@ -394,6 +394,10 @@ func (a *App) PickFiles() (AddResult, error) {
 		AttachToWindow(a.window).
 		PromptForMultipleSelection()
 	if err != nil {
+		// Closing the dialog is not an error (Windows reports it as one).
+		if strings.Contains(strings.ToLower(err.Error()), "cancel") {
+			return AddResult{Added: []session.View{}}, nil
+		}
 		return AddResult{}, err
 	}
 	if len(paths) == 0 {

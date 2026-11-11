@@ -18,8 +18,7 @@
     ".azw",
     ".fb2",
     ".lit",
-    ".pdb",
-    ".docx"
+    ".pdb"
   ],
   "outputType": ".txt",
   "params": [],

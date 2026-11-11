@@ -10,6 +10,7 @@
     "extract text"
   ],
   "category": "document",
+  "priority": 6,
   "icon": "file-type",
   "description": "Plain text from a Word or ODT document",
   "inputTypes": [

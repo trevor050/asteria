@@ -9,6 +9,7 @@
     "spreadsheet pdf"
   ],
   "category": "document",
+  "priority": 12,
   "icon": "sheet",
   "description": "PDF from a spreadsheet",
   "inputTypes": [

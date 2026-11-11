@@ -44,20 +44,34 @@
     // Skills made for these file types come first, one per kind of action
     // (convert, transform, compress, pdf...) in the engine's order, so a
     // mixed tray shows a spread rather than four flavors of one conversion.
-    // A skill that needs a free add-on still shows (it asks before getting
-    // it); skills that take any file only fill the leftover places.
+    // Skills that need a free add-on still show (they ask before getting
+    // it), at most two, preferring the add-on already offered so one
+    // download covers both; skills that take any file fill what's left.
     const usable = fitting.filter((s) => !s.missing?.length || s.addon)
     const specific = usable.filter((s) => !s.generic)
     const generic = usable.filter((s) => s.generic && !s.missing?.length)
     const picked: Suggestion[] = []
+    const addons = new Set<string>()
+    const take = (s: Suggestion) => {
+      if (picked.length >= 4 || picked.includes(s)) return
+      if (s.missing?.length) {
+        if (addons.size >= 2 && !addons.has(s.addon)) return
+        if ([...picked].filter((p) => p.missing?.length).length >= 2) return
+        addons.add(s.addon)
+      }
+      picked.push(s)
+    }
     const kinds = new Set<string>()
     for (const s of specific) {
-      if (picked.length < 4 && !kinds.has(s.category)) {
+      if (!kinds.has(s.category)) {
         kinds.add(s.category)
-        picked.push(s)
+        take(s)
       }
     }
-    for (const s of [...specific, ...generic]) if (picked.length < 4 && !picked.includes(s)) picked.push(s)
+    for (const s of specific) if (!s.missing?.length) take(s)
+    for (const s of specific) if (s.missing?.length && addons.has(s.addon)) take(s)
+    for (const s of specific) take(s)
+    for (const s of generic) take(s)
     return [...specific, ...generic].filter((s) => picked.includes(s))
   })
   let showQuick = $derived(hasFiles && !busy && !query && !paramSkill && !open && quick.length > 0)

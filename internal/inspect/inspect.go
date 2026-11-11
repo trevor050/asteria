@@ -151,6 +151,19 @@ func Describe(ctx context.Context, finder *tools.Finder, path, fileType string) 
 		}
 	case "text":
 		info.Snippet = snippet(path)
+	default:
+		// Word and OpenDocument text show their opening lines.
+		if t := strings.ToLower(fileType); t == ".docx" || t == ".odt" {
+			if text, err := ops.OfficeText(path); err == nil {
+				if len(text) > snippetBytes {
+					text = text[:snippetBytes]
+					for len(text) > 0 && !utf8.ValidString(text) {
+						text = text[:len(text)-1]
+					}
+				}
+				info.Snippet = strings.TrimSpace(text)
+			}
+		}
 	}
 	return info
 }

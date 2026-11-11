@@ -9,6 +9,7 @@
     "slides pdf"
   ],
   "category": "document",
+  "priority": 15,
   "icon": "presentation",
   "description": "PDF from a presentation",
   "inputTypes": [

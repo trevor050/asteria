@@ -9,6 +9,7 @@
     "docx pdf"
   ],
   "category": "document",
+  "priority": 15,
   "icon": "file-text",
   "description": "PDF from a Word, ODT or RTF document",
   "inputTypes": [

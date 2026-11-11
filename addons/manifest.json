@@ -320,7 +320,7 @@
             "soffice": "program/soffice.com"
           },
           "bins_verified": true,
-          "unpacked_mb": 1250,
+          "unpacked_mb": 1500,
           "notes": "Extract with: msiexec /a <msi> /qn TARGETDIR=\"<user dir>\" (administrative install = file extraction, no registry/system changes). TDF wiki documents 'msiexec /a ... TARGETDIR=' and says admin rights are needed only when targeting system folders like Program Files. NOT TESTED unelevated; test on the Windows PC. Fallback if msiexec prompts UAC: a pure-Go MSI/CAB extractor or manual. soffice.exe path under TARGETDIR is expected, not verified. soffice.com is the console front end (prints, waits, converts headless); soffice.exe is the GUI launcher and never returns for --version.",
           "experimental": true,
           "manual_fallback": {

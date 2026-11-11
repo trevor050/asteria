@@ -17,10 +17,7 @@
     ".azw",
     ".fb2",
     ".lit",
-    ".pdb",
-    ".docx",
-    ".txt",
-    ".html"
+    ".pdb"
   ],
   "outputType": ".epub",
   "params": [],

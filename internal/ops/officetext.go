@@ -46,6 +46,22 @@ func runOfficeText(ctx context.Context, job Job) error {
 	return os.WriteFile(job.Output, []byte(text), 0o644)
 }
 
+// OfficeText returns the plain text of a .docx or .odt file.
+func OfficeText(path string) (string, error) {
+	zr, err := zip.OpenReader(path)
+	if err != nil {
+		return "", err
+	}
+	defer zr.Close()
+	switch {
+	case zipHas(&zr.Reader, "word/document.xml"):
+		return officeXMLText(&zr.Reader, "word/document.xml", docxRules)
+	case zipHas(&zr.Reader, "content.xml"):
+		return officeXMLText(&zr.Reader, "content.xml", odtRules)
+	}
+	return "", Userf("no document body")
+}
+
 func zipHas(z *zip.Reader, name string) bool {
 	for _, f := range z.File {
 		if f.Name == name {

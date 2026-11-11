@@ -33,7 +33,7 @@
   // Only formats that can hold transparency get the checkerboard.
   let alpha = $derived(/^\.(png|webp|gif|heic|heif|avif|tiff?|ico|svg)$/i.test(file.type))
   let showThumb = $derived((file.kind === 'image' || file.kind === 'video') && !broken)
-  let snippet = $derived(file.kind === 'text' ? (file.info?.snippet ?? '').split('\n').slice(0, 9).join('\n') : '')
+  let snippet = $derived((file.info?.snippet ?? '').split('\n').slice(0, 9).join('\n'))
   let changed = $derived((file.steps?.length ?? 0) > 0)
   let was = $derived(file.origin === 'combined' || !changed ? '' : size(file.originalSize))
   let now = $derived(file.origin === 'combined' || changed ? size(file.size) : size(file.originalSize))
