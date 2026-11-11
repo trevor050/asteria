@@ -48,3 +48,13 @@ func TestExportName(t *testing.T) {
 		}
 	}
 }
+
+func TestExportNameEscapesEveryWindowsDeviceName(t *testing.T) {
+	for _, stem := range []string{"COM4", "com9", "LPT4", "lpt9", "COM¹", "LPT²", "NUL.tar"} {
+		got := ExportName(DefaultNamingPattern, stem, ".txt", "resize")
+		want := "_" + stem + ".txt"
+		if got != want {
+			t.Errorf("reserved Windows name %q: got %q, want %q", stem, got, want)
+		}
+	}
+}

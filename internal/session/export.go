@@ -66,9 +66,13 @@ func sanitizeFilename(s string) string {
 	if out == "" || out == "." || out == ".." {
 		return "file"
 	}
-	stem := strings.ToUpper(strings.TrimSuffix(out, filepath.Ext(out)))
+	// Windows device names stay reserved before any extension (NUL.tar.gz).
+	stem, _, _ := strings.Cut(out, ".")
+	stem = strings.ToUpper(stem)
 	switch stem {
-	case "CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "LPT1", "LPT2", "LPT3":
+	case "CON", "PRN", "AUX", "NUL",
+		"COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "COM¹", "COM²", "COM³",
+		"LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9", "LPT¹", "LPT²", "LPT³":
 		out = "_" + out
 	}
 	return out
