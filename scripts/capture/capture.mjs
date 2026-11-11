@@ -66,6 +66,15 @@ async function prepareMedia() {
   copyFileSync(join(fixtures, 'three-pages.pdf'), join(media, 'Mission brief.pdf'))
   copyFileSync(join(fixtures, 'three-pages.pdf'), join(media, 'Appendix.pdf'))
   copyFileSync(join(fixtures, 'people.json'), join(media, 'crew.json'))
+  // More kinds of files, from the format-matrix samples.
+  const more = join(media, 'more')
+  mkdirSync(more, { recursive: true })
+  const formats = join(root, 'testdata/formats')
+  for (const [from, to] of [
+    ['sample.docx', 'Quarterly report.docx'], ['sample.svg', 'Logo.svg'], ['sample.gpx', 'Morning ride.gpx'],
+    ['sample.stl', 'Bracket.stl'], ['sample.epub', 'Novel.epub'], ['sample.eml', 'Invoice.eml'],
+    ['sample.ttf', 'Brand font.ttf'], ['sample.srt', 'Subtitles.srt'],
+  ]) copyFileSync(join(formats, from), join(more, to))
 }
 
 function cleanExports() {
@@ -491,6 +500,73 @@ async function readme(browser) {
   }
 }
 
+// The newer README shots: empty state, a document conversion, the add-on
+// prompt, a video job with the processing glow, other kinds of files, and
+// the Add-ons page.
+async function more(browser) {
+  const more = join(media, 'more')
+  await restart()
+  let { ctx, page } = await open(browser, { theme: 'dark', w: 1000, h: 660, scale: 2 })
+  await page.screenshot({ path: join(docs, 'screenshot-empty.png') })
+  console.log('  docs/screenshot-empty.png')
+
+  // A Word document to PDF (LibreOffice is on this machine).
+  await add(page, [join(more, 'Quarterly report.docx')])
+  await page.keyboard.press('Escape')
+  await sleep(300)
+  await page.getByRole('button', { name: /^Convert to PDF/ }).first().click()
+  await idle(page)
+  await page.waitForFunction(() => !document.querySelector('.toast'), null, { timeout: 20000 })
+  await sleep(1500)
+  await page.screenshot({ path: join(docs, 'screenshot-document.png') })
+  console.log('  docs/screenshot-document.png')
+  await clear(page)
+
+  // An SVG: Convert to PNG needs resvg, which isn't installed here.
+  await add(page, [join(more, 'Logo.svg')])
+  await page.keyboard.press('Escape')
+  await page.getByRole('button', { name: /^Convert SVG to PNG/ }).first().click()
+  await sleep(400)
+  await page.keyboard.press('Enter')
+  await page.getByRole('dialog').waitFor()
+  await sleep(500)
+  await page.screenshot({ path: join(docs, 'screenshot-addon.png') })
+  console.log('  docs/screenshot-addon.png')
+  await page.getByRole('button', { name: 'Not now' }).click()
+  await clear(page)
+
+  // A video job: the glow while it works.
+  await add(page, [join(media, 'Earthrise flyby.mp4')])
+  await page.keyboard.press('Escape')
+  await page.keyboard.press('Meta+k')
+  await page.keyboard.type('compress video', { delay: 30 })
+  await sleep(300)
+  await page.keyboard.press('Enter')
+  await sleep(1600)
+  await page.screenshot({ path: join(docs, 'screenshot-video.png') })
+  console.log('  docs/screenshot-video.png')
+  await idle(page)
+  await clear(page)
+
+  // Other kinds of files, and what the bar offers for them.
+  await add(page, [join(more, 'Morning ride.gpx'), join(more, 'Bracket.stl'), join(more, 'Novel.epub'), join(more, 'Invoice.eml'), join(more, 'Brand font.ttf'), join(more, 'Subtitles.srt'), join(more, 'Logo.svg'), join(more, 'Quarterly report.docx')])
+  await page.keyboard.press('Escape')
+  await sleep(800)
+  await page.screenshot({ path: join(docs, 'screenshot-more.png') })
+  console.log('  docs/screenshot-more.png')
+  await ctx.close()
+
+  // Settings > Add-ons, light.
+  ;({ ctx, page } = await open(browser, { theme: 'light', w: 1000, h: 660, scale: 2 }))
+  await page.keyboard.press('Meta+,')
+  await sleep(600)
+  await page.getByRole('button', { name: 'Manage' }).click()
+  await sleep(700)
+  await page.screenshot({ path: join(docs, 'screenshot-addons.png') })
+  console.log('  docs/screenshot-addons.png')
+  await ctx.close()
+}
+
 // Only the settings screenshot (same scene as the README set).
 async function settingsShot(browser) {
   await restart()
@@ -648,6 +724,7 @@ try {
   if (mode === 'states' || mode === 'all') await states(browser, process.argv[3] ?? '')
   if (mode === 'perf' || mode === 'all') await perf(browser)
   if (mode === 'readme' || mode === 'all') await readme(browser)
+  if (mode === 'readme' || mode === 'more' || mode === 'all') await more(browser)
   if (mode === 'gif' || mode === 'all') await gif(browser)
   if (mode === 'settingsshot') await settingsShot(browser)
   if (mode === 'solo' || mode === 'all') await solo(browser)

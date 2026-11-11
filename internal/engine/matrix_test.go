@@ -493,7 +493,7 @@ func verify(path, ext string, wantMarker bool) (string, error) {
 		if err != nil || !strings.Contains(out, "Feature Count") {
 			return "", fmt.Errorf("ogrinfo: %s", lastLine(out))
 		}
-		if strings.Contains(out, "Feature Count: 0") && !strings.Contains(out, "Feature Count: 1") && !strings.Contains(out, "Feature Count: 2") {
+		if !regexp.MustCompile(`Feature Count: [1-9]`).MatchString(out) {
 			return "", fmt.Errorf("ogrinfo found no features")
 		}
 		if ext == ".kmz" {
