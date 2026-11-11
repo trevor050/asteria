@@ -65,7 +65,7 @@
   --aura-teal: 120 168 178;
   --aura-amber: 222 182 120;
   --aura-slate: 150 162 196;
-  --aura-strength: 0.42;
+  --aura-strength: 0.55;
   /* Processing glow, one hue at a time; much softer in light. */
   --hue-1: 150 170 226;
   --hue-2: 142 196 202;
@@ -119,10 +119,10 @@
   --primary-ink: #111214;
   --shadow-pop: 0 24px 60px -16px rgb(0 0 0 / 0.7), 0 2px 10px rgb(0 0 0 / 0.35);
 
-  --aura-teal: 70 112 122;
-  --aura-amber: 150 112 62;
-  --aura-slate: 84 96 128;
-  --aura-strength: 0.5;
+  --aura-teal: 62 118 132;
+  --aura-amber: 160 114 56;
+  --aura-slate: 80 96 142;
+  --aura-strength: 0.64;
   --hue-1: 54 86 196;
   --hue-2: 34 132 150;
   --hue-3: 52 150 92;

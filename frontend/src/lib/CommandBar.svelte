@@ -494,8 +494,9 @@
       rgb(var(--aura-teal))
     );
     filter: blur(18px);
-    opacity: 0;
-    transform: scale(0.94, 0.8);
+    /* A faint glow at rest, full on focus. */
+    opacity: 0.16;
+    transform: scale(0.97, 0.86);
     transition:
       opacity 0.45s var(--ease-out),
       transform 0.55s var(--ease-spring);
@@ -506,6 +507,9 @@
     transform: none;
   }
   /* Over native Liquid Glass the bar stays calm: the window is the show. */
+  :global(:root[data-glass='native']) .halo {
+    opacity: 0;
+  }
   :global(:root[data-glass='native']) .focused .halo {
     opacity: 0.12;
   }
