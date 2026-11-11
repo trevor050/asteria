@@ -3,6 +3,7 @@
 // type lists), so numbers and lists can never drift from the app.
 import fs from 'node:fs'
 import path from 'node:path'
+import { rank as rankSkills, type Data as SearchData } from '../scripts/search'
 
 const ROOT = path.resolve(process.cwd(), '..')
 const read = (p: string) => fs.readFileSync(path.join(ROOT, p), 'utf8')
@@ -151,15 +152,20 @@ if (rawPairs.size !== summary.conversionPairs) {
   )
 }
 
-function typedFor(from: string, to: string, skillName: string, aliases: string[]) {
-  const wanted = `${from} to ${to}`
-  if (aliases.includes(wanted)) return wanted
-  // Typing the target extension finds the convert skill once the file is in.
-  if (aliases.includes(to)) return to
-  return skillName.toLowerCase()
+// What to type in the app: the shortest phrase that the app's ranking (ported
+// in scripts/search.ts) puts first for this file. The skill's name always works.
+function typedFor(from: string, to: string, skill: SiteSkill | undefined, ranked: SearchData): string {
+  const name = (skill?.name ?? '').toLowerCase()
+  if (!skill) return name
+  const plain = skill.aliases.filter((a) => !/\d/.test(a)).sort((a, b) => a.length - b.length)
+  const candidates = [...[`${from} to ${to}`, to].filter((c) => skill.aliases.includes(c)), name, ...plain]
+  for (const c of candidates) {
+    const top = rankSkills(ranked, c, [from])[0]
+    if (top?.skill.id === skill.id && !top.value) return c
+  }
+  return name
 }
 
-let skillAliases = new Map<string, string[]>()
 
 export const allPairs: Pair[] = []
 for (const [, entries] of rawPairs) {
@@ -288,8 +294,17 @@ export const skills: SiteSkill[] = skillFiles(path.join(ROOT, 'skills/core'))
   })
   .sort((a, b) => a.name.localeCompare(b.name))
 
-skillAliases = new Map(skills.map((s) => [s.id, s.aliases]))
-for (const p of allPairs) p.typed = typedFor(p.from, p.to, p.skill.name, skillAliases.get(p.skill.id) ?? [])
+{
+  const ranked = {
+    skills: skills.map((s) => ({ id: s.id, n: s.name, al: s.aliases, d: s.description, c: s.category, i: s.icon, p: s.priority, acc: s.accepts, out: s.output, prm: s.param ? [s.param.label, s.param.unit, s.param.default] : null, ad: s.addon })),
+    pairs: [],
+    names: {},
+    addons: {},
+    icons: {},
+  } as unknown as SearchData
+  const byId = new Map(skills.map((s) => [s.id, s]))
+  for (const p of allPairs) p.typed = typedFor(p.from, p.to, byId.get(p.skill.id), ranked)
+}
 
 /** File-to-file pairs: these get their own page. */
 export const pagePairs = allPairs

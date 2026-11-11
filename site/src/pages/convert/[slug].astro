@@ -26,6 +26,8 @@ const addon = pair.addon
 const list = (xs: readonly string[]) => (xs.length > 1 ? `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}` : xs[0])
 const manual = addon?.manualOn ?? []
 const allManual = manual.length === 3
+// "Audio and video" -> "audio and video"; leave names like "PostScript" or "SVG" alone
+const unlocks = addon ? addon.unlocks.replace(/^(Audio|Office|More|Camera|Ebooks|Tracing|Text)\b/, (w) => w.toLowerCase()) : ''
 const title = `${F} to ${T} converter: free, offline, nothing uploaded | Asteria`
 const description = addon
   ? `Convert ${F} to ${T} on Mac, Windows or Linux with Asteria, a free app that works on your own computer. It uses ${addon.name}, a free add-on Asteria installs with one click. Nothing is uploaded.`
@@ -73,7 +75,7 @@ const jsonld = {
         <h2 id="how">How to do it</h2>
         <ol class="steps">
           <li><a href="/#download">Download Asteria</a> and open it. It's free and needs no account.</li>
-          <li>Drop your {F} files onto its window, or press <kbd>⌘O</kbd> (<kbd>Ctrl O</kbd> on Windows) to choose them. A whole folder's worth is fine.</li>
+          <li>Drop your {F} files onto its window, or press <kbd>⌘O</kbd> (<kbd>Ctrl O</kbd> on Windows) to choose them. Drop as many as you like.</li>
           <li>
             Type <span class="typed">{pair.typed}</span>
             {typedIsName ? 'and press Enter.' : <>and pick <strong>{pair.skill.name}</strong>.</>}
@@ -84,7 +86,7 @@ const jsonld = {
               <li>
                 {allManual
                   ? `The first time, Asteria tells you it needs ${addon.name}, a free program from ${addon.publisher}, and opens its official download page. Install it from there and Asteria finds it.`
-                  : `The first time, Asteria asks to download ${addon.name}, a free add-on from ${addon.publisher} (${addon.license}). It shows the download size before you say yes, and needs no administrator password.${manual.length ? ` On ${list(manual)}, it opens ${addon.name}'s official download page instead, and finds it once it is installed.` : ''}`}
+                  : `The first time, Asteria asks to download ${addon.name}, a free add-on from ${addon.publisher}, under the ${addon.license} license. It shows the download size before you say yes, and needs no administrator password.${manual.length ? ` On ${list(manual)}, it opens ${addon.name}'s official download page instead, and finds it once it is installed.` : ''}`}
               </li>
             )
           }
@@ -113,10 +115,10 @@ const jsonld = {
         {
           addon ? (
             <p>
-              {F} to {T} uses <a href={addon.homepage}>{addon.name}</a>, a free program for {addon.unlocks.toLowerCase()}.{' '}
+              {F} to {T} uses <a href={addon.homepage}>{addon.name}</a>, a free program for {unlocks}.{' '}
               {allManual
                 ? `Asteria doesn't bundle it. It only comes as an installer, so Asteria points you to the official download page and uses it once it is installed.`
-                : `Asteria doesn't bundle it. The first time you need it, Asteria offers to download it from its official release, checks the download against a pinned checksum, and keeps it in its own folder, where Settings can remove it again.`}
+                : `Asteria doesn't bundle it. The first time you need it, Asteria offers to download it, checks the download against a pinned checksum, and keeps it in its own folder, where Settings can remove it again.`}
               {' '}If {addon.name} is already on your computer, Asteria uses that copy.
             </p>
           ) : (

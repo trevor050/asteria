@@ -271,7 +271,7 @@ const n = examples.length
   @media (max-width: 560px) {
     .live .half .label {
       top: 132px;
-      width: 200px;
+      width: 170px;
     }
   }
 </style>
@@ -282,6 +282,9 @@ const n = examples.length
   // moving elements (no inherited custom properties, no layout reads per card).
   const section = document.querySelector<HTMLElement>('[data-through]')
   const still = matchMedia('(prefers-reduced-motion: reduce)')
+
+  // Distance between two cards on the lane.
+  const gapPx = () => (innerWidth <= 560 ? innerWidth * 0.82 : Math.min(560, Math.max(260, innerWidth * 0.44)))
 
   function setup() {
     if (!section) return
@@ -298,7 +301,7 @@ const n = examples.length
       const r = section.getBoundingClientRect()
       const span = r.height - innerHeight
       const p = Math.max(0, Math.min(1, -r.top / Math.max(1, span)))
-      const gap = innerWidth <= 560 ? innerWidth * 0.74 : Math.min(560, Math.max(260, innerWidth * 0.44))
+      const gap = gapPx()
       // card k crosses the line at p = (k + 0.5) / n
       let nearest = Infinity
       moving.forEach((els, k) => {
@@ -312,6 +315,16 @@ const n = examples.length
     const onScroll = () => {
       if (!frame) frame = requestAnimationFrame(apply)
     }
+    // A keyboard user tabbing to a card brings it to the line.
+    section.addEventListener('focusin', (e) => {
+      const k = cards.findIndex((c) => c.contains(e.target as Node))
+      if (k < 0) return
+      const top = section.getBoundingClientRect().top + scrollY
+      const span = section.offsetHeight - innerHeight
+      // just past the line, so the finished file is readable
+      const gap = gapPx()
+      scrollTo({ top: top + span * ((k + 0.5 + 170 / gap) / n), behavior: 'instant' })
+    })
     addEventListener('scroll', onScroll, { passive: true })
     addEventListener('resize', onScroll, { passive: true })
     apply()

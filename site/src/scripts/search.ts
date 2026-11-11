@@ -151,6 +151,17 @@ export function rank(data: Data, query: string, exts: string[]): Hit[] {
   return hits
 }
 
+// The app's DefaultRanker category order (internal/skills/ranking.go).
+const categoryOrder: Record<string, number> = {
+  convert: 40, transform: 35, compress: 30, adjust: 29, pdf: 28, media: 26, archive: 24, data: 22, filter: 20, compose: 18,
+  info: 16, sizes: 14, meta: 0, camera: 39, document: 38, ebook: 37, '3d': 37, maps: 37, fonts: 36, subtitles: 34, vector: 33,
+  email: 32, lut: 27, text: 21,
+}
+const normExt = (e: string) => ({ jpeg: 'jpg', tif: 'tiff', yml: 'yaml' })[e] ?? e
+// "Convert to PNG" on files that already are PNGs does nothing (the app's isNoOp).
+const isNoOp = (s: Skill, exts: string[]) =>
+  exts.length > 0 && !!s.out && s.n.toLowerCase().startsWith('convert to') && exts.every((e) => normExt(e) === normExt(s.out))
+
 function rankText(data: Data, text: string, value: string, exts: string[]): Hit[] {
   const scored: (Hit & { score: number })[] = []
   let strongest = 0
@@ -165,8 +176,8 @@ function rankText(data: Data, text: string, value: string, exts: string[]): Hit[
     if (strongest >= T.aliasWords && tier < T.fuzzy) return
     const applies = exts.filter((e) => accepts(s, e)).length
     const usable = !exts.length || applies > 0
-    const noOp = exts.length > 0 && !!s.out && exts.every((e) => e === s.out || (s.out === 'jpg' && e === 'jpeg'))
-    let score = tier * 1000 + Math.min(20, Math.max(0, s.p)) * 3
+    const noOp = isNoOp(s, exts)
+    let score = tier * 1000 + Math.min(20, Math.max(0, s.p)) * 3 + (categoryOrder[s.c] ?? 0) / 4
     if (usable && !noOp) score += 1e5
     scored.push({ skill: s, tier, alias, value: value && s.prm ? value : '', applies, score })
   })

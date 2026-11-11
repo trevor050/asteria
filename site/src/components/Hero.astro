@@ -556,6 +556,10 @@ const examples = ['heic to jpg', 'resize 50%', 'merge pdfs', 'trim 0:05-0:30', '
     .results :global(.desc) {
       display: none;
     }
+    .results :global(.name) {
+      white-space: normal;
+      min-width: 0;
+    }
     .end-actions {
       width: 100%;
       justify-content: space-between;
@@ -598,6 +602,7 @@ const examples = ['heic to jpg', 'resize 50%', 'merge pdfs', 'trim 0:05-0:30', '
   let rows: Row[] = []
   let active = 0
   let browsing = false
+  let dismissed = false
 
   const exts = () => [...new Set(files.map((f) => f.ext))]
   const kindName = (ext: string) => (data?.names[ext] ?? (ext ? `${ext.toUpperCase()} file` : 'File'))
@@ -708,7 +713,7 @@ const examples = ['heic to jpg', 'resize 50%', 'merge pdfs', 'trim 0:05-0:30', '
   }
 
   function render() {
-    const open = rows.length > 0 || (input.value.trim() !== '' && !!data)
+    const open = !dismissed && (rows.length > 0 || (input.value.trim() !== '' && !!data))
     results.hidden = !open
     input.setAttribute('aria-expanded', String(open))
     clearBtn.hidden = !input.value && !files.length
@@ -806,6 +811,7 @@ const examples = ['heic to jpg', 'resize 50%', 'merge pdfs', 'trim 0:05-0:30', '
   quickRow.addEventListener('click', (e) => {
     const b = (e.target as HTMLElement).closest('button')
     if (!b) return
+    dismissed = false
     if (b.dataset.q) {
       input.value = b.dataset.q
       input.focus()
@@ -889,8 +895,17 @@ const examples = ['heic to jpg', 'resize 50%', 'merge pdfs', 'trim 0:05-0:30', '
   })
 
   // ---- keys and pointer ---------------------------------------------------
-  input.addEventListener('input', update)
+  input.addEventListener('input', () => {
+    dismissed = false
+    update()
+  })
   input.addEventListener('focus', () => void ensureData())
+  input.addEventListener('click', () => {
+    if (dismissed && input.value.trim()) {
+      dismissed = false
+      render()
+    }
+  })
   input.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       if (!rows.length) return
@@ -906,12 +921,13 @@ const examples = ['heic to jpg', 'resize 50%', 'merge pdfs', 'trim 0:05-0:30', '
       // The honest end of the interaction: the download.
       results.querySelector<HTMLElement>('.end [data-dl]')?.focus()
     } else if (e.key === 'Escape') {
-      if (rows.length || browsing) {
-        rows = []
+      if (!results.hidden) {
+        dismissed = true
         browsing = false
         render()
       } else if (input.value) {
         input.value = ''
+        dismissed = false
         update()
       }
     }
@@ -936,8 +952,8 @@ const examples = ['heic to jpg', 'resize 50%', 'merge pdfs', 'trim 0:05-0:30', '
   })
   document.addEventListener('pointerdown', (e) => {
     if (!hero.querySelector('[data-bar]')!.contains(e.target as Node) && !quickRow.contains(e.target as Node)) {
-      if (rows.length) {
-        rows = []
+      if (!results.hidden) {
+        dismissed = true
         render()
       }
     }
