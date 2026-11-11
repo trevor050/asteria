@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-  <!-- Asteria app icon. Render to build/appicon.png with scripts/capture (node capture.mjs icon). -->
+  <!-- Asteria app icon: two file sheets over the app's ambient glow. Render to build/appicon.png with scripts/capture (node capture.mjs icon). -->
   <defs>
     <clipPath id="tile">
       <rect x="100" y="100" width="824" height="824" rx="186" />
@@ -7,22 +7,22 @@
     <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="90" />
     </filter>
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="26" />
-    </filter>
     <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#1b1d21" />
       <stop offset="1" stop-color="#0d0e10" />
     </linearGradient>
-    <linearGradient id="star" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#fbfaf6" />
-      <stop offset="1" stop-color="#d9d6cd" />
+      <stop offset="1" stop-color="#dcd8cf" />
     </linearGradient>
     <linearGradient id="edge" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#ffffff" stop-opacity="0.16" />
       <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.03" />
       <stop offset="1" stop-color="#ffffff" stop-opacity="0.06" />
     </linearGradient>
+    <filter id="lift" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="22" flood-color="#000" flood-opacity="0.45" />
+    </filter>
   </defs>
   <g clip-path="url(#tile)">
     <rect x="100" y="100" width="824" height="824" fill="url(#base)" />
@@ -31,18 +31,11 @@
       <circle cx="800" cy="210" r="250" fill="#a8783e" />
       <circle cx="540" cy="80" r="220" fill="#5d6a90" />
     </g>
-    <path
-      filter="url(#glow)"
-      opacity="0.55"
-      fill="#e9e4d6"
-      d="M512 250c14 140 38 208 82 252 44 44 112 68 252 82-140 14-208 38-252 82-44 44-68 112-82 252-14-140-38-208-82-252-44-44-112-68-252-82 140-14 208-38 252-82 44-44 68-112 82-252z"
-      transform="translate(512 512) scale(0.74) translate(-512 -584)"
-    />
-    <path
-      fill="url(#star)"
-      d="M512 250c14 140 38 208 82 252 44 44 112 68 252 82-140 14-208 38-252 82-44 44-68 112-82 252-14-140-38-208-82-252-44-44-112-68-252-82 140-14 208-38 252-82 44-44 68-112 82-252z"
-      transform="translate(512 512) scale(0.74) translate(-512 -584)"
-    />
+    <path d="M362 290H544L632 378V648Q632 678 602 678H362Q332 678 332 648V320Q332 290 362 290Z" fill="#ffffff" fill-opacity="0.07" stroke="#f1eee6" stroke-opacity="0.55" stroke-width="12" stroke-linejoin="round" />
+    <g filter="url(#lift)">
+      <path d="M422 346H604L692 434V704Q692 734 662 734H422Q392 734 392 704V376Q392 346 422 346Z" fill="url(#paper)" />
+      <path d="M604 346V418Q604 434 620 434H692Z" fill="#bdb8ad" />
+    </g>
   </g>
   <rect x="101" y="101" width="822" height="822" rx="185" fill="none" stroke="url(#edge)" stroke-width="2" />
 </svg>
