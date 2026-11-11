@@ -9,7 +9,8 @@
     "make gif"
   ],
   "category": "media",
-  "description": "Animated GIF, 12 fps, up to 640 px wide",
+  "icon": "arrow-left-right",
+  "description": "Animated GIF, 12 fps",
   "inputTypes": [
     "@video"
   ],

@@ -12,7 +12,8 @@
     "dominant colours"
   ],
   "category": "info",
-  "description": "Write a .json file listing the 6 main colors (hex, RGB and share of the picture), largest first",
+  "icon": "pipette",
+  "description": "Main colors as hex codes (.json)",
   "inputTypes": [
     "@image"
   ],

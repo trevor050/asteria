@@ -14,7 +14,8 @@
     "puzzle"
   ],
   "category": "compose",
-  "description": "Cut the picture into a grid of separate files in a folder (2x2 by default)",
+  "icon": "table-cells-split",
+  "description": "Cut into a grid of tiles",
   "inputTypes": [
     "@image"
   ],
@@ -32,7 +33,7 @@
         "1x3",
         "4x4"
       ],
-      "hint": "3x3 = columns x rows · 3x1 = three across (Instagram) · tiles cover the picture exactly"
+      "hint": "3x3 = columns x rows · 3x1 = three across (Instagram) · tiles cover the picture exactly · default 2x2"
     }
   ],
   "executor": {

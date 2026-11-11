@@ -8,8 +8,9 @@
     "to webp"
   ],
   "category": "convert",
+  "icon": "arrow-left-right",
   "priority": 6,
-  "description": "Save images as WebP, usually much smaller than JPEG",
+  "description": "Much smaller than JPEG",
   "inputTypes": [
     "@image"
   ],
@@ -19,6 +20,7 @@
       "name": "quality",
       "label": "Quality",
       "type": "int",
+      "hint": "85 = high quality · 70 = smaller file",
       "default": 85,
       "presets": [
         95,

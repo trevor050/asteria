@@ -13,7 +13,8 @@
     "image over image"
   ],
   "category": "compose",
-  "description": "Place the second picture centred on the first (select exactly two, base first)",
+  "icon": "picture-in-picture",
+  "description": "Second picture over the first",
   "inputTypes": [
     "@image"
   ],

@@ -362,15 +362,16 @@ func pixGrayscale(_ context.Context, m *img.Image, _ Args) (*img.Image, error) {
 	}), nil
 }
 
+// pixBlur blurs by a radius in pixels ("6") or in percent of the width
+// ("0.5%", the default, so the look is the same at any resolution).
 func pixBlur(ctx context.Context, m *img.Image, args Args) (*img.Image, error) {
-	radius, err := args.Float("radius", 3)
+	s, err := args.Length("radius", 3, m.W, m.Scale, 400)
 	if err != nil {
 		return nil, err
 	}
-	if radius <= 0 || radius > 200 {
-		return nil, Userf("blur radius must be between 0 and 200")
+	if s <= 0 {
+		return m, nil
 	}
-	s := radius * m.Scale
 	return img.Blur(m.ToLinear(), s, s).ToImage(m), ctx.Err()
 }
 
@@ -391,7 +392,7 @@ func videoRotate(args Args) (string, error) {
 }
 
 func videoBlur(args Args) (string, error) {
-	radius, err := args.Float("radius", 3)
+	radius, err := VideoLength(args, "radius", 3)
 	if err != nil {
 		return "", err
 	}

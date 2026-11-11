@@ -10,8 +10,9 @@
     "jpg to png"
   ],
   "category": "convert",
+  "icon": "arrow-left-right",
   "priority": 4,
-  "description": "Save images as lossless PNG",
+  "description": "Lossless, keeps transparency",
   "inputTypes": [
     "@image"
   ],

@@ -12,7 +12,8 @@
     "duplicate"
   ],
   "category": "transform",
-  "description": "Repeat the picture in a grid (2x2 by default, up to 10x10)",
+  "icon": "repeat-2",
+  "description": "Repeat in a grid",
   "inputTypes": [
     "@image"
   ],
@@ -30,7 +31,7 @@
         "3x1",
         "1x3"
       ],
-      "hint": "3x3 = columns x rows · output is the grid times the picture size"
+      "hint": "3x3 = columns x rows · output is the grid times the picture size · default 2x2"
     }
   ],
   "executor": {

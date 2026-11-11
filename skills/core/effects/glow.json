@@ -12,7 +12,8 @@
     "soft focus"
   ],
   "category": "filter",
-  "description": "Make bright areas bleed a soft light (40% by default)",
+  "icon": "lightbulb",
+  "description": "Bright areas bleed soft light",
   "inputTypes": [
     "@image"
   ],

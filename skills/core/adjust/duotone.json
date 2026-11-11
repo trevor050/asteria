@@ -5,7 +5,8 @@
   "author": "asteria",
   "aliases": ["two tone", "two color", "two colour", "gradient map", "dual tone", "spotify"],
   "category": "adjust",
-  "description": "Recolor the picture with a gradient from a shadow color to a highlight color (navy to peach by default)",
+  "icon": "blend",
+  "description": "Shadows and highlights in two colors",
   "inputTypes": ["@image"],
   "outputType": "",
   "params": [
@@ -15,7 +16,7 @@
       "type": "string",
       "default": "#1d2b53 #ffd28f",
       "presets": ["#1d2b53 #ffd28f", "navy gold", "black white", "purple orange", "#0b3d2e #f4e285"],
-      "hint": "shadow highlight · navy gold · #1d2b53 #ffcc66"
+      "hint": "shadow highlight · navy gold · #1d2b53 #ffcc66 · default #1d2b53 #ffd28f"
     }
   ],
   "executor": { "type": "native", "handler": "adjust.duotone" },

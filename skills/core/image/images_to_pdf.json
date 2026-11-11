@@ -10,7 +10,8 @@
     "make pdf"
   ],
   "category": "pdf",
-  "description": "Put each image on its own page, in order, sized to the image",
+  "icon": "file-text",
+  "description": "One image per page",
   "inputTypes": [
     "@image"
   ],

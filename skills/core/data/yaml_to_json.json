@@ -9,7 +9,8 @@
     "to json"
   ],
   "category": "data",
-  "description": "Pretty JSON; anchors and merge keys are expanded",
+  "icon": "braces",
+  "description": "Pretty-printed JSON",
   "inputTypes": [
     ".yaml",
     ".yml"

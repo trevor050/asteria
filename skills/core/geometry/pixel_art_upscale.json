@@ -14,7 +14,8 @@
     "sharp upscale"
   ],
   "category": "transform",
-  "description": "Enlarge by a whole number with crisp square pixels (4x by default)",
+  "icon": "image-upscale",
+  "description": "Enlarge with crisp square pixels",
   "inputTypes": [
     "@image"
   ],

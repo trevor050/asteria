@@ -11,7 +11,8 @@
     "stretch to fit"
   ],
   "category": "transform",
-  "description": "Resize to an exact size (1080x1080 by default), ignoring the aspect ratio",
+  "icon": "stretch-horizontal",
+  "description": "Exact size, ignoring proportions",
   "inputTypes": [
     "@image"
   ],

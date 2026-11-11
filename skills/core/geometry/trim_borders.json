@@ -13,7 +13,8 @@
     "crop borders"
   ],
   "category": "transform",
-  "description": "Remove uniform borders that match the top-left pixel color",
+  "icon": "slice",
+  "description": "Cut away plain borders",
   "inputTypes": [
     "@image"
   ],

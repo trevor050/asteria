@@ -12,6 +12,9 @@ type Skill struct {
 	// it picks which skill represents its family in the suggestions shown
 	// before anything is typed, and breaks ties between equal text matches.
 	Priority float64 `json:"priority,omitempty"`
+	// Icon names a Lucide icon from the app's bundled set (see
+	// skills/README.md). Empty or unknown names show the family's icon.
+	Icon string `json:"icon,omitempty"`
 	Description string     `json:"description"`
 	InputTypes  []string   `json:"inputTypes"`
 	OutputType  string     `json:"outputType"`

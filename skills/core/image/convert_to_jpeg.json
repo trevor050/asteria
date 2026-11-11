@@ -11,8 +11,9 @@
     "png to jpg"
   ],
   "category": "convert",
+  "icon": "arrow-left-right",
   "priority": 5,
-  "description": "Save images as JPEG (transparency becomes white)",
+  "description": "Opens everywhere; transparency turns white",
   "inputTypes": [
     "@image"
   ],
@@ -22,6 +23,7 @@
       "name": "quality",
       "label": "Quality",
       "type": "int",
+      "hint": "90 = high quality · 75 = smaller file",
       "default": 90,
       "presets": [
         95,

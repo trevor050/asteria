@@ -207,7 +207,7 @@ func pixBoxBlur(ctx context.Context, m *img.Image, args Args) (*img.Image, error
 }
 
 func videoBoxBlur(args Args) (string, error) {
-	r, err := args.Float("radius", 6)
+	r, err := VideoLength(args, "radius", 6)
 	if err != nil {
 		return "", err
 	}
@@ -514,7 +514,7 @@ func pixPixelate(ctx context.Context, m *img.Image, args Args) (*img.Image, erro
 }
 
 func videoPixelate(args Args) (string, error) {
-	v, err := args.Float("size", 12)
+	v, err := VideoLength(args, "size", 12)
 	if err != nil {
 		return "", err
 	}

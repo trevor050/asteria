@@ -9,7 +9,8 @@
     "spreadsheet"
   ],
   "category": "data",
-  "description": "One row per object; nested values are kept as JSON",
+  "icon": "file-spreadsheet",
+  "description": "One row per object",
   "inputTypes": [
     ".json"
   ],

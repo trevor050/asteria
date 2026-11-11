@@ -14,7 +14,8 @@
     "signature"
   ],
   "category": "compose",
-  "description": "Stamp text in the bottom-right corner, white with a soft shadow (© and the current year by default)",
+  "icon": "type",
+  "description": "Stamp text in the corner",
   "inputTypes": [
     "@image"
   ],

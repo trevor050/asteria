@@ -8,7 +8,8 @@
     "aac"
   ],
   "category": "media",
-  "description": "AAC audio in an M4A file",
+  "icon": "arrow-left-right",
+  "description": "AAC audio",
   "inputTypes": [
     "@media"
   ],

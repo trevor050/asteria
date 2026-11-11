@@ -10,8 +10,9 @@
     "jpg to heic"
   ],
   "category": "convert",
+  "icon": "arrow-left-right",
   "priority": 3,
-  "description": "Save images as HEIC, about half the size of JPEG",
+  "description": "About half the size of JPEG",
   "inputTypes": [
     "@image"
   ],
@@ -21,6 +22,7 @@
       "name": "quality",
       "label": "Quality",
       "type": "int",
+      "hint": "70 = high quality · 50 = smaller file",
       "default": 70,
       "presets": [
         90,

@@ -11,7 +11,8 @@
     "vertical flip"
   ],
   "category": "transform",
-  "description": "Turn the picture upside down (top and bottom swap)",
+  "icon": "flip-vertical-2",
+  "description": "Upside down",
   "inputTypes": [
     "@image",
     "@video"

@@ -12,7 +12,8 @@
     "engrave"
   ],
   "category": "filter",
-  "description": "Turn the picture into a grey raised relief lit from the top left",
+  "icon": "mountain",
+  "description": "Gray raised relief",
   "inputTypes": [
     "@image"
   ],

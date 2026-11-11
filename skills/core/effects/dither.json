@@ -16,7 +16,8 @@
     "web safe"
   ],
   "category": "filter",
-  "description": "Reduce to a small palette with error diffusion (black and white by default)",
+  "icon": "binary",
+  "description": "Few colors with dotted shading",
   "inputTypes": [
     "@image"
   ],

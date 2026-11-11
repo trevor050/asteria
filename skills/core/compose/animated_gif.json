@@ -13,7 +13,8 @@
     "flipbook"
   ],
   "category": "compose",
-  "description": "Turn the pictures into a looping GIF, 0.5 seconds per frame, in the order shown",
+  "icon": "image-play",
+  "description": "Pictures into a looping GIF",
   "inputTypes": [
     "@image"
   ],
@@ -34,7 +35,7 @@
       "min": 0.02,
       "max": 10,
       "unit": "s",
-      "hint": "seconds per frame · 0.1 = fast · 2 = slow slideshow"
+      "hint": "seconds per frame · 0.1 = fast · 2 = slow slideshow · default 0.5"
     }
   ],
   "executor": {

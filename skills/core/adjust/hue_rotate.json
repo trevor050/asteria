@@ -3,25 +3,50 @@
   "name": "Hue Rotate",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["hue", "hue shift", "shift hue", "rotate colors", "rotate colours", "color shift", "colour shift"],
+  "aliases": [
+    "hue",
+    "hue shift",
+    "shift hue",
+    "rotate colors",
+    "rotate colours",
+    "color shift",
+    "colour shift"
+  ],
   "category": "adjust",
-  "description": "Rotate all hues around the color wheel (30 degrees by default), keeping lightness and colorfulness",
-  "inputTypes": ["@image", "@video"],
+  "icon": "rainbow",
+  "description": "Shift every hue around the wheel",
+  "inputTypes": [
+    "@image",
+    "@video"
+  ],
   "outputType": "",
   "params": [
     {
       "name": "degrees",
       "label": "Degrees",
       "type": "string",
-      "default": "30",
-      "presets": ["30", "60", "90", "180", "-30", "-90"],
+      "default": 45,
+      "presets": [
+        20,
+        45,
+        90,
+        180,
+        -45
+      ],
       "min": -180,
       "max": 180,
       "unit": "°",
-      "hint": "30 = slight shift · 180 = opposite colors · -90 or 270 = the other way round"
+      "hint": "45 = clear shift · 180 = opposite colors · -90 or 270 = the other way round"
     }
   ],
-  "executor": { "type": "native", "handler": "adjust.hue" },
-  "permissions": ["files.read", "files.write", "files.temp"],
+  "executor": {
+    "type": "native",
+    "handler": "adjust.hue"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
   "dangerLevel": 0
 }

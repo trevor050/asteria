@@ -9,7 +9,8 @@
     "video thumbnail"
   ],
   "category": "sizes",
-  "description": "Scale and centre-crop to YouTube thumbnail (1280x720)",
+  "icon": "monitor-play",
+  "description": "1280x720, cropped to fill",
   "inputTypes": [
     "@image"
   ],

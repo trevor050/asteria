@@ -11,7 +11,8 @@
     "fit and crop"
   ],
   "category": "transform",
-  "description": "Cover an exact size (1080x1080 by default), scaling and centre-cropping the overflow",
+  "icon": "maximize",
+  "description": "Cover an exact size, crop the rest",
   "inputTypes": [
     "@image"
   ],

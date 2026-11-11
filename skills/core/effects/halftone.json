@@ -13,7 +13,8 @@
     "dot screen"
   ],
   "category": "filter",
-  "description": "Black dots on white sized by darkness, like a newspaper print (8px cells by default)",
+  "icon": "grip",
+  "description": "Newspaper print dots",
   "inputTypes": [
     "@image"
   ],
@@ -23,17 +24,17 @@
       "name": "size",
       "label": "Cell size",
       "type": "string",
-      "default": "8",
+      "default": "1.2%",
       "presets": [
-        "5",
-        "8",
-        "12",
-        "20"
+        "0.8%",
+        "1.2%",
+        "2%",
+        "3%"
       ],
-      "min": 3,
-      "max": 60,
-      "unit": "px",
-      "hint": "Dot grid spacing in pixels"
+      "min": 0.4,
+      "max": 5,
+      "unit": "%",
+      "hint": "Dot spacing: 1.2% of the width · or pixels like 10"
     }
   ],
   "executor": {

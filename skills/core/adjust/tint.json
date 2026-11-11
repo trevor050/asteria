@@ -3,25 +3,49 @@
   "name": "Tint (green-magenta)",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["green magenta", "magenta", "greener", "magenta tint", "green tint", "wb tint", "tint shift"],
+  "aliases": [
+    "green magenta",
+    "magenta",
+    "greener",
+    "magenta tint",
+    "green tint",
+    "wb tint",
+    "tint shift"
+  ],
   "category": "adjust",
-  "description": "Shift between green and magenta (+15 magenta by default); negative values add green",
-  "inputTypes": ["@image"],
+  "icon": "palette",
+  "description": "Shift toward magenta or green",
+  "inputTypes": [
+    "@image"
+  ],
   "outputType": "",
   "params": [
     {
       "name": "amount",
       "label": "Amount",
       "type": "string",
-      "default": "+15",
-      "presets": ["+10", "+15", "+30", "-15", "-30"],
+      "default": "+25",
+      "presets": [
+        "+15",
+        "+25",
+        "+50",
+        "-25",
+        "-50"
+      ],
       "min": -100,
       "max": 100,
       "unit": "",
-      "hint": "+15 = toward magenta · -15 = toward green"
+      "hint": "+25 = toward magenta · -25 = toward green"
     }
   ],
-  "executor": { "type": "native", "handler": "adjust.tint" },
-  "permissions": ["files.read", "files.write", "files.temp"],
+  "executor": {
+    "type": "native",
+    "handler": "adjust.tint"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
   "dangerLevel": 0
 }

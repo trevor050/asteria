@@ -12,7 +12,8 @@
     "image similarity"
   ],
   "category": "info",
-  "description": "Pick two images of the same size; writes a .json with mean error, max difference, PSNR, % of pixels changed and SSIM",
+  "icon": "diff",
+  "description": "PSNR, SSIM and error stats (.json)",
   "inputTypes": [
     "@image"
   ],

@@ -8,7 +8,8 @@
     "ipad background"
   ],
   "category": "sizes",
-  "description": "Scale and centre-crop to iPad wallpaper (2048x2732)",
+  "icon": "tablet",
+  "description": "2048x2732, cropped to fill",
   "inputTypes": [
     "@image"
   ],

@@ -11,7 +11,8 @@
     "tiled"
   ],
   "category": "filter",
-  "description": "Turn the picture into square tiles with thin grout lines (16px tiles by default)",
+  "icon": "brick-wall",
+  "description": "Square tiles with grout lines",
   "inputTypes": [
     "@image"
   ],
@@ -21,17 +22,17 @@
       "name": "size",
       "label": "Tile size",
       "type": "string",
-      "default": "16",
+      "default": "3%",
       "presets": [
-        "8",
-        "16",
-        "32",
-        "64"
+        "2%",
+        "3%",
+        "5%",
+        "8%"
       ],
-      "min": 4,
-      "max": 200,
-      "unit": "px",
-      "hint": "Tile size in pixels"
+      "min": 0.5,
+      "max": 10,
+      "unit": "%",
+      "hint": "Tile size: 3% of the width · or pixels like 24"
     }
   ],
   "executor": {

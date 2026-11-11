@@ -10,7 +10,8 @@
     "discord"
   ],
   "category": "media",
-  "description": "Re-encode as H.264 MP4 at a smaller size",
+  "icon": "fold-vertical",
+  "description": "Smaller H.264 MP4",
   "inputTypes": [
     "@video"
   ],
@@ -27,7 +28,7 @@
         32,
         36
       ],
-      "hint": "higher = smaller file, lower quality (18-40)",
+      "hint": "higher = smaller file, lower quality (18-40) · default 28",
       "min": 18,
       "max": 40
     }

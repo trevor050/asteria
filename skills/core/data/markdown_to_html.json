@@ -9,7 +9,8 @@
     "render markdown"
   ],
   "category": "data",
-  "description": "A standalone HTML page (GitHub-flavored Markdown)",
+  "icon": "code-xml",
+  "description": "A standalone HTML page",
   "inputTypes": [
     ".md",
     ".markdown"

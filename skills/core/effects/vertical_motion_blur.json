@@ -10,7 +10,8 @@
     "up down blur"
   ],
   "category": "filter",
-  "description": "Smear the picture up and down (20px by default)",
+  "icon": "move-vertical",
+  "description": "Fast up-and-down smear",
   "inputTypes": [
     "@image"
   ],
@@ -20,17 +21,17 @@
       "name": "length",
       "label": "Length",
       "type": "string",
-      "default": "20",
+      "default": "3%",
       "presets": [
-        "10",
-        "20",
-        "40",
-        "80"
+        "1.5%",
+        "3%",
+        "6%",
+        "10%"
       ],
-      "min": 2,
-      "max": 300,
-      "unit": "px",
-      "hint": "Smear length in pixels, vertical"
+      "min": 0.5,
+      "max": 10,
+      "unit": "%",
+      "hint": "Smear length: 3% of the width · or pixels like 40"
     }
   ],
   "executor": {

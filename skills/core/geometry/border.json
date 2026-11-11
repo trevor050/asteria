@@ -12,7 +12,8 @@
     "picture frame"
   ],
   "category": "transform",
-  "description": "Add a white border around the picture (4% of the shorter side by default)",
+  "icon": "frame",
+  "description": "White frame around the picture",
   "inputTypes": [
     "@image"
   ],

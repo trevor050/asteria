@@ -9,7 +9,8 @@
     "smaller pdf"
   ],
   "category": "pdf",
-  "description": "Lossless: removes duplicate objects and recompresses streams",
+  "icon": "fold-vertical",
+  "description": "Smaller PDF, losslessly",
   "inputTypes": [
     "@pdf"
   ],

@@ -12,7 +12,8 @@
     "metadata"
   ],
   "category": "info",
-  "description": "Write a .json file with size, format, bit depth, color profile and, when present, camera, lens, date, exposure and GPS position",
+  "icon": "info",
+  "description": "Camera, date, GPS and more (.json)",
   "inputTypes": [
     "@image"
   ],

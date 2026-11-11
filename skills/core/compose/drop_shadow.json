@@ -11,7 +11,8 @@
     "shadow behind"
   ],
   "category": "compose",
-  "description": "Add a soft shadow behind the picture or its cut-out shape (grows the canvas, saves as PNG)",
+  "icon": "layers-2",
+  "description": "Soft shadow behind (saves as PNG)",
   "inputTypes": [
     "@image"
   ],

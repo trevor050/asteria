@@ -11,7 +11,8 @@
     "image diff"
   ],
   "category": "info",
-  "description": "Pick two images of the same size; writes a .png with the first one dimmed and every difference marked in red",
+  "icon": "git-compare",
+  "description": "Mark the differences in red (.png)",
   "inputTypes": [
     "@image"
   ],

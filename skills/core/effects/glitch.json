@@ -13,7 +13,8 @@
     "distort"
   ],
   "category": "filter",
-  "description": "Slide slices sideways and split color channels (50% by default)",
+  "icon": "vibrate",
+  "description": "Broken digital signal",
   "inputTypes": [
     "@image"
   ],

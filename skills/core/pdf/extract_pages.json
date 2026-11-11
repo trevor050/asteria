@@ -10,7 +10,8 @@
     "pdf pages"
   ],
   "category": "pdf",
-  "description": "Keep only the listed pages, in the order you type them",
+  "icon": "file-output",
+  "description": "Keep only some pages",
   "inputTypes": [
     "@pdf"
   ],

@@ -8,7 +8,8 @@
     "to json"
   ],
   "category": "data",
-  "description": "Array of objects keyed by the header row",
+  "icon": "file-json",
+  "description": "Objects keyed by the header row",
   "inputTypes": [
     ".csv",
     ".tsv"

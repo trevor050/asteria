@@ -5,7 +5,8 @@
   "author": "asteria",
   "aliases": ["change color", "change colour", "swap color", "swap colour", "recolor", "recolour", "color replace", "colour replace", "replace colour"],
   "category": "adjust",
-  "description": "Replace one color with another, keeping shading (red to blue by default); similar colors follow, with a soft edge",
+  "icon": "replace",
+  "description": "Swap one color for another",
   "inputTypes": ["@image"],
   "outputType": "",
   "params": [

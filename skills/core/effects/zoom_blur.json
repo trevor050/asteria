@@ -11,7 +11,8 @@
     "burst"
   ],
   "category": "filter",
-  "description": "Blur outward from the centre like a zooming camera (15% by default)",
+  "icon": "zoom-in",
+  "description": "Rush toward the center",
   "inputTypes": [
     "@image"
   ],

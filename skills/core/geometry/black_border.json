@@ -10,7 +10,8 @@
     "add black border"
   ],
   "category": "transform",
-  "description": "Add a black border around the picture (4% of the shorter side by default)",
+  "icon": "frame",
+  "description": "Black frame around the picture",
   "inputTypes": [
     "@image"
   ],

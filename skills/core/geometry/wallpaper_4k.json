@@ -10,7 +10,8 @@
     "uhd wallpaper"
   ],
   "category": "sizes",
-  "description": "Scale and centre-crop to 4K desktop wallpaper (3840x2160)",
+  "icon": "tv",
+  "description": "3840x2160, cropped to fill",
   "inputTypes": [
     "@image"
   ],

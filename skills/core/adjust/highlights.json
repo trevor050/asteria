@@ -3,25 +3,47 @@
   "name": "Highlights",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["recover highlights", "highlight recovery", "tame highlights", "blown highlights", "bright areas", "bright spots"],
+  "aliases": [
+    "recover highlights",
+    "highlight recovery",
+    "tame highlights",
+    "blown highlights",
+    "bright areas",
+    "bright spots"
+  ],
   "category": "adjust",
-  "description": "Pull bright areas down to recover detail (-30 by default); positive values boost them",
-  "inputTypes": ["@image"],
+  "icon": "sun-dim",
+  "description": "Recover or boost bright areas",
+  "inputTypes": [
+    "@image"
+  ],
   "outputType": "",
   "params": [
     {
       "name": "amount",
       "label": "Amount",
       "type": "string",
-      "default": "-30",
-      "presets": ["-15", "-30", "-60", "-100", "+30"],
+      "default": "-50",
+      "presets": [
+        "-25",
+        "-50",
+        "-80",
+        "+40"
+      ],
       "min": -100,
       "max": 100,
       "unit": "",
-      "hint": "-30 = recover highlights · +30 = boost them · midtones and shadows stay"
+      "hint": "-50 = recover highlights · +40 = boost them · midtones and shadows stay"
     }
   ],
-  "executor": { "type": "native", "handler": "adjust.highlights" },
-  "permissions": ["files.read", "files.write", "files.temp"],
+  "executor": {
+    "type": "native",
+    "handler": "adjust.highlights"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
   "dangerLevel": 0
 }

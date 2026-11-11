@@ -197,6 +197,10 @@ type Suggestion struct {
 	// Live is true when the skill can preview on the fly while its value is
 	// being adjusted (PreviewSkill).
 	Live bool `json:"live"`
+	// Icon is the skill's icon name (empty: the family default).
+	Icon string `json:"icon"`
+	// Matched is the alias the query matched, when the name did not.
+	Matched string `json:"matched"`
 }
 
 // Search ranks skills for the query against the files skills would apply to.
@@ -220,6 +224,7 @@ func (a *App) Search(query string, fileIDs []string) []Suggestion {
 			ID: s.ID, Name: s.Name, Description: s.Description, Category: s.Category,
 			IsMeta: s.IsMeta, Combine: s.Combine, OutputType: s.OutputType, Params: s.Params,
 			Value: m.Value, Community: s.Source == skills.SkillSourceCommunity,
+			Icon: s.Icon, Matched: m.Alias,
 		}
 		if s.Executor.Type == "native" {
 			if h, ok := ops.Lookup(s.Executor.Handler); ok {
@@ -674,7 +679,7 @@ func (a *App) ListSkills() []Suggestion {
 	sort.Slice(all, func(i, j int) bool { return all[i].Name < all[j].Name })
 	out := make([]Suggestion, 0, len(all))
 	for _, s := range all {
-		out = append(out, Suggestion{ID: s.ID, Name: s.Name, Description: s.Description, Category: s.Category, IsMeta: s.IsMeta, Combine: s.Combine, OutputType: s.OutputType, Params: s.Params, Community: s.Source == skills.SkillSourceCommunity})
+		out = append(out, Suggestion{ID: s.ID, Name: s.Name, Description: s.Description, Category: s.Category, IsMeta: s.IsMeta, Combine: s.Combine, OutputType: s.OutputType, Params: s.Params, Community: s.Source == skills.SkillSourceCommunity, Icon: s.Icon})
 	}
 	return out
 }

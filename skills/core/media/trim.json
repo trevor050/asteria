@@ -10,6 +10,7 @@
     "trim audio"
   ],
   "category": "media",
+  "icon": "scissors",
   "description": "Keep only a time range",
   "inputTypes": [
     "@media"
@@ -26,7 +27,7 @@
         "0:00-1:00",
         "0:30-"
       ],
-      "hint": "start-end, e.g. 0:05-0:30 · 1:00- (to the end)"
+      "hint": "start-end, e.g. 0:05-0:30 · 1:00- (to the end) · default 0:00-0:30"
     }
   ],
   "executor": {

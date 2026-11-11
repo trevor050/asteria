@@ -10,8 +10,9 @@
     "smaller file"
   ],
   "category": "compress",
+  "icon": "fold-vertical",
   "priority": 10,
-  "description": "Re-encode JPEG/WebP at a lower quality; PNG gets lossless max compression",
+  "description": "Smaller file at a lower quality",
   "inputTypes": [
     "@image"
   ],
@@ -21,6 +22,7 @@
       "name": "quality",
       "label": "Quality",
       "type": "int",
+      "hint": "75 = good balance · 50 = smaller file · quality 1-100",
       "default": 75,
       "presets": [
         95,

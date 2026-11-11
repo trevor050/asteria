@@ -12,7 +12,8 @@
     "luminance noise"
   ],
   "category": "filter",
-  "description": "Add soft film grain that changes brightness only (20 by default)",
+  "icon": "film",
+  "description": "Soft film grain",
   "inputTypes": [
     "@image"
   ],

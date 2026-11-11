@@ -3,25 +3,47 @@
   "name": "Vibrance",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["smart saturation", "natural saturation", "boost colors", "boost colours", "colour boost", "muted colors"],
+  "aliases": [
+    "smart saturation",
+    "natural saturation",
+    "boost colors",
+    "boost colours",
+    "colour boost",
+    "muted colors"
+  ],
   "category": "adjust",
-  "description": "Boost muted colors more than vivid ones (+40% by default); neutrals and already-vivid colors barely move",
-  "inputTypes": ["@image"],
+  "icon": "droplets",
+  "description": "Boost muted colors, spare vivid ones",
+  "inputTypes": [
+    "@image"
+  ],
   "outputType": "",
   "params": [
     {
       "name": "amount",
       "label": "Amount",
       "type": "string",
-      "default": "+40",
-      "presets": ["+20", "+40", "+70", "-30", "-60"],
+      "default": "+70",
+      "presets": [
+        "+40",
+        "+70",
+        "+120",
+        "-40"
+      ],
       "min": -100,
       "max": 200,
       "unit": "%",
-      "hint": "+40 = richer muted tones · 150% = stronger · -30 = calmer"
+      "hint": "+70 = richer muted tones · +120 = strong · -40 = calmer"
     }
   ],
-  "executor": { "type": "native", "handler": "adjust.vibrance" },
-  "permissions": ["files.read", "files.write", "files.temp"],
+  "executor": {
+    "type": "native",
+    "handler": "adjust.vibrance"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
   "dangerLevel": 0
 }

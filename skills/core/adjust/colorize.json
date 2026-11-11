@@ -5,7 +5,8 @@
   "author": "asteria",
   "aliases": ["tint with color", "tint with colour", "color overlay", "colour overlay", "wash", "color wash", "colour wash", "tone with color"],
   "category": "adjust",
-  "description": "Wash the picture with a color while keeping each pixel's lightness (orange at 50% by default)",
+  "icon": "paintbrush",
+  "description": "Wash with one color, keep the shading",
   "inputTypes": ["@image"],
   "outputType": "",
   "params": [

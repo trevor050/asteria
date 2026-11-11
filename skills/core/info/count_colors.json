@@ -12,7 +12,8 @@
     "color count"
   ],
   "category": "info",
-  "description": "Write a .json file with the number of unique colors, whether it is greyscale or transparent, and the 10 most common colors",
+  "icon": "hash",
+  "description": "Unique and most common colors (.json)",
   "inputTypes": [
     "@image"
   ],

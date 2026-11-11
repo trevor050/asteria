@@ -8,7 +8,8 @@
     "lossless audio"
   ],
   "category": "media",
-  "description": "Lossless FLAC audio",
+  "icon": "arrow-left-right",
+  "description": "Lossless audio",
   "inputTypes": [
     "@media"
   ],

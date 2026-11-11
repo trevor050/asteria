@@ -13,7 +13,8 @@
     "make favicon"
   ],
   "category": "compose",
-  "description": "Make favicon.ico and the PNG icons websites need from a picture (centre-cropped square)",
+  "icon": "globe",
+  "description": "favicon.ico and website icons",
   "inputTypes": [
     "@image"
   ],

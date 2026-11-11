@@ -14,7 +14,8 @@
     "merge images horizontally"
   ],
   "category": "compose",
-  "description": "Join the pictures side by side at the same height, in the order shown",
+  "icon": "gallery-horizontal",
+  "description": "Join pictures side by side",
   "inputTypes": [
     "@image"
   ],

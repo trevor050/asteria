@@ -9,7 +9,8 @@
     "highlight color"
   ],
   "category": "meta",
-  "description": "Set the UI accent color",
+  "icon": "paintbrush",
+  "description": "Change the accent color",
   "inputTypes": [
     "*"
   ],
@@ -19,6 +20,7 @@
       "name": "color",
       "type": "string",
       "label": "Color",
+      "hint": "Indigo · Sky · Emerald · Orange · Red · Violet, or any color like #ff8800",
       "default": "99,102,241",
       "presets": [
         {

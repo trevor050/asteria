@@ -12,7 +12,8 @@
     "unrotate"
   ],
   "category": "transform",
-  "description": "Rotate by a small angle (2° by default) and crop away the empty corners",
+  "icon": "rotate-ccw-square",
+  "description": "Fix a slight tilt",
   "inputTypes": [
     "@image"
   ],
@@ -34,7 +35,7 @@
       "min": -45,
       "max": 45,
       "unit": "°",
-      "hint": "positive turns clockwise · -2 = anticlockwise · range -45 to 45"
+      "hint": "positive turns clockwise · -2 = counterclockwise · range -45 to 45"
     }
   ],
   "executor": {

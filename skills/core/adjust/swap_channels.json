@@ -5,7 +5,8 @@
   "author": "asteria",
   "aliases": ["swap rgb", "channel swap", "bgr", "rgb to bgr", "switch channels", "shuffle channels", "swap colors"],
   "category": "adjust",
-  "description": "Reorder the red, green and blue channels (bgr by default, which swaps red and blue)",
+  "icon": "shuffle",
+  "description": "Reorder red, green and blue",
   "inputTypes": ["@image", "@video"],
   "outputType": "",
   "params": [

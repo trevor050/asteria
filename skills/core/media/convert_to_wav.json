@@ -8,7 +8,8 @@
     "uncompressed audio"
   ],
   "category": "media",
-  "description": "Uncompressed 16-bit WAV",
+  "icon": "arrow-left-right",
+  "description": "Uncompressed audio",
   "inputTypes": [
     "@media"
   ],

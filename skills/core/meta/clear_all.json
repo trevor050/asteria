@@ -9,7 +9,8 @@
     "clear all"
   ],
   "category": "meta",
-  "description": "Remove every file from the tray (your originals stay where they are)",
+  "icon": "trash-2",
+  "description": "Empty the tray (originals stay)",
   "inputTypes": [
     "*"
   ],

@@ -10,7 +10,8 @@
     "zip files"
   ],
   "category": "archive",
-  "description": "Put the files (and folders) into one .zip",
+  "icon": "file-archive",
+  "description": "Pack files and folders into a .zip",
   "inputTypes": [
     "*"
   ],

@@ -9,7 +9,8 @@
     "yml"
   ],
   "category": "data",
-  "description": "Block-style YAML with key order and types kept",
+  "icon": "list-tree",
+  "description": "Readable YAML, types kept",
   "inputTypes": [
     ".json"
   ],

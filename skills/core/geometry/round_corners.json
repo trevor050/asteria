@@ -11,7 +11,8 @@
     "curved corners"
   ],
   "category": "transform",
-  "description": "Round the corners with a smooth edge (8% of the shorter side by default); saves as PNG",
+  "icon": "square-round-corner",
+  "description": "Smooth rounded corners (PNG)",
   "inputTypes": [
     "@image"
   ],

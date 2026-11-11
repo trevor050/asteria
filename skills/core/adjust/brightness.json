@@ -3,26 +3,49 @@
   "name": "Brightness",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["brighter", "darker", "lighten", "darken", "dim", "light"],
+  "aliases": [
+    "brighter",
+    "darker",
+    "lighten",
+    "darken",
+    "dim",
+    "light"
+  ],
   "category": "adjust",
+  "icon": "sun",
   "priority": 6,
-  "description": "Make the picture brighter (+20% light by default) or darker with a negative amount",
-  "inputTypes": ["@image"],
+  "description": "Brighter, or darker with a minus",
+  "inputTypes": [
+    "@image"
+  ],
   "outputType": "",
   "params": [
     {
       "name": "amount",
       "label": "Amount",
       "type": "string",
-      "default": "+20",
-      "presets": ["+10", "+20", "+40", "-20", "-40"],
+      "default": "+30",
+      "presets": [
+        "+15",
+        "+30",
+        "+60",
+        "-20",
+        "-40"
+      ],
       "min": -100,
       "max": 300,
       "unit": "%",
-      "hint": "+20 = 20% more light · -30 or 70% = darker · 2x = double"
+      "hint": "+30 = 30% more light · -30 or 70% = darker · 2x = double"
     }
   ],
-  "executor": { "type": "native", "handler": "adjust.brightness" },
-  "permissions": ["files.read", "files.write", "files.temp"],
+  "executor": {
+    "type": "native",
+    "handler": "adjust.brightness"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
   "dangerLevel": 0
 }

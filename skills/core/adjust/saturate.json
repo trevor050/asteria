@@ -3,26 +3,50 @@
   "name": "Saturate",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["saturation", "more color", "vivid", "desaturate", "less color", "colorful"],
+  "aliases": [
+    "saturation",
+    "more color",
+    "vivid",
+    "desaturate",
+    "less color",
+    "colorful"
+  ],
   "category": "adjust",
+  "icon": "droplet",
   "priority": 8,
-  "description": "Make colors richer (+40% by default) or duller with a negative amount",
-  "inputTypes": ["@image", "@video"],
+  "description": "Richer colors, or duller with a minus",
+  "inputTypes": [
+    "@image",
+    "@video"
+  ],
   "outputType": "",
   "params": [
     {
       "name": "amount",
       "label": "Amount",
       "type": "string",
-      "default": "+40",
-      "presets": ["+20", "+40", "+80", "-30", "-60"],
+      "default": "+60",
+      "presets": [
+        "+30",
+        "+60",
+        "+100",
+        "-40",
+        "-100"
+      ],
       "min": -100,
       "max": 200,
       "unit": "%",
-      "hint": "+40 or 140% = richer · -30 or 70% = duller · -100 = grey"
+      "hint": "+60 or 160% = richer · -40 or 60% = duller · -100 = gray"
     }
   ],
-  "executor": { "type": "native", "handler": "adjust.saturate" },
-  "permissions": ["files.read", "files.write", "files.temp"],
+  "executor": {
+    "type": "native",
+    "handler": "adjust.saturate"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
   "dangerLevel": 0
 }

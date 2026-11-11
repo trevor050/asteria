@@ -11,8 +11,9 @@
     "corner shade"
   ],
   "category": "filter",
+  "icon": "circle-dot",
   "priority": 5,
-  "description": "Darken the corners with a smooth falloff (50% by default)",
+  "description": "Darker corners",
   "inputTypes": [
     "@image",
     "@video"

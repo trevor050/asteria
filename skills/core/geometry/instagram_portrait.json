@@ -9,7 +9,8 @@
     "ig portrait"
   ],
   "category": "sizes",
-  "description": "Scale and centre-crop to Instagram portrait post (1080x1350)",
+  "icon": "smartphone",
+  "description": "1080x1350, cropped to fill",
   "inputTypes": [
     "@image"
   ],

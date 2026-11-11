@@ -12,7 +12,8 @@
     "brand watermark"
   ],
   "category": "compose",
-  "description": "Put the second picture as a logo in the first one's bottom-right corner, 20% wide at 80% opacity (select exactly two, picture first)",
+  "icon": "stamp",
+  "description": "Second picture as a corner logo",
   "inputTypes": [
     "@image"
   ],

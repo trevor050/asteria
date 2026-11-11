@@ -20,6 +20,9 @@ type Match struct {
 	Skill Skill   `json:"skill"`
 	Value string  `json:"value"`
 	Score float64 `json:"score"`
+	// Alias is the alias the query matched when the name itself did not,
+	// so the UI can say why a row is there.
+	Alias string `json:"alias,omitempty"`
 }
 
 // Context describes the files a search is for.
@@ -162,18 +165,21 @@ func (r *Ranker) rankText(all []Skill, text, value string, ctx Context) []Match 
 		if ms <= 0 || (strongest >= strongMatch && ms < weakMatch) {
 			continue
 		}
-		accepts := len(ctx.InputTypes) == 0 || acceptsAny(s, ctx.InputTypes)
-		if !s.IsMeta && !accepts {
-			// Keep it visible but well below anything usable.
-			ms -= 600
-		} else if !s.IsMeta {
-			ms += r.InputMatchBoost
-		}
+		// Legible order: skills that apply to the files first; then how the
+		// query matched (name exact, name prefix, name words, alias exact,
+		// alias prefix, alias words, fuzzy); then, within a tier, everyday
+		// skills (priority, the user's habits, family) ahead of obscure ones.
+		tier, alias := matchTier(s, text)
+		usable := s.IsMeta || len(ctx.InputTypes) == 0 || acceptsAny(s, ctx.InputTypes)
 		if r.isNoOp(s, ctx) {
-			ms -= r.NoOpPenalty
+			usable = false
 		}
-		score := ms + r.CategoryOrder[s.Category]/4 + clampPriority(s.Priority)/2 + r.frecency(s.ID, ctx.Usage)
-		m := Match{Skill: s, Score: score}
+		within := clampPriority(s.Priority)*3 + r.CategoryOrder[s.Category]/4 + r.frecency(s.ID, ctx.Usage)
+		score := float64(tier)*1e3 + within
+		if usable {
+			score += 1e5
+		}
+		m := Match{Skill: s, Score: score, Alias: alias}
 		if value != "" && len(s.Params) > 0 {
 			m.Value = value
 		}
@@ -249,6 +255,73 @@ func words(s string) []string {
 	return strings.FieldsFunc(strings.ToLower(s), func(r rune) bool {
 		return !unicode.IsLetter(r) && !unicode.IsDigit(r)
 	})
+}
+
+// Match tiers, best first.
+const (
+	tierNone = iota
+	tierDescription
+	tierTypo
+	tierFuzzy
+	tierAliasWords
+	tierAliasPrefix
+	tierAliasExact
+	tierNameWords
+	tierNamePrefix
+	tierNameExact
+)
+
+// matchTier classifies how text matches a skill and returns the alias that
+// matched when the match came from an alias.
+func matchTier(s Skill, text string) (int, string) {
+	q := strings.ToLower(strings.TrimSpace(text))
+	if q == "" {
+		return tierNone, ""
+	}
+	name := strings.ToLower(s.Name)
+	qw := words(q)
+	switch {
+	case name == q:
+		return tierNameExact, ""
+	case strings.HasPrefix(name, q):
+		return tierNamePrefix, ""
+	case wordPrefixes(qw, words(s.Name)):
+		return tierNameWords, ""
+	}
+	best, which := tierNone, ""
+	for _, a := range s.Aliases {
+		al := strings.ToLower(a)
+		t := tierNone
+		switch {
+		case al == q:
+			t = tierAliasExact
+		case strings.HasPrefix(al, q):
+			t = tierAliasPrefix
+		case wordPrefixes(qw, words(a)):
+			t = tierAliasWords
+		case strings.Contains(al, q):
+			t = tierFuzzy
+		}
+		if t > best {
+			best, which = t, a
+		}
+	}
+	if best >= tierAliasWords {
+		return best, which
+	}
+	if strings.Contains(name, q) || subsequenceScore(name, strings.ReplaceAll(q, " ", "")) > 0 {
+		return tierFuzzy, ""
+	}
+	if best == tierFuzzy {
+		return tierFuzzy, which
+	}
+	if typoMatch(qw, words(s.Name)) {
+		return tierTypo, ""
+	}
+	if len(q) >= 4 && strings.Contains(strings.ToLower(s.Description), q) {
+		return tierDescription, ""
+	}
+	return tierNone, ""
 }
 
 // matchScore returns how well text matches a skill (0 = no match).

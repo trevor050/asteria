@@ -10,7 +10,8 @@
     "twitter cover"
   ],
   "category": "sizes",
-  "description": "Scale and centre-crop to Twitter/X header (1500x500)",
+  "icon": "rectangle-horizontal",
+  "description": "X header, 1500x500",
   "inputTypes": [
     "@image"
   ],

@@ -15,7 +15,8 @@
     "green screen"
   ],
   "category": "compose",
-  "description": "Make the background color transparent with a soft edge (finds it from the corners by default)",
+  "icon": "eraser",
+  "description": "Make a background color transparent",
   "inputTypes": [
     "@image"
   ],

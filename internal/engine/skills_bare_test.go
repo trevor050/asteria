@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"hash/fnv"
+	"math"
 	"strings"
 	"testing"
 
@@ -52,7 +53,10 @@ func TestEveryImageSkillBareAndPresets(t *testing.T) {
 		if hashImg(pic) != sum {
 			t.Fatalf("%s modified its input", sk.ID)
 		}
-		if !unchanged[sk.ID] && out.W == pic.W && out.H == pic.H {
+		// Sizes in percent of the picture are a pixel or less on this 64x48
+		// scene; TestBareCommandIsPerceptibleOnAPhoto covers those skills.
+		relative := len(sk.Params) == 1 && strings.HasSuffix(fmt.Sprint(sk.Params[0].Default), "%") && sk.Params[0].Unit == "%" && !strings.HasPrefix(fmt.Sprint(sk.Params[0].Default), "+")
+		if !unchanged[sk.ID] && !relative && out.W == pic.W && out.H == pic.H {
 			if d := diff(out, pic); (local[sk.ID] && d == 0) || (!local[sk.ID] && d < 0.002) {
 				t.Errorf("%s (bare) barely changed the picture (mean diff %.4f)", sk.ID, d)
 			}
@@ -146,4 +150,62 @@ func diff(a, b *img.Image) float64 {
 		s += d
 	}
 	return s / float64(len(a.Pix)) / 65535
+}
+
+// The bare command of every color, tone and effect skill visibly changes an
+// ordinary photo (testdata/fixtures/photo.jpg, NASA, public domain):
+// mean OKLab difference of at least 1.5 (x100), or for saturation-type
+// skills a mean chroma change of at least 20%.
+func TestBareCommandIsPerceptibleOnAPhoto(t *testing.T) {
+	e := newEnv(t, "")
+	photo, err := ops.DecodeWorking("../../testdata/fixtures/photo.jpg")
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Depend on content: nothing to fix, no matching color, no noise, or
+	// only alpha changes on an opaque photo.
+	exempt := map[string]string{
+		"auto_levels": "full-range photo", "auto_contrast": "full-range photo", "enhance": "full-range photo",
+		"auto_white_balance": "neutral photo", "replace_color": "no red in the photo", "denoise": "no noise",
+		"opacity": "changes alpha only",
+	}
+	for _, sk := range e.reg.List() {
+		if (sk.Category != "adjust" && sk.Category != "filter") || sk.Executor.Type != "native" {
+			continue
+		}
+		h, ok := ops.Lookup(sk.Executor.Handler)
+		if !ok || h.Pixel == nil || exempt[sk.ID] != "" {
+			continue
+		}
+		args := ops.Merge(sk.Executor.With, nil)
+		if len(sk.Params) == 1 && sk.Params[0].Default != nil {
+			args[sk.Params[0].Name] = sk.Params[0].Default
+		}
+		out, err := ops.RunPixel(context.Background(), h, photo, args)
+		if err != nil {
+			t.Errorf("%s: %v", sk.ID, err)
+			continue
+		}
+		de, dc := perceptualChange(photo, out)
+		if de < 1.5 && dc < 0.2 {
+			t.Errorf("%s (bare) is too timid on an ordinary photo: mean dE %.2f, chroma change %.0f%%", sk.ID, de, dc*100)
+		}
+	}
+}
+
+func perceptualChange(a, b *img.Image) (de, chroma float64) {
+	if a.W != b.W || a.H != b.H {
+		return 100, 1
+	}
+	var sum, ca, cb float64
+	n := 0
+	for i := 0; i < len(a.Pix); i += 4 {
+		L1, A1, B1 := img.LinearToOKLab(img.Lin(a.Pix[i]), img.Lin(a.Pix[i+1]), img.Lin(a.Pix[i+2]))
+		L2, A2, B2 := img.LinearToOKLab(img.Lin(b.Pix[i]), img.Lin(b.Pix[i+1]), img.Lin(b.Pix[i+2]))
+		sum += math.Sqrt(float64((L1-L2)*(L1-L2) + (A1-A2)*(A1-A2) + (B1-B2)*(B1-B2)))
+		ca += math.Hypot(float64(A1), float64(B1))
+		cb += math.Hypot(float64(A2), float64(B2))
+		n++
+	}
+	return 100 * sum / float64(n), math.Abs(cb-ca) / math.Max(ca, 1e-9)
 }

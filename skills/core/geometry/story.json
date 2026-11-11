@@ -12,7 +12,8 @@
     "shorts"
   ],
   "category": "sizes",
-  "description": "Scale and centre-crop to Story, TikTok or Reel (1080x1920)",
+  "icon": "rectangle-vertical",
+  "description": "Story, TikTok or Reel, 1080x1920",
   "inputTypes": [
     "@image"
   ],

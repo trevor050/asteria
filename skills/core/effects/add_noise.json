@@ -13,7 +13,8 @@
     "color noise"
   ],
   "category": "filter",
-  "description": "Add color noise over the picture (12 by default)",
+  "icon": "dices",
+  "description": "Speckle with color noise",
   "inputTypes": [
     "@image",
     "@video"

@@ -10,7 +10,8 @@
     "decompress"
   ],
   "category": "archive",
-  "description": "Unpack a .zip, .tar or .tar.gz into a folder",
+  "icon": "package-open",
+  "description": "Unpack .zip, .tar or .tar.gz",
   "inputTypes": [
     "@archive"
   ],

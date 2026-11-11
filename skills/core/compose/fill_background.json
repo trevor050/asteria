@@ -14,7 +14,8 @@
     "white background"
   ],
   "category": "compose",
-  "description": "Put the picture on a solid color (white by default) so nothing is transparent",
+  "icon": "paint-bucket",
+  "description": "Replace transparency with a color",
   "inputTypes": [
     "@image"
   ],

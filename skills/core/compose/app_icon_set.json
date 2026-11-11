@@ -15,7 +15,8 @@
     "make app icon"
   ],
   "category": "compose",
-  "description": "Make app icons from 16 to 1024 pixels plus app.ico from a picture (centre-cropped square)",
+  "icon": "app-window-mac",
+  "description": "App icons from 16 to 1024 px",
   "inputTypes": [
     "@image"
   ],

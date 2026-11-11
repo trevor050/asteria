@@ -10,7 +10,8 @@
     "rip audio"
   ],
   "category": "media",
-  "description": "MP3 audio (also pulls the audio out of videos)",
+  "icon": "arrow-left-right",
+  "description": "MP3 audio, also from video",
   "inputTypes": [
     "@media"
   ],

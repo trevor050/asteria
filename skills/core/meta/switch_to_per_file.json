@@ -10,7 +10,8 @@
     "focused file"
   ],
   "category": "meta",
-  "description": "Skills apply only to the focused file",
+  "icon": "square",
+  "description": "Skills apply to the focused file",
   "inputTypes": [
     "*"
   ],

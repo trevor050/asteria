@@ -11,7 +11,8 @@
     "movement"
   ],
   "category": "filter",
-  "description": "Smear the picture sideways as if it moved fast (20px horizontal by default)",
+  "icon": "move-horizontal",
+  "description": "Fast sideways smear",
   "inputTypes": [
     "@image"
   ],
@@ -21,17 +22,17 @@
       "name": "length",
       "label": "Length",
       "type": "string",
-      "default": "20",
+      "default": "3%",
       "presets": [
-        "10",
-        "20",
-        "40",
-        "80"
+        "1.5%",
+        "3%",
+        "6%",
+        "10%"
       ],
-      "min": 2,
-      "max": 300,
-      "unit": "px",
-      "hint": "Smear length in pixels, horizontal"
+      "min": 0.5,
+      "max": 10,
+      "unit": "%",
+      "hint": "Smear length: 3% of the width · or pixels like 40"
     }
   ],
   "executor": {

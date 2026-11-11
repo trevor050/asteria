@@ -12,7 +12,8 @@
     "tile sheet"
   ],
   "category": "compose",
-  "description": "Pack the pictures into one transparent sheet, left to right in rows, one equal cell each",
+  "icon": "layout-grid",
+  "description": "Pack pictures into one sheet",
   "inputTypes": [
     "@image"
   ],

@@ -12,8 +12,9 @@
     "counterclockwise"
   ],
   "category": "transform",
+  "icon": "rotate-cw",
   "priority": 8,
-  "description": "Rotate clockwise by any angle (90 by default); quarter turns are lossless, other angles grow the canvas",
+  "description": "Turn by any angle",
   "inputTypes": [
     "@image",
     "@video"
@@ -36,7 +37,7 @@
       "min": -360,
       "max": 360,
       "unit": "°",
-      "hint": "90 = clockwise · -90 = anticlockwise · 15 or -15 = a tilt (canvas grows, corners transparent)"
+      "hint": "90 = clockwise · -90 = counterclockwise · 15 or -15 = a tilt (canvas grows, corners transparent)"
     }
   ],
   "executor": {

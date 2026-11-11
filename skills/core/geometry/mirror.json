@@ -11,7 +11,8 @@
     "flip left right"
   ],
   "category": "transform",
-  "description": "Mirror the picture left to right",
+  "icon": "flip-horizontal-2",
+  "description": "Left to right",
   "inputTypes": [
     "@image",
     "@video"

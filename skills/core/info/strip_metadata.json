@@ -13,7 +13,8 @@
     "strip exif"
   ],
   "category": "info",
-  "description": "Remove EXIF, GPS location, XMP, IPTC and comments from the photo (same format; JPEG and PNG pixels are untouched)",
+  "icon": "shield-off",
+  "description": "Remove EXIF, GPS and other metadata",
   "inputTypes": [
     "@image"
   ],

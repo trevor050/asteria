@@ -12,7 +12,8 @@
     "television"
   ],
   "category": "filter",
-  "description": "Darken every other pair of rows with a faint RGB mask, like a CRT (35% by default)",
+  "icon": "rows-4",
+  "description": "Old CRT screen lines",
   "inputTypes": [
     "@image"
   ],

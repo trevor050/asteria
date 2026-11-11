@@ -126,12 +126,13 @@ func PreviewBytes(m *img.Image) ([]byte, string, error) {
 
 // RunVideoFilter applies a handler's ffmpeg filter to a video, keeping audio.
 func RunVideoFilter(ctx context.Context, job Job, h Handler, args Args) error {
-	filter, err := h.Video(args)
+	in := job.Input()
+	info, _ := ProbeMedia(ctx, job.Tools, in)
+	// Sizes given as a percent of the picture resolve against the frame.
+	filter, err := h.Video(Merge(args, Args{"_width": float64(info.Width)}))
 	if err != nil {
 		return err
 	}
-	in := job.Input()
-	info, _ := ProbeMedia(ctx, job.Tools, in)
 	out := []string{"-i", in, "-vf", filter}
 	out = append(out, videoEncodeArgs(filepath.Ext(job.Output))...)
 	out = append(out, "-c:a", "copy", job.Output)
@@ -139,6 +140,16 @@ func RunVideoFilter(ctx context.Context, job Job, h Handler, args Args) error {
 		return fmt.Errorf("%s: %w", h.Name, err)
 	}
 	return nil
+}
+
+// VideoLength reads a size for a video filter: pixels, or a percent of the
+// frame width (RunVideoFilter supplies it; 1920 when unknown).
+func VideoLength(args Args, key string, defPx float64) (float64, error) {
+	w, _ := args.Float("_width", 1920)
+	if w <= 0 {
+		w = 1920
+	}
+	return args.Length(key, defPx, int(w), 1, 0)
 }
 
 // videoEncodeArgs picks a high-quality encoder for a re-encode that should

@@ -10,7 +10,8 @@
     "full hd wallpaper"
   ],
   "category": "sizes",
-  "description": "Scale and centre-crop to 1080p desktop wallpaper (1920x1080)",
+  "icon": "monitor",
+  "description": "1920x1080, cropped to fill",
   "inputTypes": [
     "@image"
   ],

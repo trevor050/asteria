@@ -13,8 +13,9 @@
     "8bit"
   ],
   "category": "filter",
+  "icon": "grid-3x3",
   "priority": 4,
-  "description": "Turn the picture into big square pixels (12px blocks by default)",
+  "description": "Big square pixels",
   "inputTypes": [
     "@image",
     "@video"
@@ -25,17 +26,17 @@
       "name": "size",
       "label": "Block size",
       "type": "string",
-      "default": "12",
+      "default": "2%",
       "presets": [
-        "6",
-        "12",
-        "24",
-        "48"
+        "1%",
+        "2%",
+        "4%",
+        "8%"
       ],
-      "min": 2,
-      "max": 200,
-      "unit": "px",
-      "hint": "Block size in pixels"
+      "min": 0.5,
+      "max": 10,
+      "unit": "%",
+      "hint": "Block size: 2% of the width · or pixels like 16"
     }
   ],
   "executor": {

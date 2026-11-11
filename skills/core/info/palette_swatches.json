@@ -11,7 +11,8 @@
     "swatches"
   ],
   "category": "info",
-  "description": "Write a .png strip of the 6 main colors, 120 px per swatch, largest first",
+  "icon": "swatch-book",
+  "description": "Main colors as a swatch strip (.png)",
   "inputTypes": [
     "@image"
   ],

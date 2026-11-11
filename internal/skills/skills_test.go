@@ -312,3 +312,32 @@ func TestEmptyQueryRepresentatives(t *testing.T) {
 		}
 	}
 }
+
+// Name matches outrank alias matches whatever the usage history, and the
+// matched alias is reported.
+func TestRankingTiersAndMatchedAlias(t *testing.T) {
+	r := coreRegistry(t, "")
+	ctx := Context{InputTypes: []string{".jpg"}, Usage: map[string]UsageStats{"enhance": {Count: 50, LastUsed: time.Now()}}}
+	list := r.Search("f", ctx)
+	if len(list) < 3 {
+		t.Fatalf("too few results: %d", len(list))
+	}
+	seenAlias := false
+	for _, m := range list {
+		named := strings.HasPrefix(strings.ToLower(m.Skill.Name), "f")
+		if !named {
+			seenAlias = true
+		} else if seenAlias && !m.Skill.IsMeta {
+			t.Fatalf("%s (name starts with f) ranked below an alias-only match", m.Skill.ID)
+		}
+	}
+	var enhance *Match
+	for i := range list {
+		if list[i].Skill.ID == "enhance" {
+			enhance = &list[i]
+		}
+	}
+	if enhance == nil || enhance.Alias == "" {
+		t.Fatalf("Auto Enhance should match \"f\" through an alias and report it: %+v", enhance)
+	}
+}

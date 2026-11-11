@@ -8,7 +8,8 @@
     "naming pattern"
   ],
   "category": "meta",
-  "description": "Configure output file names",
+  "icon": "text-cursor-input",
+  "description": "How exported files are named",
   "inputTypes": [
     "*"
   ],
@@ -18,7 +19,8 @@
       "name": "pattern",
       "type": "string",
       "label": "Pattern",
-      "default": "{name}_{skill}.{ext}"
+      "hint": "{name}, {ext}, {skill} and {date} · e.g. {name} {date}.{ext}",
+      "default": "{name}-{skill}.{ext}"
     }
   ],
   "isMeta": true,

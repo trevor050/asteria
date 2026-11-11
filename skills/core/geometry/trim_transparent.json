@@ -11,7 +11,8 @@
     "autocrop transparent"
   ],
   "category": "transform",
-  "description": "Crop to the box around everything that is not transparent",
+  "icon": "shrink",
+  "description": "Cut away empty edges",
   "inputTypes": [
     "@image"
   ],

@@ -14,7 +14,8 @@
     "join images in grid"
   ],
   "category": "compose",
-  "description": "Arrange the pictures in a grid in the order shown, on white (a square-ish layout by default)",
+  "icon": "grid-2x2",
+  "description": "Arrange pictures in a grid",
   "inputTypes": [
     "@image"
   ],

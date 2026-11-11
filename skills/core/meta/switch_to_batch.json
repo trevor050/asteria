@@ -10,7 +10,8 @@
     "switch to batch"
   ],
   "category": "meta",
-  "description": "Skills apply to the selected files, or every file when nothing is selected",
+  "icon": "layout-grid",
+  "description": "Skills apply to every selected file",
   "inputTypes": [
     "*"
   ],

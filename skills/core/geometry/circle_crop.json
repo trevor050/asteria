@@ -14,7 +14,8 @@
     "pfp"
   ],
   "category": "transform",
-  "description": "Crop the centre to a circle with transparent corners; saves as PNG",
+  "icon": "circle-dashed",
+  "description": "Round avatar (saves as PNG)",
   "inputTypes": [
     "@image"
   ],

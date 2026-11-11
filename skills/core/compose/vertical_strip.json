@@ -13,7 +13,8 @@
     "stitch screenshots"
   ],
   "category": "compose",
-  "description": "Stack the pictures top to bottom at the same width, in the order shown",
+  "icon": "gallery-vertical",
+  "description": "Stack pictures top to bottom",
   "inputTypes": [
     "@image"
   ],

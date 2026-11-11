@@ -11,7 +11,8 @@
     "fit canvas"
   ],
   "category": "transform",
-  "description": "Fit inside an exact size (1080x1080 by default), keeping the aspect ratio and filling the rest with transparency",
+  "icon": "minimize",
+  "description": "Fit inside an exact size",
   "inputTypes": [
     "@image"
   ],

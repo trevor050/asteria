@@ -5,7 +5,8 @@
   "author": "asteria",
   "aliases": ["ev", "stops", "exposure compensation", "overexpose", "underexpose", "f-stops"],
   "category": "adjust",
-  "description": "Change exposure in stops of light (+1 stop by default, doubling the light); negative values darken",
+  "icon": "aperture",
+  "description": "Brighter or darker in camera stops",
   "inputTypes": ["@image"],
   "outputType": "",
   "params": [

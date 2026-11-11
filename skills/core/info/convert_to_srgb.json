@@ -13,7 +13,8 @@
     "adobe rgb to srgb"
   ],
   "category": "info",
-  "description": "Convert Display P3, Adobe RGB and other tagged colors to standard sRGB so they look right everywhere",
+  "icon": "arrow-left-right",
+  "description": "Standard colors that look right everywhere",
   "inputTypes": [
     "@image"
   ],

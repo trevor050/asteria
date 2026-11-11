@@ -13,7 +13,8 @@
     "webp frames"
   ],
   "category": "compose",
-  "description": "Save every frame of an animated GIF or WebP as its own PNG in a folder",
+  "icon": "gallery-thumbnails",
+  "description": "Every frame of an animation as a PNG",
   "inputTypes": [
     ".gif",
     ".webp"

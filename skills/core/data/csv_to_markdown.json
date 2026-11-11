@@ -9,7 +9,8 @@
     "csv table"
   ],
   "category": "data",
-  "description": "GitHub-flavored Markdown table",
+  "icon": "table",
+  "description": "A Markdown table",
   "inputTypes": [
     ".csv",
     ".tsv"

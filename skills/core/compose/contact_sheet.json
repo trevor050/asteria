@@ -12,7 +12,8 @@
     "filenames grid"
   ],
   "category": "compose",
-  "description": "A grid of the pictures with each file name underneath, on a white page",
+  "icon": "images",
+  "description": "Grid of pictures with file names",
   "inputTypes": [
     "@image"
   ],

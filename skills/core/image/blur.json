@@ -8,25 +8,30 @@
     "gaussian"
   ],
   "category": "filter",
+  "icon": "cloud-fog",
   "priority": 6,
-  "description": "Apply a gaussian blur",
-  "inputTypes": ["@image", "@video"],
+  "description": "Soft gaussian blur",
+  "inputTypes": [
+    "@image",
+    "@video"
+  ],
   "outputType": "",
   "params": [
     {
       "name": "radius",
       "label": "Radius",
-      "type": "float",
-      "default": 3,
+      "type": "string",
+      "hint": "0.5% = soft · 2% = heavy · or pixels like 6",
+      "default": "0.5%",
       "presets": [
-        1.5,
-        3,
-        6,
-        12
+        "0.3%",
+        "0.5%",
+        "1%",
+        "2%"
       ],
-      "unit": "px",
-      "min": 0.5,
-      "max": 100
+      "unit": "%",
+      "min": 0.1,
+      "max": 5
     }
   ],
   "executor": {

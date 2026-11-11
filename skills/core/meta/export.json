@@ -9,7 +9,8 @@
     "write"
   ],
   "category": "meta",
-  "description": "Save the changed files; existing files are never overwritten",
+  "icon": "download",
+  "description": "Save the changed files",
   "inputTypes": [
     "*"
   ],

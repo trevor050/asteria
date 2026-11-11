@@ -9,7 +9,8 @@
     "add skill"
   ],
   "category": "meta",
-  "description": "Open the folder where your own skill JSON files live",
+  "icon": "folder-open",
+  "description": "Where your own skills live",
   "inputTypes": [
     "*"
   ],

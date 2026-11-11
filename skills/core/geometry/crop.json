@@ -11,8 +11,9 @@
     "crop to ratio"
   ],
   "category": "transform",
+  "icon": "crop",
   "priority": 10,
-  "description": "Crop around the centre to a ratio, size or percent (1:1 square by default)",
+  "description": "Crop to a ratio, size or percent",
   "inputTypes": [
     "@image"
   ],

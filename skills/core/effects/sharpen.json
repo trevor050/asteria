@@ -13,8 +13,9 @@
     "detail"
   ],
   "category": "filter",
+  "icon": "focus",
   "priority": 10,
-  "description": "Make edges and fine detail crisper (+80% by default)",
+  "description": "Crisper edges and detail",
   "inputTypes": [
     "@image",
     "@video"
@@ -25,17 +26,17 @@
       "name": "amount",
       "label": "Amount",
       "type": "string",
-      "default": "+80",
+      "default": "+120",
       "presets": [
-        "+40",
-        "+80",
-        "+150",
-        "+250"
+        "+60",
+        "+120",
+        "+200",
+        "+300"
       ],
       "min": 0,
       "max": 400,
       "unit": "%",
-      "hint": "+80 = natural · +200 = strong · 0 = off"
+      "hint": "+120 = crisp · +60 = gentle · +300 = strong"
     }
   ],
   "executor": {

@@ -9,7 +9,8 @@
     "merge"
   ],
   "category": "pdf",
-  "description": "Combine the PDFs into one, in the order shown",
+  "icon": "merge",
+  "description": "Combine PDFs in order",
   "inputTypes": [
     "@pdf"
   ],

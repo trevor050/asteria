@@ -5,7 +5,8 @@
   "author": "asteria",
   "aliases": ["vintage", "old photo", "antique", "brown tone", "retro", "old timey", "warm tone"],
   "category": "adjust",
-  "description": "Give the picture a warm brown sepia tone (full strength by default)",
+  "icon": "palette",
+  "description": "Warm brown vintage tone",
   "inputTypes": ["@image", "@video"],
   "outputType": "",
   "params": [

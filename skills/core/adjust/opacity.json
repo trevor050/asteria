@@ -5,7 +5,8 @@
   "author": "asteria",
   "aliases": ["transparency", "transparent", "fade", "alpha", "see through", "make transparent", "semi transparent"],
   "category": "adjust",
-  "description": "Make the picture see-through (70% opaque by default); saved as PNG so the transparency is kept",
+  "icon": "opacity",
+  "description": "See-through (saves as PNG)",
   "inputTypes": ["@image"],
   "outputType": ".png",
   "params": [

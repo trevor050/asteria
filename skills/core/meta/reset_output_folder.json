@@ -9,7 +9,8 @@
     "default output"
   ],
   "category": "meta",
-  "description": "Save exports beside each original file",
+  "icon": "folder-x",
+  "description": "Save exports beside the originals",
   "inputTypes": [
     "*"
   ],

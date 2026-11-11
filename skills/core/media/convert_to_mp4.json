@@ -10,7 +10,8 @@
     "h264"
   ],
   "category": "media",
-  "description": "H.264/AAC MP4 that plays everywhere",
+  "icon": "arrow-left-right",
+  "description": "H.264 MP4 that plays everywhere",
   "inputTypes": [
     "@video"
   ],

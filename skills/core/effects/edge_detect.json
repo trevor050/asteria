@@ -13,7 +13,8 @@
     "find edges"
   ],
   "category": "filter",
-  "description": "Show only the edges as white lines on black",
+  "icon": "scan-line",
+  "description": "White edges on black",
   "inputTypes": [
     "@image",
     "@video"

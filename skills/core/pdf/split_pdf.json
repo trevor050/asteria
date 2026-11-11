@@ -9,7 +9,8 @@
     "explode pdf"
   ],
   "category": "pdf",
-  "description": "One PDF per page, in a folder",
+  "icon": "split",
+  "description": "One PDF per page",
   "inputTypes": [
     "@pdf"
   ],

@@ -10,8 +10,9 @@
     "make smaller"
   ],
   "category": "transform",
+  "icon": "scaling",
   "priority": 12,
-  "description": "Resize by percent or to fit a width/height, keeping the aspect ratio",
+  "description": "Smaller or larger, same proportions",
   "inputTypes": [
     "@image"
   ],

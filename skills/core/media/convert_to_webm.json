@@ -8,7 +8,8 @@
     "vp9"
   ],
   "category": "media",
-  "description": "VP9/Opus WebM for the web",
+  "icon": "arrow-left-right",
+  "description": "VP9 WebM for the web",
   "inputTypes": [
     "@video"
   ],

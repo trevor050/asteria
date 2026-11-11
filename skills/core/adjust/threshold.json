@@ -5,7 +5,8 @@
   "author": "asteria",
   "aliases": ["binary", "pure black and white", "two color black white", "lineart", "line art", "bilevel", "halftone cutoff"],
   "category": "adjust",
-  "description": "Turn every pixel pure black or pure white around a brightness cut-off (50% by default)",
+  "icon": "square-split-horizontal",
+  "description": "Pure black and white",
   "inputTypes": ["@image"],
   "outputType": "",
   "params": [
@@ -18,7 +19,7 @@
       "min": 0,
       "max": 100,
       "unit": "%",
-      "hint": "50 = middle grey · lower = more white · higher = more black"
+      "hint": "50 = middle gray · lower = more white · higher = more black"
     }
   ],
   "executor": { "type": "native", "handler": "adjust.threshold" },

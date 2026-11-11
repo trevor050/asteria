@@ -13,7 +13,8 @@
     "space around"
   ],
   "category": "transform",
-  "description": "Add transparent space around the picture (10% of the shorter side by default)",
+  "icon": "square-padding",
+  "description": "Transparent space around",
   "inputTypes": [
     "@image"
   ],
