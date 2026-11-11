@@ -1,6 +1,6 @@
 {
   "id": "ocr_to_text",
-  "name": "Extract text (OCR)",
+  "name": "Extract Text (OCR)",
   "version": "1.0.0",
   "author": "asteria",
   "aliases": [
@@ -27,7 +27,7 @@
         "fra",
         "spa"
       ],
-      "hint": "Tesseract code, e.g. fra+eng \u00b7 default eng"
+      "hint": "Tesseract code, e.g. fra+eng · default eng"
     }
   ],
   "executor": {

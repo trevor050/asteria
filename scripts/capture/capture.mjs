@@ -542,16 +542,28 @@ async function more(browser) {
   await page.keyboard.type('compress video', { delay: 30 })
   await sleep(300)
   await page.keyboard.press('Enter')
-  await sleep(1600)
+  await sleep(400)
+  await page.keyboard.press('Enter') // accept the default quality
+  await sleep(1400)
   await page.screenshot({ path: join(docs, 'screenshot-video.png') })
   console.log('  docs/screenshot-video.png')
   await idle(page)
+  await page.keyboard.press('Escape')
   await clear(page)
 
   // Other kinds of files, and what the bar offers for them.
   await add(page, [join(more, 'Morning ride.gpx'), join(more, 'Bracket.stl'), join(more, 'Novel.epub'), join(more, 'Invoice.eml'), join(more, 'Brand font.ttf'), join(more, 'Subtitles.srt'), join(more, 'Logo.svg'), join(more, 'Quarterly report.docx')])
   await page.keyboard.press('Escape')
-  await sleep(800)
+  await page.waitForFunction(() => !document.querySelector('.toast'), null, { timeout: 20000 })
+  await sleep(500)
+  await page.getByRole('button', { name: /^All \d+ skills$/ }).click()
+  await sleep(900)
+  // Show the newer families rather than the top of the list.
+  await page.evaluate(() => {
+    const h = [...document.querySelectorAll('.browse h4')].find((e) => /Maps|3D/.test(e.textContent ?? ''))
+    h?.scrollIntoView({ block: 'start' })
+  })
+  await sleep(500)
   await page.screenshot({ path: join(docs, 'screenshot-more.png') })
   console.log('  docs/screenshot-more.png')
   await ctx.close()

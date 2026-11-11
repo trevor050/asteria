@@ -1,6 +1,6 @@
 {
   "id": "pandoc_to_txt",
-  "name": "Convert to plain text",
+  "name": "Convert to Plain Text",
   "version": "1.0.0",
   "author": "asteria",
   "aliases": [

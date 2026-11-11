@@ -1,6 +1,6 @@
 {
   "id": "pdf_to_images",
-  "name": "PDF to images",
+  "name": "PDF to Images",
   "version": "1.0.0",
   "author": "asteria",
   "aliases": [
@@ -26,7 +26,7 @@
         150,
         300
       ],
-      "hint": "dots per inch (36-600) \u00b7 default 150",
+      "hint": "dots per inch (36-600) · default 150",
       "min": 36,
       "max": 600
     }
