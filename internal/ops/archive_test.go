@@ -121,3 +121,32 @@ func TestSafeJoin(t *testing.T) {
 		t.Fatalf("safeJoin = %s, %v", got, err)
 	}
 }
+
+func TestZipKeepsFilesWhoseNamesCollideWithGeneratedSuffix(t *testing.T) {
+	h, _ := Lookup("archive.zip")
+	out := filepath.Join(t.TempDir(), "archive.zip")
+	job := Prepare(Job{
+		Inputs: []string{fixture("notes.md"), fixture("people.csv"), fixture("sample.jpg")},
+		Names:  []string{"report.txt", "report (2).txt", "report.txt"},
+		Output: out,
+	})
+	if err := h.Run(t.Context(), job); err != nil {
+		t.Fatal(err)
+	}
+	zr, err := zip.OpenReader(out)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer zr.Close()
+	seen := map[string]bool{}
+	for _, entry := range zr.File {
+		key := strings.ToLower(entry.Name)
+		if seen[key] {
+			t.Fatalf("duplicate zip entry %q would overwrite another file on extraction", entry.Name)
+		}
+		seen[key] = true
+	}
+	if len(seen) != len(job.Inputs) {
+		t.Fatalf("zip has %d unique files, want %d", len(seen), len(job.Inputs))
+	}
+}

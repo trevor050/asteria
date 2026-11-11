@@ -39,9 +39,16 @@ func uniqueName(seen map[string]int, name string) string {
 	}
 	ext := path.Ext(name)
 	base := strings.TrimSuffix(name, ext)
-	candidate := fmt.Sprintf("%s (%d)%s", base, n+1, ext)
-	seen[strings.ToLower(candidate)]++
-	return candidate
+	for {
+		candidate := fmt.Sprintf("%s (%d)%s", base, n+1, ext)
+		candidateKey := strings.ToLower(candidate)
+		if seen[candidateKey] == 0 {
+			seen[candidateKey] = 1
+			return candidate
+		}
+		n++
+		seen[key] = n + 1
+	}
 }
 
 func archiveZip(ctx context.Context, job Job) (err error) {
