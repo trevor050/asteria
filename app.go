@@ -154,7 +154,6 @@ type State struct {
 	Problems  []string         `json:"problems"`
 	Tools     []ToolStatus     `json:"tools"`
 	Platform  string           `json:"platform"`
-	Version   string           `json:"version"`
 }
 
 // GetState returns the tray, settings and environment.
@@ -173,7 +172,6 @@ func (a *App) GetState() State {
 		Problems:  a.registry.Problems(),
 		Tools:     statuses,
 		Platform:  runtime.GOOS,
-		Version:   version,
 	}
 }
 

@@ -10,9 +10,6 @@ import (
 	"github.com/wailsapp/wails/v3/pkg/events"
 )
 
-// version is set at build time with -ldflags "-X main.version=v0.1.0".
-var version = "dev"
-
 //go:embed all:frontend/dist
 var frontendFS embed.FS
 
