@@ -87,7 +87,24 @@ func (f *Finder) Reset() {
 	f.mu.Unlock()
 }
 
+// aliases are other names the same program ships under: 7-Zip's console
+// build is 7zz on macOS/Linux and 7za or 7z on Windows; Ghostscript is
+// gswin64c on Windows.
+var aliases = map[string][]string{
+	"7zz": {"7za", "7z"},
+	"gs":  {"gswin64c"},
+}
+
 func (f *Finder) resolve(name string) string {
+	for _, n := range append([]string{name}, aliases[name]...) {
+		if p := f.resolveOne(n); p != "" {
+			return p
+		}
+	}
+	return ""
+}
+
+func (f *Finder) resolveOne(name string) string {
 	f.mu.Lock()
 	pref := f.preferred
 	f.mu.Unlock()

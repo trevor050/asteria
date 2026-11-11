@@ -1,0 +1,38 @@
+{
+  "id": "spreadsheet_to_csv",
+  "name": "Spreadsheet to CSV",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "xlsx to csv",
+    "excel to csv",
+    "to csv"
+  ],
+  "category": "document",
+  "icon": "sheet",
+  "description": "CSV of the first sheet",
+  "inputTypes": [
+    ".xlsx",
+    ".xls",
+    ".ods"
+  ],
+  "outputType": ".csv",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "engine.libreoffice",
+    "with": {
+      "filter": "Text - txt - csv (StarCalc):44,34,76,1"
+    }
+  },
+  "requires": [
+    "soffice"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

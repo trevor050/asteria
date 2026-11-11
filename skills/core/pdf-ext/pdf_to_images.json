@@ -1,0 +1,48 @@
+{
+  "id": "pdf_to_images",
+  "name": "PDF to images",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "pdf to png",
+    "pdf pages to images",
+    "rasterize pdf"
+  ],
+  "category": "pdf",
+  "icon": "images",
+  "description": "One PNG per page in a folder",
+  "inputTypes": [
+    "@pdf"
+  ],
+  "outputType": "folder",
+  "params": [
+    {
+      "name": "dpi",
+      "label": "Resolution",
+      "type": "int",
+      "default": 150,
+      "presets": [
+        72,
+        150,
+        300
+      ],
+      "hint": "dots per inch (36-600) \u00b7 default 150",
+      "min": 36,
+      "max": 600
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "engine.pdfimages"
+  },
+  "requires": [
+    "gs"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

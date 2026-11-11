@@ -1,0 +1,50 @@
+{
+  "id": "pandoc_to_html",
+  "name": "Convert to HTML",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to html",
+    "docx to html",
+    "pandoc html"
+  ],
+  "category": "document",
+  "icon": "file-type",
+  "description": "HTML page from Markdown, Word or LaTeX",
+  "inputTypes": [
+    ".docx",
+    ".odt",
+    ".epub",
+    ".rst",
+    ".tex",
+    ".org",
+    ".textile",
+    ".ipynb"
+  ],
+  "outputType": ".html",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "pandoc",
+    "args": [
+      "--sandbox",
+      "--standalone",
+      "-t",
+      "html",
+      "-o",
+      "{{output}}",
+      "{{input}}"
+    ],
+    "timeoutMs": 300000
+  },
+  "requires": [
+    "pandoc"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

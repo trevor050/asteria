@@ -1,0 +1,28 @@
+{
+  "id": "tsv_to_csv",
+  "name": "TSV to CSV",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "tsv csv",
+    "tab to comma"
+  ],
+  "category": "data",
+  "icon": "table",
+  "description": "Swap tab separators for commas",
+  "inputTypes": [
+    ".tsv"
+  ],
+  "outputType": ".csv",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.table"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

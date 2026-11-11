@@ -1,0 +1,46 @@
+{
+  "id": "ebook_to_azw3",
+  "name": "Convert to AZW3",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to azw3",
+    "epub to azw3",
+    "kindle"
+  ],
+  "category": "ebook",
+  "icon": "book",
+  "description": "AZW3 for Kindle from an e-book",
+  "inputTypes": [
+    ".mobi",
+    ".fb2",
+    ".lit",
+    ".pdb",
+    ".docx",
+    ".txt",
+    ".html",
+    ".htm",
+    ".epub"
+  ],
+  "outputType": ".azw3",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "ebook-convert",
+    "args": [
+      "{{input}}",
+      "{{output}}"
+    ],
+    "timeoutMs": 300000
+  },
+  "requires": [
+    "ebook-convert"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

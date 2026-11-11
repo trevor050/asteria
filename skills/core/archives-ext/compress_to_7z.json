@@ -1,0 +1,43 @@
+{
+  "id": "compress_to_7z",
+  "name": "Compress to 7z",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "7zip",
+    "make 7z",
+    "pack 7z"
+  ],
+  "category": "archive",
+  "icon": "file-archive",
+  "description": "7z archive of a file or folder",
+  "inputTypes": [
+    "*",
+    "folder"
+  ],
+  "outputType": ".7z",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "7zz",
+    "args": [
+      "a",
+      "-t7z",
+      "-mx=7",
+      "--",
+      "{{output}}",
+      "{{input}}"
+    ],
+    "timeoutMs": 600000
+  },
+  "requires": [
+    "7zz"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

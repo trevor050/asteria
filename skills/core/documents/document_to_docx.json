@@ -1,0 +1,37 @@
+{
+  "id": "document_to_docx",
+  "name": "Word document",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to docx",
+    "to word",
+    "doc to docx"
+  ],
+  "category": "document",
+  "icon": "file-type",
+  "description": "Word .docx from an older or open document",
+  "inputTypes": [
+    ".doc",
+    ".odt",
+    ".rtf",
+    ".wpd",
+    ".wps"
+  ],
+  "outputType": ".docx",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "engine.libreoffice"
+  },
+  "requires": [
+    "soffice"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

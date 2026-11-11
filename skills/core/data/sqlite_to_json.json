@@ -1,0 +1,31 @@
+{
+  "id": "sqlite_to_json",
+  "name": "SQLite to JSON",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "sqlite json",
+    "db to json",
+    "sqlite3 to json"
+  ],
+  "category": "data",
+  "icon": "database",
+  "description": "Every table as a list of row objects",
+  "inputTypes": [
+    ".sqlite",
+    ".sqlite3",
+    ".db"
+  ],
+  "outputType": ".json",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.sqlite"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,51 @@
+{
+  "id": "pandoc_to_docx",
+  "name": "Convert to Word",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "md to docx",
+    "html to word",
+    "markdown to word"
+  ],
+  "category": "document",
+  "icon": "file-type",
+  "description": "Word .docx from Markdown, HTML or LaTeX",
+  "inputTypes": [
+    ".md",
+    ".markdown",
+    ".html",
+    ".htm",
+    ".epub",
+    ".rst",
+    ".tex",
+    ".org",
+    ".textile",
+    ".ipynb"
+  ],
+  "outputType": ".docx",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "pandoc",
+    "args": [
+      "--sandbox",
+      "-t",
+      "docx",
+      "-o",
+      "{{output}}",
+      "{{input}}"
+    ],
+    "timeoutMs": 300000
+  },
+  "requires": [
+    "pandoc"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

@@ -159,9 +159,26 @@ func runOCR(ctx context.Context, job Job) error {
 	if !validLang(lang) {
 		return Userf("%q is not a Tesseract language code; try eng, deu or fra+eng", lang)
 	}
-	job.Progress(0.1)
-	if err := engineCmd(ctx, "Tesseract", bin, filepath.Dir(out), 10*time.Minute, in, base, "-l", lang, kind); err != nil {
+	// Tesseract reads only some formats; hand it a PNG made by Asteria's
+	// own decoder so HEIC, WebP and the rest work too.
+	m, err := DecodeWorking(in)
+	if err != nil {
 		return err
+	}
+	png := base + ".src.png"
+	defer os.Remove(png)
+	if err := EncodeWorking(m, png); err != nil {
+		return err
+	}
+	job.Progress(0.2)
+	if err := engineCmd(ctx, "Tesseract", bin, filepath.Dir(out), 10*time.Minute, png, base, "-l", lang, kind); err != nil {
+		return err
+	}
+	if kind == "txt" {
+		if b, _ := os.ReadFile(base + ".txt"); len(strings.TrimSpace(string(b))) == 0 {
+			_ = os.Remove(base + ".txt")
+			return Userf("No text found in this picture")
+		}
 	}
 	return os.Rename(base+"."+kind, out)
 }

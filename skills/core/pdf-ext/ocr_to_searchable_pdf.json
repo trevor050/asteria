@@ -1,0 +1,47 @@
+{
+  "id": "ocr_to_searchable_pdf",
+  "name": "Searchable PDF (OCR)",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "ocr pdf",
+    "scan to pdf",
+    "searchable pdf"
+  ],
+  "category": "pdf",
+  "icon": "scan-text",
+  "description": "Searchable PDF from a scanned image",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".pdf",
+  "params": [
+    {
+      "name": "language",
+      "label": "Language",
+      "type": "string",
+      "default": "eng",
+      "presets": [
+        "eng",
+        "deu",
+        "fra",
+        "spa"
+      ],
+      "hint": "Tesseract code, e.g. fra+eng \u00b7 default eng"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "engine.ocr"
+  },
+  "requires": [
+    "tesseract"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

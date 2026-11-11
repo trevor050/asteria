@@ -1,0 +1,36 @@
+{
+  "id": "spreadsheet_to_pdf",
+  "name": "Convert to PDF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "xlsx to pdf",
+    "excel to pdf",
+    "spreadsheet pdf"
+  ],
+  "category": "document",
+  "icon": "sheet",
+  "description": "PDF from a spreadsheet",
+  "inputTypes": [
+    ".xlsx",
+    ".xls",
+    ".ods",
+    ".csv"
+  ],
+  "outputType": ".pdf",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "engine.libreoffice"
+  },
+  "requires": [
+    "soffice"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

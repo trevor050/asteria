@@ -1,0 +1,34 @@
+{
+  "id": "spreadsheet_to_ods",
+  "name": "OpenDocument spreadsheet",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to ods",
+    "xlsx to ods"
+  ],
+  "category": "document",
+  "icon": "sheet",
+  "description": "OpenDocument spreadsheet from Excel or CSV",
+  "inputTypes": [
+    ".xlsx",
+    ".xls",
+    ".csv"
+  ],
+  "outputType": ".ods",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "engine.libreoffice"
+  },
+  "requires": [
+    "soffice"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

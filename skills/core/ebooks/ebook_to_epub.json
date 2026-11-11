@@ -1,0 +1,47 @@
+{
+  "id": "ebook_to_epub",
+  "name": "Convert to EPUB",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to epub",
+    "mobi to epub",
+    "azw3 to epub"
+  ],
+  "category": "ebook",
+  "icon": "book-open",
+  "description": "EPUB from Kindle, FB2, DOCX or text",
+  "inputTypes": [
+    ".mobi",
+    ".azw3",
+    ".azw",
+    ".fb2",
+    ".lit",
+    ".pdb",
+    ".docx",
+    ".txt",
+    ".html",
+    ".htm"
+  ],
+  "outputType": ".epub",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "ebook-convert",
+    "args": [
+      "{{input}}",
+      "{{output}}"
+    ],
+    "timeoutMs": 300000
+  },
+  "requires": [
+    "ebook-convert"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

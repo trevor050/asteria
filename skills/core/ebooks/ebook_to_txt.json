@@ -1,0 +1,45 @@
+{
+  "id": "ebook_to_txt",
+  "name": "Convert e-book to text",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "epub to txt",
+    "mobi to txt",
+    "ebook text"
+  ],
+  "category": "ebook",
+  "icon": "book-open",
+  "description": "Plain text from an e-book",
+  "inputTypes": [
+    ".epub",
+    ".mobi",
+    ".azw3",
+    ".azw",
+    ".fb2",
+    ".lit",
+    ".pdb",
+    ".docx"
+  ],
+  "outputType": ".txt",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "ebook-convert",
+    "args": [
+      "{{input}}",
+      "{{output}}"
+    ],
+    "timeoutMs": 300000
+  },
+  "requires": [
+    "ebook-convert"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

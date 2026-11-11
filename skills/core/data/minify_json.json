@@ -1,0 +1,32 @@
+{
+  "id": "minify_json",
+  "name": "Minify JSON",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "compact json",
+    "compress json",
+    "json minify"
+  ],
+  "category": "data",
+  "icon": "braces",
+  "description": "Strip all spacing",
+  "inputTypes": [
+    ".json"
+  ],
+  "outputType": ".json",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.json",
+    "with": {
+      "mode": "minify"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

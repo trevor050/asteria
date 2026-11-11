@@ -1,0 +1,33 @@
+{
+  "id": "presentation_to_odp",
+  "name": "OpenDocument presentation",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to odp",
+    "pptx to odp"
+  ],
+  "category": "document",
+  "icon": "presentation",
+  "description": "OpenDocument presentation from PowerPoint",
+  "inputTypes": [
+    ".pptx",
+    ".ppt"
+  ],
+  "outputType": ".odp",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "engine.libreoffice"
+  },
+  "requires": [
+    "soffice"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

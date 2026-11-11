@@ -1,0 +1,45 @@
+{
+  "id": "ps_to_pdf",
+  "name": "Convert to PDF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "ps to pdf",
+    "eps to pdf",
+    "postscript"
+  ],
+  "category": "pdf",
+  "icon": "file-text",
+  "description": "PDF from PostScript or EPS",
+  "inputTypes": [
+    ".ps",
+    ".eps"
+  ],
+  "outputType": ".pdf",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "gs",
+    "args": [
+      "-dSAFER",
+      "-dBATCH",
+      "-dNOPAUSE",
+      "-dQUIET",
+      "-sDEVICE=pdfwrite",
+      "-dEPSCrop",
+      "-sOutputFile={{output}}",
+      "{{input}}"
+    ],
+    "timeoutMs": 300000
+  },
+  "requires": [
+    "gs"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,40 @@
+{
+  "id": "convert_to_json",
+  "name": "Convert to JSON",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "toml to json",
+    "xml to json",
+    "ini to json",
+    "env to json",
+    "plist to json",
+    "jsonl to json"
+  ],
+  "category": "data",
+  "icon": "file-json",
+  "description": "Write as indented JSON",
+  "inputTypes": [
+    ".toml",
+    ".xml",
+    ".ini",
+    ".cfg",
+    ".conf",
+    ".env",
+    ".plist",
+    ".jsonl",
+    ".ndjson"
+  ],
+  "outputType": ".json",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.tree"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

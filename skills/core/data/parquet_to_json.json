@@ -1,0 +1,27 @@
+{
+  "id": "parquet_to_json",
+  "name": "Parquet to JSON",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "parquet json"
+  ],
+  "category": "data",
+  "icon": "file-json",
+  "description": "Flat Parquet rows as a list of objects",
+  "inputTypes": [
+    ".parquet"
+  ],
+  "outputType": ".json",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.parquet"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,33 @@
+{
+  "id": "format_json",
+  "name": "Format JSON",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "pretty json",
+    "prettify json",
+    "indent json",
+    "beautify json"
+  ],
+  "category": "data",
+  "icon": "braces",
+  "description": "Indent with 2 spaces",
+  "inputTypes": [
+    ".json"
+  ],
+  "outputType": ".json",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.json",
+    "with": {
+      "mode": "pretty"
+    }
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,35 @@
+{
+  "id": "convert_to_ini",
+  "name": "Convert to INI",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "json to ini",
+    "yaml to ini",
+    "toml to ini",
+    "env to ini"
+  ],
+  "category": "data",
+  "icon": "settings",
+  "description": "Write sections from one level of nesting",
+  "inputTypes": [
+    ".json",
+    ".yaml",
+    ".yml",
+    ".toml",
+    ".env",
+    ".plist"
+  ],
+  "outputType": ".ini",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.tree"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

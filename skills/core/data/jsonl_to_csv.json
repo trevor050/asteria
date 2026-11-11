@@ -1,0 +1,29 @@
+{
+  "id": "jsonl_to_csv",
+  "name": "JSON Lines to CSV",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "jsonl csv",
+    "ndjson to csv"
+  ],
+  "category": "data",
+  "icon": "file-spreadsheet",
+  "description": "A row per line, columns from the keys",
+  "inputTypes": [
+    ".jsonl",
+    ".ndjson"
+  ],
+  "outputType": ".csv",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.tree"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,34 @@
+{
+  "id": "document_to_odt",
+  "name": "OpenDocument text",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to odt",
+    "docx to odt"
+  ],
+  "category": "document",
+  "icon": "file-type",
+  "description": "OpenDocument text from Word or RTF",
+  "inputTypes": [
+    ".docx",
+    ".doc",
+    ".rtf"
+  ],
+  "outputType": ".odt",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "engine.libreoffice"
+  },
+  "requires": [
+    "soffice"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,52 @@
+{
+  "id": "pandoc_to_epub",
+  "name": "Convert to EPUB",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to epub",
+    "md to epub",
+    "html to epub"
+  ],
+  "category": "document",
+  "icon": "book-open",
+  "description": "EPUB e-book from Markdown, HTML or Word",
+  "inputTypes": [
+    ".md",
+    ".markdown",
+    ".html",
+    ".htm",
+    ".docx",
+    ".odt",
+    ".rst",
+    ".tex",
+    ".org",
+    ".textile",
+    ".ipynb"
+  ],
+  "outputType": ".epub",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "pandoc",
+    "args": [
+      "--sandbox",
+      "-t",
+      "epub3",
+      "-o",
+      "{{output}}",
+      "{{input}}"
+    ],
+    "timeoutMs": 300000
+  },
+  "requires": [
+    "pandoc"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,34 @@
+{
+  "id": "convert_to_jsonl",
+  "name": "Convert to JSON Lines",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to jsonl",
+    "to ndjson",
+    "json to jsonl",
+    "json lines"
+  ],
+  "category": "data",
+  "icon": "list-tree",
+  "description": "One JSON record per line",
+  "inputTypes": [
+    ".json",
+    ".yaml",
+    ".yml",
+    ".toml",
+    ".xml"
+  ],
+  "outputType": ".jsonl",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.tree"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

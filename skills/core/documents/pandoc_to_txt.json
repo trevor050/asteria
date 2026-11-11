@@ -1,0 +1,51 @@
+{
+  "id": "pandoc_to_txt",
+  "name": "Convert to plain text",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to text",
+    "html to txt",
+    "md to txt"
+  ],
+  "category": "document",
+  "icon": "file-type",
+  "description": "Plain text from Markdown, HTML or LaTeX",
+  "inputTypes": [
+    ".md",
+    ".markdown",
+    ".html",
+    ".htm",
+    ".epub",
+    ".rst",
+    ".tex",
+    ".org",
+    ".textile",
+    ".ipynb"
+  ],
+  "outputType": ".txt",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "pandoc",
+    "args": [
+      "--sandbox",
+      "-t",
+      "plain",
+      "-o",
+      "{{output}}",
+      "{{input}}"
+    ],
+    "timeoutMs": 300000
+  },
+  "requires": [
+    "pandoc"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

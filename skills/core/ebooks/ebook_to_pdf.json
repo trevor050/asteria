@@ -1,0 +1,41 @@
+{
+  "id": "ebook_to_pdf",
+  "name": "Convert e-book to PDF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "epub to pdf",
+    "mobi to pdf",
+    "ebook pdf"
+  ],
+  "category": "ebook",
+  "icon": "book-open",
+  "description": "PDF from an e-book",
+  "inputTypes": [
+    ".epub",
+    ".mobi",
+    ".azw3",
+    ".fb2"
+  ],
+  "outputType": ".pdf",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "ebook-convert",
+    "args": [
+      "{{input}}",
+      "{{output}}"
+    ],
+    "timeoutMs": 300000
+  },
+  "requires": [
+    "ebook-convert"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

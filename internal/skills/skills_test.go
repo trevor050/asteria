@@ -39,8 +39,15 @@ func TestAllCoreSkillsLoadAndUseRealHandlers(t *testing.T) {
 				t.Errorf("%s uses unknown handler %s", s.ID, s.Executor.Handler)
 			}
 		case "meta":
+		case "cli":
+			// Built-ins may call an optional engine from the add-on
+			// catalogue, and must say which.
+			engines := map[string]bool{"pandoc": true, "ebook-convert": true, "magick": true, "7zz": true, "resvg": true, "gs": true, "soffice": true, "tesseract": true, "potrace": true, "ffmpeg": true}
+			if !engines[s.Executor.Command] || len(s.Requires) == 0 {
+				t.Errorf("core skill %s runs %q, which is not a catalogued engine", s.ID, s.Executor.Command)
+			}
 		default:
-			t.Errorf("core skill %s uses %s; built-ins must be native or meta", s.ID, s.Executor.Type)
+			t.Errorf("core skill %s uses %s; built-ins must be native, cli on an engine, or meta", s.ID, s.Executor.Type)
 		}
 		for _, in := range s.InputTypes {
 			if strings.HasPrefix(in, "@") {
@@ -324,6 +331,9 @@ func TestRankingTiersAndMatchedAlias(t *testing.T) {
 	}
 	seenAlias := false
 	for _, m := range list {
+		if !m.Skill.Accepts(".jpg") {
+			continue // skills that don't fit the file rank below by design
+		}
 		named := strings.HasPrefix(strings.ToLower(m.Skill.Name), "f")
 		if !named {
 			seenAlias = true

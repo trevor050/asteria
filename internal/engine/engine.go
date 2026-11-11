@@ -98,7 +98,8 @@ const maxPipelineDepth = 6
 
 // safeCommands may be run by community CLI skills with the base tools.exec
 // permission; anything else needs tools.exec.any (and the user's trust).
-var safeCommands = map[string]bool{"ffmpeg": true, "ffprobe": true, "magick": true, "pandoc": true, "cwebp": true, "gs": true, "qpdf": true}
+var safeCommands = map[string]bool{"ffmpeg": true, "ffprobe": true, "magick": true, "pandoc": true, "cwebp": true, "gs": true, "qpdf": true,
+	"soffice": true, "ebook-convert": true, "resvg": true, "7zz": true, "7za": true, "7z": true, "tesseract": true, "potrace": true}
 
 func New(opts Options) *Engine {
 	if opts.Tools == nil {

@@ -1,0 +1,51 @@
+{
+  "id": "raw_to_tiff",
+  "name": "Convert RAW to TIFF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "raw tif",
+    "cr2 to tiff",
+    "dng to tiff"
+  ],
+  "category": "camera",
+  "icon": "aperture",
+  "description": "16-bit TIFF from a camera RAW file",
+  "inputTypes": [
+    ".cr2",
+    ".cr3",
+    ".nef",
+    ".arw",
+    ".dng",
+    ".orf",
+    ".rw2",
+    ".raf",
+    ".pef",
+    ".srw",
+    ".x3f"
+  ],
+  "outputType": ".tiff",
+  "params": [],
+  "executor": {
+    "type": "cli",
+    "command": "magick",
+    "args": [
+      "{{input}}",
+      "-auto-orient",
+      "-depth",
+      "16",
+      "{{output}}"
+    ],
+    "timeoutMs": 120000
+  },
+  "requires": [
+    "magick"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

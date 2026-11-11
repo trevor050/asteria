@@ -1,0 +1,39 @@
+{
+  "id": "document_to_txt",
+  "name": "Plain text",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "to txt",
+    "document text",
+    "docx to txt"
+  ],
+  "category": "document",
+  "icon": "file-type",
+  "description": "UTF-8 plain text from a document",
+  "inputTypes": [
+    ".docx",
+    ".doc",
+    ".odt",
+    ".rtf"
+  ],
+  "outputType": ".txt",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "engine.libreoffice",
+    "with": {
+      "filter": "Text (encoded):UTF8"
+    }
+  },
+  "requires": [
+    "soffice"
+  ],
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

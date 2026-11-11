@@ -1,0 +1,41 @@
+{
+  "id": "convert_to_xml",
+  "name": "Convert to XML",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "json to xml",
+    "yaml to xml",
+    "toml to xml",
+    "ini to xml",
+    "plist to xml"
+  ],
+  "category": "data",
+  "icon": "code-xml",
+  "description": "Write as XML, lists as repeated <item>",
+  "inputTypes": [
+    ".json",
+    ".jsonl",
+    ".ndjson",
+    ".yaml",
+    ".yml",
+    ".toml",
+    ".ini",
+    ".cfg",
+    ".conf",
+    ".env",
+    ".plist"
+  ],
+  "outputType": ".xml",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.tree"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}
