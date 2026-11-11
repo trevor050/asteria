@@ -12,7 +12,6 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -313,7 +312,7 @@ func (m *Manager) download(ctx context.Context, a Artifact, part string, progres
 		if ctx.Err() != nil {
 			return ctx.Err()
 		}
-		return networkError(a.URL, err)
+		return networkError(a.URL, err, false)
 	}
 	defer resp.Body.Close()
 	// Redirects must stay on https (GitHub and SourceForge redirect to CDNs).
@@ -367,7 +366,7 @@ func (m *Manager) download(ctx context.Context, a Artifact, part string, progres
 			if ctx.Err() != nil {
 				return ctx.Err()
 			}
-			return networkError(a.URL, rerr)
+			return networkError(a.URL, rerr, true)
 		}
 	}
 	progress(done)
@@ -377,16 +376,18 @@ func (m *Manager) download(ctx context.Context, a Artifact, part string, progres
 	return nil
 }
 
-func networkError(raw string, err error) error {
+// networkError explains a failed download in plain words: either the host
+// couldn't be reached at all, or the transfer stopped partway (the partial
+// file is kept, so trying again resumes it).
+func networkError(raw string, err error, midway bool) error {
 	host := raw
 	if u, perr := url.Parse(raw); perr == nil {
-		host = u.Host
+		host = u.Hostname()
 	}
-	var dnsErr *net.DNSError
-	if errors.As(err, &dnsErr) || strings.Contains(err.Error(), "no such host") {
-		return userf("Couldn't reach %s. Check your internet connection and try again.", host)
+	if midway {
+		return userf("The download from %s stopped partway. Try again to continue where it left off.", host)
 	}
-	return userf("The download from %s failed (%v). Try again to resume it.", host, err)
+	return userf("Couldn't reach %s. Check your internet connection and try again.", host)
 }
 
 func fileSHA1(path string) (string, error) {
