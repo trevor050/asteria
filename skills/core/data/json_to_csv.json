@@ -1,0 +1,28 @@
+{
+  "id": "json_to_csv",
+  "name": "JSON to CSV",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "json csv",
+    "to csv",
+    "spreadsheet"
+  ],
+  "category": "data",
+  "description": "One row per object; nested values are kept as JSON",
+  "inputTypes": [
+    ".json"
+  ],
+  "outputType": ".csv",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

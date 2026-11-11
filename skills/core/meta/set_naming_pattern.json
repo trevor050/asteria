@@ -3,10 +3,15 @@
   "name": "Set Naming Pattern",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["file name pattern", "naming pattern"],
+  "aliases": [
+    "file name pattern",
+    "naming pattern"
+  ],
   "category": "meta",
   "description": "Configure output file names",
-  "inputTypes": ["*"],
+  "inputTypes": [
+    "*"
+  ],
   "outputType": "none",
   "params": [
     {
@@ -16,9 +21,10 @@
       "default": "{name}_{skill}.{ext}"
     }
   ],
-  "driver": "meta",
   "isMeta": true,
-  "executor": {"type": "meta"},
+  "executor": {
+    "type": "meta"
+  },
   "permissions": [],
   "dangerLevel": 0
 }

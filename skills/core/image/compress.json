@@ -1,0 +1,46 @@
+{
+  "id": "compress",
+  "name": "Compress Image",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "cmp",
+    "compress",
+    "reduce size",
+    "smaller file"
+  ],
+  "category": "compress",
+  "description": "Re-encode JPEG/WebP at a lower quality; PNG gets lossless max compression",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "quality",
+      "label": "Quality",
+      "type": "int",
+      "default": 75,
+      "presets": [
+        95,
+        90,
+        80,
+        70,
+        60
+      ],
+      "unit": "%",
+      "min": 1,
+      "max": 100
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "image.compress"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

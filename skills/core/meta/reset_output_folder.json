@@ -1,0 +1,24 @@
+{
+  "id": "reset_output_folder",
+  "name": "Export Next to Originals",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "same folder",
+    "original folder",
+    "default output"
+  ],
+  "category": "meta",
+  "description": "Save exports beside each original file",
+  "inputTypes": [
+    "*"
+  ],
+  "outputType": "none",
+  "params": [],
+  "isMeta": true,
+  "executor": {
+    "type": "meta"
+  },
+  "permissions": [],
+  "dangerLevel": 0
+}

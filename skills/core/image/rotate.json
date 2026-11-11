@@ -1,0 +1,46 @@
+{
+  "id": "rotate",
+  "name": "Rotate",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "rotate",
+    "turn",
+    "rot"
+  ],
+  "category": "transform",
+  "description": "Rotate clockwise by 90, 180 or 270 degrees",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "angle",
+      "label": "Angle",
+      "type": "int",
+      "default": 90,
+      "presets": [
+        90,
+        180,
+        270
+      ],
+      "unit": "°",
+      "options": [
+        "90",
+        "180",
+        "270"
+      ]
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "image.rotate"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

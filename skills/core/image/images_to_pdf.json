@@ -1,0 +1,30 @@
+{
+  "id": "images_to_pdf",
+  "name": "Images to PDF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "img to pdf",
+    "jpg to pdf",
+    "photos to pdf",
+    "make pdf"
+  ],
+  "category": "pdf",
+  "description": "Put each image on its own page, in order, sized to the image",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".pdf",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "pdf.from_images"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "outputName": "images"
+}

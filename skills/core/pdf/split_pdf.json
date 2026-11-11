@@ -1,0 +1,28 @@
+{
+  "id": "split_pdf",
+  "name": "Split PDF",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "split",
+    "pages to files",
+    "explode pdf"
+  ],
+  "category": "pdf",
+  "description": "One PDF per page, in a folder",
+  "inputTypes": [
+    "@pdf"
+  ],
+  "outputType": "folder",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "pdf.split"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

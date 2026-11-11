@@ -1,0 +1,29 @@
+{
+  "id": "csv_to_markdown",
+  "name": "CSV to Markdown Table",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "csv md",
+    "markdown table",
+    "csv table"
+  ],
+  "category": "data",
+  "description": "GitHub-flavored Markdown table",
+  "inputTypes": [
+    ".csv",
+    ".tsv"
+  ],
+  "outputType": ".md",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "data.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

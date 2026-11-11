@@ -12,6 +12,8 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
+
+	"asteria/internal/ops"
 )
 
 type LoaderOptions struct {
@@ -122,6 +124,9 @@ func (l *Loader) LoadAll() error {
 		merged[id] = s
 	}
 
+	if list, ok := errOut.(LoadErrors); ok && len(list) == 0 {
+		errOut = nil
+	}
 	l.mu.Lock()
 	l.skills = merged
 	l.lastErr = errOut
@@ -342,8 +347,12 @@ func (l *Loader) collectFromDisk(root string, source SkillSource) (map[string]Sk
 }
 
 func normalizeSkill(s Skill) (Skill, error) {
-	if strings.TrimSpace(s.ID) == "" {
+	s.ID = strings.TrimSpace(s.ID)
+	if s.ID == "" {
 		return Skill{}, fmt.Errorf("missing id")
+	}
+	if !idPattern.MatchString(s.ID) {
+		return Skill{}, fmt.Errorf("id %q must be lower-case letters, digits, '_', '-' or '.'", s.ID)
 	}
 	if strings.TrimSpace(s.Name) == "" {
 		return Skill{}, fmt.Errorf("missing name")
@@ -351,40 +360,117 @@ func normalizeSkill(s Skill) (Skill, error) {
 	if strings.TrimSpace(s.Version) == "" {
 		return Skill{}, fmt.Errorf("missing version")
 	}
-	// Keep defaults safe.
-	if strings.TrimSpace(s.Executor.Type) != "" {
-		// Infer driver when omitted.
-		switch strings.ToLower(strings.TrimSpace(s.Executor.Type)) {
-		case "cli":
-			if s.Driver == "" {
-				s.Driver = "cli"
-			}
-		case "pipeline":
-			if s.Driver == "" {
-				s.Driver = "pipeline"
-			}
-		case "meta":
-			if s.Driver == "" {
-				s.Driver = "meta"
-			}
+	if len(s.Params) > 1 {
+		return Skill{}, fmt.Errorf("skills take at most one parameter (found %d)", len(s.Params))
+	}
+	for _, p := range s.Params {
+		if strings.TrimSpace(p.Name) == "" {
+			return Skill{}, fmt.Errorf("parameter is missing a name")
 		}
 	}
-	if s.Driver == "" {
-		s.Driver = "meta"
+	types, err := expandTypes(s.InputTypes)
+	if err != nil {
+		return Skill{}, err
 	}
-	if s.Params == nil {
-		s.Params = nil
+	s.InputTypes = types
+	if s.OutputType == "" && s.Executor.OutputExtension != "" {
+		s.OutputType = s.Executor.OutputExtension
 	}
+	s.OutputType = normalizeOutputType(s.OutputType)
+	if s.Category == "" {
+		s.Category = "other"
+	}
+
+	kind := strings.ToLower(strings.TrimSpace(s.Executor.Type))
+	if kind == "" && s.IsMeta {
+		kind = "meta"
+	}
+	s.Executor.Type = kind
+	requires := append([]string{}, s.Requires...)
+	switch kind {
+	case "native":
+		h, ok := ops.Lookup(s.Executor.Handler)
+		if !ok {
+			return Skill{}, fmt.Errorf("unknown native handler %q", s.Executor.Handler)
+		}
+		if s.Combine && !h.Combine {
+			return Skill{}, fmt.Errorf("handler %s cannot combine files", h.Name)
+		}
+		s.Combine = h.Combine
+		requires = append(requires, h.Requires...)
+	case "cli":
+		if strings.TrimSpace(s.Executor.Command) == "" {
+			return Skill{}, fmt.Errorf("cli skills need executor.command")
+		}
+		if s.OutputType == "" {
+			return Skill{}, fmt.Errorf("cli skills need an outputType")
+		}
+		requires = append(requires, strings.TrimSuffix(filepath.Base(s.Executor.Command), ".exe"))
+	case "pipeline":
+		if len(s.Executor.Steps) == 0 {
+			return Skill{}, fmt.Errorf("pipeline skills need at least one step")
+		}
+		if s.Combine {
+			return Skill{}, fmt.Errorf("pipeline skills cannot combine files")
+		}
+	case "meta":
+		if s.Source == SkillSourceCommunity {
+			return Skill{}, fmt.Errorf("meta skills are built in and cannot be added")
+		}
+		s.IsMeta = true
+		if len(s.InputTypes) == 0 {
+			s.InputTypes = []string{"*"}
+		}
+	default:
+		return Skill{}, fmt.Errorf("executor.type must be native, cli or pipeline (got %q)", s.Executor.Type)
+	}
+	if !s.IsMeta && len(s.InputTypes) == 0 {
+		return Skill{}, fmt.Errorf("missing inputTypes")
+	}
+	s.Driver = kind
+	s.Requires = dedupe(requires)
 	s.Permissions = NormalizePermissions(s.Permissions)
 	return s, nil
 }
+
+func dedupe(in []string) []string {
+	out := []string{}
+	seen := map[string]bool{}
+	for _, v := range in {
+		v = strings.ToLower(strings.TrimSpace(v))
+		if v != "" && !seen[v] {
+			seen[v] = true
+			out = append(out, v)
+		}
+	}
+	return out
+}
+
+// LoadErrors collects one message per skill file that failed to load.
+type LoadErrors []string
+
+func (e LoadErrors) Error() string { return strings.Join(e, "; ") }
 
 func joinErr(existing error, next error) error {
 	if next == nil {
 		return existing
 	}
-	if existing == nil {
-		return next
+	list, _ := existing.(LoadErrors)
+	if more, ok := next.(LoadErrors); ok {
+		return append(list, more...)
 	}
-	return fmt.Errorf("%v; %w", existing, next)
+	return append(list, next.Error())
+}
+
+// Problems returns the messages from the last load, one per bad file.
+func (l *Loader) Problems() []string {
+	l.mu.RLock()
+	defer l.mu.RUnlock()
+	if list, ok := l.lastErr.(LoadErrors); ok {
+		return append([]string{}, list...)
+	}
+	if l.lastErr != nil {
+		return []string{l.lastErr.Error()}
+	}
+	return nil
 }

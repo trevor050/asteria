@@ -1,0 +1,29 @@
+{
+  "id": "convert_to_png",
+  "name": "Convert to PNG",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "png",
+    "to png",
+    "heic to png",
+    "jpg to png"
+  ],
+  "category": "convert",
+  "description": "Save images as lossless PNG",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".png",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "image.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

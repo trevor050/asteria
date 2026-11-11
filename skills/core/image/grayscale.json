@@ -1,0 +1,28 @@
+{
+  "id": "grayscale",
+  "name": "Grayscale",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "bw",
+    "black and white",
+    "monochrome"
+  ],
+  "category": "filter",
+  "description": "Remove color",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "image.grayscale"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -3,10 +3,16 @@
   "name": "Accent Color",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["accent", "theme color", "highlight color"],
+  "aliases": [
+    "accent",
+    "theme color",
+    "highlight color"
+  ],
   "category": "meta",
   "description": "Set the UI accent color",
-  "inputTypes": ["*"],
+  "inputTypes": [
+    "*"
+  ],
   "outputType": "none",
   "params": [
     {
@@ -15,18 +21,37 @@
       "label": "Color",
       "default": "99,102,241",
       "presets": [
-        {"label": "Indigo", "value": "99,102,241"},
-        {"label": "Sky", "value": "14,165,233"},
-        {"label": "Emerald", "value": "16,185,129"},
-        {"label": "Orange", "value": "249,115,22"},
-        {"label": "Red", "value": "239,68,68"},
-        {"label": "Violet", "value": "168,85,247"}
+        {
+          "label": "Indigo",
+          "value": "99,102,241"
+        },
+        {
+          "label": "Sky",
+          "value": "14,165,233"
+        },
+        {
+          "label": "Emerald",
+          "value": "16,185,129"
+        },
+        {
+          "label": "Orange",
+          "value": "249,115,22"
+        },
+        {
+          "label": "Red",
+          "value": "239,68,68"
+        },
+        {
+          "label": "Violet",
+          "value": "168,85,247"
+        }
       ]
     }
   ],
-  "driver": "meta",
   "isMeta": true,
-  "executor": {"type": "meta"},
+  "executor": {
+    "type": "meta"
+  },
   "permissions": [],
   "dangerLevel": 0
 }

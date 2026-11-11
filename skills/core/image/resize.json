@@ -1,0 +1,45 @@
+{
+  "id": "resize",
+  "name": "Resize",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "rs",
+    "scale",
+    "shrink image",
+    "make smaller"
+  ],
+  "category": "transform",
+  "description": "Resize by percent or to fit a width/height, keeping the aspect ratio",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "size",
+      "label": "Size",
+      "type": "string",
+      "default": "50%",
+      "presets": [
+        "75%",
+        "50%",
+        "25%",
+        "1920",
+        "1280",
+        "800"
+      ],
+      "hint": "50% · 1920 (width) · x1080 (height) · 1920x1080 (fit inside)"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "image.resize"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

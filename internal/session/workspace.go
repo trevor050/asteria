@@ -2,64 +2,60 @@ package session
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
+// Workspace is the per-run scratch directory that holds step outputs.
 type Workspace struct {
 	Root string
 }
 
-func NewWorkspace() (*Workspace, error) {
+// SessionsRoot is where workspaces live: <user cache>/asteria/sessions.
+func SessionsRoot() (string, error) {
 	base, err := os.UserCacheDir()
 	if err != nil {
-		return nil, err
-	}
-	root := filepath.Join(base, "asteria", "workspace", time.Now().Format("20060102-150405"))
-	if err := os.MkdirAll(root, 0o755); err != nil {
-		return nil, err
-	}
-	return &Workspace{Root: root}, nil
-}
-
-func (w *Workspace) EnsureFileDir(fileID string) (string, error) {
-	dir := filepath.Join(w.Root, fileID)
-	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return "", err
 	}
-	return dir, nil
+	return filepath.Join(base, "asteria", "sessions"), nil
 }
 
-func (w *Workspace) SnapshotPath(fileID string, index int, ext string) string {
-	filename := "snapshot-" + fmtIndex(index) + ext
-	return filepath.Join(w.Root, fileID, filename)
-}
-
-func (w *Workspace) Reset() error {
-	return os.RemoveAll(w.Root)
-}
-
-func CopyFile(src string, dst string) error {
-	in, err := os.Open(src)
-	if err != nil {
-		return err
+// NewWorkspace creates a fresh workspace under root.
+func NewWorkspace(root string) (*Workspace, error) {
+	dir := filepath.Join(root, fmt.Sprintf("%s-%d", time.Now().Format("20060102-150405"), os.Getpid()))
+	if err := os.MkdirAll(dir, 0o700); err != nil {
+		return nil, err
 	}
-	defer in.Close()
-
-	out, err := os.Create(dst)
-	if err != nil {
-		return err
-	}
-	defer out.Close()
-
-	if _, err := io.Copy(out, in); err != nil {
-		return err
-	}
-	return out.Sync()
+	return &Workspace{Root: dir}, nil
 }
 
-func fmtIndex(index int) string {
-	return fmt.Sprintf("%03d", index)
+// FileDir creates the directory for one tray item.
+func (w *Workspace) FileDir(id string) (string, error) {
+	dir := filepath.Join(w.Root, id)
+	return dir, os.MkdirAll(dir, 0o700)
+}
+
+// Close deletes the workspace.
+func (w *Workspace) Close() error { return os.RemoveAll(w.Root) }
+
+// CleanupStale removes workspaces left behind by earlier runs (for example
+// after a crash) and the pre-0.1 "workspace" directory. Asteria runs as a
+// single instance, so any other session directory is stale.
+func CleanupStale(sessionsRoot string, keep string) {
+	entries, err := os.ReadDir(sessionsRoot)
+	if err == nil {
+		for _, e := range entries {
+			p := filepath.Join(sessionsRoot, e.Name())
+			if p == keep || !e.IsDir() {
+				continue
+			}
+			_ = os.RemoveAll(p)
+		}
+	}
+	legacy := filepath.Join(filepath.Dir(sessionsRoot), "workspace")
+	if strings.HasSuffix(filepath.Dir(sessionsRoot), "asteria") {
+		_ = os.RemoveAll(legacy)
+	}
 }

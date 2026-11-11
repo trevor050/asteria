@@ -1,0 +1,43 @@
+{
+  "id": "trim",
+  "name": "Trim",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "cut",
+    "clip",
+    "trim video",
+    "trim audio"
+  ],
+  "category": "media",
+  "description": "Keep only a time range",
+  "inputTypes": [
+    "@media"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "range",
+      "label": "Range",
+      "type": "string",
+      "default": "0:00-0:30",
+      "presets": [
+        "0:00-0:30",
+        "0:00-1:00",
+        "0:30-"
+      ],
+      "hint": "start-end, e.g. 0:05-0:30 · 1:00- (to the end)"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "media.trim"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

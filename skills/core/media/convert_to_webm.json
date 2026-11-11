@@ -1,0 +1,28 @@
+{
+  "id": "convert_to_webm",
+  "name": "Convert to WebM",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "webm",
+    "vp9"
+  ],
+  "category": "media",
+  "description": "VP9/Opus WebM for the web",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": ".webm",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

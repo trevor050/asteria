@@ -3,15 +3,21 @@
   "name": "Clear All",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": ["reset", "clear"],
+  "aliases": [
+    "reset",
+    "clear"
+  ],
   "category": "meta",
   "description": "Clear all files and actions",
-  "inputTypes": ["*"],
+  "inputTypes": [
+    "*"
+  ],
   "outputType": "none",
   "params": [],
-  "driver": "meta",
   "isMeta": true,
-  "executor": {"type": "meta"},
+  "executor": {
+    "type": "meta"
+  },
   "permissions": [],
   "dangerLevel": 1
 }

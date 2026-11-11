@@ -1,0 +1,47 @@
+{
+  "id": "convert_to_jpeg",
+  "name": "Convert to JPEG",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "jpg",
+    "jpeg",
+    "to jpg",
+    "heic to jpg",
+    "png to jpg"
+  ],
+  "category": "convert",
+  "description": "Save images as JPEG (transparency becomes white)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".jpg",
+  "params": [
+    {
+      "name": "quality",
+      "label": "Quality",
+      "type": "int",
+      "default": 90,
+      "presets": [
+        95,
+        90,
+        80,
+        70,
+        60
+      ],
+      "unit": "%",
+      "min": 1,
+      "max": 100
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "image.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

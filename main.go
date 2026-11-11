@@ -2,62 +2,92 @@ package main
 
 import (
 	"embed"
+	"io/fs"
 	"log"
-	"net/http"
+	"os"
 
 	"github.com/wailsapp/wails/v3/pkg/application"
+	"github.com/wailsapp/wails/v3/pkg/events"
 )
 
-//go:embed all:frontend/dist all:skills/core
-var assets embed.FS
+// version is set at build time with -ldflags "-X main.version=v0.1.0".
+var version = "dev"
+
+//go:embed all:frontend/dist
+var frontendFS embed.FS
+
+//go:embed skills/core
+var skillsFS embed.FS
 
 func main() {
-	// Create the App instance
-	appInstance := NewApp()
+	core, err := fs.Sub(skillsFS, ".")
+	if err != nil {
+		log.Fatal(err)
+	}
+	svc, err := NewApp(core)
+	if err != nil {
+		log.Fatal(err)
+	}
+	preview := &previewHandler{store: svc.store}
 
+	var window *application.WebviewWindow
 	app := application.New(application.Options{
 		Name:        "Asteria",
-		Description: "File actions, chained live",
-		Services: []application.Service{
-			application.NewService(appInstance),
-		},
+		Description: "Convert files locally from a command bar",
+		Services:    []application.Service{application.NewService(svc)},
 		Assets: application.AssetOptions{
-			Handler: application.AssetFileServerFS(assets),
-			Middleware: func(next http.Handler) http.Handler {
-				return next
-			},
+			Handler:    application.AssetFileServerFS(frontendFS),
+			Middleware: preview.wrap,
 		},
 		Mac: application.MacOptions{
 			ApplicationShouldTerminateAfterLastWindowClosed: true,
 		},
+		SingleInstance: &application.SingleInstanceOptions{
+			UniqueID: "io.github.trevor050.asteria",
+			OnSecondInstanceLaunch: func(data application.SecondInstanceData) {
+				if window != nil {
+					window.Restore()
+					window.Focus()
+				}
+				svc.addFromArgs(data.Args)
+			},
+		},
+		Server:     application.ServerOptions{Host: "127.0.0.1", Port: 34217},
+		OnShutdown: svc.shutdown,
 	})
 
-	// Create window with liquid glass
-	window := app.Window.NewWithOptions(application.WebviewWindowOptions{
-		Name:   "main",
-		Title:  "Asteria",
-		Width:  800,
-		Height: 580,
+	window = app.Window.NewWithOptions(application.WebviewWindowOptions{
+		Name:      "main",
+		Title:     "Asteria",
+		Width:     980,
+		Height:    680,
+		MinWidth:  560,
+		MinHeight: 440,
 		Mac: application.MacWindow{
-			Backdrop: application.MacBackdropLiquidGlass,
-			TitleBar: application.MacTitleBarHiddenInset,
-			LiquidGlass: application.MacLiquidGlass{
-				Style:        application.LiquidGlassStyleAutomatic,
-				CornerRadius: 16.0,
-				TintColor:    &application.RGBA{Red: 255, Green: 255, Blue: 255, Alpha: 20},
-			},
-			InvisibleTitleBarHeight: 50,
+			Backdrop:                application.MacBackdropTranslucent,
+			TitleBar:                application.MacTitleBarHiddenInset,
+			InvisibleTitleBarHeight: 44,
 		},
-		BackgroundColour: application.RGBA{Red: 255, Green: 255, Blue: 255, Alpha: 0},
+		BackgroundColour: application.NewRGBA(0, 0, 0, 0),
 		URL:              "/",
 		EnableFileDrop:   true,
 	})
 
-	// Initialize app after we have the window
-	appInstance.initWithApp(app, window)
+	window.OnWindowEvent(events.Common.WindowFilesDropped, func(event *application.WindowEvent) {
+		files := event.Context().DroppedFiles()
+		if len(files) == 0 {
+			return
+		}
+		app.Event.Emit(eventFilesAdded, svc.AddPaths(files))
+	})
 
-	err := app.Run()
-	if err != nil {
+	svc.attach(app, window)
+
+	// Files passed on the command line ("Open with", drag onto the app icon
+	// on Windows/Linux) are added on start.
+	go svc.addFromArgs(os.Args[1:])
+
+	if err := app.Run(); err != nil {
 		log.Fatal(err)
 	}
 }
