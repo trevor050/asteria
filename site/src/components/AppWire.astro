@@ -1,0 +1,134 @@
+---
+// The app drawn as an outline, on the same 2000 x 1320 grid as
+// docs/screenshot-dark.png, so the drawing and the screenshot register
+// exactly where the line of light meets them. Boxes are thin strokes (the
+// outline file's stroke), text is a faint bar where the real text sits.
+type Bar = [x1: number, x2: number, cy: number, h: number]
+const bars: Bar[] = []
+const bar = (x1: number, x2: number, cy: number, h = 18) => bars.push([x1, x2, cy, h])
+
+// top bar
+bar(189, 257, 49, 20)
+bar(282, 341, 49, 20)
+bar(1753, 1881, 49, 20)
+
+// row one: five tiles, 388 apart
+const cols = [45, 433, 821, 1209, 1597]
+const names = [262 - 51, 695 - 438, 1007 - 826, 1433 - 1214, 1803 - 1602]
+const meta1 = [393 - 51, 633 - 438, 1058 - 826, 1430 - 1214, 1794 - 1602]
+const meta2 = [0, 708 - 438, 1110 - 826, 1498 - 1214, 0]
+cols.forEach((x, i) => {
+  const t = x + 6
+  bar(t, t + names[i], 423, 22)
+  bar(t, t + meta1[i], 464, 18)
+  if (meta2[i]) bar(t, t + meta2[i], 497, 18)
+})
+// chips under each picture: [x1, x2, y1, y2]
+const chips: [number, number, number, number][] = [
+  [51, 279, 499, 541],
+  [51, 383, 551, 593],
+]
+for (const x of [438, 826, 1214]) {
+  chips.push([x, x + 229, 533, 575], [x, x + 333, 585, 627])
+}
+---
+
+<svg class="wire" viewBox="0 0 2000 1320" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  <g class="box">
+    <!-- the window -->
+    <rect x="1" y="1" width="1998" height="1318" rx="28"></rect>
+    <!-- top bar: All files / One by one, settings -->
+    <rect x="1600" y="25" width="125" height="50" rx="25"></rect>
+    <path d="M1936 43h26M1936 55h26"></path>
+    <circle cx="1954" cy="43" r="5"></circle>
+    <circle cx="1944" cy="55" r="5"></circle>
+
+    <!-- row one -->
+    {cols.map((x) => <rect x={x} y="116" width="358" height="269" rx="22"></rect>)}
+    <!-- what is in each picture -->
+    <circle cx="224" cy="251" r="118"></circle>
+    <rect x="433" y="162" width="359" height="179"></rect>
+    <rect x="866" y="116" width="270" height="269"></rect>
+    <circle cx="1019" cy="258" r="21"></circle>
+    <path d="M866 318 Q1000 300 1136 344"></path>
+    <rect x="1254" y="116" width="270" height="269"></rect>
+    <circle cx="1389" cy="252" r="89"></circle>
+    <text x="1776" y="250" class="big">PDF</text>
+    {chips.map(([x1, x2, y1, y2]) => <rect x={x1} y={y1} width={x2 - x1} height={y2 - y1} rx={(y2 - y1) / 2}></rect>)}
+
+    <!-- row two, cut off by the suggestions -->
+    <path d="M45 875V695Q45 673 67 673H381Q403 673 403 695V875"></path>
+    <path d="M427 875V692Q427 662 457 662H767Q797 662 797 692V875" class="on"></path>
+    <path d="M821 875V695Q821 673 843 673H1158Q1180 673 1180 695V875"></path>
+    <text x="222" y="812" class="big">PDF</text>
+    <ellipse cx="637" cy="807" rx="28" ry="13"></ellipse>
+
+    <!-- suggestions -->
+    <rect x="121" y="867" width="1440" height="260" rx="26"></rect>
+    <rect x="134" y="1037" width="1413" height="76" rx="14" class="on"></rect>
+    <rect x="288" y="1055" width="153" height="38" rx="9"></rect>
+    <circle cx="173" cy="918" r="13"></circle>
+    <circle cx="173" cy="996" r="13"></circle>
+    <circle cx="173" cy="1075" r="13"></circle>
+
+    <!-- the command bar and export -->
+    <rect x="121" y="1149" width="1440" height="102" rx="51"></rect>
+    <circle cx="168" cy="1200" r="29"></circle>
+    <path d="M168 1188v24M156 1200h24"></path>
+    <rect x="1583" y="1149" width="296" height="102" rx="51"></rect>
+    <path d="M1638 1190v20M1630 1197l8-8 8 8M1628 1212h20"></path>
+  </g>
+  <g class="text">
+    {bars.map(([x1, x2, cy, h]) => <rect x={x1} y={cy - h / 2} width={x2 - x1} height={h} rx={h / 2}></rect>)}
+    <!-- suggestions text -->
+    <rect x="218" y="907" width="217" height="22" rx="11"></rect>
+    <rect x="464" y="909" width="271" height="18" rx="9"></rect>
+    <rect x="1461" y="909" width="62" height="18" rx="9"></rect>
+    <rect x="218" y="985" width="164" height="22" rx="11"></rect>
+    <rect x="411" y="987" width="272" height="18" rx="9"></rect>
+    <rect x="1461" y="987" width="62" height="18" rx="9"></rect>
+    <rect x="218" y="1064" width="55" height="22" rx="11"></rect>
+    <rect x="300" y="1064" width="129" height="22" rx="11"></rect>
+    <rect x="470" y="1066" width="269" height="18" rx="9"></rect>
+    <rect x="1461" y="1066" width="62" height="18" rx="9"></rect>
+    <!-- typed in the bar, export label, export folder -->
+    <rect x="228" y="1186" width="220" height="28" rx="14"></rect>
+    <rect x="1674" y="1188" width="107" height="24" rx="12"></rect>
+    <rect x="1803" y="1191" width="35" height="18" rx="9"></rect>
+    <rect x="157" y="1273" width="329" height="18" rx="9"></rect>
+  </g>
+</svg>
+
+<style>
+  .wire {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #121316;
+  }
+  .box {
+    fill: none;
+    stroke: rgb(243 240 232 / 0.5);
+    stroke-width: 1.25px;
+    vector-effect: non-scaling-stroke;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+  .box :global(*) {
+    vector-effect: non-scaling-stroke;
+  }
+  .box .on {
+    stroke: rgb(243 240 232 / 0.85);
+  }
+  .text {
+    fill: rgb(243 240 232 / 0.16);
+  }
+  .big {
+    fill: rgb(243 240 232 / 0.22);
+    stroke: none;
+    font-family: var(--sans);
+    font-size: 58px;
+    font-weight: 200;
+    text-anchor: middle;
+  }
+</style>
