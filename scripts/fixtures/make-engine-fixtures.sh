@@ -94,6 +94,8 @@ fb.setupOS2(); fb.setupPost()
 fb.save("sample.otf")
 for flavor in ("woff", "woff2"):
     f = TTFont("sample.ttf"); f.flavor = flavor; f.save("sample." + flavor)
+    # CFF-outline web fonts for the OTF conversion.
+    f = TTFont("sample.otf"); f.flavor = flavor; f.save("convert_to_otf." + flavor)
 PY
 
 # Parquet: pyarrow if present (pip install pyarrow in a venv).
