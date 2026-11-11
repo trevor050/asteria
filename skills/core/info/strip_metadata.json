@@ -1,0 +1,32 @@
+{
+  "id": "strip_metadata",
+  "name": "Strip Metadata",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "remove exif",
+    "remove location",
+    "remove gps",
+    "privacy",
+    "clean metadata",
+    "scrub",
+    "strip exif"
+  ],
+  "category": "info",
+  "description": "Remove EXIF, GPS location, XMP, IPTC and comments from the photo (same format; JPEG and PNG pixels are untouched)",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": "",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "info.strip"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,32 @@
+{
+  "id": "compare_images",
+  "name": "Compare Images",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "compare",
+    "diff",
+    "difference",
+    "spot the difference",
+    "image diff"
+  ],
+  "category": "info",
+  "description": "Pick two images of the same size; writes a .png with the first one dimmed and every difference marked in red",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".png",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "info.compare"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0,
+  "combine": true,
+  "outputName": "comparison"
+}

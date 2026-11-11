@@ -1,0 +1,31 @@
+{
+  "id": "count_colors",
+  "name": "Count Colors",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "unique colors",
+    "unique colours",
+    "how many colors",
+    "how many colours",
+    "colour count",
+    "color count"
+  ],
+  "category": "info",
+  "description": "Write a .json file with the number of unique colours, whether it is greyscale or transparent, and the 10 most common colours",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".json",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "info.countcolors"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,49 @@
+{
+  "id": "extract_palette",
+  "name": "Extract Palette",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "palette",
+    "colors",
+    "colours",
+    "color scheme",
+    "dominant colors",
+    "dominant colours"
+  ],
+  "category": "info",
+  "description": "Write a .json file listing the 6 main colours (hex, RGB and share of the picture), largest first",
+  "inputTypes": [
+    "@image"
+  ],
+  "outputType": ".json",
+  "params": [
+    {
+      "name": "colors",
+      "label": "Colours",
+      "type": "int",
+      "default": 6,
+      "presets": [
+        3,
+        4,
+        6,
+        8,
+        12
+      ],
+      "min": 2,
+      "max": 16,
+      "unit": "",
+      "hint": "2-16 colours · 6 = a good palette · fewer = bolder groups"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "info.palette"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp"
+  ],
+  "dangerLevel": 0
+}
