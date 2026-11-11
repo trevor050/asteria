@@ -1,0 +1,393 @@
+---
+// "I have ___, I want ___" over every verified conversion. The rows rendered
+// here are what shows before anything is typed (and without JS); typing
+// filters the full list from /data/search.json.
+import { pagePairs, summary, familyOrder, type Pair } from '../lib/data'
+
+interface Props {
+  /** 'popular' shows a short starting list; 'all' lists everything by family */
+  show: 'popular' | 'all'
+  headingLevel?: 'h1' | 'h2'
+  id?: string
+}
+const { show, headingLevel = 'h2', id = 'find' } = Astro.props
+const H = headingLevel
+
+const popular = [
+  'heic-to-jpg', 'png-to-jpg', 'webp-to-png', 'jpg-to-webp', 'mov-to-mp4', 'mp4-to-mp3', 'mov-to-gif', 'docx-to-pdf',
+  'pdf-to-txt', 'md-to-docx', 'xlsx-to-csv', 'csv-to-json', 'wav-to-mp3', 'epub-to-mobi', 'srt-to-vtt', 'svg-to-png',
+]
+  .map((s) => pagePairs.find((p) => p.slug === s))
+  .filter((p): p is Pair => !!p)
+  .slice(0, 10)
+
+const groups = familyOrder
+  .map((f) => ({ family: f, pairs: pagePairs.filter((p) => p.family === f) }))
+  .filter((g) => g.pairs.length)
+const rest = pagePairs.filter((p) => !familyOrder.includes(p.family))
+if (rest.length) groups.push({ family: 'Other', pairs: rest })
+---
+
+<section class="finder" id={id} aria-labelledby={`${id}-title`} data-finder>
+  <div class="wrap inner">
+    <H id={`${id}-title`}>Find your conversion</H>
+    <p class="lede">
+      {summary.conversionPairs} conversions between {summary.fileTypesRead} kinds of file. Each one was run on a real file and the result
+      checked by a separate program.
+    </p>
+
+    <form class="ask" role="search" aria-label="Find a conversion" data-ask onsubmit="return false">
+      <label class="slot">
+        <span>I have</span>
+        <input name="have" data-have type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="heic" aria-describedby={`${id}-count`} />
+      </label>
+      <span class="beam mini" aria-hidden="true"><i></i></span>
+      <label class="slot">
+        <span>I want</span>
+        <input name="want" data-want type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="jpg" aria-describedby={`${id}-count`} />
+      </label>
+    </form>
+    <p class="count" id={`${id}-count`} aria-live="polite" data-count>
+      {show === 'popular' ? 'Some of the common ones. Type a format, or what it is called, to search all of them.' : `All ${pagePairs.length} file-to-file conversions, by kind.`}
+    </p>
+
+    <div data-static>
+      {
+        show === 'popular' ? (
+          <ul class="rows">
+            {popular.map((p) => (
+              <li>
+                <a href={`/convert/${p.slug}`}>
+                  <span class="from">
+                    {p.fromName} <small>.{p.from}</small>
+                  </span>
+                  <span class="through-mark" aria-hidden="true" />
+                  <span class="to">
+                    {p.toName} <small>.{p.to}</small>
+                  </span>
+                  <span class:list={['needs', { addon: p.addon }]}>{p.addon ? `needs ${p.addon.name}` : 'built in'}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          groups.map((g) => (
+            <section class="fam" aria-labelledby={`fam-${g.family.replace(/\W+/g, '-')}`}>
+              <h2 id={`fam-${g.family.replace(/\W+/g, '-')}`}>
+                {g.family} <span>{g.pairs.length}</span>
+              </h2>
+              <ul class="rows">
+                {g.pairs.map((p) => (
+                  <li>
+                    <a href={`/convert/${p.slug}`}>
+                      <span class="from">
+                        {p.fromName} <small>.{p.from}</small>
+                      </span>
+                      <span class="through-mark" aria-hidden="true" />
+                      <span class="to">
+                        {p.toName} <small>.{p.to}</small>
+                      </span>
+                      <span class:list={['needs', { addon: p.addon }]}>{p.addon ? `needs ${p.addon.name}` : 'built in'}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
+        )
+      }
+    </div>
+    <ul class="rows" data-live hidden></ul>
+    {show === 'popular' && <p class="all-link"><a href="/convert">Every conversion, by kind of file</a></p>}
+  </div>
+</section>
+
+<style>
+  .finder {
+    padding-block: clamp(64px, 10vw, 120px);
+  }
+  .inner {
+    max-width: calc(860px + 2 * var(--gutter));
+  }
+  .inner > .lede {
+    margin-top: 16px;
+    max-width: 52ch;
+  }
+  .ask {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+    gap: 18px;
+    margin-top: 40px;
+  }
+  .slot {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 64px;
+    padding: 0 20px;
+    border-radius: 18px;
+    border: 1px solid var(--line-strong);
+    background: #16171a;
+    cursor: text;
+    transition: border-color 0.2s var(--ease-out);
+  }
+  .slot:focus-within {
+    border-color: rgb(255 255 255 / 0.3);
+  }
+  .slot span {
+    color: var(--muted);
+    font-size: 15px;
+    white-space: nowrap;
+  }
+  .slot input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font-size: 22px;
+    font-weight: 300;
+    caret-color: var(--light-a);
+  }
+  .slot input::placeholder {
+    color: rgb(255 255 255 / 0.22);
+  }
+  .beam.mini {
+    height: 64px;
+    align-self: center;
+  }
+  .beam.mini::before {
+    filter: blur(10px);
+    width: 16px;
+    margin-left: -8px;
+  }
+  .count {
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .rows {
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .rows :global(li) {
+    border-bottom: 1px solid var(--line);
+  }
+  .rows :global(a) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 2px minmax(0, 1fr) minmax(7.5rem, auto);
+    align-items: center;
+    gap: 24px;
+    padding: 14px 4px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: background-color 0.15s;
+  }
+  .rows :global(a:focus-visible) {
+    outline-offset: -2px;
+  }
+  @media (hover: hover) {
+    .rows :global(a:hover) {
+      background: var(--hover);
+    }
+  }
+  .rows :global(.from) {
+    color: var(--ink-2);
+    text-align: right;
+  }
+  .rows :global(small) {
+    font-size: 13px;
+    color: var(--muted);
+    margin-left: 4px;
+  }
+  .rows :global(.through-mark) {
+    width: 2px;
+    height: 22px;
+    border-radius: 2px;
+    background: var(--light);
+  }
+  .rows :global(.needs) {
+    text-align: right;
+    font-size: 13px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .rows :global(.needs.addon) {
+    color: var(--warn);
+  }
+  .rows :global(mark) {
+    background: none;
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--light-a);
+    text-underline-offset: 0.2em;
+  }
+  .fam {
+    margin-top: 48px;
+  }
+  .fam h2 {
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .fam h2 span {
+    color: var(--muted);
+    font-size: 0.85em;
+    margin-left: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+  .all-link {
+    margin-top: 22px;
+    font-size: 15px;
+    color: var(--ink-2);
+  }
+  @media (max-width: 640px) {
+    .ask {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .beam.mini {
+      display: none;
+    }
+    .slot {
+      height: 56px;
+    }
+    .rows :global(a) {
+      grid-template-columns: minmax(0, 1fr) 2px minmax(0, 1fr);
+      gap: 4px 14px;
+    }
+    .rows :global(.needs) {
+      grid-column: 3;
+      text-align: left;
+    }
+    .rows :global(small) {
+      display: block;
+      margin-left: 0;
+    }
+  }
+</style>
+
+<script>
+  import { loadData, esc } from '../scripts/search'
+  import type { Data } from '../scripts/search'
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-finder]')) {
+    const have = root.querySelector<HTMLInputElement>('[data-have]')!
+    const want = root.querySelector<HTMLInputElement>('[data-want]')!
+    const staticList = root.querySelector<HTMLElement>('[data-static]')!
+    const live = root.querySelector<HTMLUListElement>('[data-live]')!
+    const count = root.querySelector<HTMLElement>('[data-count]')!
+    const initialCount = count.textContent
+    let data: Data | null = null
+
+    // Common words people use for formats, mapped to extensions.
+    const words: Record<string, string[]> = {
+      iphone: ['heic', 'heif'], photo: ['jpg', 'jpeg', 'heic', 'png'], picture: ['jpg', 'png', 'heic', 'webp'],
+      word: ['docx', 'doc'], excel: ['xlsx', 'xls'], powerpoint: ['pptx', 'ppt'], video: ['mp4', 'mov', 'mkv', 'webm', 'avi'],
+      music: ['mp3', 'wav', 'm4a', 'flac', 'ogg'], audio: ['mp3', 'wav', 'm4a', 'flac', 'ogg', 'opus'], kindle: ['mobi', 'azw3'],
+      ebook: ['epub', 'mobi', 'azw3', 'fb2'], subtitles: ['srt', 'vtt', 'ass'], markdown: ['md', 'markdown'], text: ['txt'],
+      spreadsheet: ['xlsx', 'csv', 'ods'], jpeg: ['jpg', 'jpeg'], tiff: ['tif', 'tiff'],
+    }
+
+    function score(q: string, ext: string, name: string): number {
+      if (!q) return 1
+      const e = ext.toLowerCase()
+      const n = name.toLowerCase()
+      if (e === q) return 4
+      if (words[q]?.includes(e)) return 3
+      if (e.startsWith(q)) return 2
+      if (n.split(/[^a-z0-9]+/).some((w) => w.startsWith(q))) return 1
+      return 0
+    }
+    const clean = (s: string) => s.trim().toLowerCase().replace(/^\./, '').replace(/^(a|an)\s+/, '')
+    const hl = (text: string, q: string) => {
+      if (!q) return esc(text)
+      const i = text.toLowerCase().indexOf(q)
+      return i < 0 ? esc(text) : `${esc(text.slice(0, i))}<mark>${esc(text.slice(i, i + q.length))}</mark>${esc(text.slice(i + q.length))}`
+    }
+
+    async function run() {
+      const a = clean(have.value)
+      const b = clean(want.value)
+      if (!a && !b) {
+        live.hidden = true
+        staticList.hidden = false
+        count.textContent = initialCount
+        return
+      }
+      data ??= await loadData().catch(() => null)
+      if (!data) {
+        count.textContent = 'The search could not load. Every conversion is listed on the conversions page.'
+        return
+      }
+      if (a !== clean(have.value) || b !== clean(want.value)) return
+      const hits = data.pairs
+        .filter((p) => p[6])
+        .map((p) => {
+          const fs = score(a, p[0], data!.names[p[0]] ?? '')
+          const ts = score(b, p[1], data!.names[p[1]] ?? '')
+          return { p, s: fs && ts ? fs * 10 + ts - (p[3] ? 0.5 : 0) : 0 }
+        })
+        .filter((x) => x.s > 0)
+        .sort((x, y) => y.s - x.s || x.p[0].localeCompare(y.p[0]) || x.p[1].localeCompare(y.p[1]))
+      const shown = hits.slice(0, 60)
+      live.innerHTML = shown
+        .map(({ p }) => {
+          const [from, to, slug, addon] = p
+          const needs = addon ? `<span class="needs addon">needs ${esc(data!.addons[addon] ?? addon)}</span>` : `<span class="needs">built in</span>`
+          return `<li><a href="/convert/${slug}"><span class="from">${hl(data!.names[from] ?? from, a)} <small>.${hl(from, a)}</small></span><span class="through-mark" aria-hidden="true"></span><span class="to">${hl(data!.names[to] ?? to, b)} <small>.${hl(to, b)}</small></span>${needs}</a></li>`
+        })
+        .join('')
+      staticList.hidden = true
+      live.hidden = false
+      count.textContent = hits.length
+        ? hits.length > shown.length
+          ? `${hits.length} matches. The first ${shown.length} are below; add the other side to narrow it down.`
+          : `${hits.length} ${hits.length === 1 ? 'match' : 'matches'}.`
+        : `No tested conversion matches that yet. Check the spelling, or try just one side.`
+    }
+
+    for (const el of [have, want]) {
+      el.addEventListener('input', run)
+      el.addEventListener('focus', () => void loadData().catch(() => null))
+      el.addEventListener('keydown', (e) => {
+        const first = root.querySelector<HTMLAnchorElement>(live.hidden ? '[data-static] a' : '[data-live] a')
+        if (e.key === 'ArrowDown' && first) {
+          e.preventDefault()
+          first.focus()
+        } else if (e.key === 'Enter') {
+          if (el === have && !want.value) want.focus()
+          else if (first && !live.hidden) first.click()
+        }
+      })
+    }
+    // Arrow keys move through the results, Escape goes back to the fields.
+    root.addEventListener('keydown', (e) => {
+      const a = (e.target as HTMLElement).closest('.rows a')
+      if (!a) return
+      const all = [...root.querySelectorAll<HTMLAnchorElement>('.rows:not([hidden]) a, [data-static]:not([hidden]) a')]
+      const i = all.indexOf(a as HTMLAnchorElement)
+      if (e.key === 'ArrowDown' && i < all.length - 1) {
+        e.preventDefault()
+        all[i + 1].focus()
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        ;(i > 0 ? all[i - 1] : want).focus()
+      } else if (e.key === 'Escape') {
+        have.focus()
+      }
+    })
+    // Pre-fill from the URL (?have=heic&want=jpg).
+    const u = new URLSearchParams(location.search)
+    if (u.get('have') || u.get('want')) {
+      have.value = u.get('have') ?? ''
+      want.value = u.get('want') ?? ''
+      run()
+    }
+  }
+</script>

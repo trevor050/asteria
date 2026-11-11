@@ -1,0 +1,41 @@
+<!doctype html>
+<!-- The social card (public/og.png). Rendered at 1200x630 by scripts/og/render.mjs. -->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: Geist; src: url('../../src/assets/fonts/Geist-Variable-subset.woff2') format('woff2'); font-weight: 100 900; }
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #0f1012; font-family: Geist, sans-serif; color: #ecebe6; }
+  .aura { position: absolute; inset: 0; opacity: .7; }
+  .b { position: absolute; border-radius: 50%; filter: blur(10px); }
+  .t { width: 820px; height: 620px; left: -260px; top: -330px; background: radial-gradient(closest-side, rgb(62 118 132), rgb(62 118 132 / .45) 45%, transparent); }
+  .a { width: 760px; height: 600px; right: -240px; top: -300px; background: radial-gradient(closest-side, rgb(160 114 56), rgb(160 114 56 / .42) 45%, transparent); }
+  .s { width: 900px; height: 500px; left: 160px; top: -360px; background: radial-gradient(closest-side, rgb(80 96 142), rgb(80 96 142 / .4) 50%, transparent); }
+  .stage { position: absolute; left: 0; right: 0; top: 96px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 92px; }
+  .g { width: 150px; height: 188px; position: relative; display: grid; place-items: center; }
+  .g svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .g span { position: relative; margin-top: 22px; font-size: 32px; font-weight: 300; letter-spacing: -.02em; }
+  .l { justify-self: end; } .r { justify-self: start; }
+  .l span { color: #b4b2ab; } .r span { color: #1c1c1a; font-weight: 350; }
+  .beam { position: relative; width: 4px; height: 290px; }
+  .beam::before { content: ''; position: absolute; inset: 0 -14px; border-radius: 99px; background: linear-gradient(#5cc0cf, #93a0e6 50%, #f3ac52); filter: blur(18px); opacity: .7; }
+  .beam::after { content: ''; position: absolute; inset: 0; border-radius: 99px; background: linear-gradient(#5cc0cf, #93a0e6 50%, #f3ac52); }
+  .beam i { position: absolute; left: 1.25px; width: 1.5px; top: 0; bottom: 0; background: #fff; z-index: 1; opacity: .85; }
+  h1 { position: absolute; left: 0; right: 0; bottom: 92px; margin: 0; text-align: center; font-size: 62px; font-weight: 200; letter-spacing: -.035em; line-height: 1; }
+  p { position: absolute; left: 0; right: 0; bottom: 44px; margin: 0; text-align: center; font-size: 22px; font-weight: 300; color: #b4b2ab; }
+  .brand { position: absolute; left: 48px; top: 40px; display: flex; gap: 12px; align-items: center; font-size: 24px; }
+  .brand img { width: 40px; height: 40px; }
+</style>
+</head>
+<body>
+  <div class="aura"><div class="b t"></div><div class="b a"></div><div class="b s"></div></div>
+  <div class="brand"><img src="../../../build/appicon.png" alt=""><span>Asteria</span></div>
+  <div class="stage">
+    <div class="g l"><svg viewBox="0 0 398 500"><path d="M38 0H270L398 128V462Q398 500 360 500H38Q0 500 0 462V38Q0 0 38 0Z" fill="rgb(255 255 255 / .04)" stroke="rgb(243 240 232 / .62)" vector-effect="non-scaling-stroke" style="stroke-width:2px"/></svg><span>HEIC</span></div>
+    <div class="beam"><i></i></div>
+    <div class="g r"><svg viewBox="0 0 398 500" style="filter:drop-shadow(0 16px 22px rgb(0 0 0 / .55))"><defs><linearGradient id="p" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#dedad1"/></linearGradient></defs><path d="M38 0H270L398 128V462Q398 500 360 500H38Q0 500 0 462V38Q0 0 38 0Z" fill="url(#p)"/><path d="M270 0V96Q270 128 302 128H398Z" fill="#c2bdb1"/></svg><span>JPG</span></div>
+  </div>
+  <h1>Drop a file. Say what it should be.</h1>
+  <p>A free file converter for Mac, Windows and Linux. Nothing is uploaded.</p>
+</body>
+</html>

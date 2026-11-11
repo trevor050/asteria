@@ -1,0 +1,36 @@
+---
+// A download button that leads with the visitor's system. Without JS it says
+// "Download Asteria" and goes to the download section (or the release page).
+import { getRelease } from '../lib/release'
+interface Props {
+  class?: string
+  /** where the button goes without JS */
+  href?: string
+  /** go straight to the file (true) or to the download section (false) */
+  direct?: boolean
+}
+const { class: cls = '', href = '/#download', direct = false } = Astro.props
+const r = await getRelease()
+const first = (list: typeof r.mac) => list.find((d) => !d.fallback) ?? list[0]
+const mac = first(r.mac)
+const win = first(r.windows)
+const lin = first(r.linux)
+---
+
+<a
+  class:list={['btn primary', cls]}
+  href={href}
+  data-dl
+  data-direct={direct ? '1' : undefined}
+  data-mac={mac.url}
+  data-windows={win.url}
+  data-linux={lin.url}
+  data-mac-fallback={mac.fallback ? '1' : undefined}
+  data-windows-fallback={win.fallback ? '1' : undefined}
+  data-linux-fallback={lin.fallback ? '1' : undefined}
+>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+    ><path d="M12 4v11"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg
+  >
+  <span data-dl-label>Download Asteria</span>
+</a>

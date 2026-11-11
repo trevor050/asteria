@@ -1,0 +1,334 @@
+---
+// Real conversions from docs/formats.json pass through the line as the page
+// scrolls: an outline before it, a finished file after it. Without motion (or
+// without JS) the same examples are a plain before-and-after list.
+import FileGlyph from './FileGlyph.astro'
+import { pairBySlug } from '../lib/data'
+
+const wanted = ['heic-to-jpg', 'mov-to-gif', 'docx-to-pdf', 'wav-to-mp3', 'epub-to-mobi', 'srt-to-vtt', 'csv-to-json', 'gpx-to-kml']
+const examples = wanted.map((s) => pairBySlug.get(s)).filter((p) => !!p)
+const n = examples.length
+---
+
+<section class="through" aria-labelledby="through-title" data-through style={`--n:${n}`}>
+  <div class="pin">
+    <div class="wrap intro">
+      <h2 id="through-title">In one side, out the other.</h2>
+      <p class="lede">Each of these is a real conversion, run on a real file and checked by a separate program.</p>
+    </div>
+    <div class="lane" data-lane>
+      <div class="beam tall" aria-hidden="true" data-beam><i></i><b class="flash" data-flash></b></div>
+      <ol class="cards">
+        {
+          examples.map((p, k) => (
+            <li class="card" style={`--k:${k}`}>
+              <a href={`/convert/${p.slug}`} class="pair">
+                <span class="half before">
+                  <FileGlyph kind="outline" ext={p.from} width={96} />
+                  <span class="label">
+                    <span class="what">{p.fromName}</span>
+                  </span>
+                </span>
+                <span class="half after">
+                  <FileGlyph kind="paper" ext={p.to} width={96} />
+                  <span class="label">
+                    <span class="what">{p.toName}</span>
+                    <span class:list={['needs', { addon: p.addon }]}>{p.addon ? `with ${p.addon.name}, a free add-on` : 'built in'}</span>
+                  </span>
+                </span>
+                <span class="visually-hidden">
+                  {p.fromName} to {p.toName}: type “{p.typed}” in Asteria
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .through {
+    position: relative;
+    padding-block: clamp(64px, 10vw, 120px);
+  }
+  .intro {
+    text-align: center;
+    display: grid;
+    justify-items: center;
+    gap: 16px;
+  }
+  .intro .lede {
+    max-width: 44ch;
+  }
+
+  /* ---- static (default, reduced motion, no JS): before | line | after ---- */
+  .lane {
+    position: relative;
+    max-width: 760px;
+    margin: 56px auto 0;
+    padding-inline: var(--gutter);
+  }
+  .lane > .beam {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+  }
+  .cards {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 36px;
+  }
+  .pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 9vw, 120px);
+    color: inherit;
+    text-decoration: none;
+  }
+  .half {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .half.before {
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+  .label {
+    display: grid;
+    gap: 2px;
+  }
+  .what {
+    font-size: 16px;
+  }
+  .needs {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .needs.addon {
+    color: var(--warn);
+  }
+  .before .what {
+    color: var(--ink-2);
+  }
+  .after :global(.glyph svg) {
+    filter: drop-shadow(0 14px 18px rgb(0 0 0 / 0.5));
+  }
+  @media (hover: hover) {
+    .pair:hover .what {
+      text-decoration: underline;
+      text-decoration-color: var(--line-strong);
+      text-underline-offset: 0.22em;
+    }
+  }
+  @media (max-width: 560px) {
+    .half,
+    .half.before {
+      flex-direction: column;
+      text-align: center;
+      gap: 10px;
+    }
+    .pair :global(.glyph) {
+      --gw: 72px !important;
+    }
+    .what {
+      font-size: 14px;
+    }
+  }
+
+  /* ---- live: pinned, the files travel left to right across the line ---- */
+  .through.live {
+    height: calc(100svh + var(--n) * 55svh);
+    padding: 0;
+  }
+  .live .pin {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    padding-top: clamp(48px, 9vh, 96px);
+    overflow: hidden;
+  }
+  .live .lane {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  .live .lane > .beam {
+    top: 12%;
+    bottom: 12%;
+  }
+  .live .cards {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+  .live .card {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+  }
+  /* Each card is drawn twice at the same spot: the outline copy is clipped to
+     the left of the line, the paper copy to the right. Only transforms move. */
+  .live .pair {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    width: 0;
+    height: 0;
+  }
+  .live .half {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50vw;
+    height: 220px;
+    margin-top: -110px;
+    overflow: hidden;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 14px;
+  }
+  .live .half.before {
+    margin-left: -50vw;
+  }
+  .live .half.after {
+    margin-left: 0;
+  }
+  .live .half > :global(*) {
+    transform: translateX(var(--x, 0px));
+    will-change: transform;
+  }
+  .live .half.before > :global(*) {
+    /* centre the content on the card's own position, measured from the line */
+    margin-left: auto;
+    margin-right: 0;
+  }
+  .live .before :global(.glyph),
+  .live .before .label {
+    position: absolute;
+    right: 0;
+    translate: 50% 0;
+  }
+  .live .after :global(.glyph),
+  .live .after .label {
+    position: absolute;
+    left: 0;
+    translate: -50% 0;
+  }
+  .live .half :global(.glyph) {
+    top: 18px;
+  }
+  .live .half .label {
+    top: 160px;
+    width: 260px;
+    text-align: center;
+    justify-items: center;
+  }
+  .live .before .what {
+    color: var(--ink-2);
+  }
+  .live .half.before .needs {
+    visibility: hidden;
+  }
+  .live .before .label::after {
+    content: '';
+  }
+  .live .pair:focus-visible {
+    outline: none;
+  }
+  .live .pair:focus-visible .after .what {
+    outline: 1.5px solid var(--light-a);
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+
+  /* brightens while a file is passing through */
+  .flash {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 44px;
+    margin-left: -22px;
+    border-radius: 99px;
+    background: var(--light);
+    filter: blur(22px);
+    opacity: 0;
+    pointer-events: none;
+  }
+  @media (max-width: 560px) {
+    .live .half .label {
+      top: 132px;
+      width: 170px;
+    }
+  }
+</style>
+
+<script>
+  // Moves each card from left to right as the section scrolls past: one
+  // passive scroll listener, one frame, transforms written straight to the
+  // moving elements (no inherited custom properties, no layout reads per card).
+  const section = document.querySelector<HTMLElement>('[data-through]')
+  const still = matchMedia('(prefers-reduced-motion: reduce)')
+
+  // Distance between two cards on the lane.
+  const gapPx = () => (innerWidth <= 560 ? innerWidth * 0.82 : Math.min(560, Math.max(260, innerWidth * 0.44)))
+
+  function setup() {
+    if (!section) return
+    const live = !still.matches
+    section.classList.toggle('live', live)
+    if (!live) return
+    const cards = [...section.querySelectorAll<HTMLElement>('.card')]
+    const n = cards.length
+    const flash = section.querySelector<HTMLElement>('[data-flash]')
+    const moving = cards.map((c) => [...c.querySelectorAll<HTMLElement>('.half > *')])
+    let frame = 0
+    const apply = () => {
+      frame = 0
+      const r = section.getBoundingClientRect()
+      const span = r.height - innerHeight
+      const p = Math.max(0, Math.min(1, -r.top / Math.max(1, span)))
+      const gap = gapPx()
+      // card k crosses the line at p = (k + 0.5) / n
+      let nearest = Infinity
+      moving.forEach((els, k) => {
+        const x = (p * n - k - 0.5) * gap
+        nearest = Math.min(nearest, Math.abs(x))
+        const t = `translateX(${x.toFixed(1)}px)`
+        for (const el of els) el.style.transform = t
+      })
+      if (flash) flash.style.opacity = String(Math.max(0, 1 - nearest / 70) * 0.7)
+    }
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(apply)
+    }
+    // A keyboard user tabbing to a card brings it to the line.
+    section.addEventListener('focusin', (e) => {
+      const k = cards.findIndex((c) => c.contains(e.target as Node))
+      if (k < 0) return
+      const top = section.getBoundingClientRect().top + scrollY
+      const span = section.offsetHeight - innerHeight
+      // just past the line, so the finished file is readable
+      const gap = gapPx()
+      scrollTo({ top: top + span * ((k + 0.5 + 170 / gap) / n), behavior: 'instant' })
+    })
+    addEventListener('scroll', onScroll, { passive: true })
+    addEventListener('resize', onScroll, { passive: true })
+    apply()
+  }
+  setup()
+  still.addEventListener('change', () => location.reload())
+</script>

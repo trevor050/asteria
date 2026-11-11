@@ -1,0 +1,292 @@
+---
+import { getRelease, formatSize, RELEASES_URL } from '../lib/release'
+const r = await getRelease()
+const released = r.published
+  ? new Date(r.published).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })
+  : null
+
+const systems = [
+  {
+    os: 'mac',
+    name: 'Mac',
+    needs: 'macOS 12 or newer, on Apple silicon or Intel.',
+    files: r.mac,
+    steps: [
+      'Open the downloaded file and drag Asteria into Applications.',
+      'Open Asteria. Your Mac says it could not verify that Asteria is free of malware. Click Done.',
+      'Open System Settings, then Privacy & Security. Scroll down to Security, where it says Asteria was blocked, and click Open Anyway.',
+      'Click Open Anyway once more and enter your password. From then on it opens like any other app.',
+    ],
+    note: 'Open Anyway only appears after you have tried to open the app. If it is not there, open Asteria once more, then look again.',
+  },
+  {
+    os: 'windows',
+    name: 'Windows',
+    needs: 'Windows 10 or 11, 64-bit.',
+    files: r.windows,
+    steps: [
+      'If your browser says the file isn’t commonly downloaded, choose Keep (in Edge it is under the three dots, then Keep anyway).',
+      'Open the installer. Windows shows a blue box that says Windows protected your PC.',
+      'Click More info, then Run anyway, and follow the installer.',
+    ],
+    note: 'If the message says Smart App Control blocked it and there is no Run anyway button, Windows has no way to allow a single unsigned app. On recent versions of Windows 11 you can turn Smart App Control off in Windows Security, under App & browser control. That is your call, and we would rather you did not switch off a protection just for us.',
+  },
+  {
+    os: 'linux',
+    name: 'Linux',
+    needs: 'Ubuntu 24.04, Debian 13 or newer, 64-bit.',
+    files: r.linux,
+    steps: [
+      'For Ubuntu or Debian, open the .deb file with your software installer and click Install.',
+      'For the AppImage, open its Properties, turn on Allow executing file as program (or Executable as Program), then double-click it.',
+    ],
+    note: 'Linux does not warn about unsigned apps the way Mac and Windows do.',
+  },
+] as const
+---
+
+<section class="download" id="download" aria-labelledby="download-title" data-download>
+  <div class="wrap inner">
+    <h2 id="download-title">Download Asteria</h2>
+    <p class="lede">Free, for Mac, Windows and Linux.</p>
+
+    {
+      r.fallback && (
+        <p class="pending">
+          The first release is being put together. When it is out, the files will be on the <a href={RELEASES_URL}>releases page</a>{' '}
+          on GitHub, and on this page.
+        </p>
+      )
+    }
+
+    <div class="systems" data-systems>
+      {
+        systems.map((s, i) => (
+          <div class="system" data-os={s.os}>
+            <div class="row">
+              <h3>{s.name}</h3>
+              <p class="needs">{s.needs}</p>
+              <div class="files">
+                {s.files.map((f, j) => (
+                  <a class:list={['btn', { primary: j === 0 }]} href={f.url} data-file={f.file || undefined}>
+                    {f.fallback ? (
+                      <span>Releases page</span>
+                    ) : (
+                      <>
+                        <span>{f.label}</span>
+                        {f.size && <span class="sub">{formatSize(f.size)}</span>}
+                      </>
+                    )}
+                  </a>
+                ))}
+              </div>
+            </div>
+            <details open={i === 0}>
+              <summary>Opening it the first time</summary>
+              <div class="steps">
+                {s.os !== 'linux' && (
+                  <p>
+                    Asteria isn’t signed with {s.os === 'mac' ? 'Apple' : 'Microsoft'} yet, so the first time you open it your computer
+                    warns you that it can’t check who made it. You only need to do this once.
+                  </p>
+                )}
+                <ol>
+                  {s.steps.map((t) => (
+                    <li>{t}</li>
+                  ))}
+                </ol>
+                <p class="note">{s.note}</p>
+              </div>
+            </details>
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="meta">
+      {
+        r.version ? (
+          <>
+            Version {r.version}
+            {released && `, released ${released}`}.{' '}
+            {r.checksums && (
+              <>
+                <a href={r.checksums.url} class="nw">SHA-256 checksums</a>.{' '}
+              </>
+            )}
+            <a href={r.url}>Release notes</a> and <a href={RELEASES_URL}>every version</a> on GitHub.
+          </>
+        ) : (
+          <>
+            Every build will be on the <a href={RELEASES_URL}>releases page</a>, with SHA-256 checksums.
+          </>
+        )
+      }
+    </p>
+  </div>
+</section>
+
+<style>
+  .download {
+    padding-block: clamp(80px, 12vw, 140px) 0;
+  }
+  .inner {
+    position: relative;
+    max-width: calc(940px + 2 * var(--gutter));
+    text-align: left;
+  }
+  h2,
+  .inner > .lede {
+    text-align: center;
+  }
+  .inner > .lede {
+    margin: 14px auto 0;
+  }
+  .pending {
+    margin: 32px auto 0;
+    max-width: 56ch;
+    text-align: center;
+    color: var(--warn);
+  }
+  .systems {
+    display: flex;
+    flex-direction: column;
+    margin-top: 48px;
+    border-top: 1px solid var(--line);
+  }
+  .system {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr);
+    gap: 6px 28px;
+    align-items: baseline;
+  }
+  .row h3 {
+    grid-row: span 2;
+  }
+  h3 {
+    font-size: 1.6rem;
+    font-weight: 250;
+    letter-spacing: -0.02em;
+  }
+  .needs {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .files {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .files .btn {
+    min-height: 42px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+  details {
+    margin-top: 14px;
+    margin-left: calc(9rem + 28px);
+  }
+  summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    color: var(--ink-2);
+    font-size: 15px;
+    list-style: none;
+    border-radius: 6px;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform 0.2s var(--ease-out);
+  }
+  details[open] summary::before {
+    transform: rotate(45deg) translate(-2px, -1px);
+  }
+  @media (hover: hover) {
+    summary:hover {
+      color: var(--ink);
+    }
+  }
+  .steps {
+    display: grid;
+    gap: 14px;
+    padding-top: 14px;
+    max-width: 62ch;
+    color: var(--ink-2);
+  }
+  .steps ol {
+    margin: 0;
+    padding-left: 1.4em;
+    display: grid;
+    gap: 8px;
+    color: var(--ink);
+  }
+  .steps li::marker {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .note {
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .meta {
+    margin-top: 28px;
+    color: var(--muted);
+    font-size: 14px;
+    text-align: center;
+  }
+  .meta a {
+    color: var(--ink-2);
+  }
+  .nw {
+    white-space: nowrap;
+  }
+  @media (max-width: 760px) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+    .row h3 {
+      grid-row: auto;
+    }
+    .files {
+      grid-column: 1;
+    }
+    .files .btn {
+      flex: 1 1 100%;
+    }
+    details {
+      margin-left: 0;
+    }
+  }
+</style>
+
+<script>
+  import { detectOS } from '../scripts/os'
+  // Lead with the visitor's system: move it to the top and open its steps.
+  const root = document.querySelector<HTMLElement>('[data-download]')
+  const os = detectOS()
+  if (root && os !== 'other') {
+    const list = root.querySelector<HTMLElement>('[data-systems]')!
+    const mine = list.querySelector<HTMLElement>(`[data-os='${os}']`)
+    if (mine) {
+      list.prepend(mine)
+      for (const d of list.querySelectorAll('details')) d.open = d.closest('[data-os]') === mine
+    }
+  }
+</script>

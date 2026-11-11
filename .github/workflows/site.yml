@@ -1,0 +1,54 @@
+name: Site
+
+# Builds the website (site/) on pull requests that change it or the data it
+# is generated from.
+on:
+  pull_request:
+    paths:
+      - 'site/**'
+      - 'docs/formats.json'
+      - 'docs/screenshot-dark.png'
+      - 'skills/core/**'
+      - 'addons/manifest.json'
+      - 'frontend/src/lib/icons.ts'
+      - 'internal/ops/*.go'
+      - 'build/appicon.*'
+      - '.github/workflows/site.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: npm ci
+      - name: Build
+        run: npm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check the output
+        run: |
+          node -e '
+            const fs = require("fs");
+            const pairs = fs.readdirSync("dist/convert").filter((f) => f.endsWith(".html")).length;
+            const sitemap = fs.readFileSync("dist/sitemap.xml", "utf8");
+            const urls = (sitemap.match(/<loc>/g) || []).length;
+            for (const f of ["index.html", "convert.html", "404.html", "robots.txt", "og.png", "data/search.json"]) {
+              if (!fs.existsSync("dist/" + f)) throw new Error("missing dist/" + f);
+            }
+            if (pairs < 100) throw new Error("only " + pairs + " conversion pages");
+            if (urls !== pairs + 2) throw new Error("sitemap has " + urls + " URLs for " + pairs + " pages");
+            console.log(pairs + " conversion pages, " + urls + " sitemap URLs");
+          '

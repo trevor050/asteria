@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro'
+import Hero from '../components/Hero.astro'
+import AppShot from '../components/AppShot.astro'
+import Through from '../components/Through.astro'
+import Finder from '../components/Finder.astro'
+import Free from '../components/Free.astro'
+import Download from '../components/Download.astro'
+import { summary } from '../lib/data'
+import { REPO_URL } from '../lib/release'
+
+const description = `Asteria is a free file converter for Mac, Windows and Linux. Drop a file, type what you want, get the result. ${summary.conversionPairs} tested conversions, and nothing is ever uploaded.`
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Asteria',
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'macOS, Windows, Linux',
+  description,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  license: 'https://opensource.org/licenses/MIT',
+  codeRepository: REPO_URL,
+  url: 'https://asteria.trevorrosato.com/',
+}
+---
+
+<Base title="Asteria: a free file converter that never uploads your files" description={description} path="/" jsonld={jsonld}>
+  <Hero />
+  <AppShot />
+  <Through />
+  <Finder show="popular" />
+  <Free />
+  <Download />
+</Base>

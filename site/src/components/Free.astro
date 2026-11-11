@@ -1,0 +1,92 @@
+---
+import { REPO_URL } from '../lib/release'
+---
+
+<section class="free" aria-labelledby="free-title">
+  <div class="wrap grid">
+    <div class="head">
+      <h2 id="free-title">Free, and staying that way.</h2>
+      <p class="lede">
+        Paying every month to change the three letters after a dot was always a strange deal. Asteria is free, with no account,
+        no ads and no limit on how many files you convert.
+      </p>
+    </div>
+    <dl>
+      <div>
+        <dt>Nothing is uploaded</dt>
+        <dd>
+          Your files stay on your computer, and Asteria works offline. The only time it goes online is to download a free add-on
+          you said yes to, from the address it shows you first.
+        </dd>
+      </div>
+      <div>
+        <dt>Your originals stay as they were</dt>
+        <dd>Results are saved as new files, next to the originals or in a folder you pick. Nothing is ever written over a file you already have.</dd>
+      </div>
+      <div>
+        <dt>Nothing to sign up for</dt>
+        <dd>No account, no email address, no trial that runs out, nothing to cancel.</dd>
+      </div>
+      <div>
+        <dt>Open source</dt>
+        <dd>
+          The code is <a href={REPO_URL}>on GitHub</a> under the MIT license, along with a test that checks converting a file never
+          opens a network connection.
+        </dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<style>
+  .free {
+    padding-block: clamp(64px, 10vw, 120px);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 48px clamp(32px, 6vw, 96px);
+    align-items: start;
+  }
+  .head {
+    display: grid;
+    gap: 20px;
+    position: sticky;
+    top: 32px;
+  }
+  dl {
+    margin: 0;
+    display: grid;
+    border-top: 1px solid var(--line);
+  }
+  dl > div {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: 8px 32px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  dt {
+    font-size: 1.125rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  dd {
+    margin: 0;
+    color: var(--ink-2);
+    max-width: 46ch;
+  }
+  @media (max-width: 860px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    .head {
+      position: static;
+    }
+  }
+  @media (max-width: 560px) {
+    dl > div {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

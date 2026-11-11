@@ -1,0 +1,985 @@
+---
+import FileGlyph from './FileGlyph.astro'
+import DownloadButton from './DownloadButton.astro'
+import { summary } from '../lib/data'
+
+// The app's own empty-state examples (frontend/src/App.svelte).
+const examples = ['heic to jpg', 'resize 50%', 'merge pdfs', 'trim 0:05-0:30', 'csv to json', 'zip']
+---
+
+<section class="hero" aria-labelledby="hero-title" data-hero>
+  <div class="wrap head">
+    <h1 id="hero-title">Drop a file.<br />Say what it should be.</h1>
+    <p class="lede">
+      Asteria is a free file converter for Mac, Windows and Linux. It works on your own computer, so your files are never
+      uploaded anywhere.
+    </p>
+  </div>
+
+  <div class="stage" data-stage aria-live="polite">
+    <div class="side before">
+      <FileGlyph kind="outline" ext="heic" width={104} data-glyph="before" />
+      <p class="cap">
+        <span class="fname" data-name="before">IMG_4127.heic</span>
+        <span class="kind" data-kind="before">HEIC image</span>
+      </p>
+    </div>
+    <div class="beam" data-beam><i></i><b class="spark" data-spark></b></div>
+    <div class="side after">
+      <FileGlyph kind="paper" ext="jpg" width={104} data-glyph="after" />
+      <p class="cap">
+        <span class="fname" data-name="after">IMG_4127.jpg</span>
+        <span class="kind" data-kind="after">JPEG image, built in</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="console">
+    <div class="quick" data-quick aria-label="Examples">
+      {
+        examples.map((e, i) => (
+          <button type="button" data-q={e} style={`--i:${i}`}>
+            {e}
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="bar" data-bar>
+      <div class="halo" aria-hidden="true"></div>
+      <div class="field">
+        <button type="button" class="add" data-pick aria-label="Choose a file to try (it is not uploaded)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+        </button>
+        <input type="file" multiple hidden data-file />
+        <label class="visually-hidden" for="cmd">What should happen to your file?</label>
+        <input
+          id="cmd"
+          data-input
+          type="text"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          role="combobox"
+          aria-expanded="false"
+          aria-controls="cmd-results"
+          aria-autocomplete="list"
+          placeholder="Try heic to jpg, or drop a file on this page"
+        />
+        <button type="button" class="clear" data-clear hidden aria-label="Clear">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+        </button>
+      </div>
+      <div class="results" data-results hidden>
+        <ul id="cmd-results" role="listbox" aria-label="What Asteria can do" data-list></ul>
+        <div class="end" data-end>
+          <p data-end-text>Asteria does this on your computer. Nothing is uploaded.</p>
+          <div class="end-actions">
+            <a class="more" data-end-link hidden href="/convert">How it works</a>
+            <DownloadButton direct href="/#download" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="honest" data-honest>
+      This page only reads a file's name and type. Nothing is uploaded or converted here.
+    </p>
+
+    <div class="cta">
+      <DownloadButton />
+      <p>
+        <a href="/convert">{summary.conversionPairs} tested conversions</a> between {summary.fileTypesRead} kinds of file
+      </p>
+    </div>
+  </div>
+  <div class="drop-hint" aria-hidden="true">Let go to see what this file can become</div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding-top: clamp(20px, 5vh, 64px);
+    padding-bottom: clamp(40px, 6vh, 72px);
+  }
+  .head {
+    text-align: center;
+    display: grid;
+    justify-items: center;
+    gap: 18px;
+  }
+  .head .lede {
+    max-width: 46ch;
+  }
+
+  /* ---- the stage: before | line | after ---- */
+  .stage {
+    --gap: clamp(28px, 7vw, 96px);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: var(--gap);
+    margin: clamp(24px, 4.5vh, 52px) auto 0;
+    max-width: 760px;
+    padding-inline: var(--gutter);
+  }
+  .side {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-width: 0;
+  }
+  .before {
+    justify-content: flex-end;
+    text-align: right;
+    flex-direction: row-reverse;
+  }
+  .after {
+    justify-content: flex-start;
+  }
+  .cap {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+    width: 15rem;
+  }
+  .fname {
+    font-size: 15px;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .kind {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .after .kind[data-addon] {
+    color: var(--warn);
+  }
+  .stage .beam {
+    height: 176px;
+  }
+  .spark {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 60px;
+    height: 120px;
+    margin: -60px 0 0 -30px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0));
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-out);
+    pointer-events: none;
+  }
+  .stage :global(.glyph.paper svg) {
+    filter: drop-shadow(0 14px 18px rgb(0 0 0 / 0.5));
+  }
+  /* A dropped file arrives from the left and the line answers. */
+  .stage.arrive :global([data-glyph='before']) {
+    animation: arrive 0.6s var(--ease-out) both;
+  }
+  .stage.arrive :global([data-glyph='after']) {
+    animation: emerge 0.7s 0.18s var(--ease-out) both;
+  }
+  .stage.arrive .beam::before {
+    animation: flare 0.9s var(--ease-out);
+  }
+  @keyframes arrive {
+    from {
+      opacity: 0;
+      transform: translateX(-28px);
+    }
+  }
+  @keyframes emerge {
+    from {
+      opacity: 0;
+      transform: translateX(-18px) scale(0.96);
+    }
+  }
+  @keyframes flare {
+    30% {
+      opacity: 1;
+      transform: scaleX(1.6);
+    }
+  }
+
+  /* ---- the console: quick row, bar, results ---- */
+  .console {
+    position: relative;
+    max-width: 720px;
+    margin: clamp(20px, 3.5vh, 40px) auto 0;
+    padding-inline: var(--gutter);
+  }
+  .quick {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+    margin: 0 0 10px;
+    min-height: 34px;
+  }
+  .quick :global(button) {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 0;
+    background: transparent;
+    color: var(--ink-2);
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      background-color 0.15s,
+      color 0.15s,
+      transform 0.16s var(--ease-out);
+  }
+  .quick :global(button:active) {
+    transform: scale(0.97);
+  }
+  .quick :global(svg) {
+    width: 15px;
+    height: 15px;
+  }
+  .quick :global(.all) {
+    color: var(--muted);
+  }
+  .quick :global(.mark) {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  @media (hover: hover) {
+    .quick :global(button:hover) {
+      background: var(--chip);
+      color: var(--ink);
+    }
+  }
+
+  .bar {
+    position: relative;
+  }
+  /* The app's halo: the wash's colours, blurred once, behind the field. */
+  .halo {
+    position: absolute;
+    inset: 2px 10px;
+    border-radius: 18px;
+    background: conic-gradient(from 200deg, rgb(var(--aura-teal)), rgb(var(--aura-slate)), rgb(var(--aura-amber)), rgb(var(--aura-teal)));
+    filter: blur(18px);
+    opacity: 0.22;
+    transform: scale(0.97, 0.86);
+    transition:
+      opacity 0.45s var(--ease-out),
+      transform 0.55s var(--ease-spring);
+    pointer-events: none;
+  }
+  .bar:focus-within .halo {
+    opacity: 0.4;
+    transform: none;
+  }
+  .field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 56px;
+    padding: 0 12px 0 14px;
+    border-radius: 28px;
+    border: 1px solid var(--line-strong);
+    background: linear-gradient(90deg, rgb(var(--aura-teal) / 0.1), rgb(var(--aura-slate) / 0.06) 50%, rgb(var(--aura-amber) / 0.1)), #16171a;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.06),
+      0 10px 30px -18px rgb(0 0 0 / 0.5);
+    transition: border-color 0.3s var(--ease-out);
+  }
+  .bar:focus-within .field {
+    border-color: rgb(255 255 255 / 0.22);
+  }
+  .add,
+  .clear {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition:
+      background-color 0.15s,
+      color 0.15s,
+      border-color 0.15s,
+      transform 0.3s var(--ease-spring);
+  }
+  .clear {
+    border-color: transparent;
+  }
+  .add svg,
+  .clear svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+  }
+  .add:active,
+  .clear:active {
+    transform: scale(0.92);
+  }
+  @media (hover: hover) {
+    .add:hover,
+    .clear:hover {
+      background: var(--chip);
+      color: var(--ink);
+      border-color: transparent;
+    }
+  }
+  [data-input] {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--ink);
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: -0.005em;
+    caret-color: var(--light-a);
+  }
+  [data-input]::placeholder {
+    color: var(--muted);
+    font-weight: 300;
+    opacity: 1;
+  }
+
+  /* results open below the bar: a solid panel, like the app's suggestions */
+  .results {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 10px);
+    z-index: 30;
+    border: 1px solid var(--line-strong);
+    border-radius: 18px;
+    background: var(--panel);
+    box-shadow: var(--shadow-pop);
+    overflow: hidden;
+    transform-origin: 50% 0;
+    animation: open 0.18s var(--ease-out) both;
+  }
+  @keyframes open {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.99);
+    }
+  }
+  .results ul {
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    max-height: min(52vh, 420px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .results :global(li) {
+    display: grid;
+    grid-template-columns: 16px auto minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 14px;
+    padding: 10px 12px;
+    border-radius: 11px;
+    cursor: pointer;
+  }
+  .results :global(li[aria-selected='true']) {
+    background: var(--chip);
+  }
+  .results :global(li .icon) {
+    align-self: center;
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .results :global(.name) {
+    font-weight: 450;
+    white-space: nowrap;
+  }
+  .results :global(.via) {
+    margin-left: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .results :global(.value) {
+    margin-left: 7px;
+    padding: 1px 6px;
+    border-radius: 6px;
+    background: rgb(112 128 150 / 0.22);
+    font-weight: 400;
+    font-variant-numeric: tabular-nums;
+  }
+  .results :global(.desc) {
+    color: var(--muted);
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .results :global(.meta) {
+    color: var(--muted);
+    font-size: 12px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .results :global(.meta.warn) {
+    color: var(--warn);
+  }
+  .results :global(.empty) {
+    display: block;
+    padding: 14px 12px;
+    color: var(--ink-2);
+    cursor: default;
+  }
+  .end {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 20px;
+    flex-wrap: wrap;
+    padding: 14px 16px;
+    border-top: 1px solid var(--line);
+    background: var(--panel-2);
+  }
+  .end p {
+    color: var(--ink-2);
+    font-size: 14px;
+    max-width: 38ch;
+  }
+  .end-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .end .more {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .end :global(.btn) {
+    min-height: 40px;
+    padding: 0 16px;
+    font-size: 14px;
+  }
+
+  .honest {
+    margin: 14px 0 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 12px 24px;
+    margin-top: clamp(20px, 3.5vh, 32px);
+  }
+  .cta p {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .cta a:not(.btn) {
+    color: var(--ink-2);
+  }
+
+  .drop-hint {
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    z-index: 40;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--paper-ink);
+    font-size: 14px;
+    opacity: 0;
+    transform: translate(-50%, 8px);
+    transition:
+      opacity 0.2s var(--ease-out),
+      transform 0.3s var(--ease-out);
+    pointer-events: none;
+  }
+  :global(html.dragging) .drop-hint {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  @media (max-width: 640px) {
+    .stage {
+      grid-template-columns: 1fr auto 1fr;
+      gap: 18px;
+    }
+    .side {
+      flex-direction: column;
+      text-align: center;
+      gap: 12px;
+    }
+    .before {
+      flex-direction: column;
+      text-align: center;
+    }
+    .stage :global(.glyph) {
+      --gw: 76px !important;
+    }
+    .stage .beam {
+      height: 180px;
+    }
+    .cap {
+      width: auto;
+      max-width: 38vw;
+    }
+    .fname {
+      font-size: 14px;
+    }
+    .results :global(li) {
+      grid-template-columns: 16px minmax(0, 1fr) auto;
+    }
+    .results :global(.desc) {
+      display: none;
+    }
+    .results :global(.name) {
+      white-space: normal;
+      min-width: 0;
+    }
+    .end-actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+</style>
+
+<script>
+  import { loadData, rank, quick, extOf, findPair, formatBytes, esc, accepts } from '../scripts/search'
+  import type { Data, Hit, Skill, PairRow } from '../scripts/search'
+  import { wireDownloads } from '../scripts/os'
+
+  wireDownloads()
+  const touch = matchMedia('(pointer: coarse)').matches
+  const restingPlaceholder = touch ? 'Try heic to jpg, or tap + for a file' : 'Try heic to jpg, or drop a file on this page'
+
+  const hero = document.querySelector<HTMLElement>('[data-hero]')!
+  const input = hero.querySelector<HTMLInputElement>('[data-input]')!
+  const list = hero.querySelector<HTMLUListElement>('[data-list]')!
+  const results = hero.querySelector<HTMLElement>('[data-results]')!
+  const quickRow = hero.querySelector<HTMLElement>('[data-quick]')!
+  const clearBtn = hero.querySelector<HTMLButtonElement>('[data-clear]')!
+  const fileInput = hero.querySelector<HTMLInputElement>('[data-file]')!
+  const stage = hero.querySelector<HTMLElement>('[data-stage]')!
+  const endText = hero.querySelector<HTMLElement>('[data-end-text]')!
+  const endLink = hero.querySelector<HTMLAnchorElement>('[data-end-link]')!
+  const honest = hero.querySelector<HTMLElement>('[data-honest]')!
+  const exampleRow = quickRow.innerHTML
+  input.placeholder = restingPlaceholder
+
+  interface Dropped {
+    name: string
+    ext: string
+    size: number
+  }
+  type Row = { kind: 'pair'; pair: PairRow } | { kind: 'skill'; hit: Hit } | { kind: 'all'; skill: Skill }
+
+  let data: Data | null = null
+  let files: Dropped[] = []
+  let rows: Row[] = []
+  let active = 0
+  let browsing = false
+  let dismissed = false
+
+  const exts = () => [...new Set(files.map((f) => f.ext))]
+  const kindName = (ext: string) => (data?.names[ext] ?? (ext ? `${ext.toUpperCase()} file` : 'File'))
+  const addonName = (id: string | null) => (id ? (data?.addons[id] ?? id) : '')
+  const icon = (name: string) =>
+    `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" style="color:var(--fam-${famTint(name)}, var(--muted))">${data?.icons[name] ?? ''}</svg>`
+  // Family tint, as in the app's Icon.svelte (frontend/src/lib/families.ts).
+  const tint: Record<string, string> = {
+    document: 'document', ebook: 'document', text: 'document', fonts: 'document', subtitles: 'media',
+    email: 'info', camera: 'convert', vector: 'compose', lut: 'adjust', maps: 'transform', '3d': 'transform',
+  }
+  let currentCat = ''
+  const famTint = (_: string) => tint[currentCat] ?? currentCat
+
+  async function ensureData() {
+    if (data) return data
+    try {
+      data = await loadData()
+    } catch {
+      endText.textContent = 'The list could not load. Every conversion is listed on the conversions page.'
+    }
+    return data
+  }
+
+  // ---- the stage ---------------------------------------------------------
+  function setGlyph(which: 'before' | 'after', ext: string, name: string, kind: string, addon = false) {
+    const g = stage.querySelector<HTMLElement>(`[data-glyph='${which}']`)!
+    const label = ext === 'folder' ? 'folder' : ext || 'file'
+    g.querySelector('[data-ext]')!.textContent = label
+    g.classList.toggle('long', label.length > 4)
+    stage.querySelector(`[data-name='${which}']`)!.textContent = name
+    const k = stage.querySelector<HTMLElement>(`[data-kind='${which}']`)!
+    k.textContent = kind
+    k.toggleAttribute('data-addon', addon)
+  }
+  const samples: [RegExp, string][] = [
+    [/^(heic|heif|jpe?g|png|webp|gif|tiff?|bmp|avif|mov|mp4|m4v)$/, 'IMG_4127'],
+    [/^(pdf|docx?|odt|rtf|md|markdown|txt|html?|tex|pptx?|odp)$/, 'Report'],
+    [/^(csv|tsv|xlsx?|ods|json|jsonl|yaml|yml|xml|toml|sqlite3?|db|parquet)$/, 'Budget'],
+    [/^(mp3|wav|m4a|aac|flac|ogg|opus|aiff?)$/, 'Voice memo'],
+    [/^(mkv|webm|avi|wmv|flv|mpe?g|3gp)$/, 'Clip'],
+    [/^(srt|vtt|ass|sbv|ttml|dfxp)$/, 'Episode 1'],
+    [/^(epub|mobi|azw3|fb2)$/, 'Novel'],
+    [/^(gpx|kml|kmz|geojson)$/, 'Morning ride'],
+    [/^(ttf|otf|woff2?)$/, 'Font'],
+    [/^(stl|obj|glb|gltf|ply|3mf)$/, 'Model'],
+    [/^(zip|7z|gz|tar.*|xz|zst|bz2)$/, 'Archive'],
+  ]
+  let sampleExt = 'heic'
+  const stem = () => {
+    if (files[0]) return files[0].name.replace(/\.[^.]+$/, '').replace(/\.tar$/, '')
+    return samples.find(([re]) => re.test(sampleExt))?.[1] ?? 'File'
+  }
+  const sampleIn = (s: Skill) => {
+    const acc = s.acc.filter((e) => e !== '*')
+    return ['jpg', 'mp4', 'pdf', 'docx', 'mp3', 'csv'].find((e) => acc.includes(e)) ?? acc[0] ?? 'file'
+  }
+
+  function showRowOnStage(row: Row | undefined) {
+    if (!row) return
+    const first = files[0]
+    if (row.kind === 'pair') {
+      const [from, to, , addon] = row.pair
+      sampleExt = from
+      const inName = first && first.ext === from ? first.name : `${stem()}.${from}`
+      setGlyph('before', from, inName, first ? `${kindName(from)}, ${formatBytes(first.size)}` : kindName(from))
+      setGlyph('after', to, `${stem()}.${to === 'folder' ? '' : to}`.replace(/\.$/, ''), addon ? `${kindName(to)}, needs ${addonName(addon)}` : `${kindName(to)}, built in`, !!addon)
+      return
+    }
+    const s = row.kind === 'skill' ? row.hit.skill : row.skill
+    const value = row.kind === 'skill' ? row.hit.value : ''
+    const inExt = first?.ext ?? sampleIn(s)
+    sampleExt = inExt
+    const outExt = s.out || inExt
+    setGlyph('before', inExt, first ? first.name : `${stem()}.${inExt}`, first ? `${kindName(inExt)}, ${formatBytes(first.size)}` : kindName(inExt))
+    const what = `${s.n}${value ? ` ${value}` : ''}`
+    setGlyph(
+      'after',
+      outExt,
+      outExt === 'folder' ? `${stem()} folder` : `${stem()}.${outExt}`,
+      s.ad ? `${what}, needs ${addonName(s.ad)}` : what,
+      !!s.ad,
+    )
+  }
+
+  // ---- the list ------------------------------------------------------------
+  function rowHTML(row: Row, i: number): string {
+    const id = `opt-${i}`
+    const sel = i === active
+    if (row.kind === 'pair') {
+      const [from, to, , addon, , typed] = row.pair
+      currentCat = 'convert'
+      const meta = addon ? `<span class="meta warn">needs ${esc(addonName(addon))}</span>` : `<span class="meta">built in</span>`
+      return `<li id="${id}" role="option" aria-selected="${sel}" data-i="${i}">${icon('arrow-left-right')}<span class="name">${esc(kindName(from))} to ${esc(kindName(to))}</span><span class="desc">In Asteria, type “${esc(typed)}”</span>${meta}</li>`
+    }
+    const s = row.kind === 'skill' ? row.hit.skill : row.skill
+    currentCat = s.c
+    const value = row.kind === 'skill' && row.hit.value ? `<span class="value">${esc(row.hit.value)}</span>` : ''
+    const via = row.kind === 'skill' && row.hit.alias && !s.n.toLowerCase().includes(row.hit.alias) ? `<span class="via">“${esc(row.hit.alias)}”</span>` : ''
+    let meta = ''
+    if (s.ad) meta = `<span class="meta warn">needs ${esc(addonName(s.ad))}</span>`
+    else if (files.length > 1 && row.kind === 'skill') {
+      const n = files.filter((f) => accepts(s, f.ext)).length
+      if (n && n < files.length) meta = `<span class="meta">${n} of ${files.length}</span>`
+    }
+    if (!meta && files.length && row.kind === 'skill' && !row.hit.applies) meta = `<span class="meta">not for this file</span>`
+    return `<li id="${id}" role="option" aria-selected="${sel}" data-i="${i}">${icon(s.i)}<span class="name">${esc(s.n)}${value}${via}</span><span class="desc">${esc(s.d)}</span>${meta}</li>`
+  }
+
+  function render() {
+    const open = !dismissed && (rows.length > 0 || (input.value.trim() !== '' && !!data))
+    results.hidden = !open
+    input.setAttribute('aria-expanded', String(open))
+    clearBtn.hidden = !input.value && !files.length
+    if (!open) {
+      input.removeAttribute('aria-activedescendant')
+      return
+    }
+    if (!rows.length) {
+      list.innerHTML = `<li class="empty" role="presentation">Nothing by that name. Try a format, like “mp4”, or what you want, like “smaller”.</li>`
+      endLink.hidden = true
+      return
+    }
+    active = Math.max(0, Math.min(active, rows.length - 1))
+    list.innerHTML = rows.map(rowHTML).join('')
+    input.setAttribute('aria-activedescendant', `opt-${active}`)
+    list.querySelector(`#opt-${active}`)?.scrollIntoView({ block: 'nearest' })
+    const row = rows[active]
+    showRowOnStage(row)
+    updateEnd(row)
+  }
+
+  function updateEnd(row: Row) {
+    let pair: PairRow | undefined
+    let name = ''
+    let addon: string | null = null
+    if (row.kind === 'pair') {
+      pair = row.pair
+      addon = row.pair[3]
+      name = `${kindName(row.pair[0])} to ${kindName(row.pair[1])}`
+    } else {
+      const s = row.kind === 'skill' ? row.hit.skill : row.skill
+      name = s.n
+      addon = s.ad
+      if (s.out && files[0]) pair = findPair(data!, files[0].ext, s.out)
+      else if (s.out) pair = data!.pairs.find((p) => p[4] === s.id && p[6])
+    }
+    const where = files.length ? `on your ${files.length > 1 ? `${files.length} files` : 'file'}` : ''
+    endText.textContent = addon
+      ? `Asteria does ${name} ${where} on your computer, with ${addonName(addon)}, a free add-on it offers to download first.`.replace(/\s+/g, ' ')
+      : `Asteria does ${name} ${where} on your computer, with nothing else to install.`.replace(/\s+/g, ' ')
+    if (pair && pair[6]) {
+      endLink.hidden = false
+      endLink.href = `/convert/${pair[2]}`
+      endLink.textContent = `About ${pair[0].toUpperCase()} to ${pair[1].toUpperCase()}`
+    } else endLink.hidden = true
+  }
+
+  async function update() {
+    const q = input.value
+    browsing = false
+    if (!q.trim()) {
+      rows = []
+      render()
+      return
+    }
+    const d = await ensureData()
+    if (!d || q !== input.value) return
+    const out: Row[] = []
+    // "mov to gif": a verified pair goes first, with what to type in the app.
+    const m = q.trim().toLowerCase().match(/^\.?([a-z0-9.]+)\s+(?:to|2|->|→|into)\s+\.?([a-z0-9.]+)$/)
+    const p = m ? findPair(d, m[1], m[2]) : undefined
+    if (p) {
+      out.push({ kind: 'pair', pair: p })
+      const via = d.pairs.filter((x) => x[0] === p[0] && x[1] === p[1]).map((x) => x[4])
+      const others = d.skills.filter((s) => s.out === p[1] && accepts(s, p[0]))
+      for (const s of others.sort((a, b) => Number(via.includes(b.id)) - Number(via.includes(a.id)) || b.p - a.p).slice(0, 5)) {
+        out.push({ kind: 'skill', hit: { skill: s, tier: 9, alias: '', value: '', applies: 1 } })
+      }
+    } else {
+      for (const hit of rank(d, q, exts()).slice(0, 7)) out.push({ kind: 'skill', hit })
+    }
+    rows = out
+    active = 0
+    render()
+  }
+
+  // ---- quick row ---------------------------------------------------------
+  function renderQuick() {
+    if (!files.length || !data) {
+      quickRow.innerHTML = exampleRow
+      return
+    }
+    const qs = quick(data, exts())
+    const fitting = data.skills.filter((s) => exts().some((e) => accepts(s, e))).length
+    quickRow.innerHTML =
+      qs
+        .map((s, i) => {
+          currentCat = s.c
+          const mark = s.ad ? `<span class="mark">${esc(addonName(s.ad))}</span>` : ''
+          return `<button type="button" data-skill="${s.id}" style="--i:${i}">${icon(s.i)}${esc(s.n)}${mark}</button>`
+        })
+        .join('') + `<button type="button" class="all" data-all>All ${fitting} that fit</button>`
+  }
+
+  quickRow.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest('button')
+    if (!b) return
+    dismissed = false
+    if (b.dataset.q) {
+      input.value = b.dataset.q
+      input.focus()
+      update()
+    } else if (b.dataset.skill && data) {
+      const s = data.skills.find((x) => x.id === b.dataset.skill)!
+      input.value = s.n.toLowerCase()
+      input.focus()
+      update()
+    } else if ('all' in b.dataset && data) {
+      browsing = true
+      const fitting = data.skills.filter((s) => exts().some((e) => accepts(s, e)))
+      rows = fitting.map((skill) => ({ kind: 'all', skill }) as Row)
+      active = 0
+      input.focus()
+      render()
+    }
+  })
+
+  // ---- files -------------------------------------------------------------
+  async function takeFiles(list: FileList | File[]) {
+    const picked = [...list].filter((f) => f.name)
+    if (!picked.length) return
+    // Only the name, the size and the type are read. Nothing is uploaded.
+    files = picked.map((f) => ({ name: f.name, ext: extOf(f.name), size: f.size }))
+    await ensureData()
+    input.placeholder = files.length === 1 ? 'What should happen to this file?' : `What should happen to these ${files.length} files?`
+    honest.textContent = `Only the name${files.length > 1 ? 's' : ''} and size${files.length > 1 ? 's' : ''} were read. ${files.length > 1 ? 'They were' : 'It was'} not uploaded, and nothing was converted.`
+    renderQuick()
+    // Show the likeliest result right away.
+    if (data) {
+      // The likeliest conversion for the first file: a built-in one if there is one.
+      const ext0 = files[0].ext
+      const conv = data.skills
+        .filter((sk) => sk.out && sk.out !== ext0 && !sk.acc.includes('*') && accepts(sk, ext0) && data!.pairs.some((pp) => pp[0] === ext0 && pp[4] === sk.id))
+        .sort((a, b) => Number(!!a.ad) - Number(!!b.ad) || Number(b.c === 'convert') - Number(a.c === 'convert') || b.p - a.p)
+      const usual: Record<string, string> = { heic: 'jpg', heif: 'jpg', mov: 'mp4', mkv: 'mp4', avi: 'mp4', webm: 'mp4', wav: 'mp3', flac: 'mp3', aiff: 'mp3', doc: 'pdf', docx: 'pdf', odt: 'pdf', rtf: 'pdf', pptx: 'pdf', xlsx: 'csv', md: 'docx', epub: 'mobi', srt: 'vtt' }
+      const top = conv.find((sk) => sk.out === usual[ext0]) ?? conv[0] ?? quick(data, [ext0], 1)[0]
+      if (top) showRowOnStage({ kind: 'all', skill: top })
+      else {
+        setGlyph('before', files[0].ext, files[0].name, `${kindName(files[0].ext)}, ${formatBytes(files[0].size)}`)
+        setGlyph('after', '?', 'Not this one', 'Asteria has no skill for this kind of file yet')
+      }
+    }
+    stage.classList.remove('arrive')
+    void stage.offsetWidth
+    stage.classList.add('arrive')
+    input.value = ''
+    rows = []
+    render()
+    input.focus({ preventScroll: true })
+  }
+
+  addEventListener('dragover', (e) => {
+    if (e.dataTransfer && [...e.dataTransfer.types].includes('Files')) {
+      e.preventDefault()
+      e.dataTransfer.dropEffect = 'copy'
+    }
+  })
+  addEventListener('drop', (e) => {
+    if (!e.dataTransfer?.files.length) return
+    e.preventDefault()
+    takeFiles(e.dataTransfer.files)
+    if (hero.getBoundingClientRect().bottom < 0 || hero.getBoundingClientRect().top > innerHeight) {
+      hero.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
+    }
+  })
+  hero.querySelector('[data-pick]')!.addEventListener('click', () => fileInput.click())
+  fileInput.addEventListener('change', () => fileInput.files && takeFiles(fileInput.files))
+
+  clearBtn.addEventListener('click', () => {
+    input.value = ''
+    files = []
+    rows = []
+    input.placeholder = restingPlaceholder
+    honest.textContent = "This page only reads a file's name and type. Nothing is uploaded or converted here."
+    renderQuick()
+    showRowOnStage({ kind: 'pair', pair: ['heic', 'jpg', 'heic-to-jpg', null, 'convert_to_jpeg', 'heic to jpg', 1] })
+    render()
+    input.focus()
+  })
+
+  // ---- keys and pointer ---------------------------------------------------
+  input.addEventListener('input', () => {
+    dismissed = false
+    update()
+  })
+  input.addEventListener('focus', () => void ensureData())
+  input.addEventListener('click', () => {
+    if (dismissed && input.value.trim()) {
+      dismissed = false
+      render()
+    }
+  })
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (!rows.length) return
+      e.preventDefault()
+      active = (active + (e.key === 'ArrowDown' ? 1 : -1) + rows.length) % rows.length
+      render()
+    } else if (e.key === 'Enter') {
+      e.preventDefault()
+      if (!rows.length) {
+        update()
+        return
+      }
+      // The honest end of the interaction: the download.
+      results.querySelector<HTMLElement>('.end [data-dl]')?.focus()
+    } else if (e.key === 'Escape') {
+      if (!results.hidden) {
+        dismissed = true
+        browsing = false
+        render()
+      } else if (input.value) {
+        input.value = ''
+        dismissed = false
+        update()
+      }
+    }
+  })
+  list.addEventListener('pointermove', (e) => {
+    const li = (e.target as HTMLElement).closest<HTMLElement>('li[data-i]')
+    if (!li) return
+    const i = Number(li.dataset.i)
+    if (i === active) return
+    active = i
+    for (const el of list.querySelectorAll('li[data-i]')) el.setAttribute('aria-selected', String(el === li))
+    input.setAttribute('aria-activedescendant', li.id)
+    showRowOnStage(rows[active])
+    updateEnd(rows[active])
+  })
+  list.addEventListener('click', (e) => {
+    const li = (e.target as HTMLElement).closest<HTMLElement>('li[data-i]')
+    if (!li) return
+    active = Number(li.dataset.i)
+    render()
+    results.querySelector<HTMLElement>('.end [data-dl]')?.focus()
+  })
+  document.addEventListener('pointerdown', (e) => {
+    if (!hero.querySelector('[data-bar]')!.contains(e.target as Node) && !quickRow.contains(e.target as Node)) {
+      if (!results.hidden) {
+        dismissed = true
+        render()
+      }
+    }
+  })
+
+  // The line notices the cursor: a soft brightening that follows it.
+  const beam = stage.querySelector<HTMLElement>('[data-beam]')!
+  const spark = stage.querySelector<HTMLElement>('[data-spark]')!
+  const fine = matchMedia('(hover: hover) and (pointer: fine)')
+  const still = matchMedia('(prefers-reduced-motion: reduce)')
+  let frame = 0
+  let px = 0
+  let py = 0
+  hero.addEventListener('pointermove', (e) => {
+    if (!fine.matches || still.matches) return
+    px = e.clientX
+    py = e.clientY
+    if (frame) return
+    frame = requestAnimationFrame(() => {
+      frame = 0
+      const r = beam.getBoundingClientRect()
+      const y = Math.max(0, Math.min(r.height, py - r.top))
+      const near = Math.max(0, 1 - Math.abs(px - (r.left + r.width / 2)) / 420) * (py > r.top - 160 && py < r.bottom + 160 ? 1 : 0)
+      spark.style.transform = `translateY(${y}px)`
+      spark.style.opacity = String(near * 0.9)
+    })
+  })
+  hero.addEventListener('pointerleave', () => (spark.style.opacity = '0'))
+</script>
