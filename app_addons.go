@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"errors"
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -80,6 +81,8 @@ type AddonView struct {
 	Path          string `json:"path"`
 	ManualPage    string `json:"manualPage"`
 	ManualWhy     string `json:"manualWhy"`
+	// Source is the host the download comes from, e.g. "github.com".
+	Source string `json:"source"`
 }
 
 func (a *App) addonView(e addons.Engine) AddonView {
@@ -105,6 +108,9 @@ func (a *App) addonView(e addons.Engine) AddonView {
 		v.State, v.ManualPage, v.ManualWhy = "manual", art.Manual.Page, art.Manual.Why
 	case hasArt:
 		v.State, v.Version = "available", art.Version
+		if u, err := url.Parse(art.URL); err == nil {
+			v.Source = u.Hostname()
+		}
 		v.DownloadBytes = art.Size
 		v.DiskBytes = art.UnpackedMB * 1_000_000
 	default:

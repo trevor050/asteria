@@ -52,9 +52,12 @@
     const w = info?.width || 0
     const h = info?.height || 0
     if (!w || !h || !frameW || !frameH) return null
-    let s = Math.min(frameW / w, frameH / h, 1)
+    // Vector art scales cleanly, so a small SVG fills a good part of the
+    // frame instead of sitting tiny in the middle.
+    const vector = (showOriginal ? file.originalPath : file.type)?.toLowerCase().endsWith('.svg')
+    let s = Math.min(frameW / w, frameH / h, vector ? Math.max(1, 360 / Math.max(w, h)) : 1)
     let pixelated = false
-    if (s === 1 && Math.max(w, h) < 96) {
+    if (!vector && s === 1 && Math.max(w, h) < 96) {
       s = Math.max(1, Math.min(4, Math.floor(160 / Math.max(w, h))))
       pixelated = s > 1
     }

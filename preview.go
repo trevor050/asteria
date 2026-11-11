@@ -79,6 +79,9 @@ func (h *previewHandler) wrap(next http.Handler) http.Handler {
 				return
 			}
 			w.Header().Set("Cache-Control", "private, max-age=31536000, immutable")
+			if strings.EqualFold(step.Type, ".svg") {
+				w.Header().Set("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; img-src data:")
+			}
 			http.ServeContent(w, r, "file"+step.Type, info.ModTime(), file)
 		default:
 			http.NotFound(w, r)
@@ -102,6 +105,12 @@ func (h *previewHandler) thumb(w http.ResponseWriter, r *http.Request, f *sessio
 		var b []byte
 		mime := "image/jpeg"
 		var err error
+		if strings.EqualFold(step.Type, ".svg") {
+			// The webview draws SVG itself; an <img> never runs its scripts
+			// or loads anything it references.
+			b, err = os.ReadFile(step.Path)
+			return thumbData{b, "image/svg+xml"}, err
+		}
 		switch inspect.Kind(step.Type) {
 		case "video":
 			b, err = inspect.VideoPoster(r.Context(), h.tools, step.Path, size, step.Info.Duration)
@@ -127,6 +136,9 @@ func (h *previewHandler) thumb(w http.ResponseWriter, r *http.Request, f *sessio
 	}
 	td := v.(thumbData)
 	w.Header().Set("Content-Type", td.mime)
+	if td.mime == "image/svg+xml" {
+		w.Header().Set("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; img-src data:")
+	}
 	w.Header().Set("Cache-Control", "private, max-age=31536000, immutable")
 	_, _ = w.Write(td.data)
 }

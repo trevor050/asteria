@@ -212,6 +212,9 @@ type Suggestion struct {
 	Icon string `json:"icon"`
 	// Matched is the alias the query matched, when the name did not.
 	Matched string `json:"matched"`
+	// Generic is true for skills that take any file (zip, checksum, file
+	// info); the quick row prefers skills made for the file's type.
+	Generic bool `json:"generic"`
 }
 
 // Search ranks skills for the query against the files skills would apply to.
@@ -235,7 +238,7 @@ func (a *App) Search(query string, fileIDs []string) []Suggestion {
 			ID: s.ID, Name: s.Name, Description: s.Description, Category: s.Category,
 			IsMeta: s.IsMeta, Combine: s.Combine, OutputType: s.OutputType, Params: s.Params,
 			Value: m.Value, Community: s.Source == skills.SkillSourceCommunity,
-			Icon: s.Icon, Matched: m.Alias,
+			Icon: s.Icon, Matched: m.Alias, Generic: slices.Contains(s.InputTypes, "*"),
 		}
 		if s.Executor.Type == "native" {
 			if h, ok := ops.Lookup(s.Executor.Handler); ok {

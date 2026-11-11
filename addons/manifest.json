@@ -6,12 +6,12 @@
     {
       "id": "ffmpeg",
       "name": "FFmpeg",
-      "unlocks": "Audio and video conversion (MP4, MKV, MOV, WebM, MP3, AAC, FLAC, WAV, GIF and more)",
-      "publisher": "FFmpeg project (builds by Gyan Doshi, BtbN, Martin Riedl)",
+      "unlocks": "Audio and video",
+      "publisher": "the FFmpeg project",
       "license": "GPL-3.0-or-later",
       "license_url": "https://www.ffmpeg.org/legal.html",
       "homepage": "https://ffmpeg.org/",
-      "license_note": "FFmpeg core is LGPL-2.1+; every build recorded here is a GPL variant (--enable-gpl --enable-version3, includes x264/x265) so MP4/H.264 output works. We only exec the CLI, never link. LGPL-only builds exist (BtbN 'lgpl' variants) but lack libx264/libx265. Bundle must ship/point to the build's license text (LICENSE in the archive for Windows/Linux). x265/H.265 patent pools are a separate non-license concern.",
+      "license_note": "FFmpeg core is LGPL-2.1+; every build recorded here is a GPL variant (--enable-gpl --enable-version3, includes x264/x265) so MP4/H.264 output works. We only exec the CLI, never link. LGPL-only builds exist (BtbN 'lgpl' variants) but lack libx264/libx265. Bundle must ship/point to the build's license text (LICENSE in the archive for Windows/Linux). x265/H.265 patent pools are a separate non-license concern. Builds by Gyan Doshi, BtbN, Martin Riedl.",
       "platforms": {
         "darwin-arm64": {
           "version": "9.0.2",
@@ -169,12 +169,12 @@
     {
       "id": "pandoc",
       "name": "Pandoc",
-      "unlocks": "Document and markup conversion (Markdown, HTML, Word DOCX, EPUB, LaTeX, ODT, reStructuredText and more)",
-      "publisher": "John MacFarlane (jgm)",
+      "unlocks": "Markdown, LaTeX and web documents",
+      "publisher": "John MacFarlane",
       "license": "GPL-2.0-or-later",
       "license_url": "https://github.com/jgm/pandoc/blob/main/COPYING.md",
       "homepage": "https://pandoc.org/",
-      "license_note": "GPL-2.0-or-later; we only exec the unmodified binary. PDF output additionally needs a LaTeX engine (not covered here).",
+      "license_note": "GPL-2.0-or-later; we only exec the unmodified binary. PDF output additionally needs a LaTeX engine (not covered here). Builds: jgm.",
       "platforms": {
         "darwin-arm64": {
           "version": "3.13",
@@ -259,7 +259,7 @@
     {
       "id": "libreoffice",
       "name": "LibreOffice",
-      "unlocks": "Office documents (Word, Excel, PowerPoint, OpenDocument) to PDF and other formats",
+      "unlocks": "Office documents",
       "publisher": "The Document Foundation",
       "license": "MPL-2.0",
       "license_url": "https://www.libreoffice.org/about-us/licenses/",
@@ -374,7 +374,7 @@
     {
       "id": "7zip",
       "name": "7-Zip",
-      "unlocks": "Archives (7z, RAR, ZIP, TAR, ISO and many more) - open and create",
+      "unlocks": "More archive types (7z, RAR, ISO)",
       "publisher": "Igor Pavlov",
       "license": "LGPL-2.1-or-later",
       "license_url": "https://www.7-zip.org/license.txt",
@@ -413,18 +413,18 @@
         },
         "windows-amd64": {
           "version": "26.06",
-          "url": "https://github.com/ip7z/7zip/releases/download/26.06/7z2606-extra.7z",
-          "size": 1758340,
-          "sha256": "396c180f12d2247c24b0b1fcd482c6fc2a2700f61211ffede1061dd971f5e104",
-          "checksum_source": "GitHub release API asset digest (sha256), computed by GitHub at upload",
+          "url": "https://github.com/ip7z/7zip/releases/download/26.06/7z2606-x64.msi",
+          "size": 2003456,
+          "sha256": "6dc822569e777d9a3ecd5ffcbc22b55600af87e6c5d9810a64e8566cf5a4af9f",
+          "checksum_source": "GitHub release asset digest",
           "signature": null,
-          "format": "7z",
+          "format": "msi",
           "bins": {
-            "7za": "x64/7za.exe"
+            "7zz": "Files/7-Zip/7z.exe"
           },
           "bins_verified": false,
-          "unpacked_mb": 5,
-          "notes": "'7-Zip Extra' standalone console. Expected layout: 7za.exe (x86) at root plus x64\\7za.exe and arm64\\7za.exe (not verified). The archive itself is .7z, so bootstrapping needs a 7z reader: a pure-Go lib (e.g. bodgit/sevenzip) or ship/download 7zr.exe (https://github.com/ip7z/7zip/releases/download/26.06/7zr.exe, 600064 B, sha256 e80db2dad715a6c5adabe292d31ed54e11f4e9b99ca349827b50573b175891bc) which can unpack .7z. Hash matched our independent download."
+          "unpacked_mb": 6,
+          "notes": "Official MSI, unpacked per user with msiexec /a (administrative install image: no elevation, nothing registered). 7z.exe needs 7z.dll beside it, so the full package is used rather than the 7za-only \"extra\" archive (which cannot open RAR, ISO or WIM)."
         },
         "linux-amd64": {
           "version": "26.06",
@@ -466,12 +466,12 @@
     {
       "id": "resvg",
       "name": "resvg",
-      "unlocks": "High-quality SVG to PNG rendering",
-      "publisher": "Linebender (Yevhenii Reizner)",
+      "unlocks": "SVG to picture",
+      "publisher": "Linebender",
       "license": "Apache-2.0 OR MIT",
       "license_url": "https://github.com/linebender/resvg/blob/main/LICENSE-APACHE",
       "homepage": "https://github.com/linebender/resvg",
-      "license_note": "Permissive; no restrictions of note. Also an ~13MB source tarball in releases (not needed).",
+      "license_note": "Permissive; no restrictions of note. Also an ~13MB source tarball in releases (not needed). Builds: Yevhenii Reizner.",
       "platforms": {
         "darwin-arm64": {
           "version": "0.49.0",
@@ -556,8 +556,8 @@
     {
       "id": "imagemagick",
       "name": "ImageMagick",
-      "unlocks": "Wide image format support (HEIC, TIFF, PSD, RAW-ish, ICO, animated GIF and 200+ more)",
-      "publisher": "ImageMagick Studio LLC",
+      "unlocks": "Camera RAW and rare image formats",
+      "publisher": "ImageMagick Studio",
       "license": "ImageMagick",
       "license_url": "https://imagemagick.org/script/license.php",
       "homepage": "https://imagemagick.org/",
@@ -627,7 +627,7 @@
     {
       "id": "calibre",
       "name": "Calibre",
-      "unlocks": "E-book conversion (EPUB, MOBI, AZW3, KFX-ish, PDF, FB2, CBZ and more)",
+      "unlocks": "Ebooks",
       "publisher": "Kovid Goyal",
       "license": "GPL-3.0-only",
       "license_url": "https://github.com/kovidgoyal/calibre/blob/master/LICENSE",
@@ -717,8 +717,8 @@
     {
       "id": "ghostscript",
       "name": "Ghostscript",
-      "unlocks": "PDF, PostScript and EPS handling (compress, rasterize, convert)",
-      "publisher": "Artifex Software",
+      "unlocks": "PostScript and PDF to pictures",
+      "publisher": "Artifex",
       "license": "AGPL-3.0-or-later",
       "license_url": "https://www.gnu.org/licenses/agpl-3.0.html",
       "homepage": "https://ghostscript.com/",
@@ -763,7 +763,7 @@
     {
       "id": "potrace",
       "name": "Potrace",
-      "unlocks": "Bitmap to vector tracing (PNG/BMP to SVG, EPS, PDF)",
+      "unlocks": "Tracing pictures into vectors",
       "publisher": "Peter Selinger",
       "license": "GPL-2.0-or-later",
       "license_url": "https://potrace.sourceforge.net/#license",
@@ -858,12 +858,12 @@
     {
       "id": "tesseract",
       "name": "Tesseract OCR",
-      "unlocks": "Text recognition from scans and images (OCR to text or searchable PDF)",
-      "publisher": "Tesseract OCR project (Windows build: UB Mannheim; Linux AppImage: AlexanderP)",
+      "unlocks": "Text from pictures (OCR)",
+      "publisher": "the Tesseract project",
       "license": "Apache-2.0",
       "license_url": "https://github.com/tesseract-ocr/tesseract/blob/main/LICENSE",
       "homepage": "https://tesseract-ocr.github.io/",
-      "license_note": "Apache-2.0. The upstream project publishes SOURCE ONLY on its own releases (5.5.4 has zero assets); every binary here is third-party, though both are the ones tessdoc points to. Language data (tessdata) is separate: installers/AppImage may include only English.",
+      "license_note": "Apache-2.0. The upstream project publishes SOURCE ONLY on its own releases (5.5.4 has zero assets); every binary here is third-party, though both are the ones tessdoc points to. Language data (tessdata) is separate: installers/AppImage may include only English. Windows build by UB Mannheim; Linux AppImage by AlexanderP.",
       "platforms": {
         "darwin-arm64": {
           "manual": {

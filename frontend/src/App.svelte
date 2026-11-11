@@ -48,7 +48,9 @@
     const n = needAddon
     needAddon = null
     void refreshState()
-    if (n?.s) run(n.s, n.params ?? {})
+    // The suggestion was ranked before the add-on existed; it no longer
+    // misses anything, so run it straight away.
+    if (n?.s) run({ ...n.s, missing: [] }, n.params ?? {})
   }
   async function refreshState() {
     const s = await api.GetState()

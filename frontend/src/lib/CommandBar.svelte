@@ -41,25 +41,26 @@
   // one-click actions, and the real count of everything that applies.
   let fitting = $derived(suggestions.filter((s) => !s.isMeta && s.applies > 0))
   let quick = $derived.by(() => {
-    // One per kind of action first (convert, transform, compress, pdf...),
-    // in the engine's order, so a mixed tray shows a spread, not four
-    // flavors of the same conversion.
-    const ready = fitting.filter((s) => !s.missing?.length)
+    // Skills made for these file types come first, one per kind of action
+    // (convert, transform, compress, pdf...) in the engine's order, so a
+    // mixed tray shows a spread rather than four flavors of one conversion.
+    // A skill that needs a free add-on still shows (it asks before getting
+    // it); skills that take any file only fill the leftover places.
+    const usable = fitting.filter((s) => !s.missing?.length || s.addon)
+    const specific = usable.filter((s) => !s.generic)
+    const generic = usable.filter((s) => s.generic && !s.missing?.length)
     const picked: Suggestion[] = []
     const kinds = new Set<string>()
-    for (const s of ready) {
+    for (const s of specific) {
       if (picked.length < 4 && !kinds.has(s.category)) {
         kinds.add(s.category)
         picked.push(s)
       }
     }
-    for (const s of ready) if (picked.length < 4 && !picked.includes(s)) picked.push(s)
-    return ready.filter((s) => picked.includes(s))
+    for (const s of [...specific, ...generic]) if (picked.length < 4 && !picked.includes(s)) picked.push(s)
+    return [...specific, ...generic].filter((s) => picked.includes(s))
   })
-  // Skills that fit but need an add-on first: offered in plain words when
-  // nothing else fits, instead of an empty row.
-  let needs = $derived(fitting.find((s) => s.addon && s.missing?.length) ?? null)
-  let showQuick = $derived(hasFiles && !busy && !query && !paramSkill && !open && (quick.length > 0 || !!needs))
+  let showQuick = $derived(hasFiles && !busy && !query && !paramSkill && !open && quick.length > 0)
 
   // Browsing: every skill that fits, grouped by family.
   let browse = $state(false)
@@ -272,6 +273,7 @@
     return some
   }
   function tip(s: Suggestion): string {
+    if (s.missing?.length) return `${s.description}. Needs ${s.missing[0]}, a free add-on: you'll be asked first.`
     const hint = s.params?.[0]?.hint
     return hint ? `${s.description}. ${hint}` : s.description
   }
@@ -351,14 +353,12 @@
           onclick={() => choose(s)}
           onmouseenter={() => (hovered = s)}
           onmouseleave={() => (hovered = null)}
-          title={tip(s)}><Icon name={s.icon} family={s.category} size={14} />{s.name}</button
+          title={tip(s)}
+          ><Icon name={s.icon} family={s.category} size={14} />{s.name}{#if s.missing?.length}<span class="addon"
+              ><Icon name="download" size={12} tint={false} /></span
+            >{/if}</button
         >
       {/each}
-      {#if !quick.length && needs}
-        <button type="button" class="offer" onmousedown={(e) => e.preventDefault()} onclick={() => onrun(needs!, {})}
-          ><Icon name={needs.icon} family={needs.category} size={14} />{needs.name} needs {needs.missing?.[0]} (free) · Get it</button
-        >
-      {/if}
       {#if fitting.length > quick.length}
         <button type="button" class="all" style={`--i:${quick.length}`} onmousedown={(e) => e.preventDefault()} onclick={showAll}
           >All {fitting.length} skills</button
@@ -622,9 +622,10 @@
   .quick .all {
     color: var(--muted);
   }
-  .quick .offer {
-    color: var(--ink);
-    background: var(--chip);
+  .quick .addon {
+    display: inline-flex;
+    margin-left: 2px;
+    color: var(--muted);
   }
 
   /* ---- suggestions -------------------------------------------------------- */

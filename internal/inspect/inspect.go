@@ -6,15 +6,18 @@ import (
 	"archive/zip"
 	"bytes"
 	"context"
+	"encoding/xml"
 	"fmt"
 	"image"
 	"image/jpeg"
 	"image/png"
 	"io"
 	"io/fs"
+	"math"
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 	"unicode/utf8"
@@ -67,6 +70,8 @@ func Kind(fileType string) string {
 	switch {
 	case t == "folder":
 		return "folder"
+	case t == ".svg":
+		return "image" // drawn by the webview itself (see SVGSize)
 	case in(ops.ImageInputExts, t):
 		return "image"
 	case t == ".pdf":
@@ -95,6 +100,13 @@ func Describe(ctx context.Context, finder *tools.Finder, path, fileType string) 
 	info := Info{Kind: Kind(fileType)}
 	switch info.Kind {
 	case "image":
+		if strings.EqualFold(fileType, ".svg") {
+			if w, h, ok := SVGSize(path); ok {
+				info.Width, info.Height = w, h
+				info.Summary = fmt.Sprintf("%d×%d", w, h)
+			}
+			break
+		}
 		if cfg, err := imageConfig(path); err == nil {
 			info.Width, info.Height = cfg.Width, cfg.Height
 			if o := ops.JPEGOrientation(path); o >= 5 && o <= 8 {
@@ -319,4 +331,78 @@ func VideoPoster(ctx context.Context, finder *tools.Finder, path string, max int
 		return nil, fmt.Errorf("no frame: %v", err)
 	}
 	return out, nil
+}
+
+// SVGSize reads an SVG's intrinsic size from its root element: width and
+// height in px (or unitless), else the viewBox. Sizes are clamped so a
+// hostile file can't ask for a giant canvas.
+func SVGSize(path string) (int, int, bool) {
+	f, err := os.Open(path)
+	if err != nil {
+		return 0, 0, false
+	}
+	defer f.Close()
+	dec := xml.NewDecoder(io.LimitReader(f, 1<<20))
+	dec.Strict = false
+	for {
+		tok, err := dec.Token()
+		if err != nil {
+			return 0, 0, false
+		}
+		se, ok := tok.(xml.StartElement)
+		if !ok {
+			continue
+		}
+		if se.Name.Local != "svg" {
+			return 0, 0, false
+		}
+		var w, h float64
+		var vb []float64
+		for _, a := range se.Attr {
+			switch a.Name.Local {
+			case "width":
+				w = svgLength(a.Value)
+			case "height":
+				h = svgLength(a.Value)
+			case "viewBox":
+				for _, p := range strings.FieldsFunc(a.Value, func(r rune) bool { return r == ' ' || r == ',' }) {
+					v, err := strconv.ParseFloat(p, 64)
+					if err != nil {
+						break
+					}
+					vb = append(vb, v)
+				}
+			}
+		}
+		if (w <= 0 || h <= 0) && len(vb) == 4 && vb[2] > 0 && vb[3] > 0 {
+			if w > 0 {
+				h = w * vb[3] / vb[2]
+			} else if h > 0 {
+				w = h * vb[2] / vb[3]
+			} else {
+				w, h = vb[2], vb[3]
+			}
+		}
+		if w <= 0 || h <= 0 {
+			return 0, 0, false
+		}
+		// Keep the aspect ratio but stay within a sane canvas.
+		if s := math.Max(w, h) / 8192; s > 1 {
+			w, h = w/s, h/s
+		}
+		return max(1, int(math.Round(w))), max(1, int(math.Round(h))), true
+	}
+}
+
+func svgLength(v string) float64 {
+	v = strings.TrimSpace(v)
+	if strings.HasSuffix(v, "%") {
+		return 0
+	}
+	v = strings.TrimSuffix(v, "px")
+	f, err := strconv.ParseFloat(v, 64)
+	if err != nil {
+		return 0
+	}
+	return f
 }

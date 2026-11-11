@@ -10,6 +10,7 @@
     "zip files"
   ],
   "category": "archive",
+  "priority": 10,
   "icon": "file-archive",
   "description": "Pack files and folders into a .zip",
   "inputTypes": [

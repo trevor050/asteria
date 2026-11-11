@@ -11,6 +11,7 @@
     "inspect"
   ],
   "category": "info",
+  "priority": 12,
   "icon": "file-search",
   "description": "What a file really is, its size and hash",
   "inputTypes": [

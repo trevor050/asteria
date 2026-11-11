@@ -91,7 +91,7 @@
 <div class="scrim" role="presentation" onclick={() => phase !== 'working' && onclose()}>
   <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_noninteractive_element_interactions -->
   <div class="sheet glass" role="dialog" aria-modal="true" aria-labelledby="addon-title" tabindex="-1" bind:this={sheet} {onkeydown} onclick={(e) => e.stopPropagation()}>
-    <h2 id="addon-title">{addon.unlocks} need {addon.name}</h2>
+    <h2 id="addon-title">{task ? `${task} needs ${addon.name}` : `Get ${addon.name}?`}</h2>
     {#if manual}
       <p>
         {addon.name} is free, from {addon.publisher}, but Asteria can't add it for you on this computer.
@@ -106,12 +106,12 @@
       </div>
     {:else if phase === 'ask' || phase === 'error'}
       <p>
-        {addon.name} is free, from {addon.publisher}.{#if task}&nbsp;{task} uses it.{/if} Asteria can add it for you in one step: a
+        {addon.name} is free, from {addon.publisher}. Asteria can add it for you in one step: a
         {bytes(addon.downloadBytes)} download that takes about {bytes(addon.diskBytes)} on this computer. You only do this once, and you can remove it
         in Settings.
       </p>
       <p class="quiet">
-        It downloads from {addon.name}'s official site. Nothing about your files is sent anywhere.
+        It downloads straight from {addon.source || `${addon.name}'s official site`}. Nothing about your files is sent anywhere.
         <button type="button" class="link" onclick={() => void api.OpenAddonPage(addon.id, 'license')}>{addon.license} license</button>
       </p>
       {#if phase === 'error'}<p class="err">{error}</p>{/if}
