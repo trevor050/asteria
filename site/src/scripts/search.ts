@@ -17,8 +17,8 @@ export interface Skill {
   prm: [string, string, string] | null
   ad: string | null
 }
-/** [from, to, slug, addonId, skillId, typed, hasPage] */
-export type PairRow = [string, string, string, string | null, string, string, 0 | 1]
+/** [from, to, slug, addonId, skillId, typed, hasPage, skills that make a folder] */
+export type PairRow = [string, string, string, string | null, string, string, 0 | 1, string?]
 
 export interface Data {
   skills: Skill[]

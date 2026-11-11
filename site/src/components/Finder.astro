@@ -2,7 +2,7 @@
 // "I have ___, I want ___" over every verified conversion. The rows rendered
 // here are what shows before anything is typed (and without JS); typing
 // filters the full list from /data/search.json.
-import { pagePairs, summary, familyOrder, type Pair } from '../lib/data'
+import { pagePairs, allPairs, summary, familyOrder, type Pair } from '../lib/data'
 
 interface Props {
   /** 'popular' shows a short starting list; 'all' lists everything by family */
@@ -21,10 +21,15 @@ const popular = [
   .filter((p): p is Pair => !!p)
   .slice(0, 10)
 
+// Every counted pair: the file-to-file ones link to their page, the ones
+// that make a folder of files (icon sets, video frames, unpacked archives)
+// are listed without one.
+const listed = [...allPairs].sort((a, b) => a.from.localeCompare(b.from) || Number(a.to === 'folder') - Number(b.to === 'folder') || a.to.localeCompare(b.to))
+const folderCount = listed.filter((p) => p.to === 'folder').length
 const groups = familyOrder
-  .map((f) => ({ family: f, pairs: pagePairs.filter((p) => p.family === f) }))
+  .map((f) => ({ family: f, pairs: listed.filter((p) => p.family === f) }))
   .filter((g) => g.pairs.length)
-const rest = pagePairs.filter((p) => !familyOrder.includes(p.family))
+const rest = listed.filter((p) => !familyOrder.includes(p.family))
 if (rest.length) groups.push({ family: 'Other', pairs: rest })
 ---
 
@@ -32,7 +37,7 @@ if (rest.length) groups.push({ family: 'Other', pairs: rest })
   <div class="wrap inner">
     <H id={`${id}-title`}>Find your conversion</H>
     <p class="lede">
-      {summary.conversionPairs} conversions between {summary.fileTypesRead} kinds of file. Each one was run on a real file and the result
+      {summary.conversionPairs} conversions from {summary.fileTypesRead} kinds of file. Each one was run on a real file and the result
       checked by a separate program.
     </p>
 
@@ -48,7 +53,7 @@ if (rest.length) groups.push({ family: 'Other', pairs: rest })
       </label>
     </form>
     <p class="count" id={`${id}-count`} aria-live="polite" data-count>
-      {show === 'popular' ? 'Some of the common ones. Type a format, or what it is called, to search all of them.' : `All ${pagePairs.length} file-to-file conversions, by kind.`}
+      {show === 'popular' ? 'Some of the common ones. Type a format, or what it is called, to search all of them.' : `All ${summary.conversionPairs}, by kind of file. ${summary.conversionPairs - folderCount} make a new file and have a page of their own; the other ${folderCount} make a folder of files, like an app icon set or a video's frames.`}
     </p>
 
     <div data-static>
@@ -77,20 +82,35 @@ if (rest.length) groups.push({ family: 'Other', pairs: rest })
                 {g.family} <span>{g.pairs.length}</span>
               </h2>
               <ul class="rows">
-                {g.pairs.map((p) => (
-                  <li>
-                    <a href={`/convert/${p.slug}`}>
-                      <span class="from">
-                        {p.fromName} <small>.{p.from}</small>
-                      </span>
-                      <span class="through-mark" aria-hidden="true" />
-                      <span class="to">
-                        {p.toName} <small>.{p.to}</small>
-                      </span>
-                      <span class:list={['needs', { addon: p.addon }]}>{p.addon ? `needs ${p.addon.name}` : 'built in'}</span>
-                    </a>
-                  </li>
-                ))}
+                {g.pairs.map((p) =>
+                  p.to === 'folder' ? (
+                    <li>
+                      <div class="row">
+                        <span class="from">
+                          {p.fromName} <small>.{p.from}</small>
+                        </span>
+                        <span class="through-mark" aria-hidden="true" />
+                        <span class="to">
+                          Folder of files <small>{[p.skill.name, ...p.others.map((o) => o.name)].join(', ')}</small>
+                        </span>
+                        <span class:list={['needs', { addon: p.addon }]}>{p.addon ? `needs ${p.addon.name}` : 'built in'}</span>
+                      </div>
+                    </li>
+                  ) : (
+                    <li>
+                      <a href={`/convert/${p.slug}`}>
+                        <span class="from">
+                          {p.fromName} <small>.{p.from}</small>
+                        </span>
+                        <span class="through-mark" aria-hidden="true" />
+                        <span class="to">
+                          {p.toName} <small>.{p.to}</small>
+                        </span>
+                        <span class:list={['needs', { addon: p.addon }]}>{p.addon ? `needs ${p.addon.name}` : 'built in'}</span>
+                      </a>
+                    </li>
+                  ),
+                )}
               </ul>
             </section>
           ))
@@ -178,7 +198,8 @@ if (rest.length) groups.push({ family: 'Other', pairs: rest })
   .rows :global(li) {
     border-bottom: 1px solid var(--line);
   }
-  .rows :global(a) {
+  .rows :global(a),
+  .rows :global(.row) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 2px minmax(0, 1fr) minmax(7.5rem, auto);
     align-items: center;
@@ -257,7 +278,8 @@ if (rest.length) groups.push({ family: 'Other', pairs: rest })
     .slot {
       height: 56px;
     }
-    .rows :global(a) {
+    .rows :global(a),
+    .rows :global(.row) {
       grid-template-columns: minmax(0, 1fr) 2px minmax(0, 1fr);
       gap: 4px 14px;
     }
@@ -327,10 +349,9 @@ if (rest.length) groups.push({ family: 'Other', pairs: rest })
       }
       if (a !== clean(have.value) || b !== clean(want.value)) return
       const hits = data.pairs
-        .filter((p) => p[6])
         .map((p) => {
           const fs = score(a, p[0], data!.names[p[0]] ?? '')
-          const ts = score(b, p[1], data!.names[p[1]] ?? '')
+          const ts = score(b, p[1], data!.names[p[1]] ?? (p[1] === 'folder' ? 'Folder of files' : ''))
           return { p, s: fs && ts ? fs * 10 + ts - (p[3] ? 0.5 : 0) : 0 }
         })
         .filter((x) => x.s > 0)
@@ -338,9 +359,14 @@ if (rest.length) groups.push({ family: 'Other', pairs: rest })
       const shown = hits.slice(0, 60)
       live.innerHTML = shown
         .map(({ p }) => {
-          const [from, to, slug, addon] = p
+          const [from, to, slug, addon, , , page] = p
           const needs = addon ? `<span class="needs addon">needs ${esc(data!.addons[addon] ?? addon)}</span>` : `<span class="needs">built in</span>`
-          return `<li><a href="/convert/${slug}"><span class="from">${hl(data!.names[from] ?? from, a)} <small>.${hl(from, a)}</small></span><span class="through-mark" aria-hidden="true"></span><span class="to">${hl(data!.names[to] ?? to, b)} <small>.${hl(to, b)}</small></span>${needs}</a></li>`
+          const fromHTML = `<span class="from">${hl(data!.names[from] ?? from, a)} <small>.${hl(from, a)}</small></span><span class="through-mark" aria-hidden="true"></span>`
+          if (!page) {
+            const skill = p[7] || (data!.skills.find((x) => x.id === p[4])?.n ?? '')
+            return `<li><div class="row">${fromHTML}<span class="to">${hl('Folder of files', b)} <small>${esc(skill)}</small></span>${needs}</div></li>`
+          }
+          return `<li><a href="/convert/${slug}">${fromHTML}<span class="to">${hl(data!.names[to] ?? to, b)} <small>.${hl(to, b)}</small></span>${needs}</a></li>`
         })
         .join('')
       staticList.hidden = true

@@ -25,7 +25,7 @@ export const GET: APIRoute = () => {
       prm: s.param ? [s.param.label, s.param.unit, s.param.default] : null,
       ad: s.addon,
     })),
-    pairs: allPairs.map((p) => [p.from, p.to, p.slug, p.addon?.id ?? null, p.skill.id, p.typed, p.to === 'folder' ? 0 : 1]),
+    pairs: allPairs.map((p) => [p.from, p.to, p.slug, p.addon?.id ?? null, p.skill.id, p.typed, p.to === 'folder' ? 0 : 1, p.to === 'folder' ? [p.skill.name, ...p.others.map((o) => o.name)].join(', ') : '']),
     names: Object.fromEntries(formats.map((f) => [f.ext, f.name])),
     addons: Object.fromEntries(addons.map((a) => [a.id, a.name])),
     icons: usedIcons,
