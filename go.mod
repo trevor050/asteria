@@ -8,12 +8,15 @@ require (
 	github.com/gen2brain/h265 v0.2.4
 	github.com/gen2brain/webp v0.6.4
 	github.com/google/uuid v1.6.0
+	github.com/klauspost/compress v1.20.4
 	github.com/pdfcpu/pdfcpu v0.16.4
+	github.com/ulikunitz/xz v0.5.17
 	github.com/wailsapp/wails/v3 v3.1.0
 	github.com/yuin/goldmark v1.8.7
 	go.yaml.in/yaml/v3 v3.0.6
 	golang.org/x/image v0.48.0
 	golang.org/x/sync v0.25.0
+	golang.org/x/sys v0.50.0
 )
 
 require (
@@ -26,7 +29,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.31 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	golang.org/x/crypto v0.58.0 // indirect
-	golang.org/x/sys v0.50.0 // indirect
 	golang.org/x/term v0.47.0 // indirect
 	golang.org/x/text v0.44.0 // indirect
 )
