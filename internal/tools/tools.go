@@ -108,6 +108,10 @@ func defaultDirs() []string {
 		dirs := []string{}
 		if v := os.Getenv("LOCALAPPDATA"); v != "" {
 			dirs = append(dirs, filepath.Join(v, "Microsoft", "WinGet", "Links"))
+			// Service logons can reject WinGet's symlinks as untrusted
+			// mount points. The package's real binaries still work.
+			bins, _ := filepath.Glob(filepath.Join(v, "Microsoft", "WinGet", "Packages", "Gyan.FFmpeg*", "ffmpeg*", "bin"))
+			dirs = append(dirs, bins...)
 		}
 		if home != "" {
 			dirs = append(dirs, filepath.Join(home, "scoop", "shims"))
