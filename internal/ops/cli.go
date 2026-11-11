@@ -1,11 +1,11 @@
 package ops
 
 import (
+	"asteria/internal/tools"
 	"bytes"
 	"context"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -48,7 +48,7 @@ func RunCLI(ctx context.Context, spec CLISpec, job Job) error {
 		}
 		args = append(args, RenderTemplate(a, job))
 	}
-	cmd := exec.CommandContext(ctx, bin, args...)
+	cmd := tools.Command(ctx, bin, args...)
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr

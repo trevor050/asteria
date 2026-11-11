@@ -13,7 +13,6 @@ import (
 	"io"
 	"io/fs"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -314,7 +313,7 @@ func VideoPoster(ctx context.Context, finder *tools.Finder, path string, max int
 	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 	scale := fmt.Sprintf("scale='min(%d,iw)':-2", max)
-	cmd := exec.CommandContext(ctx, bin, "-v", "error", "-ss", seek, "-i", path, "-frames:v", "1", "-vf", scale, "-f", "image2pipe", "-vcodec", "mjpeg", "-q:v", "4", "pipe:1")
+	cmd := tools.Command(ctx, bin, "-v", "error", "-ss", seek, "-i", path, "-frames:v", "1", "-vf", scale, "-f", "image2pipe", "-vcodec", "mjpeg", "-q:v", "4", "pipe:1")
 	out, err := cmd.Output()
 	if err != nil || len(out) == 0 {
 		return nil, fmt.Errorf("no frame: %v", err)

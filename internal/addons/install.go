@@ -1,6 +1,7 @@
 package addons
 
 import (
+	"asteria/internal/tools"
 	"context"
 	"crypto/rand"
 	"crypto/sha1"
@@ -15,7 +16,6 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -430,7 +430,7 @@ func checkRuns(ctx context.Context, dir string, a Artifact) error {
 			flag = "--version"
 		}
 		c, cancel := context.WithTimeout(ctx, 60*time.Second)
-		cmd := exec.CommandContext(c, p, flag)
+		cmd := tools.Command(c, p, flag)
 		cmd.Dir = dir
 		out, err := cmd.CombinedOutput()
 		cancel()

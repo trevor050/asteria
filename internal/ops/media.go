@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -59,7 +58,7 @@ func ProbeMedia(ctx context.Context, finder *tools.Finder, path string) (MediaIn
 	}
 	ctx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
-	out, err := exec.CommandContext(ctx, probe, "-v", "error", "-print_format", "json", "-show_format", "-show_streams", path).Output()
+	out, err := tools.Command(ctx, probe, "-v", "error", "-print_format", "json", "-show_format", "-show_streams", path).Output()
 	if err != nil {
 		return MediaInfo{}, Userf("%s is not a media file ffmpeg can read", filepath.Base(path))
 	}
@@ -159,7 +158,7 @@ func runFFmpeg(ctx context.Context, job Job, duration float64, args []string) er
 		return &MissingToolError{Tool: "ffmpeg"}
 	}
 	full := append([]string{"-hide_banner", "-nostdin", "-y", "-progress", "pipe:1", "-nostats", "-loglevel", "error"}, args...)
-	cmd := exec.CommandContext(ctx, bin, full...)
+	cmd := tools.Command(ctx, bin, full...)
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	stdout, err := cmd.StdoutPipe()

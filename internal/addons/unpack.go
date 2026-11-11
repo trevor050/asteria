@@ -3,6 +3,7 @@ package addons
 import (
 	"archive/tar"
 	"archive/zip"
+	"asteria/internal/tools"
 	"bufio"
 	"bytes"
 	"compress/bzip2"
@@ -358,7 +359,7 @@ func unpackDMG(ctx context.Context, src, dst string) error {
 		return err
 	}
 	defer os.Rename(img, src)
-	attach := exec.CommandContext(ctx, "/usr/bin/hdiutil", "attach", "-nobrowse", "-readonly", "-noautoopen", "-mountpoint", mnt, img)
+	attach := tools.Command(ctx, "/usr/bin/hdiutil", "attach", "-nobrowse", "-readonly", "-noautoopen", "-mountpoint", mnt, img)
 	attach.Stdin = strings.NewReader("Y\n") // accept a license agreement if the image shows one
 	if out, err := attach.CombinedOutput(); err != nil {
 		return fmt.Errorf("hdiutil attach: %v: %s", err, bytes.TrimSpace(out))
@@ -373,7 +374,7 @@ func unpackDMG(ctx context.Context, src, dst string) error {
 			continue // skip the "Applications" shortcut and hidden files
 		}
 		// ditto keeps bundle structure, permissions and code signatures.
-		cp := exec.CommandContext(ctx, "/usr/bin/ditto", filepath.Join(mnt, e.Name()), filepath.Join(dst, e.Name()))
+		cp := tools.Command(ctx, "/usr/bin/ditto", filepath.Join(mnt, e.Name()), filepath.Join(dst, e.Name()))
 		if out, err := cp.CombinedOutput(); err != nil {
 			return fmt.Errorf("copying %s: %v: %s", e.Name(), err, bytes.TrimSpace(out))
 		}
@@ -395,7 +396,7 @@ func unpackMSI(ctx context.Context, src, dst string) error {
 	defer os.Rename(msi, src)
 	abs, _ := filepath.Abs(dst)
 	logf := filepath.Join(filepath.Dir(msi), "msiexec.log")
-	cmd := exec.CommandContext(ctx, filepath.Join(os.Getenv("SystemRoot"), "System32", "msiexec.exe"), "/a", msi, "/qn", "/norestart", "TARGETDIR="+abs, "/l*v", logf)
+	cmd := tools.Command(ctx, filepath.Join(os.Getenv("SystemRoot"), "System32", "msiexec.exe"), "/a", msi, "/qn", "/norestart", "TARGETDIR="+abs, "/l*v", logf)
 	if out, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("msiexec /a: %v: %s", err, bytes.TrimSpace(out))
 	}
@@ -411,7 +412,7 @@ func unpackAppImage(ctx context.Context, src, dst string) error {
 	if err := copyFile(src, img, 0o755); err != nil {
 		return err
 	}
-	cmd := exec.CommandContext(ctx, img, "--appimage-extract")
+	cmd := tools.Command(ctx, img, "--appimage-extract")
 	cmd.Dir = dst
 	cmd.Env = append(os.Environ(), "APPIMAGE_EXTRACT_AND_RUN=0")
 	if out, err := cmd.CombinedOutput(); err != nil {

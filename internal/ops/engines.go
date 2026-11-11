@@ -1,13 +1,13 @@
 package ops
 
 import (
+	"asteria/internal/tools"
 	"bytes"
 	"context"
 	"fmt"
 	"image"
 	"image/color"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"sort"
@@ -45,7 +45,7 @@ func engineCmd(ctx context.Context, name, bin, dir string, timeout time.Duration
 	}
 	c, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
-	cmd := exec.CommandContext(c, bin, args...)
+	cmd := tools.Command(c, bin, args...)
 	cmd.Dir = dir
 	var out bytes.Buffer
 	cmd.Stdout = &out
@@ -89,6 +89,10 @@ func fileURI(p string) string {
 	return "file://" + strings.ReplaceAll(p, " ", "%20")
 }
 
+// loRunawayBase is the fixed part of the output size at which a
+// LibreOffice conversion is treated as stuck (tests lower it).
+var loRunawayBase int64 = 256 << 20
+
 // runLibreOffice converts office documents with LibreOffice in headless
 // mode. It uses its own throwaway profile so it never collides with a
 // LibreOffice the user has open, and writes into a scratch folder because
@@ -124,9 +128,39 @@ func runLibreOffice(ctx context.Context, job Job) error {
 		target += ":" + f
 	}
 	job.Progress(0.1)
-	if err := engineCmd(ctx, "LibreOffice", bin, scratch, 5*time.Minute,
+	// Some LibreOffice builds loop forever on certain files and keep
+	// writing (26.8.1 on macOS repeats a table cell of a .docx exported to
+	// text until the disk fills). Stop it once the output is far larger
+	// than any real conversion of this input could be.
+	limit := loRunawayBase + 64*fileSize(in)
+	runCtx, stop := context.WithCancel(ctx)
+	defer stop()
+	runaway := make(chan struct{})
+	go func() {
+		t := time.NewTicker(500 * time.Millisecond)
+		defer t.Stop()
+		for {
+			select {
+			case <-runCtx.Done():
+				return
+			case <-t.C:
+				if treeSize(outDir) > limit {
+					close(runaway)
+					stop()
+					return
+				}
+			}
+		}
+	}()
+	err = engineCmd(runCtx, "LibreOffice", bin, scratch, 5*time.Minute,
 		"-env:UserInstallation="+fileURI(profile), "--headless", "--norestore", "--nolockcheck", "--nodefault",
-		"--convert-to", target, "--outdir", outDir, in); err != nil {
+		"--convert-to", target, "--outdir", outDir, in)
+	select {
+	case <-runaway:
+		return Userf("LibreOffice got stuck converting this file and was stopped")
+	default:
+	}
+	if err != nil {
 		return err
 	}
 	produced, _ := filepath.Glob(filepath.Join(outDir, "*"))
@@ -277,6 +311,28 @@ func writePBM(m *img.Image, threshold float32, path string) error {
 		b.Write(row)
 	}
 	return os.WriteFile(path, b.Bytes(), 0o644)
+}
+
+func fileSize(p string) int64 {
+	st, err := os.Stat(p)
+	if err != nil {
+		return 0
+	}
+	return st.Size()
+}
+
+// treeSize is the total size of the files under dir.
+func treeSize(dir string) int64 {
+	var n int64
+	_ = filepath.WalkDir(dir, func(_ string, d os.DirEntry, err error) error {
+		if err == nil && !d.IsDir() {
+			if info, err := d.Info(); err == nil {
+				n += info.Size()
+			}
+		}
+		return nil
+	})
+	return n
 }
 
 func fileExists(p string) bool {

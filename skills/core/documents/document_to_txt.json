@@ -10,11 +10,9 @@
   ],
   "category": "document",
   "icon": "file-type",
-  "description": "UTF-8 plain text from a document",
+  "description": "Plain text from a .doc or RTF document",
   "inputTypes": [
-    ".docx",
     ".doc",
-    ".odt",
     ".rtf"
   ],
   "outputType": ".txt",
