@@ -35,7 +35,7 @@ Images, PDFs, archives and data are handled by Go code built into the app, inclu
 | <kbd>Tab</kbd> | Cycle presets while editing a setting |
 | <kbd>Space</kbd> / <kbd>⌘</kbd><kbd>Y</kbd> | Quick Look the focused file; <kbd>O</kbd> toggles the original, <kbd>←</kbd><kbd>→</kbd> move between files |
 | <kbd>⌘</kbd><kbd>↵</kbd> | Export changed files |
-| <kbd>⌘</kbd><kbd>O</kbd> | Add files or folders |
+| <kbd>⌘</kbd><kbd>O</kbd> | Add files (drop folders into the window on Windows) |
 | <kbd>⌘</kbd><kbd>Z</kbd> | Undo the last skill |
 | <kbd>Esc</kbd> | Cancel what's running, close menus, clear the selection |
 | <kbd>⌘</kbd>-click, <kbd>⇧</kbd>-click, <kbd>⌘</kbd><kbd>A</kbd> | Select files; skills then apply only to the selection |

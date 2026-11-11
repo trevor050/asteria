@@ -346,10 +346,12 @@ func (a *App) PickFiles() (AddResult, error) {
 	if a.app == nil {
 		return AddResult{}, errors.New("file picker unavailable")
 	}
+	// Windows switches to a folder-only dialog when directories are enabled.
+	// Keep its file picker usable; folders can still be dropped into the tray.
 	paths, err := a.app.Dialog.OpenFile().
 		SetTitle("Add files to Asteria").
 		CanChooseFiles(true).
-		CanChooseDirectories(true).
+		CanChooseDirectories(runtime.GOOS != "windows").
 		AttachToWindow(a.window).
 		PromptForMultipleSelection()
 	if err != nil {
