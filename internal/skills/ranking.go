@@ -170,7 +170,12 @@ func (r *Ranker) rankText(all []Skill, text, value string, ctx Context) []Match 
 		// alias prefix, alias words, fuzzy); then, within a tier, everyday
 		// skills (priority, the user's habits, family) ahead of obscure ones.
 		tier, alias := matchTier(s, text)
-		usable := s.IsMeta || len(ctx.InputTypes) == 0 || acceptsAny(s, ctx.InputTypes)
+		// App commands (export, undo, settings) compete with file skills only
+		// when their name starts with what was typed.
+		usable := len(ctx.InputTypes) == 0 || acceptsAny(s, ctx.InputTypes)
+		if s.IsMeta {
+			usable = tier >= tierNamePrefix
+		}
 		if r.isNoOp(s, ctx) {
 			usable = false
 		}

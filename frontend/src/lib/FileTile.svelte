@@ -1,5 +1,7 @@
 <script lang="ts">
   import { scale } from 'svelte/transition'
+  import Icon from './Icon.svelte'
+  import { skillMeta } from './skillmeta.svelte'
   import { motionReduced } from './theme'
   import { thumbURL, type FileView } from './api'
   import { size, typeLabel } from './format'
@@ -95,6 +97,7 @@
       <div class="chips">
         {#each file.steps ?? [] as step, i (step.id)}
           <span class="chip" in:chipIn out:chipOut>
+            <Icon name={skillMeta[step.skillId]?.icon} family={skillMeta[step.skillId]?.category} size={12} />
             {step.label}
             <button
               type="button"
@@ -311,7 +314,7 @@
   .chip {
     display: inline-flex;
     align-items: center;
-    gap: 1px;
+    gap: 5px;
     padding: 2px 2px 2px 9px;
     border-radius: 999px;
     background: var(--chip);

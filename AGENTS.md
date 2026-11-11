@@ -19,6 +19,9 @@ Asteria: local-first desktop file converter. Wails 3.1 (Go) + Svelte 5. Drop fil
 - Layout: `layout` (empty/grid/solo) lags `wantLayout` by one View Transition so the file morphs tile <-> `Hero.svelte` (`view-transition-name: subject`, one element at a time; `lastHero` keeps the hero alive while leaving). Solo = 1 file, or per_file mode with several.
 - Processing glow: `.pulse` in App.svelte, `pulse` state set 350 ms after busy starts (fast ops never light up), ok/fail resolve after. Six fixed-color layers cross-fade by opacity only; hues are `--hue-1..6` tokens per theme.
 - PDF first page: `lib/PdfPage.svelte` lazy-imports pdfjs-dist + worker (`?url`); falls back to a type card.
+- Icons: Lucide (ISC) inner SVG strings in generated `lib/icons.ts`; regenerate with `node scripts/icons/build-icons.mjs` after adding an `icon` to a skill (it fails on unknown or assistant-style names). `Icon.svelte` tints by family via `--fam-*` tokens in style.css (OKLCh, low chroma). Step chips get icons from `lib/skillmeta.svelte.ts` (ListSkills).
+- Ranking is tiered (`matchTier` in ranking.go): usable first (meta commands only on a name-prefix match), then name exact > name prefix > name words > alias exact/prefix/words > fuzzy; priority/usage/family within a tier. `Match.Alias` -> Suggestion.matched, shown in quotes.
+- Descriptions are short phrases (<= ~45 chars); defaults live in the param hint. Spatial effect sizes default to % of width (`args.Length`); video filters get `_width` from RunVideoFilter (`VideoLength`).
 - Settings panel `lib/Settings.svelte`; accent presets read from the Accent Color skill. Naming presets: `{name}.{ext}`, `{name} {date}.{ext}`, `{name}-{skill}.{ext}` (NOT `{name}_{skill}.{ext}`: that legacy value is normalized back to the default).
 
 ## Commands

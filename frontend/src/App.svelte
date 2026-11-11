@@ -10,6 +10,7 @@
   import SettingsPanel from './lib/Settings.svelte'
   import { isTyping, mod, plural } from './lib/format'
   import { motionReduced, setAppearance, setOverrides } from './lib/theme'
+  import { loadSkillMeta } from './lib/skillmeta.svelte'
 
   type Toast = { id: number; text: string; tone: 'info' | 'error'; detail?: string; actions?: { label: string; run: () => void }[] }
 
@@ -475,6 +476,7 @@
       on<string[] | null>(events.skillsChanged, (problems) => {
         refreshKey++
         void countSkills()
+        void loadSkillMeta()
         if (problems?.length) toast(`${plural(problems.length, 'skill')} didn't load`, { tone: 'error', detail: problems.join('\n') })
         else toast('Skills reloaded')
       }),
@@ -487,6 +489,7 @@
       }
       bar?.focus()
       void countSkills()
+      void loadSkillMeta()
     })()
     // Test hook: add paths exactly like a drop does (used by the screenshot
     // and GIF scripts against the server-mode build).

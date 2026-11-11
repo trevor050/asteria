@@ -3,6 +3,7 @@
   import { api, type ParamDef, type Suggestion } from './api'
   import { mod, plural, typeLabel } from './format'
   import { familyName, familyRank } from './families'
+  import Icon from './Icon.svelte'
 
   type Props = {
     targetIds: string[]
@@ -113,7 +114,9 @@
   function scrub(v: number) {
     if (!range) return
     const r = range.step < 1 ? Math.round(v * 100) / 100 : Math.round(v)
-    paramValue = range.signed && r > 0 ? `+${r}` : String(r)
+    // Percent parameters stay percent ("0.6%" of the width, "+60%").
+    const unit = param?.unit === '%' ? '%' : ''
+    paramValue = (range.signed && r > 0 ? `+${r}` : String(r)) + unit
   }
 
   export function focus(text?: string) {
@@ -253,13 +256,21 @@
     }
   }
 
+  // Say something only when it is news: the skill fits some of the files,
+  // makes one file from many, or makes a folder.
   function meta(s: Suggestion): string {
     if (s.missing?.length) return `needs ${s.missing.join(', ')}`
     if (s.isMeta || !hasFiles) return ''
     if (!s.applies) return 'no matching files'
-    const out = s.outputType === 'folder' ? 'folder' : s.outputType ? typeLabel(s.outputType) : ''
-    if (s.combine) return `${plural(s.applies, 'file')} → 1 ${out}`
-    return out ? `${plural(s.applies, 'file')} → ${out}` : plural(s.applies, 'file')
+    const total = targetIds.length
+    const some = s.applies < total ? `${s.applies} of ${total}` : ''
+    if (s.combine) return `${plural(s.applies, 'file')} → 1 ${s.outputType ? typeLabel(s.outputType) : 'file'}`
+    if (s.outputType === 'folder') return some ? `${some} → folders` : '→ folder'
+    return some
+  }
+  function tip(s: Suggestion): string {
+    const hint = s.params?.[0]?.hint
+    return hint ? `${s.description}. ${hint}` : s.description
   }
 
   let placeholder = $derived(
@@ -290,7 +301,9 @@
                 choose(s)
               }}
               onmousemove={() => (highlight = i)}
+              title={tip(s)}
             >
+              <Icon name={s.icon} family={s.category} />
               <span class="name">{s.name}</span>
               <span class="desc">{s.description}</span>
             </div>
@@ -312,9 +325,11 @@
             choose(s)
           }}
           onmousemove={() => (highlight = i)}
+          title={tip(s)}
         >
+          <Icon name={s.icon} family={s.category} />
           <span class="name">
-            {s.name}{#if s.value}<span class="value">{s.value}</span>{/if}
+            {s.name}{#if s.value}<span class="value">{s.value}</span>{/if}{#if s.matched && !s.value}<span class="via">{s.matched}</span>{/if}
           </span>
           <span class="desc">{s.description}</span>
           <span class="meta" class:warn={s.missing?.length}>{meta(s)}</span>
@@ -333,7 +348,7 @@
           onclick={() => choose(s)}
           onmouseenter={() => (hovered = s)}
           onmouseleave={() => (hovered = null)}
-          title={s.description}>{s.name}</button
+          title={tip(s)}><Icon name={s.icon} family={s.category} size={14} />{s.name}</button
         >
       {/each}
       {#if fitting.length > quick.length}
@@ -385,7 +400,7 @@
     <span class="halo" aria-hidden="true"></span>
     <div class="field glass">
       {#if paramSkill && param}
-        <span class="skill">{paramSkill.name}</span>
+        <span class="skill"><Icon name={paramSkill.icon} family={paramSkill.category} size={15} tint={false} />{paramSkill.name}</span>
         <input
           bind:this={input}
           bind:value={paramValue}
@@ -550,6 +565,9 @@
   }
   .skill {
     flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
     padding: 4px 10px;
     border-radius: 9px;
     background: var(--accent-soft);
@@ -572,6 +590,9 @@
     margin: 0 0 8px 8px;
   }
   .quick button {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
     border: 0;
     background: transparent;
     color: var(--ink-2);
@@ -621,7 +642,7 @@
   }
   li {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 16px auto 1fr auto;
     align-items: baseline;
     gap: 14px;
     padding: 9px 12px;
@@ -632,6 +653,10 @@
   li.active {
     background: var(--chip);
   }
+  li > :global(.icon),
+  .item > :global(.icon) {
+    align-self: center;
+  }
   li.dim .name {
     color: var(--muted);
   }
@@ -639,6 +664,18 @@
     font-weight: 450;
     white-space: nowrap;
     color: var(--ink);
+  }
+  .via {
+    margin-left: 8px;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--muted);
+  }
+  .via::before {
+    content: '“';
+  }
+  .via::after {
+    content: '”';
   }
   .value {
     margin-left: 7px;
@@ -700,7 +737,7 @@
   }
   .item {
     display: grid;
-    grid-template-columns: minmax(120px, auto) 1fr;
+    grid-template-columns: 16px minmax(120px, auto) 1fr;
     align-items: baseline;
     gap: 14px;
     padding: 7px 12px;
@@ -794,7 +831,7 @@
       display: none;
     }
     li {
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 16px 1fr auto;
     }
     .keys {
       display: none;

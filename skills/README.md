@@ -49,6 +49,7 @@ Copy it into your skills folder and type `thumb`.
 | `params` | no | At most **one** parameter the user types (see below) |
 | `aliases` | no | Extra words that should find it (`"jpg"`, `"extract audio"`) |
 | `description`, `category`, `author` | no | Shown in suggestions. `category` is the family the skill is listed under and nudges ranking: `convert`, `transform` (size and shape), `compress`, `adjust` (colour and tone), `filter` (effects), `compose`, `info`, `sizes`, `pdf`, `media`, `archive`, `data` |
+| `icon` | no | A [Lucide](https://lucide.dev/icons) icon name shown next to the skill, e.g. `"crop"`, `"palette"`, `"film"`. Pick one that says what the skill does. Without one, or with a name the app doesn't bundle, the family's icon is used (see below) |
 | `priority` | no | 0-20. Picks which skill stands for its family in the suggestions shown before anything is typed, and breaks ties between equally good matches |
 | `combine` | no | Many files in, one file out. Inferred from native handlers that combine |
 | `outputName` | no | Base name for combined results, e.g. `"merged"` |
@@ -128,6 +129,28 @@ Each step gets the previous step's output. Step `params` override the user's val
 Arguments are passed straight to the program, never through a shell. `{{input}}`, `{{output}}` and `{{<param name>}}` are substituted; a lone `{{inputs}}` argument expands to every input of a combine skill. The program must write `{{output}}`; if it exits non-zero, its last lines of stderr are shown on that file.
 
 Asteria finds programs on your `PATH` and in the usual Homebrew, winget, Scoop and Chocolatey folders (GUI apps on macOS don't inherit your shell's `PATH`). If the program isn't installed, the suggestion says so and Enter shows how to install it.
+
+### Icons
+
+Each row in the command bar starts with the skill's icon, tinted quietly by family. The app bundles the Lucide icons its own skills use plus common ones for yours: `file`, `image`, `video`, `music`, `camera`, `type`, `code`, `terminal`, `globe`, `mail`, `printer`, `lock`, `shield`, `eye`, `search`, `calendar`, `tag`, `table`, `chart-bar`, `scissors`, `paintbrush`, `pen`, `package`, `copy` and the rest listed in [`frontend/src/lib/icons.ts`](../frontend/src/lib/icons.ts). Family defaults:
+
+| Category | Default icon |
+| --- | --- |
+| `convert` | `arrow-left-right` |
+| `transform` | `scaling` |
+| `sizes` | `ratio` |
+| `compress` | `fold-vertical` |
+| `adjust` | `palette` |
+| `filter` | `blend` |
+| `compose` | `layers` |
+| `info` | `info` |
+| `pdf` | `file-text` |
+| `media` | `clapperboard` |
+| `archive` | `archive` |
+| `data` | `braces` |
+| `meta` | `settings-2` |
+
+To bundle another Lucide icon, add it to a skill (or to `EXTRA` in [`scripts/icons/build-icons.mjs`](../scripts/icons/build-icons.mjs)) and run `node scripts/icons/build-icons.mjs`.
 
 ## Permissions
 

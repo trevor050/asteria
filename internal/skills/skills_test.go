@@ -331,6 +331,14 @@ func TestRankingTiersAndMatchedAlias(t *testing.T) {
 			t.Fatalf("%s (name starts with f) ranked below an alias-only match", m.Skill.ID)
 		}
 	}
+	if list[0].Skill.IsMeta {
+		t.Errorf("\"f\" put the app command %s first", list[0].Skill.ID)
+	}
+	for _, m := range list {
+		if m.Skill.ID == "switch_to_batch" && m.Score >= list[len(list)-1].Score+1e5 {
+			t.Errorf("Apply to All Files ranks among file skills for \"f\"")
+		}
+	}
 	var enhance *Match
 	for i := range list {
 		if list[i].Skill.ID == "enhance" {

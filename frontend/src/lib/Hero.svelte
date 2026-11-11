@@ -1,5 +1,7 @@
 <script lang="ts">
   import { scale } from 'svelte/transition'
+  import Icon from './Icon.svelte'
+  import { skillMeta } from './skillmeta.svelte'
   import { fileURL, thumbURL, type FileView, type Info } from './api'
   import { size, typeLabel } from './format'
   import { motionReduced } from './theme'
@@ -211,6 +213,7 @@
       <div class="chips">
         {#each file.steps ?? [] as step, i (step.id)}
           <span class="chip" in:chipIn out:chipOut>
+            <Icon name={skillMeta[step.skillId]?.icon} family={skillMeta[step.skillId]?.category} size={12} />
             {step.label}
             <button type="button" aria-label={'Remove ' + step.label} title="Remove this step (the rest replays)" onclick={() => onremovestep(i)}>×</button>
           </span>
@@ -497,7 +500,7 @@
   .chip {
     display: inline-flex;
     align-items: center;
-    gap: 1px;
+    gap: 5px;
     padding: 2px 2px 2px 10px;
     border-radius: 999px;
     background: var(--chip);

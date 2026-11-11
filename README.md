@@ -135,7 +135,7 @@ internal/session              tray files, workspace, collision-safe export
 internal/skills               skill format, loader, hot reload, search ranking
 internal/inspect              dimensions, page counts, durations, thumbnails
 skills/core                   built-in skills (JSON, embedded in the app)
-frontend/                     Svelte 5 UI (type: Geist and Geist Mono, OFL; PDF pages: pdf.js, Apache-2.0)
+frontend/                     Svelte 5 UI (type: Geist and Geist Mono, OFL; icons: Lucide, ISC; PDF pages: pdf.js, Apache-2.0)
 scripts/capture               screenshots, demo GIF and app icon render
 build/                        icons, platform config and Taskfiles
 ```
