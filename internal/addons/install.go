@@ -185,6 +185,13 @@ func (m *Manager) Install(parent context.Context, id string, report func(Progres
 		return err
 	}
 	part := filepath.Join(dl, fmt.Sprintf("%s-%s-%s.part", e.ID, a.Version, Platform()))
+	// A cancelled install never leaves its download behind, whichever step
+	// noticed the cancellation (a small file can finish downloading first).
+	defer func() {
+		if errors.Is(err, ErrCancelled) {
+			_ = os.Remove(part)
+		}
+	}()
 	if err := m.download(ctx, a, part, func(done int64) {
 		report(Progress{Engine: id, Phase: "download", Done: done, Total: a.Size, Frac: float64(done) / float64(a.Size)})
 	}); err != nil {
