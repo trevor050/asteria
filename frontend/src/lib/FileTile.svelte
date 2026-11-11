@@ -1,9 +1,12 @@
 <script lang="ts">
+  import { scale } from 'svelte/transition'
   import { thumbURL, type FileView } from './api'
   import { size, typeLabel } from './format'
 
   type Props = {
     file: FileView
+    /** Position in the newest batch, for the staggered entrance. */
+    enter?: number
     selected: boolean
     active: boolean
     working: boolean
@@ -12,7 +15,7 @@
     onremovestep: (index: number) => void
     oncontext: (e: MouseEvent) => void
   }
-  let { file, selected, active, working, onselect, onopen, onremovestep, oncontext }: Props = $props()
+  let { file, enter = 0, selected, active, working, onselect, onopen, onremovestep, oncontext }: Props = $props()
 
   let broken = $state(false)
   $effect(() => {
@@ -20,14 +23,13 @@
     broken = false
   })
 
+  // Only formats that can hold transparency get the checkerboard.
+  let alpha = $derived(/^\.(png|webp|gif|heic|heif|avif|tiff?|ico|svg)$/i.test(file.type))
   let showThumb = $derived((file.kind === 'image' || file.kind === 'video') && !broken)
   let snippet = $derived(file.kind === 'text' ? (file.info?.snippet ?? '').split('\n').slice(0, 9).join('\n') : '')
   let changed = $derived((file.steps?.length ?? 0) > 0)
-  let sizeLine = $derived.by(() => {
-    if (file.origin === 'combined') return size(file.size)
-    if (!changed) return size(file.originalSize)
-    return `${size(file.originalSize)} → ${size(file.size)}`
-  })
+  let was = $derived(file.origin === 'combined' || !changed ? '' : size(file.originalSize))
+  let now = $derived(file.origin === 'combined' || changed ? size(file.size) : size(file.originalSize))
   let infoLine = $derived.by(() => {
     const now = file.info?.summary ?? ''
     const was = file.originalInfo?.summary ?? ''
@@ -35,6 +37,10 @@
     return now
   })
   let ratio = $derived(file.origin !== 'combined' && changed && file.originalSize > 0 ? file.size / file.originalSize : 1)
+  // Same-motion check for svelte transitions, which ignore the CSS media query.
+  const still = typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches
+  const chipIn = (node: Element) => scale(node, { start: 0.85, duration: still ? 0 : 220, opacity: 0 })
+  const chipOut = (node: Element) => scale(node, { start: 0.85, duration: still ? 0 : 140 })
 </script>
 
 <div
@@ -46,14 +52,15 @@
   aria-selected={selected}
   tabindex="-1"
   data-id={file.id}
+  style={`--enter:${enter}`}
   onclick={onselect}
   ondblclick={onopen}
   oncontextmenu={oncontext}
   onkeydown={() => {}}
 >
-  <div class="preview" class:folder={file.kind === 'folder'}>
+  <div class="preview" class:folder={file.kind === 'folder'} class:image={showThumb}>
     {#if showThumb}
-      <img class:checker={file.kind === 'image'} src={thumbURL(file.id, file.rev)} alt="" loading="lazy" decoding="async" onerror={() => (broken = true)} />
+      <img class:checker={file.kind === 'image' && alpha} src={thumbURL(file.id, file.rev)} alt="" loading="lazy" decoding="async" onerror={() => (broken = true)} />
     {:else if snippet}
       <pre class="snip" aria-hidden="true">{snippet}</pre>
       <span class="corner">{typeLabel(file.type)}</span>
@@ -64,20 +71,24 @@
       </div>
     {/if}
     {#if file.origin === 'combined'}
-      <span class="badge" title={'Made from ' + (file.sources ?? []).join(', ')}>new</span>
+      <span class="badge" title={'Made from ' + (file.sources ?? []).join(', ')}>New</span>
     {/if}
   </div>
 
   <div class="body">
     <div class="name" title={file.originalPath || file.displayName}>{file.displayName}</div>
     <div class="meta">
-      <span class:smaller={ratio < 0.98}>{sizeLine}</span>
+      <span class="sizes"
+        >{#if was}<span class="was">{was}</span><span class="arrow" aria-label="to">→</span>{/if}<span class:smaller={ratio < 0.98} class:now={!!was}
+          >{now}</span
+        ></span
+      >
       {#if infoLine}<span>{infoLine}</span>{/if}
     </div>
     {#if (file.steps?.length ?? 0)}
       <div class="chips">
         {#each file.steps ?? [] as step, i (step.id)}
-          <span class="chip">
+          <span class="chip" in:chipIn out:chipOut>
             {step.label}
             <button
               type="button"
@@ -97,49 +108,69 @@
 
 <style>
   .tile {
+    position: relative;
     display: flex;
     flex-direction: column;
     min-width: 0;
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 6px;
+    margin: -6px;
     outline: none;
     cursor: default;
-    transition: background 0.12s;
+    transition: background 0.2s var(--ease-out);
+    animation: tile-in 0.42s var(--ease-out) both;
+    animation-delay: calc(var(--enter) * 26ms);
+    /* Off-screen tiles skip layout and paint, which keeps hundreds of
+       files smooth. */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 230px;
   }
-  .tile:hover {
-    background: var(--hover);
+  @keyframes tile-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.98);
+    }
   }
   .tile.selected {
-    background: rgb(var(--accent-rgb) / 0.1);
-  }
-  .tile.active .preview {
-    box-shadow:
-      0 0 0 2px var(--bg),
-      0 0 0 4px rgb(var(--accent-rgb) / 0.75);
+    background: var(--accent-soft);
   }
   .preview {
     position: relative;
     aspect-ratio: 4 / 3;
-    border-radius: 9px;
+    border-radius: 11px;
     overflow: hidden;
     background: var(--well);
+    box-shadow: inset 0 0 0 1px var(--line);
     display: grid;
     place-items: center;
+    transition:
+      box-shadow 0.25s var(--ease-out),
+      transform 0.35s var(--ease-spring);
+  }
+  .preview.image {
+    box-shadow: none;
+  }
+  .tile:hover .preview {
+    transform: translateY(-2px);
+  }
+  .tile.active .preview {
+    box-shadow:
+      0 0 0 2px var(--bg),
+      0 0 0 3.5px var(--accent);
   }
   .working .preview::after {
     content: '';
     position: absolute;
-    inset: 0;
-    background: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / 0.22) 50%, transparent 70%);
-    background-size: 220% 100%;
-    animation: sweep 1.1s linear infinite;
+    inset: 0 -100%;
+    background: linear-gradient(100deg, transparent 35%, rgb(255 255 255 / 0.16) 50%, transparent 65%);
+    animation: sweep 1.3s var(--ease-out) infinite;
   }
   @keyframes sweep {
     from {
-      background-position: 120% 0;
+      transform: translateX(-35%);
     }
     to {
-      background-position: -120% 0;
+      transform: translateX(35%);
     }
   }
   img {
@@ -164,48 +195,47 @@
     align-self: stretch;
     justify-self: stretch;
     margin: 0;
-    padding: 9px 10px;
-    font: 10px/1.45 ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    padding: 10px 11px;
+    font: 10px/1.5 var(--mono);
     color: var(--muted);
     white-space: pre;
     overflow: hidden;
-    background: var(--surface);
+    -webkit-mask-image: linear-gradient(to right, #000 70%, transparent);
+    mask-image: linear-gradient(to right, #000 70%, transparent);
     -webkit-user-select: none;
     user-select: none;
   }
   .corner {
     position: absolute;
-    right: 6px;
-    bottom: 6px;
-    padding: 1px 6px;
-    border-radius: 5px;
+    right: 8px;
+    bottom: 7px;
     font-size: 11px;
-    font-weight: 600;
-    background: var(--well);
-    color: rgb(var(--accent-ink-rgb));
+    font-weight: 450;
+    letter-spacing: 0.04em;
+    color: var(--ink-2);
   }
   .glyph {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 2px;
     padding: 8px;
     text-align: center;
   }
   .ext {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: rgb(var(--accent-ink-rgb));
+    font-size: 26px;
+    font-weight: 250;
+    letter-spacing: 0.06em;
+    color: var(--ink);
   }
   .folder .ext::before {
     content: '';
     display: block;
-    width: 34px;
-    height: 26px;
-    margin: 0 auto 6px;
-    border-radius: 4px 4px 5px 5px;
-    background: rgb(var(--accent-rgb) / 0.35);
+    width: 36px;
+    height: 27px;
+    margin: 0 auto 8px;
+    border-radius: 4px 4px 6px 6px;
+    background: var(--line-strong);
     clip-path: polygon(0 18%, 38% 18%, 46% 0, 100% 0, 100% 100%, 0 100%);
   }
   .sum {
@@ -215,22 +245,23 @@
   }
   .badge {
     position: absolute;
-    top: 6px;
-    left: 6px;
-    padding: 1px 7px;
-    border-radius: 6px;
+    top: 7px;
+    left: 7px;
+    padding: 2px 8px;
+    border-radius: 999px;
     font-size: 11px;
-    font-weight: 600;
-    background: rgb(var(--accent-rgb));
-    color: white;
+    font-weight: 450;
+    background: var(--primary-bg);
+    color: var(--primary-ink);
   }
   .body {
-    padding: 7px 2px 2px;
+    padding: 9px 3px 2px;
     min-width: 0;
   }
   .name {
-    font-weight: 600;
+    font-weight: 400;
     font-size: 13.5px;
+    color: var(--ink);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -242,7 +273,14 @@
     font-size: 12px;
     color: var(--muted);
     font-variant-numeric: tabular-nums;
-    margin-top: 1px;
+    margin-top: 2px;
+  }
+  .arrow {
+    margin: 0 5px;
+    opacity: 0.6;
+  }
+  .now {
+    color: var(--ink-2);
   }
   .smaller {
     color: var(--good);
@@ -251,16 +289,17 @@
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-    margin-top: 6px;
+    margin-top: 8px;
   }
   .chip {
     display: inline-flex;
     align-items: center;
-    gap: 2px;
-    padding: 2px 3px 2px 8px;
-    border-radius: 6px;
+    gap: 1px;
+    padding: 2px 2px 2px 9px;
+    border-radius: 999px;
     background: var(--chip);
-    font-size: 12px;
+    color: var(--ink-2);
+    font-size: 11.5px;
     white-space: nowrap;
     max-width: 100%;
     overflow: hidden;
@@ -272,23 +311,32 @@
     color: var(--muted);
     width: 18px;
     height: 18px;
-    border-radius: 4px;
-    font-size: 14px;
+    border-radius: 50%;
+    font-size: 13px;
     line-height: 1;
     cursor: pointer;
     padding: 0;
+    opacity: 0.55;
+    transition:
+      opacity 0.15s,
+      background 0.15s,
+      color 0.15s;
+  }
+  .chip:hover button,
+  .chip button:focus-visible {
+    opacity: 1;
   }
   .chip button:hover {
-    background: var(--hover-strong);
+    background: var(--line-strong);
     color: var(--ink);
-  }
-  .chip button:focus-visible {
-    outline: 2px solid rgb(var(--accent-rgb));
   }
   @media (prefers-reduced-motion: reduce) {
     .working .preview::after {
       animation: none;
-      background: rgb(255 255 255 / 0.12);
+      background: rgb(255 255 255 / 0.08);
+    }
+    .tile:hover .preview {
+      transform: none;
     }
   }
 </style>

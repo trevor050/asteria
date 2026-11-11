@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tick } from 'svelte'
   import { api, type ParamDef, type Suggestion } from './api'
   import { mod, plural, typeLabel } from './format'
 
@@ -24,6 +25,32 @@
 
   let param = $derived<ParamDef | null>(paramSkill?.params?.[0] ?? null)
   let visible = $derived(suggestions.slice(0, 7))
+  // The engine already ranks what fits the files; surface the top few as
+  // one-click actions, and the real count of everything that applies.
+  let fitting = $derived(suggestions.filter((s) => !s.isMeta && s.applies > 0))
+  let quick = $derived.by(() => {
+    // One per kind of action first (convert, transform, compress, pdf...),
+    // in the engine's order, so a mixed tray shows a spread, not four
+    // flavors of the same conversion.
+    const ready = fitting.filter((s) => !s.missing?.length)
+    const picked: Suggestion[] = []
+    const kinds = new Set<string>()
+    for (const s of ready) {
+      if (picked.length < 4 && !kinds.has(s.category)) {
+        kinds.add(s.category)
+        picked.push(s)
+      }
+    }
+    for (const s of ready) if (picked.length < 4 && !picked.includes(s)) picked.push(s)
+    return ready.filter((s) => picked.includes(s))
+  })
+  let showQuick = $derived(hasFiles && !busy && !query && !paramSkill && !open && quick.length > 0)
+
+  function showAll() {
+    open = true
+    highlight = 0
+    input?.focus()
+  }
 
   export function focus(text?: string) {
     input?.focus()
@@ -78,15 +105,23 @@
       paramSkill = s
       paramValue = s.value || presetValue(p.default ?? '')
       open = false
-      queueMicrotask(() => input?.select())
+      void tick().then(() => input?.select())
       return
     }
     run(s, {})
   }
 
   function run(s: Suggestion, params: Record<string, unknown>) {
+    const had = focused
     onrun(s, params)
     reset()
+    if (had) refocus()
+  }
+
+  // Entering or leaving parameter mode swaps the input element; keep focus
+  // in the bar so it stays ready for the next command.
+  function refocus() {
+    void tick().then(() => input?.focus())
   }
 
   function cyclePreset(dir: 1 | -1) {
@@ -109,11 +144,13 @@
         e.stopPropagation()
         paramSkill = null
         paramValue = ''
+        refocus()
       } else if (e.key === 'Backspace' && paramValue === '') {
         e.preventDefault()
         query = paramSkill.name
         paramSkill = null
         open = true
+        refocus()
       }
       return
     }
@@ -161,15 +198,16 @@
   )
 </script>
 
-<div class="bar" class:focused class:busy>
+<div class="bar" class:focused class:busy class:param={!!paramSkill}>
   {#if open && !paramSkill && visible.length}
-    <ul class="suggestions" id="suggestions" role="listbox" aria-label="Skills">
+    <ul class="suggestions glass" id="suggestions" role="listbox" aria-label="Skills">
       {#each visible as s, i (s.id + s.value)}
         <li
           role="option"
           aria-selected={i === highlight}
           class:active={i === highlight}
           class:dim={!s.isMeta && hasFiles && (!s.applies || s.missing?.length)}
+          style={`--i:${i}`}
           onmousedown={(e) => {
             e.preventDefault()
             choose(s)
@@ -186,53 +224,34 @@
     </ul>
   {/if}
 
-  <div class="field">
-    {#if paramSkill && param}
-      <span class="skill">{paramSkill.name}</span>
-      <input
-        bind:this={input}
-        bind:value={paramValue}
-        {onkeydown}
-        onfocus={() => (focused = true)}
-        onblur={() => (focused = false)}
-        aria-label={param.label}
-        placeholder={param.hint || param.label}
-        spellcheck="false"
-        autocomplete="off"
-      />
-      {#if param.unit && !paramValue.endsWith(param.unit)}<span class="unit">{param.unit}</span>{/if}
-    {:else}
-      <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5l1.6 4.4c.3.8 1 1.5 1.8 1.8l4.1 1.3-4.1 1.3c-.8.3-1.5 1-1.8 1.8L10 17.5l-1.6-4.4c-.3-.8-1-1.5-1.8-1.8L2.5 10l4.1-1.3c.8-.3 1.5-1 1.8-1.8z" /></svg>
-      <input
-        bind:this={input}
-        bind:value={query}
-        {onkeydown}
-        oninput={() => (open = true)}
-        onfocus={() => (focused = true)}
-        onblur={() => {
-          focused = false
-          open = false
-        }}
-        {placeholder}
-        aria-label="Command"
-        aria-expanded={open}
-        aria-autocomplete="list"
-        role="combobox"
-        aria-controls="suggestions"
-        spellcheck="false"
-        autocomplete="off"
-      />
-    {/if}
-  </div>
+  {#if showQuick}
+    <div class="quick" role="group" aria-label="Likely next steps">
+      {#each quick as s, i (s.id)}
+        <button
+          type="button"
+          style={`--i:${i}`}
+          onmousedown={(e) => e.preventDefault()}
+          onclick={() => choose(s)}
+          title={s.description}>{s.name}</button
+        >
+      {/each}
+      {#if fitting.length > quick.length}
+        <button type="button" class="all" style={`--i:${quick.length}`} onmousedown={(e) => e.preventDefault()} onclick={showAll}
+          >All {fitting.length} skills</button
+        >
+      {/if}
+    </div>
+  {/if}
 
   {#if paramSkill && param}
     <div class="params">
       {#if param.presets?.length}
         <div class="presets">
-          {#each param.presets as p}
+          {#each param.presets as p, i}
             <button
               type="button"
               class:on={paramValue === presetValue(p)}
+              style={`--i:${i}`}
               onmousedown={(e) => e.preventDefault()}
               onclick={() => {
                 paramValue = presetValue(p)
@@ -243,37 +262,138 @@
         </div>
       {/if}
       <span class="keys"><kbd>Tab</kbd> cycle <kbd>↵</kbd> apply <kbd>Esc</kbd> back</span>
+      {#if param.hint}<p class="hint">{param.hint}</p>{/if}
     </div>
-    {#if param.hint}<p class="hint">{param.hint}</p>{/if}
   {/if}
+
+  <div class="wrap">
+    <span class="halo" aria-hidden="true"></span>
+    <div class="field glass">
+      {#if paramSkill && param}
+        <span class="skill">{paramSkill.name}</span>
+        <input
+          bind:this={input}
+          bind:value={paramValue}
+          {onkeydown}
+          onfocus={() => (focused = true)}
+          onblur={() => (focused = false)}
+          aria-label={param.label}
+          placeholder={param.hint || param.label}
+          spellcheck="false"
+          autocomplete="off"
+        />
+        {#if param.unit && !paramValue.endsWith(param.unit)}<span class="unit">{param.unit}</span>{/if}
+      {:else}
+        <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true"
+          ><path d="M10 1.5c.4 3.9 1.1 6.1 2.3 7.2 1.2 1.2 3.3 1.9 6.2 2.3-2.9.4-5 1.1-6.2 2.3-1.2 1.1-1.9 3.3-2.3 6.2-.4-2.9-1.1-5.1-2.3-6.2C6.5 12.1 4.4 11.4 1.5 11c2.9-.4 5-1.1 6.2-2.3C8.9 7.6 9.6 5.4 10 1.5z" /></svg
+        >
+        <input
+          bind:this={input}
+          bind:value={query}
+          {onkeydown}
+          oninput={() => (open = true)}
+          onfocus={() => (focused = true)}
+          onblur={() => {
+            focused = false
+            open = false
+          }}
+          {placeholder}
+          aria-label="Command"
+          aria-expanded={open}
+          aria-autocomplete="list"
+          role="combobox"
+          aria-controls="suggestions"
+          spellcheck="false"
+          autocomplete="off"
+        />
+      {/if}
+    </div>
+  </div>
 </div>
 
 <style>
   .bar {
     position: relative;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* ---- the field ---------------------------------------------------------- */
+  .wrap {
+    position: relative;
+  }
+  /* A soft iridescent glow, in the same colors as the ambient wash, that
+     blooms behind the field when it has focus. Opacity and scale only. */
+  .halo {
+    position: absolute;
+    inset: 2px 10px;
+    border-radius: 18px;
+    background: conic-gradient(
+      from 200deg,
+      rgb(var(--aura-teal)),
+      rgb(var(--aura-slate)),
+      rgb(var(--aura-amber)),
+      rgb(var(--aura-teal))
+    );
+    filter: blur(18px);
+    opacity: 0;
+    transform: scale(0.94, 0.8);
+    transition:
+      opacity 0.45s var(--ease-out),
+      transform 0.55s var(--ease-spring);
+    pointer-events: none;
+  }
+  .focused .halo {
+    opacity: 0.55;
+    transform: none;
+  }
+  .busy .halo {
+    animation: breathe 2.4s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    50% {
+      opacity: 0.25;
+    }
   }
   .field {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 10px;
-    height: 48px;
-    padding: 0 14px;
-    border-radius: 12px;
-    background: var(--field);
+    gap: 12px;
+    height: 52px;
+    padding: 0 16px 0 18px;
+    border-radius: 16px;
     border: 1px solid var(--line);
+    box-shadow:
+      inset 0 1px 0 var(--glass-edge),
+      0 10px 30px -18px rgb(0 0 0 / 0.5);
     transition:
-      border-color 0.15s,
-      box-shadow 0.15s;
+      border-color 0.3s var(--ease-out),
+      transform 0.4s var(--ease-spring);
   }
   .focused .field {
-    border-color: rgb(var(--accent-rgb) / 0.55);
-    box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / 0.14);
+    border-color: var(--line-strong);
   }
   .glyph {
-    width: 18px;
-    height: 18px;
-    fill: rgb(var(--accent-rgb));
+    width: 17px;
+    height: 17px;
     flex: none;
+    fill: var(--muted);
+    transition:
+      fill 0.3s,
+      transform 0.5s var(--ease-spring);
+  }
+  .focused .glyph {
+    fill: var(--accent);
+    transform: rotate(90deg);
+  }
+  .busy .glyph {
+    animation: turn 2.4s linear infinite;
+  }
+  @keyframes turn {
+    to {
+      transform: rotate(360deg);
+    }
   }
   input {
     flex: 1;
@@ -284,71 +404,113 @@
     background: transparent;
     color: var(--ink);
     font: inherit;
-    font-size: 16px;
-    letter-spacing: -0.01em;
+    font-size: 17px;
+    font-weight: 300;
+    letter-spacing: -0.005em;
+    caret-color: var(--accent);
   }
   input::placeholder {
     color: var(--muted);
+    font-weight: 300;
   }
   .skill {
     flex: none;
-    padding: 4px 9px;
-    border-radius: 7px;
-    background: rgb(var(--accent-rgb) / 0.13);
-    color: rgb(var(--accent-ink-rgb));
-    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 9px;
+    background: var(--accent-soft);
+    color: var(--ink);
     font-size: 14px;
+    font-weight: 450;
+    animation: pop 0.3s var(--ease-spring) both;
   }
   .unit {
     color: var(--muted);
+    font-weight: 300;
   }
+
+  /* ---- one-click next steps ----------------------------------------------- */
+  .quick {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin: 0 0 8px 8px;
+  }
+  .quick button {
+    border: 0;
+    background: transparent;
+    color: var(--ink-2);
+    font-size: 13px;
+    font-weight: 400;
+    padding: 5px 11px;
+    border-radius: 999px;
+    cursor: pointer;
+    animation: rise 0.36s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 40ms);
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+  .quick button:hover {
+    background: var(--chip);
+    color: var(--ink);
+  }
+  .quick .all {
+    color: var(--muted);
+  }
+
+  /* ---- suggestions -------------------------------------------------------- */
   .suggestions {
+    --glass-bg: var(--glass-strong);
     position: absolute;
     left: 0;
     right: 0;
-    bottom: calc(100% + 8px);
+    bottom: calc(100% + 10px);
     margin: 0;
     padding: 6px;
     list-style: none;
-    background: var(--popover);
     border: 1px solid var(--line);
-    border-radius: 12px;
+    border-radius: 16px;
     box-shadow: var(--shadow-pop);
     display: flex;
     flex-direction: column-reverse;
     z-index: 20;
-    animation: rise 0.12s ease-out;
+    transform-origin: 50% 100%;
+    animation: open 0.2s var(--ease-out) both;
   }
-  @keyframes rise {
+  @keyframes open {
     from {
       opacity: 0;
-      transform: translateY(4px);
+      transform: translateY(6px) scale(0.985);
     }
   }
   li {
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: baseline;
-    gap: 12px;
-    padding: 9px 10px;
-    border-radius: 8px;
+    gap: 14px;
+    padding: 9px 12px;
+    border-radius: 10px;
     cursor: default;
+    transition: background 0.12s;
   }
   li.active {
-    background: rgb(var(--accent-rgb) / 0.12);
+    background: var(--chip);
   }
   li.dim .name {
     color: var(--muted);
   }
   .name {
-    font-weight: 600;
+    font-weight: 450;
     white-space: nowrap;
+    color: var(--ink);
   }
   .value {
-    margin-left: 6px;
+    margin-left: 7px;
     padding: 1px 6px;
-    border-radius: 5px;
-    background: var(--chip);
+    border-radius: 6px;
+    background: var(--accent-soft);
+    font-weight: 400;
     font-variant-numeric: tabular-nums;
   }
   .desc {
@@ -364,45 +526,83 @@
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }
-  .meta.warn {
+  li.active .meta {
+    color: var(--ink-2);
+  }
+  .meta.warn,
+  li.active .meta.warn {
     color: var(--warn);
   }
+
+  /* ---- parameter mode ----------------------------------------------------- */
   .params {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
-    margin-top: 8px;
     flex-wrap: wrap;
+    gap: 6px 12px;
+    margin: 0 4px 10px 8px;
   }
   .presets {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     flex-wrap: wrap;
   }
   .presets button {
-    font: inherit;
     font-size: 13px;
-    padding: 4px 10px;
-    border-radius: 7px;
+    padding: 5px 11px;
+    border-radius: 999px;
     border: 1px solid var(--line);
     background: transparent;
-    color: var(--ink);
+    color: var(--ink-2);
     cursor: pointer;
     font-variant-numeric: tabular-nums;
+    animation: rise 0.3s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 30ms);
+    transition:
+      background 0.15s,
+      border-color 0.15s,
+      color 0.15s;
+  }
+  .presets button:hover {
+    color: var(--ink);
+    border-color: var(--line-strong);
   }
   .presets button.on {
-    border-color: rgb(var(--accent-rgb) / 0.6);
-    background: rgb(var(--accent-rgb) / 0.12);
+    border-color: transparent;
+    background: var(--accent-soft);
+    color: var(--ink);
   }
   .keys {
     color: var(--muted);
     font-size: 12px;
   }
+  .keys kbd {
+    margin: 0 2px 0 6px;
+  }
   .hint {
-    margin: 6px 2px 0;
+    flex-basis: 100%;
+    margin: 0;
     color: var(--muted);
     font-size: 12px;
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+  }
+  @media (prefers-color-scheme: light) {
+    .focused .halo {
+      opacity: 0.4;
+    }
   }
   @media (max-width: 640px) {
     .desc {
@@ -410,6 +610,12 @@
     }
     li {
       grid-template-columns: 1fr auto;
+    }
+    .keys {
+      display: none;
+    }
+    .quick button:nth-child(4):not(.all) {
+      display: none;
     }
   }
 </style>

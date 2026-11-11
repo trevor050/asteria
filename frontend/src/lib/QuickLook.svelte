@@ -46,7 +46,7 @@
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <div class="scrim" role="presentation" onclick={onclose}>
   <div
-    class="sheet"
+    class="sheet glass"
     role="dialog"
     aria-modal="true"
     aria-label={'Preview of ' + file.displayName}
@@ -60,17 +60,22 @@
         <h2>{showOriginal ? originalName : file.displayName}</h2>
         <p>
           {typeLabel(showOriginal ? originalType : file.type)}&ensp;{size(showOriginal ? file.originalSize : file.size)}{#if info?.summary}&ensp;{info.summary}{/if}
-          {#if (file.steps?.length ?? 0) && !showOriginal}&ensp;<span class="steps">{(file.steps ?? []).map((s) => s.label).join(' → ')}</span>{/if}
+          {#if (file.steps?.length ?? 0) && !showOriginal}&ensp;<span class="steps">{(file.steps ?? []).map((s) => s.label).join('  →  ')}</span>{/if}
         </p>
       </div>
       <div class="actions">
         {#if canCompare}
-          <button type="button" class:on={showOriginal} onclick={() => (showOriginal = !showOriginal)} title="Toggle original (O)">
-            {showOriginal ? 'Showing original' : 'Compare with original'}
-          </button>
+          <div class="compare" role="radiogroup" aria-label="Show">
+            <button type="button" role="radio" aria-checked={showOriginal} class:on={showOriginal} onclick={() => (showOriginal = true)} title="Toggle with O"
+              >Original</button
+            >
+            <button type="button" role="radio" aria-checked={!showOriginal} class:on={!showOriginal} onclick={() => (showOriginal = false)} title="Toggle with O"
+              >Result</button
+            >
+          </div>
         {/if}
         {#if file.originalPath}
-          <button type="button" onclick={() => onreveal(file.originalPath)}>Show original in folder</button>
+          <button type="button" class="reveal" onclick={() => onreveal(file.originalPath)}>Show original in folder</button>
         {/if}
         <button type="button" class="close" onclick={onclose} aria-label="Close preview">×</button>
       </div>
@@ -112,11 +117,11 @@
     position: fixed;
     inset: 0;
     z-index: 50;
-    background: rgb(0 0 0 / 0.38);
+    background: var(--scrim);
     display: grid;
     place-items: center;
-    padding: 24px;
-    animation: fade 0.12s ease-out;
+    padding: 28px;
+    animation: fade 0.18s ease-out both;
   }
   @keyframes fade {
     from {
@@ -124,24 +129,30 @@
     }
   }
   .sheet {
+    --glass-bg: var(--glass-strong);
     width: min(1100px, 100%);
     height: min(780px, 100%);
     display: flex;
     flex-direction: column;
-    background: var(--surface);
-    border-radius: 14px;
+    border-radius: 20px;
     border: 1px solid var(--line);
     box-shadow: var(--shadow-pop);
     outline: none;
     overflow: hidden;
+    animation: sheet-in 0.34s var(--ease-spring) both;
+  }
+  @keyframes sheet-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px) scale(0.975);
+    }
   }
   header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     gap: 16px;
-    padding: 14px 16px 12px 18px;
-    border-bottom: 1px solid var(--line);
+    padding: 14px 14px 12px 22px;
   }
   .title {
     min-width: 0;
@@ -149,49 +160,76 @@
   h2 {
     margin: 0;
     font-size: 16px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   header p {
-    margin: 2px 0 0;
+    margin: 3px 0 0;
     color: var(--muted);
-    font-size: 13px;
+    font-size: 12.5px;
     font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .steps {
-    color: var(--ink);
+    color: var(--ink-2);
+    white-space: pre;
   }
   .actions {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     flex: none;
     align-items: center;
   }
   .actions button {
-    font: inherit;
-    font-size: 13px;
-    padding: 5px 10px;
-    border-radius: 8px;
-    border: 1px solid var(--line);
+    font-size: 12.5px;
+    border: 0;
     background: transparent;
-    color: var(--ink);
+    color: var(--ink-2);
     cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 999px;
+    transition:
+      background 0.15s,
+      color 0.15s;
   }
-  .actions button.on {
-    background: rgb(var(--accent-rgb) / 0.12);
-    border-color: rgb(var(--accent-rgb) / 0.5);
+  .actions button:hover {
+    color: var(--ink);
+    background: var(--hover);
+  }
+  .compare {
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+    border-radius: 999px;
+    background: var(--chip);
+  }
+  .compare button.on {
+    background: var(--primary-bg);
+    color: var(--primary-ink);
+  }
+  .compare button.on:hover {
+    background: var(--primary-bg);
+    color: var(--primary-ink);
   }
   .actions .close {
-    border: 0;
-    font-size: 20px;
-    width: 30px;
-    padding: 2px 0;
+    font-size: 19px;
+    line-height: 1;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
   }
   .stage {
     position: relative;
     flex: 1;
     min-height: 0;
+    margin: 0 10px;
+    border-radius: 12px;
     display: grid;
     place-items: center;
     background: var(--well);
@@ -200,10 +238,11 @@
   img,
   video {
     position: absolute;
-    inset: 12px;
-    width: calc(100% - 24px);
-    height: calc(100% - 24px);
+    inset: 14px;
+    width: calc(100% - 28px);
+    height: calc(100% - 28px);
     object-fit: contain;
+    animation: fade 0.2s ease-out both;
   }
   iframe {
     width: 100%;
@@ -211,12 +250,15 @@
     border: 0;
     background: white;
   }
+  audio {
+    width: min(480px, 80%);
+  }
   pre {
     align-self: stretch;
     justify-self: stretch;
     margin: 0;
-    padding: 18px;
-    font: 13px/1.55 ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    padding: 20px 22px;
+    font: 12.5px/1.6 var(--mono);
     white-space: pre-wrap;
     word-break: break-word;
     color: var(--ink);
@@ -226,13 +268,14 @@
     justify-self: stretch;
     list-style: none;
     margin: 0;
-    padding: 10px 18px;
+    padding: 10px 22px;
     font-size: 13px;
   }
   .entries li {
     display: flex;
     justify-content: space-between;
-    padding: 4px 0;
+    gap: 16px;
+    padding: 6px 0;
     border-bottom: 1px solid var(--line);
   }
   .entries .dir {
@@ -245,11 +288,22 @@
   }
   .none {
     color: var(--muted);
+    font-weight: 300;
   }
   footer {
-    padding: 8px 18px;
+    padding: 10px 22px 12px;
     font-size: 12px;
     color: var(--muted);
-    border-top: 1px solid var(--line);
+  }
+  footer kbd {
+    margin-right: 2px;
+  }
+  @media (max-width: 640px) {
+    .scrim {
+      padding: 12px;
+    }
+    header {
+      flex-wrap: wrap;
+    }
   }
 </style>

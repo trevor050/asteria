@@ -1,54 +1,97 @@
+/* Geist and Geist Mono 1.9.2, SIL Open Font License 1.1 (see assets/fonts/OFL.txt). */
 @font-face {
-  font-family: 'Space Grotesk';
+  font-family: 'Geist';
   font-style: normal;
-  font-weight: 300 700;
+  font-weight: 100 900;
   font-display: swap;
-  src: url('./assets/fonts/SpaceGrotesk-VariableFont_wght.woff2') format('woff2');
+  src: url('./assets/fonts/Geist-Variable.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('./assets/fonts/GeistMono-Variable.woff2') format('woff2');
 }
 
+/*
+ * One quiet system. Color lives only in the ambient wash behind the window
+ * (.aura in App.svelte); everything in front of it is near-neutral glass and
+ * thin type. The user's accent (set by the Accent Color skill) is softened
+ * toward the ink so any choice sits inside the palette.
+ */
 :root {
   --accent-rgb: 99 102 241;
-  --accent-ink-rgb: 67 56 202;
-  --danger-rgb: 220 38 38;
+  --danger-rgb: 196 76 62;
 
-  --bg: #f5f5f7;
-  --surface: #ffffff;
-  --popover: #ffffff;
-  --field: #ffffff;
-  --well: #ebebef;
-  --check: #e0e0e6;
-  --ink: #18181d;
-  --muted: #6c6c78;
-  --line: rgb(24 24 29 / 0.1);
-  --chip: rgb(24 24 29 / 0.06);
-  --hover: rgb(24 24 29 / 0.04);
-  --hover-strong: rgb(24 24 29 / 0.1);
-  --good: #15803d;
-  --warn: #b45309;
-  --shadow-pop: 0 12px 32px rgb(20 20 40 / 0.14), 0 2px 6px rgb(20 20 40 / 0.06);
+  --bg: #f2f2ef;
+  --ink: #1c1c1a;
+  --ink-2: #4a4945;
+  --muted: #6b6a65;
+  --line: rgb(28 28 26 / 0.09);
+  --line-strong: rgb(28 28 26 / 0.16);
+  --chip: rgb(28 28 26 / 0.055);
+  --hover: rgb(28 28 26 / 0.035);
+  --well: rgb(28 28 26 / 0.04);
+  --check: rgb(28 28 26 / 0.06);
+  --glass: rgb(255 255 253 / 0.62);
+  --glass-strong: rgb(252 252 250 / 0.86);
+  --glass-solid: #fbfbf9;
+  --glass-edge: rgb(255 255 255 / 0.7);
+  --scrim: rgb(30 30 28 / 0.28);
+  --accent: color-mix(in oklab, rgb(var(--accent-rgb)) 70%, #1c1c1a);
+  --accent-soft: color-mix(in oklab, rgb(var(--accent-rgb)) 14%, transparent);
+  --good: #3f7a52;
+  --warn: #8a5d1c;
+  --danger: rgb(var(--danger-rgb));
+  --primary-bg: #1c1c1a;
+  --primary-ink: #f6f5f1;
+  --shadow-pop: 0 18px 50px -12px rgb(40 36 28 / 0.22), 0 2px 8px rgb(40 36 28 / 0.06);
+
+  --aura-teal: 120 168 178;
+  --aura-amber: 222 182 120;
+  --aura-slate: 150 162 196;
+  --aura-strength: 0.42;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.36, 0.64, 1);
+
+  --sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   color-scheme: light dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --accent-ink-rgb: 165 168 255;
-    --danger-rgb: 248 113 113;
-    --bg: #131317;
-    --surface: #1b1b21;
-    --popover: #202027;
-    --field: #1b1b21;
-    --well: #24242c;
-    --check: #2c2c35;
-    --ink: #ececf1;
-    --muted: #9a9aa8;
-    --line: rgb(255 255 255 / 0.1);
-    --chip: rgb(255 255 255 / 0.08);
-    --hover: rgb(255 255 255 / 0.04);
-    --hover-strong: rgb(255 255 255 / 0.12);
-    --good: #4ade80;
-    --warn: #fbbf24;
-    --shadow-pop: 0 14px 36px rgb(0 0 0 / 0.5), 0 2px 6px rgb(0 0 0 / 0.3);
+    --danger-rgb: 232 150 136;
+    --bg: #0f1012;
+    --ink: #ecebe6;
+    --ink-2: #b4b2ab;
+    --muted: #8b8983;
+    --line: rgb(255 255 255 / 0.07);
+    --line-strong: rgb(255 255 255 / 0.14);
+    --chip: rgb(255 255 255 / 0.065);
+    --hover: rgb(255 255 255 / 0.035);
+    --well: rgb(255 255 255 / 0.03);
+    --check: rgb(255 255 255 / 0.045);
+    --glass: rgb(26 27 30 / 0.56);
+    --glass-strong: rgb(22 23 26 / 0.84);
+    --glass-solid: #18191c;
+    --glass-edge: rgb(255 255 255 / 0.06);
+    --scrim: rgb(4 4 6 / 0.62);
+    --accent: color-mix(in oklab, rgb(var(--accent-rgb)) 55%, #ecebe6);
+    --accent-soft: color-mix(in oklab, rgb(var(--accent-rgb)) 16%, transparent);
+    --good: #a3cbb0;
+    --warn: #d9b57e;
+    --primary-bg: #ecebe6;
+    --primary-ink: #111214;
+    --shadow-pop: 0 24px 60px -16px rgb(0 0 0 / 0.7), 0 2px 10px rgb(0 0 0 / 0.35);
+
+    --aura-teal: 70 112 122;
+    --aura-amber: 150 112 62;
+    --aura-slate: 84 96 128;
+    --aura-strength: 0.5;
   }
 }
 
@@ -63,13 +106,22 @@ body {
   overflow: hidden;
   background: var(--bg);
   color: var(--ink);
-  font-family: 'Space Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: var(--sans);
   font-size: 14px;
-  line-height: 1.4;
+  font-weight: 400;
+  line-height: 1.45;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   -webkit-user-select: none;
   user-select: none;
   cursor: default;
+}
+
+button {
+  font: inherit;
+  color: inherit;
 }
 
 input,
@@ -82,19 +134,20 @@ code {
 
 kbd {
   display: inline-block;
-  font: inherit;
-  font-size: 11.5px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 450;
   line-height: 1;
   padding: 3px 5px;
   border-radius: 5px;
   background: var(--chip);
-  color: var(--ink);
+  color: var(--ink-2);
   font-variant-numeric: tabular-nums;
 }
 
 code {
-  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 0.92em;
+  font-family: var(--mono);
+  font-size: 0.9em;
   padding: 1px 5px;
   border-radius: 5px;
   background: var(--chip);
@@ -102,8 +155,28 @@ code {
 
 button:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid rgb(var(--accent-rgb));
+  outline: 1.5px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* Glass that degrades: without backdrop blur, or when the user asks for less
+   transparency, surfaces become solid. */
+.glass {
+  background: var(--glass-bg, var(--glass));
+  -webkit-backdrop-filter: blur(22px) saturate(1.15);
+  backdrop-filter: blur(22px) saturate(1.15);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: var(--glass-solid) !important;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: var(--glass-solid) !important;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -111,10 +184,13 @@ button:focus-visible,
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--hover-strong);
+  background: var(--line-strong);
   border-radius: 10px;
   border: 3px solid transparent;
   background-clip: content-box;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -122,6 +198,7 @@ button:focus-visible,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
