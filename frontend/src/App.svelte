@@ -43,6 +43,27 @@
   let pulse = $state<'off' | 'run' | 'ok' | 'fail'>('off')
   let pulseTimer: ReturnType<typeof setTimeout> | undefined
   let runFailed = false
+  // Live preview of a skill being chosen or adjusted, on a reduced copy.
+  let live = $state<{ fileId: string; url: string } | null>(null)
+  let liveSeq = 0
+  let liveTimer: ReturnType<typeof setTimeout> | undefined
+  function preview(s: Suggestion | null, params?: Record<string, unknown>) {
+    clearTimeout(liveTimer)
+    const mine = ++liveSeq
+    const fid = heroFile?.id ?? activeId ?? targets[0]
+    if (!s || !fid || busy) {
+      live = null
+      return
+    }
+    liveTimer = setTimeout(async () => {
+      try {
+        const url = await api.PreviewSkill(fid, s.id, params ?? {}, 1400)
+        if (mine === liveSeq) live = { fileId: fid, url }
+      } catch {
+        if (mine === liveSeq) live = null
+      }
+    }, 40)
+  }
 
   let settings = $derived(st?.settings)
   let perFile = $derived(settings?.mode === 'per_file')
@@ -534,6 +555,7 @@
           onnext={() => moveActive(1)}
           onopen={() => (quickId = hf.id)}
           onremovestep={(i) => removeStep(hf.id, i)}
+          preview={live?.fileId === hf.id ? live.url : ''}
         />
       {:else if layout === 'empty' || !files.length}
         <div class="empty">
@@ -560,6 +582,7 @@
             <FileTile
               {file}
               subject={file.id === subjectId}
+              preview={live?.fileId === file.id ? live.url : ''}
               enter={Math.max(0, Math.min(i - addedFrom, 14))}
               selected={selected.includes(file.id)}
               active={activeId === file.id && (perFile || files.length > 1)}
@@ -607,6 +630,7 @@
         onrun={run}
         onadd={() => void pickFiles()}
         onpopover={(h) => (veil = h)}
+        onpreview={preview}
       />
       {#if files.length}
         <button

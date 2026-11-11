@@ -10,6 +10,8 @@
     enter?: number
     /** The file the one-file view morphs from and to. */
     subject?: boolean
+    /** Live preview image (data URL) shown instead of the thumbnail. */
+    preview?: string
     selected: boolean
     active: boolean
     working: boolean
@@ -18,7 +20,7 @@
     onremovestep: (index: number) => void
     oncontext: (e: MouseEvent) => void
   }
-  let { file, enter = 0, subject = false, selected, active, working, onselect, onopen, onremovestep, oncontext }: Props = $props()
+  let { file, enter = 0, subject = false, preview = '', selected, active, working, onselect, onopen, onremovestep, oncontext }: Props = $props()
 
   let broken = $state(false)
   $effect(() => {
@@ -61,7 +63,9 @@
   onkeydown={() => {}}
 >
   <div class="preview" class:folder={file.kind === 'folder'} class:image={showThumb} style:view-transition-name={subject ? 'subject' : undefined}>
-    {#if showThumb}
+    {#if preview}
+      <img src={preview} alt="" class:checker={alpha} />
+    {:else if showThumb}
       <img class:checker={file.kind === 'image' && alpha} src={thumbURL(file.id, file.rev)} alt="" loading="lazy" decoding="async" onerror={() => (broken = true)} />
     {:else if snippet}
       <pre class="snip" aria-hidden="true">{snippet}</pre>

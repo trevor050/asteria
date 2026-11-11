@@ -2,6 +2,7 @@
   import { tick } from 'svelte'
   import { api, type ParamDef, type Suggestion } from './api'
   import { mod, plural, typeLabel } from './format'
+  import { familyName, familyRank } from './families'
 
   type Props = {
     targetIds: string[]
@@ -13,11 +14,13 @@
     onadd: () => void
     /** Height of the suggestion list while it is open (0 when closed). */
     onpopover?: (height: number) => void
+    /** Asks for a live preview of a skill with these values (null clears). */
+    onpreview?: (s: Suggestion | null, params?: Record<string, unknown>) => void
   }
-  let { targetIds, hasFiles, busy, refreshKey, onrun, onadd, onpopover }: Props = $props()
+  let { targetIds, hasFiles, busy, refreshKey, onrun, onadd, onpopover, onpreview }: Props = $props()
   let popH = $state(0)
   $effect(() => {
-    onpopover?.(open && !paramSkill && visible.length ? popH : 0)
+    onpopover?.(open && !paramSkill && (visible.length || browse) ? popH : 0)
   })
 
   let input: HTMLInputElement | undefined = $state()
@@ -54,10 +57,63 @@
   })
   let showQuick = $derived(hasFiles && !busy && !query && !paramSkill && !open && quick.length > 0)
 
+  // Browsing: every skill that fits, grouped by family.
+  let browse = $state(false)
+  let groups = $derived.by(() => {
+    const pool = hasFiles ? fitting : suggestions.filter((s) => !s.isMeta)
+    const by = new Map<string, Suggestion[]>()
+    for (const s of pool) {
+      const k = s.category || 'other'
+      if (!by.has(k)) by.set(k, [])
+      by.get(k)!.push(s)
+    }
+    return [...by.entries()]
+      .sort((a, b) => familyRank(a[0]) - familyRank(b[0]))
+      .map(([k, items]) => ({ key: k, name: familyName(k), items: [...items].sort((a, b) => a.name.localeCompare(b.name)) }))
+  })
+  let browseList = $derived(groups.flatMap((g) => g.items))
+  let browsing = $derived(browse && open && !query && !paramSkill)
+  let list = $derived(browsing ? browseList : visible)
+  let listEl: HTMLElement | undefined = $state()
+
   function showAll() {
+    browse = true
     open = true
     highlight = 0
     input?.focus()
+  }
+
+  // Live previews: while a value is being chosen, or a live suggestion is
+  // highlighted or hovered, show what it would do.
+  let hovered = $state<Suggestion | null>(null)
+  $effect(() => {
+    if (!onpreview) return
+    if (paramSkill && param && paramSkill.live) {
+      onpreview(paramSkill, { [param.name]: paramValue })
+      return
+    }
+    const s = hovered ?? (open ? list[highlight] : null)
+    if (s?.live && s.applies > 0) {
+      const p = s.params?.[0]
+      onpreview(s, p && s.value ? { [p.name]: s.value } : {})
+      return
+    }
+    onpreview(null)
+  })
+
+  // A numeric parameter with a range gets a slider that previews live.
+  let range = $derived.by(() => {
+    if (!param || !paramSkill?.live || param.min == null || param.max == null) return null
+    const lo = param.min
+    const hi = param.max
+    const step = hi - lo <= 10 ? 0.05 : 1
+    const n = parseFloat(paramValue.replace(/[^0-9.+-]/g, ''))
+    return { lo, hi, step, signed: lo < 0, value: Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : lo }
+  })
+  function scrub(v: number) {
+    if (!range) return
+    const r = range.step < 1 ? Math.round(v * 100) / 100 : Math.round(v)
+    paramValue = range.signed && r > 0 ? `+${r}` : String(r)
   }
 
   export function focus(text?: string) {
@@ -73,6 +129,8 @@
     paramSkill = null
     paramValue = ''
     open = false
+    browse = false
+    hovered = null
     highlight = 0
   }
 
@@ -113,6 +171,8 @@
       paramSkill = s
       paramValue = s.value || presetValue(p.default ?? '')
       open = false
+      browse = false
+      hovered = null
       void tick().then(() => input?.select())
       return
     }
@@ -168,23 +228,28 @@
         open = true
         return
       }
-      if (!visible.length) return
-      // The list opens upward, so ArrowUp moves away from the input.
-      const delta = e.key === 'ArrowUp' ? 1 : -1
-      highlight = (highlight + delta + visible.length) % visible.length
+      if (!list.length) return
+      // The short list opens upward (ArrowUp moves away from the input); the
+      // browsing list reads top-down.
+      const delta = (e.key === 'ArrowUp') !== browsing ? 1 : -1
+      highlight = (highlight + delta + list.length) % list.length
+      if (browsing) void tick().then(() => listEl?.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' }))
     } else if (e.key === 'Enter' && !e.metaKey && !e.ctrlKey) {
       e.preventDefault()
-      const s = visible[highlight]
+      const s = list[highlight]
       if (s && (open || query)) choose(s)
-    } else if (e.key === 'Tab' && open && visible[highlight]) {
+    } else if (e.key === 'Tab' && open && list[highlight]) {
       e.preventDefault()
-      const s = visible[highlight]
+      const s = list[highlight]
       query = s.name + (s.value ? ' ' + s.value : s.params?.length ? ' ' : '')
     } else if (e.key === 'Escape' && (open || query)) {
       e.preventDefault()
       e.stopPropagation()
       if (query) query = ''
-      else open = false
+      else {
+        open = false
+        browse = false
+      }
     }
   }
 
@@ -207,7 +272,33 @@
 </script>
 
 <div class="bar" class:focused class:busy class:param={!!paramSkill}>
-  {#if open && !paramSkill && visible.length}
+  {#if browsing}
+    <div class="suggestions browse glass" id="suggestions" role="listbox" aria-label="All skills" bind:clientHeight={popH} bind:this={listEl}>
+      {#each groups as g (g.key)}
+        <div class="family" role="group" aria-label={g.name}>
+          <h4>{g.name} <span>{g.items.length}</span></h4>
+          {#each g.items as s (s.id)}
+            {@const i = browseList.indexOf(s)}
+            <div
+              class="item"
+              role="option"
+              aria-selected={i === highlight}
+              class:active={i === highlight}
+              tabindex="-1"
+              onmousedown={(e) => {
+                e.preventDefault()
+                choose(s)
+              }}
+              onmousemove={() => (highlight = i)}
+            >
+              <span class="name">{s.name}</span>
+              <span class="desc">{s.description}</span>
+            </div>
+          {/each}
+        </div>
+      {/each}
+    </div>
+  {:else if open && !paramSkill && visible.length}
     <ul class="suggestions glass" id="suggestions" role="listbox" aria-label="Skills" bind:clientHeight={popH}>
       {#each visible as s, i (s.id + s.value)}
         <li
@@ -240,6 +331,8 @@
           style={`--i:${i}`}
           onmousedown={(e) => e.preventDefault()}
           onclick={() => choose(s)}
+          onmouseenter={() => (hovered = s)}
+          onmouseleave={() => (hovered = null)}
           title={s.description}>{s.name}</button
         >
       {/each}
@@ -268,6 +361,20 @@
             >
           {/each}
         </div>
+      {/if}
+      {#if range}
+        <input
+          class="scrub"
+          type="range"
+          min={range.lo}
+          max={range.hi}
+          step={range.step}
+          value={range.value}
+          aria-label={param.label}
+          oninput={(e) => scrub(Number(e.currentTarget.value))}
+          onpointerup={() => input?.focus()}
+          {onkeydown}
+        />
       {/if}
       <span class="keys"><kbd>Tab</kbd> cycle <kbd>↵</kbd> apply <kbd>Esc</kbd> back</span>
       {#if param.hint}<p class="hint">{param.hint}</p>{/if}
@@ -562,6 +669,48 @@
     color: var(--warn);
   }
 
+  /* ---- browsing every skill by family ----------------------------------- */
+  .browse {
+    display: block;
+    max-height: min(50vh, 480px);
+    overflow-y: auto;
+    padding: 8px;
+    overscroll-behavior: contain;
+  }
+  .family + .family {
+    margin-top: 6px;
+  }
+  .family h4 {
+    position: sticky;
+    top: -8px;
+    margin: 0;
+    padding: 8px 12px 6px;
+    font-size: 12px;
+    font-weight: 450;
+    color: var(--muted);
+    background: var(--glass-strong);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    z-index: 1;
+  }
+  .family h4 span {
+    margin-left: 4px;
+    opacity: 0.7;
+    font-variant-numeric: tabular-nums;
+  }
+  .item {
+    display: grid;
+    grid-template-columns: minmax(120px, auto) 1fr;
+    align-items: baseline;
+    gap: 14px;
+    padding: 7px 12px;
+    border-radius: 10px;
+    cursor: default;
+  }
+  .item.active {
+    background: var(--chip);
+  }
+
   /* ---- parameter mode ----------------------------------------------------- */
   .params {
     display: flex;
@@ -604,6 +753,16 @@
   .keys {
     color: var(--muted);
     font-size: 12px;
+  }
+  .scrub {
+    flex: 1 1 160px;
+    min-width: 120px;
+    max-width: 280px;
+    height: 20px;
+    margin: 0 4px;
+    accent-color: var(--accent);
+    background: transparent;
+    cursor: pointer;
   }
   .keys kbd {
     margin: 0 2px 0 6px;

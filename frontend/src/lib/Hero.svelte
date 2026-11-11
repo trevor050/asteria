@@ -15,8 +15,10 @@
     onnext: () => void
     onopen: () => void
     onremovestep: (index: number) => void
+    /** Live preview (data URL) of a skill being chosen, shown in place. */
+    preview?: string
   }
-  let { file, index, count, working, onprev, onnext, onopen, onremovestep }: Props = $props()
+  let { file, index, count, working, onprev, onnext, onopen, onremovestep, preview = '' }: Props = $props()
 
   // The frame shrink-wraps the media; its limits come from the window, so
   // the file, its details and the bar stay one compact, centered group.
@@ -118,6 +120,12 @@
         <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" /></svg>
       </button>
     {/if}
+    {#if preview}
+      <div class="media">
+        <img class="subject live" class:checker={alpha} src={preview} alt="Preview" style={`max-width:${frameW}px;max-height:${frameH}px`} />
+        <span class="tag">Preview</span>
+      </div>
+    {:else}
     {#key file.id + rev}
       <!-- svelte-ignore a11y_no_static_element_interactions -->
       <div class="media" ondblclick={onopen}>
@@ -182,6 +190,7 @@
         {/if}
       </div>
     {/key}
+    {/if}
   </div>
 
   <div class="details">
@@ -252,6 +261,24 @@
   }
   video.subject {
     background: #000;
+  }
+  img.live {
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+  .tag {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    color: var(--ink);
+    background: var(--glass-strong);
+    box-shadow: inset 0 0 0 1px var(--line);
+    pointer-events: none;
   }
   .pixelated {
     image-rendering: pixelated;
