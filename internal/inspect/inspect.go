@@ -13,12 +13,16 @@ import (
 	"io"
 	"io/fs"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 	"unicode/utf8"
 
 	"github.com/disintegration/imaging"
+	"github.com/gen2brain/h265/heic"
+	"golang.org/x/image/draw"
 
 	"asteria/internal/ops"
 	"asteria/internal/tools"
@@ -147,6 +151,55 @@ func plural(n int, word string) string {
 	return fmt.Sprintf("%d %ss", n, word)
 }
 
+// fit scales img to fit within max×max. Very large sources are first
+// reduced with a cheap bilinear pass so a 36 MP photo previews in well under
+// a second; the final step uses a proper filter.
+func fit(img image.Image, max int) image.Image {
+	b := img.Bounds()
+	if b.Dx() <= max && b.Dy() <= max {
+		return img
+	}
+	if b.Dx() > max*3 || b.Dy() > max*3 {
+		scale := float64(max*2) / float64(maxInt(b.Dx(), b.Dy()))
+		w, h := int(float64(b.Dx())*scale+0.5), int(float64(b.Dy())*scale+0.5)
+		dst := image.NewNRGBA(image.Rect(0, 0, w, h))
+		draw.ApproxBiLinear.Scale(dst, dst.Bounds(), img, b, draw.Src, nil)
+		img = dst
+	}
+	return imaging.Fit(img, max, max, imaging.Linear)
+}
+
+func maxInt(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+// embeddedThumbnail returns the preview image a HEIC file carries when it is
+// big enough for the requested size, which is far cheaper than decoding the
+// full picture. It returns nil when there is no usable thumbnail.
+func embeddedThumbnail(path string, max int) (image.Image, error) {
+	ext := strings.ToLower(filepath.Ext(path))
+	if ext != ".heic" && ext != ".heif" {
+		return nil, nil
+	}
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	img, err := heic.DecodeThumbnail(f, heic.Options{AutoRotate: true})
+	if err != nil {
+		return nil, nil
+	}
+	b := img.Bounds()
+	if b.Dx()*2 < max && b.Dy()*2 < max {
+		return nil, nil
+	}
+	return img, nil
+}
+
 func imageConfig(path string) (image.Config, error) {
 	f, err := os.Open(path)
 	if err != nil {
@@ -225,14 +278,14 @@ func HumanSize(n int64) string {
 // Thumbnail renders an image file to a JPEG (or PNG when it has
 // transparency) no larger than max pixels on its longest side.
 func Thumbnail(path string, max int) ([]byte, string, error) {
-	img, err := ops.DecodeImage(path)
+	img, err := embeddedThumbnail(path, max)
+	if err != nil || img == nil {
+		img, err = ops.DecodeImage(path)
+	}
 	if err != nil {
 		return nil, "", err
 	}
-	b := img.Bounds()
-	if b.Dx() > max || b.Dy() > max {
-		img = imaging.Fit(img, max, max, imaging.Linear)
-	}
+	img = fit(img, max)
 	var buf bytes.Buffer
 	if opaque, ok := img.(interface{ Opaque() bool }); ok && !opaque.Opaque() {
 		enc := png.Encoder{CompressionLevel: png.BestSpeed}
@@ -245,4 +298,26 @@ func Thumbnail(path string, max int) ([]byte, string, error) {
 		return nil, "", err
 	}
 	return buf.Bytes(), "image/jpeg", nil
+}
+
+// VideoPoster grabs a frame about a second in (or the first frame of a
+// shorter clip) as a JPEG no wider than max, using ffmpeg.
+func VideoPoster(ctx context.Context, finder *tools.Finder, path string, max int, duration float64) ([]byte, error) {
+	bin, ok := finder.Lookup("ffmpeg")
+	if !ok {
+		return nil, fmt.Errorf("ffmpeg not installed")
+	}
+	seek := "1"
+	if duration > 0 && duration < 2 {
+		seek = "0"
+	}
+	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
+	defer cancel()
+	scale := fmt.Sprintf("scale='min(%d,iw)':-2", max)
+	cmd := exec.CommandContext(ctx, bin, "-v", "error", "-ss", seek, "-i", path, "-frames:v", "1", "-vf", scale, "-f", "image2pipe", "-vcodec", "mjpeg", "-q:v", "4", "pipe:1")
+	out, err := cmd.Output()
+	if err != nil || len(out) == 0 {
+		return nil, fmt.Errorf("no frame: %v", err)
+	}
+	return out, nil
 }

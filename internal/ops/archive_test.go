@@ -31,7 +31,8 @@ func readTree(t *testing.T, root string) map[string]string {
 }
 
 func TestExtractZipAndTarGz(t *testing.T) {
-	want := map[string]string{"bundle/hello.txt": "hello\n", "bundle/nested/über file.txt": "deep\n"}
+	// The single top-level "bundle" folder is unwrapped.
+	want := map[string]string{"hello.txt": "hello\n", "nested/über file.txt": "deep\n"}
 	for _, name := range []string{"bundle.zip", "bundle.tar.gz"} {
 		h, _ := Lookup("archive.extract")
 		out := filepath.Join(t.TempDir(), "out")

@@ -29,6 +29,13 @@ func TestConvertJPEGToPNGKeepsPixels(t *testing.T) {
 	}
 	assertColor(t, img, 60, 0, indigo, 12)
 	assertColor(t, img, 60, 79, amber, 12)
+	// An 8-bit JPEG must not turn into a 16-bit PNG.
+	f, _ := os.Open(out)
+	defer f.Close()
+	cfg, _, _ := image.DecodeConfig(f)
+	if cfg.ColorModel == color.RGBA64Model || cfg.ColorModel == color.NRGBA64Model {
+		t.Fatal("JPEG converted to a 16-bit PNG")
+	}
 }
 
 func TestConvertTransparentPNGToJPEGUsesWhiteBackground(t *testing.T) {
@@ -65,12 +72,22 @@ func TestConvertToWebPAndBack(t *testing.T) {
 	assertColor(t, img2, 60, 77, amber, 24)
 }
 
-func TestImageOutputExtFallsBackForHEIC(t *testing.T) {
-	if got := imageOutputExt(".heic", ".heic"); got != ".jpg" {
-		t.Fatalf("got %s, want .jpg", got)
+func TestHEICRoundTrip(t *testing.T) {
+	// Encode to HEIC, decode it again, and check the pixels survived.
+	out := mustRun(t, "image.convert", []string{fixture("sample.jpg")}, "out.heic", Args{"quality": 90})
+	back := mustRun(t, "image.convert", []string{out}, "back.png", nil)
+	img, _ := decode(t, back)
+	if b := img.Bounds(); b.Dx() != 120 || b.Dy() != 80 {
+		t.Fatalf("size = %v, want 120x80", b.Size())
 	}
-	if got := imageOutputExt(".png", ".heic"); got != ".png" {
-		t.Fatalf("got %s, want .png", got)
+	assertColor(t, img, 60, 4, indigo, 24)
+	assertColor(t, img, 60, 75, amber, 24)
+	// "Same format" skills keep HEIC as HEIC now that it can be written.
+	if got := imageOutputExt(".heic", ".heic"); got != ".heic" {
+		t.Fatalf("imageOutputExt = %s", got)
+	}
+	if got := imageOutputExt(".xyz", ".heic"); got != ".jpg" {
+		t.Fatalf("unknown output should fall back to .jpg, got %s", got)
 	}
 }
 

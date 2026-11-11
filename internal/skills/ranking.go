@@ -54,6 +54,11 @@ func DefaultRanker() *Ranker {
 	}
 }
 
+const (
+	strongMatch = 600
+	weakMatch   = 440
+)
+
 var (
 	compactValue = regexp.MustCompile(`^([a-z]+)(\d[\d.%x:,\-]*)$`)
 	digit        = regexp.MustCompile(`\d`)
@@ -116,9 +121,18 @@ func (r *Ranker) rankEmpty(all []Skill, ctx Context) []Match {
 
 func (r *Ranker) rankText(all []Skill, text, value string, ctx Context) []Match {
 	out := []Match{}
-	for _, s := range all {
-		ms := matchScore(s, text)
-		if ms <= 0 {
+	raw := make([]float64, len(all))
+	strongest := 0.0
+	for i, s := range all {
+		raw[i] = matchScore(s, text)
+		if raw[i] > strongest {
+			strongest = raw[i]
+		}
+	}
+	for i, s := range all {
+		ms := raw[i]
+		// Fuzzy-only matches are noise when the query clearly names something.
+		if ms <= 0 || (strongest >= strongMatch && ms < weakMatch) {
 			continue
 		}
 		accepts := len(ctx.InputTypes) == 0 || acceptsAny(s, ctx.InputTypes)

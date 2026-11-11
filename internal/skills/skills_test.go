@@ -206,3 +206,12 @@ func TestFileType(t *testing.T) {
 		t.Fatal("FileType")
 	}
 }
+
+func TestStrongMatchesHideFuzzyNoise(t *testing.T) {
+	r := coreRegistry(t, "")
+	for _, m := range r.Search("comp", Context{InputTypes: []string{".jpg", ".mov"}}) {
+		if strings.HasPrefix(m.Skill.Name, "Convert to") {
+			t.Errorf("%q matched %s", "comp", m.Skill.Name)
+		}
+	}
+}

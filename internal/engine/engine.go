@@ -562,7 +562,7 @@ func summarize(skill skills.Skill, out Outcome) string {
 		parts = append(parts, fmt.Sprintf("%d failed", len(out.Failed)))
 	}
 	if len(out.Skipped) > 0 {
-		parts = append(parts, fmt.Sprintf("%d skipped", len(out.Skipped)))
+		parts = append(parts, fmt.Sprintf("%d left as is", len(out.Skipped)))
 	}
 	if out.Cancelled {
 		parts = append(parts, "cancelled")

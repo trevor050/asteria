@@ -19,7 +19,7 @@ import (
 	"strings"
 
 	"github.com/disintegration/imaging"
-	_ "github.com/gen2brain/heic" // registers the HEIC/HEIF decoder
+	"github.com/gen2brain/h265/heic"
 	"github.com/gen2brain/webp"
 	"golang.org/x/image/bmp"
 	"golang.org/x/image/tiff"
@@ -31,6 +31,7 @@ var ImageInputExts = []string{".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tif", "
 // imageOutputExts lists the formats Asteria can encode.
 var imageOutputExts = map[string]bool{
 	".png": true, ".jpg": true, ".jpeg": true, ".webp": true, ".gif": true, ".bmp": true, ".tif": true, ".tiff": true,
+	".heic": true, ".heif": true,
 }
 
 func init() {
@@ -48,7 +49,7 @@ func init() {
 }
 
 // imageOutputExt keeps the planned extension when we can encode it and falls
-// back to JPEG otherwise (HEIC input with a "same format" skill such as resize).
+// back to JPEG otherwise.
 func imageOutputExt(planned, _ string) string {
 	planned = strings.ToLower(planned)
 	if imageOutputExts[planned] {
@@ -78,7 +79,17 @@ func DecodeImage(path string) (image.Image, error) {
 			return nil, err
 		}
 	}
-	img, err := imaging.Decode(bufio.NewReader(f), imaging.AutoOrientation(true))
+	var img image.Image
+	if ext == ".heic" || ext == ".heif" {
+		// Pure-Go HEVC decoder; AutoRotate applies the irot/imir transforms
+		// iPhones use for portrait photos.
+		img, err = heic.Decode(bufio.NewReader(f), heic.Options{AutoRotate: true})
+		if err != nil {
+			return nil, Userf("could not read HEIC image: %v", err)
+		}
+		return img, nil
+	}
+	img, err = imaging.Decode(bufio.NewReader(f), imaging.AutoOrientation(true))
 	if err != nil {
 		if errors.Is(err, image.ErrFormat) {
 			return nil, Userf("%s is not an image Asteria can read", filepath.Base(path))
@@ -109,6 +120,12 @@ func EncodeImage(img image.Image, path string, quality int, bestCompression bool
 	case ".jpg", ".jpeg":
 		err = jpeg.Encode(w, flatten(img, color.White), &jpeg.Options{Quality: quality})
 	case ".png":
+		// Go's PNG encoder writes 16-bit files for YCbCr/CMYK sources (JPEGs),
+		// doubling their size for nothing; convert those to 8-bit first.
+		switch img.(type) {
+		case *image.YCbCr, *image.CMYK:
+			img = imaging.Clone(img)
+		}
 		enc := png.Encoder{CompressionLevel: png.DefaultCompression}
 		if bestCompression {
 			enc.CompressionLevel = png.BestCompression
@@ -118,6 +135,8 @@ func EncodeImage(img image.Image, path string, quality int, bestCompression bool
 		err = webp.Encode(w, img, webp.Options{Quality: quality, Method: 4})
 	case ".gif":
 		err = gif.Encode(w, img, &gif.Options{NumColors: 256})
+	case ".heic", ".heif":
+		err = heic.Encode(w, img, heic.EncodeOptions{Quality: quality})
 	case ".bmp":
 		err = bmp.Encode(w, img)
 	case ".tif", ".tiff":

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -11,6 +12,7 @@ import (
 
 	"asteria/internal/inspect"
 	"asteria/internal/session"
+	"asteria/internal/tools"
 )
 
 // previewHandler serves tray files to the webview so previews show the real
@@ -19,6 +21,7 @@ import (
 // Only files in the tray are reachable, by id; never arbitrary paths.
 type previewHandler struct {
 	store *session.Store
+	tools *tools.Finder
 	group singleflight.Group
 }
 
@@ -96,7 +99,17 @@ func (h *previewHandler) thumb(w http.ResponseWriter, r *http.Request, f *sessio
 				return thumbData{b, mimeFor(ext)}, nil
 			}
 		}
-		b, mime, err := inspect.Thumbnail(step.Path, size)
+		var b []byte
+		mime := "image/jpeg"
+		var err error
+		switch inspect.Kind(step.Type) {
+		case "video":
+			b, err = inspect.VideoPoster(r.Context(), h.tools, step.Path, size, step.Info.Duration)
+		case "image":
+			b, mime, err = inspect.Thumbnail(step.Path, size)
+		default:
+			err = errNoPreview
+		}
 		if err != nil {
 			return nil, err
 		}
@@ -117,6 +130,8 @@ func (h *previewHandler) thumb(w http.ResponseWriter, r *http.Request, f *sessio
 	w.Header().Set("Cache-Control", "private, max-age=31536000, immutable")
 	_, _ = w.Write(td.data)
 }
+
+var errNoPreview = errors.New("no preview for this type")
 
 type thumbData struct {
 	data []byte

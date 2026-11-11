@@ -28,7 +28,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	preview := &previewHandler{store: svc.store}
+	preview := &previewHandler{store: svc.store, tools: svc.tools}
 
 	var window *application.WebviewWindow
 	app := application.New(application.Options{

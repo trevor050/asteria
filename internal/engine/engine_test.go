@@ -117,7 +117,7 @@ func TestBatchConvertSkipsWrongTypesAndNeverTouchesOriginals(t *testing.T) {
 	if len(out.Updated) != 2 || len(out.Skipped) != 1 || out.Skipped[0].Name != "people.csv" {
 		t.Fatalf("outcome = %+v", out)
 	}
-	if !strings.Contains(out.Message, "2 files") || !strings.Contains(out.Message, "1 skipped") {
+	if !strings.Contains(out.Message, "2 files") || !strings.Contains(out.Message, "1 left as is") {
 		t.Fatalf("message = %q", out.Message)
 	}
 	for _, f := range []*session.File{jpg, heic} {

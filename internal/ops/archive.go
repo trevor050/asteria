@@ -227,8 +227,28 @@ func archiveExtract(ctx context.Context, job Job) error {
 	}
 	if err != nil {
 		_ = os.RemoveAll(job.Output)
+		return err
 	}
-	return err
+	return flattenSingleRoot(job.Output)
+}
+
+// flattenSingleRoot unwraps archives whose contents sit in one top-level
+// folder ("bundle.zip" -> bundle/hello.txt, not bundle/bundle/hello.txt),
+// the way Finder and Explorer extract them.
+func flattenSingleRoot(dir string) error {
+	entries, err := os.ReadDir(dir)
+	if err != nil || len(entries) != 1 || !entries[0].IsDir() {
+		return err
+	}
+	inner := filepath.Join(dir, entries[0].Name())
+	tmp := dir + ".unwrap"
+	if err := os.Rename(inner, tmp); err != nil {
+		return err
+	}
+	if err := os.Remove(dir); err != nil {
+		return err
+	}
+	return os.Rename(tmp, dir)
 }
 
 func extractZip(ctx context.Context, in string, job Job) error {

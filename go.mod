@@ -1,11 +1,11 @@
 module asteria
 
-go 1.26.0
+go 1.26.4
 
 require (
 	github.com/disintegration/imaging v1.6.2
 	github.com/fsnotify/fsnotify v1.9.0
-	github.com/gen2brain/heic v0.7.2
+	github.com/gen2brain/h265 v0.2.4
 	github.com/gen2brain/webp v0.6.4
 	github.com/google/uuid v1.6.0
 	github.com/pdfcpu/pdfcpu v0.16.4
@@ -24,7 +24,6 @@ require (
 	github.com/godbus/dbus/v5 v5.2.2 // indirect
 	github.com/hhrutter/tiff v1.0.7 // indirect
 	github.com/mattn/go-runewidth v0.0.31 // indirect
-	github.com/tetratelabs/wazero v1.12.0 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	golang.org/x/crypto v0.58.0 // indirect
 	golang.org/x/sys v0.50.0 // indirect
