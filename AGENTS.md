@@ -50,6 +50,9 @@ Asteria: local-first desktop file converter. Wails 3.1 (Go) + Svelte 5. Drop fil
 - Go PNG encoder writes 16-bit for YCbCr sources; `EncodeImage` converts first.
 - macOS GUI apps lack shell PATH; `internal/tools` also checks Homebrew/winget/scoop/choco dirs.
 - LibreOffice 26.8.1 (macOS) loops forever exporting a pandoc-made .docx table to text; .docx/.odt -> txt is pure Go now (`doc.text`), and `runLibreOffice` kills output > 256 MB + 64x input.
+- Windows: LibreOffice must run as `program/soffice.com` (soffice.exe never returns for --version); its profile lives in a short path (`<cache>/asteria/lo`, reused) because profiles under the session workspace passed MAX_PATH and LibreOffice failed silently. MSI add-ons unpack with `msiexec /a` (admin image, no elevation; layouts: LibreOffice `program/`, Calibre `PFiles64/Calibre2/`, 7-Zip `Files/7-Zip/`); the image's copy of the .msi is deleted. Proving "no admin": the PC's SSH session is elevated, so run tests through a one-shot `schtasks /it /ru Trevor` task (medium integrity) and log the token state.
+- Windows visual pass driver: pywinauto (UIA `invoke()` on web content found by name; Chromium exposes it lazily). For a real Explorer drag, place Explorer beside the app and check WindowFromPoint before releasing (a drop once landed in Explorer's sidebar and moved a file into ~/Videos).
+- ffmpeg builds without libvorbis/libopus (Homebrew): `runFFmpeg` retries with the built-in vorbis/opus encoders.
 - SVG previews are served raw as image/svg+xml with a CSP (img context: no scripts/external loads); `inspect.SVGSize` gives dims. Don't render SVG via an iframe/innerHTML.
 - Calibre gives empty books from `.htm` (not `.html`); ImageMagick builds without libheif can't verify HEIC (matrix falls back to ffprobe).
 - Linux build needs GTK4 + WebKitGTK 6.0 (`libgtk-4-dev libwebkitgtk-6.0-dev`), Ubuntu 24.04+.
