@@ -280,8 +280,18 @@ func (s *Store) HasPath(path string) bool {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	for _, f := range s.files {
-		if f.hasOriginal && f.originPath == abs {
+		if !f.hasOriginal {
+			continue
+		}
+		if f.originPath == abs {
 			return true
+		}
+		if strings.EqualFold(f.originPath, abs) {
+			original, originalErr := os.Stat(f.originPath)
+			candidate, candidateErr := os.Stat(abs)
+			if originalErr == nil && candidateErr == nil && os.SameFile(original, candidate) {
+				return true
+			}
 		}
 	}
 	return false

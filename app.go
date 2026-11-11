@@ -324,6 +324,12 @@ func (a *App) AddPaths(paths []string) AddResult {
 	}
 	wg.Wait()
 	for i, p := range todo {
+		// Earlier entries from this drop may refer to the same file with
+		// different casing on Windows or a case-insensitive macOS volume.
+		if a.store.HasPath(p) {
+			res.Duplicates++
+			continue
+		}
 		info := infos[i]
 		f, err := a.store.Add(p, func(string, string) inspect.Info { return info })
 		if err != nil {

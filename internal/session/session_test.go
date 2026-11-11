@@ -3,6 +3,7 @@ package session
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -56,5 +57,27 @@ func TestExportNameEscapesEveryWindowsDeviceName(t *testing.T) {
 		if got != want {
 			t.Errorf("reserved Windows name %q: got %q, want %q", stem, got, want)
 		}
+	}
+}
+
+func TestHasPathRecognizesDifferentCaseOnInsensitiveFilesystem(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "photo.jpg")
+	if err := os.WriteFile(path, []byte("original"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	alias := strings.ToUpper(path)
+	if _, err := os.Stat(alias); err != nil {
+		t.Skip("filesystem is case sensitive")
+	}
+	ws, err := NewWorkspace(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	store := NewStore(ws)
+	if _, err := store.Add(path, nil); err != nil {
+		t.Fatal(err)
+	}
+	if !store.HasPath(alias) {
+		t.Fatal("same original added with different casing was not recognized")
 	}
 }
