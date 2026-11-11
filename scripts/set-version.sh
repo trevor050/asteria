@@ -20,6 +20,7 @@ files=(
   build/windows/info.json
   build/windows/wails.exe.manifest
   build/windows/nsis/wails_tools.nsh
+  version.go
 )
 for f in "${files[@]}"; do
   perl -pi -e "s/\Q$old\E/$new/g" "$f"

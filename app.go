@@ -154,6 +154,7 @@ type State struct {
 	Problems  []string         `json:"problems"`
 	Tools     []ToolStatus     `json:"tools"`
 	Platform  string           `json:"platform"`
+	Version   string           `json:"version"`
 }
 
 // GetState returns the tray, settings and environment.
@@ -172,6 +173,7 @@ func (a *App) GetState() State {
 		Problems:  a.registry.Problems(),
 		Tools:     statuses,
 		Platform:  runtime.GOOS,
+		Version:   Version,
 	}
 }
 
@@ -509,6 +511,24 @@ func (a *App) Export(fileIDs []string) Result {
 	return res
 }
 
+// links are the only pages the app ever opens, in the user's browser.
+var links = map[string]string{
+	"repository": "https://github.com/trevor050/asteria",
+	"skills":     "https://github.com/trevor050/asteria/blob/master/skills/README.md",
+}
+
+// OpenLink opens one of the app's fixed links ("repository" or "skills").
+func (a *App) OpenLink(name string) error {
+	u, ok := links[name]
+	if !ok {
+		return fmt.Errorf("unknown link %q", name)
+	}
+	if a.app == nil {
+		return errors.New("unavailable")
+	}
+	return a.app.Browser.OpenURL(u)
+}
+
 // Reveal shows a path in Finder / Explorer / the file manager.
 func (a *App) Reveal(path string) error {
 	if a.app == nil {
@@ -544,11 +564,19 @@ func (a *App) PickOutputFolder() Result {
 	return Result{Settings: &s, Outcome: engine.Outcome{Message: "Exports go to " + folder}}
 }
 
-// UpdateSettings changes one setting: mode, namingPattern, accentColor or outputFolder.
+// UpdateSettings changes one setting: mode, namingPattern, accentColor,
+// outputFolder, appearance ("system", "light", "dark"), reduceMotion or
+// reduceTransparency ("true" or "false").
 func (a *App) UpdateSettings(key, value string) Result {
 	var msg string
 	s, err := a.settings.Update(func(s *storage.Settings) {
 		switch key {
+		case "appearance":
+			s.Appearance = value
+		case "reduceMotion":
+			s.ReduceMotion = value == "true"
+		case "reduceTransparency":
+			s.ReduceTransparency = value == "true"
 		case "mode":
 			s.Mode = value
 		case "namingPattern":

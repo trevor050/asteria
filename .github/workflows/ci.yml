@@ -61,6 +61,9 @@ jobs:
       - name: Vet the app package
         run: go vet -tags nodynamic .
 
+      - name: Test the app package (settings, export naming)
+        run: go test -tags nodynamic .
+
   build:
     name: Build (${{ matrix.os }})
     needs: test

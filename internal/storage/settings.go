@@ -22,6 +22,12 @@ type Settings struct {
 	// Mode is "batch" (skills apply to the selection, or every file) or
 	// "per_file" (skills apply to the focused file only).
 	Mode string `json:"mode"`
+	// Appearance is "system", "light" or "dark".
+	Appearance string `json:"appearance"`
+	// ReduceMotion and ReduceTransparency turn the reduced variants on even
+	// when the operating system does not ask for them.
+	ReduceMotion       bool `json:"reduceMotion"`
+	ReduceTransparency bool `json:"reduceTransparency"`
 }
 
 func (s *Settings) normalize() {
@@ -33,6 +39,9 @@ func (s *Settings) normalize() {
 	}
 	if s.Mode != "per_file" {
 		s.Mode = "batch"
+	}
+	if s.Appearance != "light" && s.Appearance != "dark" {
+		s.Appearance = "system"
 	}
 }
 
@@ -92,5 +101,6 @@ func (s *SettingsStore) Update(fn func(*Settings)) (Settings, error) {
 		return cur, err
 	}
 	fn(&cur)
+	cur.normalize()
 	return cur, s.Save(cur)
 }
