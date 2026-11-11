@@ -82,6 +82,8 @@ type Engine struct {
 	running bool
 	cancel  context.CancelFunc
 	undo    []undoEntry
+
+	pix *pixCache
 }
 
 type undoEntry struct {
@@ -106,7 +108,7 @@ func New(opts Options) *Engine {
 	if opts.OnUsed == nil {
 		opts.OnUsed = func(string) {}
 	}
-	return &Engine{opts: opts}
+	return &Engine{opts: opts, pix: newPixCache()}
 }
 
 func (e *Engine) begin(parent context.Context) (context.Context, func(), error) {
@@ -511,7 +513,9 @@ func (e *Engine) execute(ctx context.Context, f *session.File, skill skills.Skil
 		Progress: progress,
 	})
 	var err error
-	if skill.Executor.Type == "native" {
+	if skill.Executor.Type == "native" && handler.Pixel != nil && ops.IsImageType(inType) && ops.IsImageType(outType) {
+		err = e.runPixel(ctx, f, handler, job.Args, inPath, outPath, progress)
+	} else if skill.Executor.Type == "native" {
 		err = handler.Run(ctx, job)
 	} else {
 		err = ops.RunCLI(ctx, ops.CLISpec{Command: skill.Executor.Command, Args: skill.Executor.Args, TimeoutMs: skill.Executor.TimeoutMs}, job)

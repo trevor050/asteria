@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"io/fs"
@@ -193,6 +194,9 @@ type Suggestion struct {
 	Applies     int               `json:"applies"`
 	Missing     []string          `json:"missing"`
 	Community   bool              `json:"community"`
+	// Live is true when the skill can preview on the fly while its value is
+	// being adjusted (PreviewSkill).
+	Live bool `json:"live"`
 }
 
 // Search ranks skills for the query against the files skills would apply to.
@@ -216,6 +220,11 @@ func (a *App) Search(query string, fileIDs []string) []Suggestion {
 			ID: s.ID, Name: s.Name, Description: s.Description, Category: s.Category,
 			IsMeta: s.IsMeta, Combine: s.Combine, OutputType: s.OutputType, Params: s.Params,
 			Value: m.Value, Community: s.Source == skills.SkillSourceCommunity,
+		}
+		if s.Executor.Type == "native" {
+			if h, ok := ops.Lookup(s.Executor.Handler); ok {
+				sug.Live = h.Live
+			}
 		}
 		if !s.IsMeta {
 			for _, id := range fileIDs {
@@ -509,6 +518,17 @@ func (a *App) Export(fileIDs []string) Result {
 		res.Outcome.Message = strings.Join(parts, " · ")
 	}
 	return res
+}
+
+// PreviewSkill applies an image skill to a reduced copy of the file's current
+// result and returns it as a data: URL, without changing the tray. It powers
+// live adjustment while a value is dragged. maxSide bounds the long side.
+func (a *App) PreviewSkill(fileID, skillID string, params map[string]any, maxSide int) (string, error) {
+	b, mime, err := a.engine.Preview(a.ctx(), fileID, skillID, params, maxSide)
+	if err != nil {
+		return "", errors.New(engine.Readable(err))
+	}
+	return "data:" + mime + ";base64," + base64.StdEncoding.EncodeToString(b), nil
 }
 
 // links are the only pages the app ever opens, in the user's browser.

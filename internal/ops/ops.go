@@ -12,6 +12,7 @@ import (
 	"sort"
 	"strings"
 
+	"asteria/internal/img"
 	"asteria/internal/tools"
 )
 
@@ -70,7 +71,24 @@ type Handler struct {
 	// Concurrency caps how many jobs of this handler run in parallel.
 	// Zero means the engine default.
 	Concurrency int
+
+	// Pixel, when set, makes this an image operation on the shared pixel
+	// core: it receives the lossless working image and returns a new one
+	// (never modifying its input). The engine supplies the input from its
+	// cache or by replaying the chain from the last real file, encodes the
+	// result once, and can run it on a small proxy for live previews. Run
+	// is filled in automatically for Pixel handlers.
+	Pixel PixelFunc
+	// Live marks Pixel operations fast enough to preview while a value is
+	// being dragged (on a ~1 megapixel proxy).
+	Live bool
+	// Video optionally maps the same arguments to an ffmpeg -vf filter so
+	// the skill also works on video files.
+	Video func(args Args) (string, error)
 }
+
+// PixelFunc is an image operation on the shared pixel core.
+type PixelFunc func(ctx context.Context, m *img.Image, args Args) (*img.Image, error)
 
 // ErrUnsupported marks input the handler cannot process. The engine reports it
 // as a skipped file instead of a failure.
@@ -91,6 +109,17 @@ var registry = map[string]Handler{}
 func register(h Handler) {
 	if _, exists := registry[h.Name]; exists {
 		panic("ops: duplicate handler " + h.Name)
+	}
+	if h.Pixel != nil {
+		if h.Run == nil {
+			h.Run = standalonePixel(h)
+		}
+		if h.OutputExt == nil {
+			h.OutputExt = imageOutputExt
+		}
+		if h.Concurrency == 0 {
+			h.Concurrency = 3
+		}
 	}
 	registry[h.Name] = h
 }

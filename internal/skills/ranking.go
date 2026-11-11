@@ -48,8 +48,8 @@ func DefaultRanker() *Ranker {
 		InputMatchBoost: 150,
 		NoOpPenalty:     500,
 		CategoryOrder: map[string]float64{
-			"convert": 40, "transform": 35, "compress": 30, "pdf": 28, "media": 26,
-			"archive": 24, "data": 22, "filter": 20, "meta": 0,
+			"convert": 40, "transform": 35, "compress": 30, "adjust": 29, "pdf": 28, "media": 26,
+			"archive": 24, "data": 22, "filter": 20, "compose": 18, "info": 16, "meta": 0,
 		},
 	}
 }

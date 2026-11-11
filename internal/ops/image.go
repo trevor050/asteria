@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"errors"
+	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -23,6 +24,8 @@ import (
 	"github.com/gen2brain/webp"
 	"golang.org/x/image/bmp"
 	"golang.org/x/image/tiff"
+
+	"asteria/internal/img"
 )
 
 // ImageInputExts lists the image formats Asteria can decode.
@@ -36,12 +39,12 @@ var imageOutputExts = map[string]bool{
 
 func init() {
 	for _, h := range []Handler{
-		{Name: "image.convert", Run: imageConvert, OutputExt: imageOutputExt},
-		{Name: "image.resize", Run: imageResize, OutputExt: imageOutputExt},
+		{Name: "image.convert", Pixel: pixConvert, OutputExt: imageOutputExt},
+		{Name: "image.resize", Pixel: pixResize, OutputExt: imageOutputExt},
 		{Name: "image.compress", Run: imageCompress, OutputExt: imageOutputExt},
-		{Name: "image.rotate", Run: imageRotate, OutputExt: imageOutputExt},
-		{Name: "image.grayscale", Run: imageGrayscale, OutputExt: imageOutputExt},
-		{Name: "image.blur", Run: imageBlur, OutputExt: imageOutputExt},
+		{Name: "image.rotate", Pixel: pixRotate, OutputExt: imageOutputExt, Video: videoRotate},
+		{Name: "image.grayscale", Pixel: pixGrayscale, OutputExt: imageOutputExt, Live: true, Video: func(Args) (string, error) { return "hue=s=0", nil }},
+		{Name: "image.blur", Pixel: pixBlur, OutputExt: imageOutputExt, Live: true, Video: videoBlur},
 	} {
 		h.Concurrency = 3
 		register(h)
@@ -179,19 +182,6 @@ func quality(job Job, fallback int) (int, error) {
 	return job.Args.IntInRange("quality", fallback, 1, 100)
 }
 
-func imageConvert(_ context.Context, job Job) error {
-	img, err := DecodeImage(job.Input())
-	if err != nil {
-		return err
-	}
-	job.Progress(0.5)
-	q, err := quality(job, 90)
-	if err != nil {
-		return err
-	}
-	return EncodeImage(img, job.Output, q, false)
-}
-
 var sizeRe = regexp.MustCompile(`^\s*(\d*)\s*[x×]?\s*(\d*)\s*$`)
 
 // ParseSize turns "50%", "1920", "x1080" or "1920x1080" into a target size
@@ -236,28 +226,6 @@ func ParseSize(spec string, w, h int) (int, int, error) {
 	return nw, nh, nil
 }
 
-func imageResize(_ context.Context, job Job) error {
-	img, err := DecodeImage(job.Input())
-	if err != nil {
-		return err
-	}
-	b := img.Bounds()
-	nw, nh, err := ParseSize(job.Args.String("size", "50%"), b.Dx(), b.Dy())
-	if err != nil {
-		return err
-	}
-	job.Progress(0.3)
-	if nw != b.Dx() || nh != b.Dy() {
-		img = imaging.Resize(img, nw, nh, imaging.Lanczos)
-	}
-	job.Progress(0.7)
-	q, err := quality(job, 90)
-	if err != nil {
-		return err
-	}
-	return EncodeImage(img, job.Output, q, false)
-}
-
 func imageCompress(_ context.Context, job Job) error {
 	img, err := DecodeImage(job.Input())
 	if err != nil {
@@ -296,65 +264,6 @@ func normExt(ext string) string {
 	return ext
 }
 
-func imageRotate(_ context.Context, job Job) error {
-	img, err := DecodeImage(job.Input())
-	if err != nil {
-		return err
-	}
-	deg, err := job.Args.Float("angle", 90)
-	if err != nil {
-		return err
-	}
-	d := ((int(math.Round(deg)) % 360) + 360) % 360
-	switch d {
-	case 90:
-		img = imaging.Rotate270(img) // imaging rotates counter-clockwise
-	case 180:
-		img = imaging.Rotate180(img)
-	case 270:
-		img = imaging.Rotate90(img)
-	case 0:
-	default:
-		return Userf("rotate supports 90, 180 or 270 degrees (got %v)", deg)
-	}
-	q, err := quality(job, 92)
-	if err != nil {
-		return err
-	}
-	return EncodeImage(img, job.Output, q, false)
-}
-
-func imageGrayscale(_ context.Context, job Job) error {
-	img, err := DecodeImage(job.Input())
-	if err != nil {
-		return err
-	}
-	q, err := quality(job, 92)
-	if err != nil {
-		return err
-	}
-	return EncodeImage(imaging.Grayscale(img), job.Output, q, false)
-}
-
-func imageBlur(_ context.Context, job Job) error {
-	img, err := DecodeImage(job.Input())
-	if err != nil {
-		return err
-	}
-	radius, err := job.Args.Float("radius", 3)
-	if err != nil {
-		return err
-	}
-	if radius <= 0 || radius > 100 {
-		return Userf("blur radius must be between 0 and 100")
-	}
-	q, err := quality(job, 92)
-	if err != nil {
-		return err
-	}
-	return EncodeImage(imaging.Blur(img, radius), job.Output, q, false)
-}
-
 // CopyFile copies src to a new file at dst.
 func CopyFile(src, dst string) (err error) {
 	in, err := os.Open(src)
@@ -376,4 +285,100 @@ func CopyFile(src, dst string) (err error) {
 	}()
 	_, err = io.Copy(out, in)
 	return err
+}
+
+// ---- pixel-core versions of the original image skills ----------------------
+
+// pixConvert changes only the encoder settings; the pixels stay lossless in
+// the chain and are encoded once, at this quality, in the target format.
+func pixConvert(_ context.Context, m *img.Image, args Args) (*img.Image, error) {
+	q, err := args.IntInRange("quality", 90, 1, 100)
+	if err != nil {
+		return nil, err
+	}
+	out := *m // pixels are shared, never modified
+	out.Quality = q
+	return &out, nil
+}
+
+func pixResize(_ context.Context, m *img.Image, args Args) (*img.Image, error) {
+	// Sizes are in full-resolution pixels; a proxy scales them by Scale.
+	fw, fh := int(math.Round(float64(m.W)/m.Scale)), int(math.Round(float64(m.H)/m.Scale))
+	nw, nh, err := ParseSize(args.String("size", "50%"), fw, fh)
+	if err != nil {
+		return nil, err
+	}
+	if nw == fw && nh == fh {
+		return m, nil
+	}
+	tw := max(1, int(math.Round(float64(nw)*m.Scale)))
+	th := max(1, int(math.Round(float64(nh)*m.Scale)))
+	out := img.Resize(m, tw, th, img.Lanczos3)
+	if m.Scale != 1 {
+		out.Scale = m.Scale // a proxy stays a proxy of the new size
+	}
+	return out, nil
+}
+
+func pixRotate(_ context.Context, m *img.Image, args Args) (*img.Image, error) {
+	deg, err := args.Degrees("angle", 90)
+	if err != nil {
+		return nil, err
+	}
+	switch ((int(math.Round(deg)) % 360) + 360) % 360 {
+	case 0:
+		return m, nil
+	case 90:
+		return img.Rotate90(m), nil
+	case 180:
+		return img.Rotate180(m), nil
+	case 270:
+		return img.Rotate270(m), nil
+	}
+	return nil, Userf("rotate supports 90, 180 or 270 degrees (got %v); use straighten for other angles", deg)
+}
+
+// pixGrayscale uses linear-light luminance, so mid-tones keep their
+// brightness (gamma-space averages darken saturated colours).
+func pixGrayscale(_ context.Context, m *img.Image, _ Args) (*img.Image, error) {
+	return img.MapColor(m, img.LinearLight, func(r, g, b float32) (float32, float32, float32) {
+		y := img.Luma(r, g, b)
+		return y, y, y
+	}), nil
+}
+
+func pixBlur(ctx context.Context, m *img.Image, args Args) (*img.Image, error) {
+	radius, err := args.Float("radius", 3)
+	if err != nil {
+		return nil, err
+	}
+	if radius <= 0 || radius > 200 {
+		return nil, Userf("blur radius must be between 0 and 200")
+	}
+	s := radius * m.Scale
+	return img.Blur(m.ToLinear(), s, s).ToImage(m), ctx.Err()
+}
+
+func videoRotate(args Args) (string, error) {
+	deg, err := args.Degrees("angle", 90)
+	if err != nil {
+		return "", err
+	}
+	switch ((int(math.Round(deg)) % 360) + 360) % 360 {
+	case 90:
+		return "transpose=clock", nil
+	case 180:
+		return "hflip,vflip", nil
+	case 270:
+		return "transpose=cclock", nil
+	}
+	return "", Userf("video rotate supports 90, 180 or 270 degrees")
+}
+
+func videoBlur(args Args) (string, error) {
+	radius, err := args.Float("radius", 3)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("gblur=sigma=%.2f", math.Max(0.1, math.Min(radius, 100))), nil
 }
