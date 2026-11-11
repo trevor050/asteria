@@ -1,0 +1,27 @@
+{
+  "id": "hue_rotate",
+  "name": "Hue Rotate",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["hue", "hue shift", "shift hue", "rotate colors", "rotate colours", "color shift", "colour shift"],
+  "category": "adjust",
+  "description": "Rotate all hues around the colour wheel (30 degrees by default), keeping lightness and colourfulness",
+  "inputTypes": ["@image", "@video"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "degrees",
+      "label": "Degrees",
+      "type": "string",
+      "default": "30",
+      "presets": ["30", "60", "90", "180", "-30", "-90"],
+      "min": -180,
+      "max": 180,
+      "unit": "°",
+      "hint": "30 = slight shift · 180 = opposite colours · -90 or 270 = the other way round"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.hue" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

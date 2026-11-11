@@ -1,0 +1,24 @@
+{
+  "id": "levels",
+  "name": "Levels",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["black point", "white point", "input levels", "set levels", "clip points"],
+  "category": "adjust",
+  "description": "Set black and white points (10 245 by default) so darks go to black and brights to white; add a gamma for midtones",
+  "inputTypes": ["@image"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "levels",
+      "label": "Levels",
+      "type": "string",
+      "default": "10 245",
+      "presets": ["10 245", "20 235", "5% 95%", "0 255 1.2", "0 255 0.8"],
+      "hint": "black white [gamma] · 10 245 = 0-255 values · 5% 95% = percent · 10 245 1.2 = brighter midtones"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.levels" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

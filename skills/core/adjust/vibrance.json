@@ -1,0 +1,27 @@
+{
+  "id": "vibrance",
+  "name": "Vibrance",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["smart saturation", "natural saturation", "boost colors", "boost colours", "colour boost", "muted colors"],
+  "category": "adjust",
+  "description": "Boost muted colours more than vivid ones (+40% by default); neutrals and already-vivid colours barely move",
+  "inputTypes": ["@image"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "amount",
+      "label": "Amount",
+      "type": "string",
+      "default": "+40",
+      "presets": ["+20", "+40", "+70", "-30", "-60"],
+      "min": -100,
+      "max": 200,
+      "unit": "%",
+      "hint": "+40 = richer muted tones · 150% = stronger · -30 = calmer"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.vibrance" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

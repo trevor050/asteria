@@ -1,0 +1,27 @@
+{
+  "id": "posterize",
+  "name": "Posterize",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["posterise", "reduce colors", "reduce colours", "color levels", "banding", "poster"],
+  "category": "adjust",
+  "description": "Reduce each colour channel to a few flat levels (4 by default) for a poster look",
+  "inputTypes": ["@image"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "levels",
+      "label": "Levels",
+      "type": "int",
+      "default": 4,
+      "presets": [2, 3, 4, 6, 8],
+      "min": 2,
+      "max": 32,
+      "unit": "",
+      "hint": "2 = harshest · 4 = poster · 16 = subtle banding"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.posterize" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

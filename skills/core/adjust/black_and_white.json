@@ -1,0 +1,16 @@
+{
+  "id": "black_and_white",
+  "name": "Black & White",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["b&w", "bw", "black and white", "black white", "mono", "noir", "perceptual grey", "perceptual gray"],
+  "category": "adjust",
+  "priority": 7,
+  "description": "Convert to black and white using perceived lightness (OKLab), which keeps reds and blues looking natural",
+  "inputTypes": ["@image", "@video"],
+  "outputType": "",
+  "params": [],
+  "executor": { "type": "native", "handler": "adjust.lightness" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

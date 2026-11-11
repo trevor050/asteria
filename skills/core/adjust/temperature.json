@@ -1,0 +1,27 @@
+{
+  "id": "temperature",
+  "name": "Temperature",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["warm", "warmer", "warmth", "colour temperature", "color temperature", "kelvin", "golden"],
+  "category": "adjust",
+  "description": "Warm the picture up (+25 by default); use a negative number to cool it down",
+  "inputTypes": ["@image"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "amount",
+      "label": "Amount",
+      "type": "string",
+      "default": "+25",
+      "presets": ["+15", "+25", "+50", "-25", "-50"],
+      "min": -100,
+      "max": 100,
+      "unit": "",
+      "hint": "+25 = warmer (orange) · -25 = cooler (blue)"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.temperature" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

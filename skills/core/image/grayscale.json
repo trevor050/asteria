@@ -3,26 +3,13 @@
   "name": "Grayscale",
   "version": "1.0.0",
   "author": "asteria",
-  "aliases": [
-    "bw",
-    "black and white",
-    "monochrome"
-  ],
-  "category": "filter",
-  "description": "Remove color",
-  "inputTypes": [
-    "@image"
-  ],
+  "aliases": ["greyscale", "gray", "grey", "monochrome", "desaturate completely", "decolor", "decolour", "remove color", "remove colour", "luminance grey"],
+  "category": "adjust",
+  "description": "Remove all colour, keeping linear-light luminance (for a perceptual grey try Black & White)",
+  "inputTypes": ["@image", "@video"],
   "outputType": "",
   "params": [],
-  "executor": {
-    "type": "native",
-    "handler": "image.grayscale"
-  },
-  "permissions": [
-    "files.read",
-    "files.write",
-    "files.temp"
-  ],
+  "executor": { "type": "native", "handler": "image.grayscale" },
+  "permissions": ["files.read", "files.write", "files.temp"],
   "dangerLevel": 0
 }

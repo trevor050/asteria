@@ -1,0 +1,16 @@
+{
+  "id": "enhance",
+  "name": "Auto Enhance",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["fix", "improve", "auto fix", "magic", "auto enhance", "autofix", "one click fix", "make better"],
+  "category": "adjust",
+  "priority": 12,
+  "description": "One-click fix: auto contrast plus a gentle +15% vibrance",
+  "inputTypes": ["@image"],
+  "outputType": "",
+  "params": [],
+  "executor": { "type": "native", "handler": "adjust.enhance" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

@@ -1,0 +1,27 @@
+{
+  "id": "shadows",
+  "name": "Shadows",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["lift shadows", "open shadows", "fill light", "brighten shadows", "darken shadows", "dark areas"],
+  "category": "adjust",
+  "description": "Lift dark areas (+30 by default) without touching the highlights; negative values deepen them",
+  "inputTypes": ["@image"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "amount",
+      "label": "Amount",
+      "type": "string",
+      "default": "+30",
+      "presets": ["+15", "+30", "+60", "-30", "-60"],
+      "min": -100,
+      "max": 100,
+      "unit": "",
+      "hint": "+30 = lift shadows · -30 = deepen them · colours keep their hue"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.shadows" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

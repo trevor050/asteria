@@ -1,0 +1,24 @@
+{
+  "id": "duotone",
+  "name": "Duotone",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["two tone", "two color", "two colour", "gradient map", "dual tone", "spotify"],
+  "category": "adjust",
+  "description": "Recolour the picture with a gradient from a shadow colour to a highlight colour (navy to peach by default)",
+  "inputTypes": ["@image"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "colors",
+      "label": "Colors",
+      "type": "string",
+      "default": "#1d2b53 #ffd28f",
+      "presets": ["#1d2b53 #ffd28f", "navy gold", "black white", "purple orange", "#0b3d2e #f4e285"],
+      "hint": "shadow highlight · navy gold · #1d2b53 #ffcc66"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.duotone" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

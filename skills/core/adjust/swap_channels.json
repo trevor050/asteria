@@ -1,0 +1,24 @@
+{
+  "id": "swap_channels",
+  "name": "Swap Channels",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["swap rgb", "channel swap", "bgr", "rgb to bgr", "switch channels", "shuffle channels", "swap colors"],
+  "category": "adjust",
+  "description": "Reorder the red, green and blue channels (bgr by default, which swaps red and blue)",
+  "inputTypes": ["@image", "@video"],
+  "outputType": "",
+  "params": [
+    {
+      "name": "order",
+      "label": "Order",
+      "type": "string",
+      "default": "bgr",
+      "presets": ["bgr", "grb", "rbg", "gbr", "brg"],
+      "hint": "3 letters from r, g, b · bgr = swap red and blue · grb = swap red and green"
+    }
+  ],
+  "executor": { "type": "native", "handler": "adjust.swap" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

@@ -1,0 +1,15 @@
+{
+  "id": "auto_contrast",
+  "name": "Auto Contrast",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["autocontrast", "auto contrast", "stretch contrast", "normalize", "normalise", "fix flat"],
+  "category": "adjust",
+  "description": "Stretch brightness to full range with one shared curve, ignoring the extreme 0.5%, so colours keep their hue",
+  "inputTypes": ["@image"],
+  "outputType": "",
+  "params": [],
+  "executor": { "type": "native", "handler": "adjust.autocontrast" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}

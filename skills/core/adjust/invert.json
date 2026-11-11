@@ -1,0 +1,15 @@
+{
+  "id": "invert",
+  "name": "Invert",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": ["negative", "negate", "invert colors", "invert colours", "reverse colors", "photo negative"],
+  "category": "adjust",
+  "description": "Invert every colour to its opposite, like a photographic negative; transparency is kept",
+  "inputTypes": ["@image", "@video"],
+  "outputType": "",
+  "params": [],
+  "executor": { "type": "native", "handler": "adjust.invert" },
+  "permissions": ["files.read", "files.write", "files.temp"],
+  "dangerLevel": 0
+}
