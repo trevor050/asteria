@@ -121,7 +121,13 @@ func EncodeImage(img image.Image, path string, quality int, bestCompression bool
 	w := bufio.NewWriter(f)
 	switch ext {
 	case ".jpg", ".jpeg":
-		err = jpeg.Encode(w, flatten(img, color.White), &jpeg.Options{Quality: quality})
+		img = flatten(img, color.White)
+		// An opaque NRGBA image is byte-identical to RGBA; the encoder has a
+		// fast path for RGBA and a slow per-pixel one for everything else.
+		if n, ok := img.(*image.NRGBA); ok {
+			img = &image.RGBA{Pix: n.Pix, Stride: n.Stride, Rect: n.Rect}
+		}
+		err = jpeg.Encode(w, img, &jpeg.Options{Quality: quality})
 	case ".png":
 		// Go's PNG encoder writes 16-bit files for YCbCr/CMYK sources (JPEGs),
 		// doubling their size for nothing; convert those to 8-bit first.

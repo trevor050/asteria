@@ -7,9 +7,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"path/filepath"
 	"runtime"
+	"runtime/debug"
 	"strings"
 	"sync"
 	"time"
@@ -107,6 +109,13 @@ func New(opts Options) *Engine {
 	}
 	if opts.OnUsed == nil {
 		opts.OnUsed = func(string) {}
+	}
+	// Image work allocates large short-lived buffers; a soft memory limit
+	// makes the collector return them promptly instead of letting the heap
+	// grow to several times the working set on an 8 GB machine. An explicit
+	// GOMEMLIMIT wins.
+	if debug.SetMemoryLimit(-1) == math.MaxInt64 {
+		debug.SetMemoryLimit(1280 << 20)
 	}
 	return &Engine{opts: opts, pix: newPixCache()}
 }
