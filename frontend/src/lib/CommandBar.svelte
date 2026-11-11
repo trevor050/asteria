@@ -494,8 +494,8 @@
       rgb(var(--aura-teal))
     );
     filter: blur(18px);
-    /* A faint glow at rest, full on focus. */
-    opacity: 0.16;
+    /* Barely there at rest, a quiet lift on focus. */
+    opacity: 0.06;
     transform: scale(0.97, 0.86);
     transition:
       opacity 0.45s var(--ease-out),
@@ -503,7 +503,7 @@
     pointer-events: none;
   }
   .focused .halo {
-    opacity: 0.55;
+    opacity: 0.16;
     transform: none;
   }
   .busy .halo {
@@ -511,10 +511,12 @@
   }
   @keyframes breathe {
     50% {
-      opacity: 0.25;
+      opacity: 0.1;
     }
   }
   .field {
+    /* Dense enough that the halo reads as a glow around the bar, not a tint inside it. */
+    --glass-bg: var(--glass-strong);
     position: relative;
     display: flex;
     align-items: center;
@@ -852,7 +854,7 @@
     }
   }
   :global(:root[data-theme='light']) .focused .halo {
-    opacity: 0.4;
+    opacity: 0.14;
   }
   @media (max-width: 640px) {
     .desc {
