@@ -1,0 +1,28 @@
+{
+  "id": "convert_to_avi",
+  "name": "Convert to AVI",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "avi"
+  ],
+  "category": "media",
+  "icon": "arrow-left-right",
+  "description": "Old-school AVI with MPEG-4 video",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": ".avi",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.convert_avi"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

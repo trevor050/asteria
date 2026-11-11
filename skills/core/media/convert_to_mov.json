@@ -1,0 +1,29 @@
+{
+  "id": "convert_to_mov",
+  "name": "Convert to MOV",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "mov",
+    "quicktime"
+  ],
+  "category": "media",
+  "icon": "arrow-left-right",
+  "description": "H.264 MOV for Apple apps",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": ".mov",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

@@ -20,8 +20,7 @@
     ".pdb",
     ".docx",
     ".txt",
-    ".html",
-    ".htm"
+    ".html"
   ],
   "outputType": ".epub",
   "params": [],

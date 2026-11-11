@@ -91,7 +91,7 @@ func (f *Finder) Reset() {
 // build is 7zz on macOS/Linux and 7za or 7z on Windows; Ghostscript is
 // gswin64c on Windows.
 var aliases = map[string][]string{
-	"7zz": {"7za", "7z"},
+	"7zz": {"7z", "7za"},
 	"gs":  {"gswin64c"},
 }
 

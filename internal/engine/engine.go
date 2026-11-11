@@ -415,7 +415,7 @@ func (e *Engine) applyCombine(ctx context.Context, skill skills.Skill, params ma
 	h, _ := ops.Lookup(skill.Executor.Handler)
 	job := ops.Prepare(ops.Job{
 		Inputs: inputs, Names: names, Output: outPath,
-		Args:     ops.Merge(skill.Executor.With, params),
+		Args:     ops.Merge(fixedArgs(skill), params),
 		Tools:    e.opts.Tools,
 		Progress: func(v float64) { report(Progress{Label: skill.Name, Total: 1, Fraction: v}) },
 	})
@@ -518,7 +518,7 @@ func (e *Engine) execute(ctx context.Context, f *session.File, skill skills.Skil
 		Inputs:   []string{inPath},
 		Names:    []string{displayName},
 		Output:   outPath,
-		Args:     ops.Merge(skill.Executor.With, params),
+		Args:     ops.Merge(fixedArgs(skill), params),
 		Tools:    e.opts.Tools,
 		Progress: progress,
 	})
@@ -715,4 +715,23 @@ func (e *Engine) RemoveStep(parent context.Context, fileID string, index int, re
 	}
 	out.Updated = []session.View{f.View()}
 	return out, nil
+}
+
+// fixedArgs are a skill's fixed "with" arguments. CLI skills also get each
+// parameter's default, since their command templates ({{zoom}}) have no
+// fallback of their own; native handlers apply their own defaults.
+func fixedArgs(skill skills.Skill) map[string]any {
+	if skill.Executor.Type == "native" {
+		return skill.Executor.With
+	}
+	out := map[string]any{}
+	for _, p := range skill.Params {
+		if p.Default != nil {
+			out[p.Name] = p.Default
+		}
+	}
+	for k, v := range skill.Executor.With {
+		out[k] = v
+	}
+	return out
 }

@@ -109,11 +109,17 @@ func TestMatrix(t *testing.T) {
 			src, ok := fixtures[in]
 			// A skill may need particular content (OCR needs text):
 			// testdata/formats/<skill>.<ext> overrides the generic fixture.
+			hasSpecial := false
 			for _, ext := range []string{in, formatAliases[in]} {
 				if special := filepath.Join("../../testdata/formats", sk.ID+ext); ext != "" && fileExists(special) {
-					src, ok = special, true
+					src, ok, hasSpecial = special, true, true
 					break
 				}
+			}
+			// A skill with content-specific fixtures (OCR needs a picture
+			// of text) is only run where such a fixture exists.
+			if !hasSpecial && contentSpecific[sk.ID] {
+				ok = false
 			}
 			if !ok || missing != "" {
 				if !seenUntested[key] {
@@ -178,6 +184,9 @@ func TestMatrix(t *testing.T) {
 		t.Fatalf("%d built-in conversions failed:\n%s", len(pureFailed), strings.Join(pureFailed, "\n"))
 	}
 }
+
+// contentSpecific skills need fixtures with particular content.
+var contentSpecific = map[string]bool{"ocr_to_text": true, "ocr_to_searchable_pdf": true}
 
 // formatAliases are other spellings of a format with its own fixture.
 var formatAliases = map[string]string{
@@ -344,7 +353,7 @@ func verify(path, ext string, wantMarker bool) (string, error) {
 				return "ImageMagick identify", nil
 			}
 			// Builds without a HEIC/AVIF delegate: fall through to ffprobe.
-			if !strings.Contains(out, "delegate") && !strings.Contains(out, "module") {
+			if !strings.Contains(out, "delegate") && !strings.Contains(out, "module") && !strings.Contains(out, "plugin") {
 				return "", fmt.Errorf("ImageMagick can't read it: %s", strings.TrimSpace(out))
 			}
 		}

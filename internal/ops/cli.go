@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"time"
 )
@@ -48,12 +49,15 @@ func RunCLI(ctx context.Context, spec CLISpec, job Job) error {
 		}
 		args = append(args, RenderTemplate(a, job))
 	}
-	cmd := tools.Command(ctx, bin, args...)
-	var stdout, stderr bytes.Buffer
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
 	job.Progress(0.1)
-	err := cmd.Run()
+	stdout, stderr, err := runCaptured(ctx, bin, args)
+	if err != nil && ctx.Err() == nil && pandocNeedsData(spec.Command, args, stderr.String()) {
+		// Pandoc's own builds embed their templates; some Linux
+		// distributions' builds read them from disk, which --sandbox
+		// forbids. Only then run again without the sandbox.
+		_ = os.RemoveAll(job.Output)
+		stdout, stderr, err = runCaptured(ctx, bin, slices.DeleteFunc(slices.Clone(args), func(a string) bool { return a == "--sandbox" }))
+	}
 	if err != nil {
 		_ = os.RemoveAll(job.Output)
 		if ctx.Err() != nil {
@@ -88,4 +92,17 @@ func RenderTemplate(s string, job Job) string {
 		out = strings.ReplaceAll(out, "{{"+k+"}}", fmt.Sprint(v))
 	}
 	return out
+}
+
+func runCaptured(ctx context.Context, bin string, args []string) (bytes.Buffer, bytes.Buffer, error) {
+	cmd := tools.Command(ctx, bin, args...)
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+	return stdout, stderr, err
+}
+
+func pandocNeedsData(command string, args []string, stderr string) bool {
+	return command == "pandoc" && slices.Contains(args, "--sandbox") && strings.Contains(stderr, "Could not find data file")
 }

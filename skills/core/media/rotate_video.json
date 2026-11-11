@@ -1,0 +1,43 @@
+{
+  "id": "rotate_video",
+  "name": "Rotate Video",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "rotate",
+    "turn video",
+    "rotate clip"
+  ],
+  "category": "media",
+  "icon": "rotate-cw",
+  "description": "Turn the video clockwise",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "angle",
+      "label": "Angle",
+      "type": "string",
+      "default": "90",
+      "presets": [
+        "90",
+        "180",
+        "270"
+      ],
+      "hint": "90 \u00b7 180 \u00b7 270 degrees clockwise \u00b7 default 90"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "media.rotate"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

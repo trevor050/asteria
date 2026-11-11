@@ -1,0 +1,46 @@
+{
+  "id": "resize_video",
+  "name": "Resize Video",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "scale video",
+    "video height",
+    "720p",
+    "1080p",
+    "480p",
+    "downscale video"
+  ],
+  "category": "media",
+  "icon": "monitor",
+  "description": "Scale the video down to a set height",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "height",
+      "label": "Height",
+      "type": "string",
+      "default": "720",
+      "presets": [
+        "480",
+        "720",
+        "1080"
+      ],
+      "hint": "height in px, e.g. 720 \u00b7 never upscales \u00b7 default 720"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "media.resize"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

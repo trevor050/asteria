@@ -1,0 +1,47 @@
+{
+  "id": "change_speed",
+  "name": "Change Speed",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "speed",
+    "speed up",
+    "slow down",
+    "slow motion",
+    "timelapse",
+    "faster",
+    "slower"
+  ],
+  "category": "media",
+  "icon": "gauge",
+  "description": "Speed up or slow down audio and video",
+  "inputTypes": [
+    "@media"
+  ],
+  "outputType": "",
+  "params": [
+    {
+      "name": "speed",
+      "label": "Speed",
+      "type": "string",
+      "default": "2x",
+      "presets": [
+        "0.5x",
+        "1.5x",
+        "2x"
+      ],
+      "hint": "0.25-4 \u00b7 0.5x slower \u00b7 2x faster \u00b7 default 2x"
+    }
+  ],
+  "executor": {
+    "type": "native",
+    "handler": "media.speed"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

@@ -1,0 +1,32 @@
+{
+  "id": "join_audio",
+  "name": "Join Audio",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "concat audio",
+    "merge audio",
+    "combine audio",
+    "append audio"
+  ],
+  "category": "media",
+  "icon": "merge",
+  "description": "Join audio files end to end, in tray order",
+  "inputTypes": [
+    "@audio"
+  ],
+  "outputType": ".m4a",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.join"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0,
+  "outputName": "joined"
+}

@@ -7,6 +7,7 @@ export const icons: Record<string, string> = {
   "app-window-mac": "<rect width=\"20\" height=\"16\" x=\"2\" y=\"4\" rx=\"2\" /><path d=\"M6 8h.01\" /><path d=\"M10 8h.01\" /><path d=\"M14 8h.01\" />",
   "archive": "<rect width=\"20\" height=\"5\" x=\"2\" y=\"3\" rx=\"1\" /><path d=\"M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8\" /><path d=\"M10 12h4\" />",
   "arrow-left-right": "<path d=\"M8 3 4 7l4 4\" /><path d=\"M4 7h16\" /><path d=\"m16 21 4-4-4-4\" /><path d=\"M20 17H4\" />",
+  "audio-lines": "<path d=\"M2 10v3\" /><path d=\"M6 6v11\" /><path d=\"M10 3v18\" /><path d=\"M14 8v7\" /><path d=\"M18 5v13\" /><path d=\"M22 10v3\" />",
   "baseline": "<path d=\"M4 20h16\" /><path d=\"m6 16 6-12 6 12\" /><path d=\"M8 12h8\" />",
   "binary": "<rect x=\"14\" y=\"14\" width=\"4\" height=\"6\" rx=\"2\" /><rect x=\"6\" y=\"4\" width=\"4\" height=\"6\" rx=\"2\" /><path d=\"M6 20h4\" /><path d=\"M14 10h4\" /><path d=\"M6 14h2v6\" /><path d=\"M14 4h2v6\" />",
   "blend": "<circle cx=\"15\" cy=\"9\" r=\"7\" /><circle cx=\"9\" cy=\"15\" r=\"7\" />",
@@ -75,6 +76,7 @@ export const icons: Record<string, string> = {
   "gallery-horizontal": "<path d=\"M2 3v18\" /><rect width=\"12\" height=\"18\" x=\"6\" y=\"3\" rx=\"2\" /><path d=\"M22 3v18\" />",
   "gallery-thumbnails": "<rect width=\"18\" height=\"14\" x=\"3\" y=\"3\" rx=\"2\" /><path d=\"M4 21h1\" /><path d=\"M9 21h1\" /><path d=\"M14 21h1\" /><path d=\"M19 21h1\" />",
   "gallery-vertical": "<path d=\"M3 2h18\" /><rect width=\"18\" height=\"12\" x=\"3\" y=\"6\" rx=\"2\" /><path d=\"M3 22h18\" />",
+  "gauge": "<path d=\"m12 14 4-4\" /><path d=\"M3.34 19a10 10 0 1 1 17.32 0\" />",
   "git-compare": "<circle cx=\"18\" cy=\"18\" r=\"3\" /><circle cx=\"6\" cy=\"6\" r=\"3\" /><path d=\"M13 6h3a2 2 0 0 1 2 2v7\" /><path d=\"M11 18H8a2 2 0 0 1-2-2V9\" />",
   "globe": "<circle cx=\"12\" cy=\"12\" r=\"10\" /><path d=\"M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20\" /><path d=\"M2 12h20\" />",
   "grid-2x2": "<path d=\"M12 3v18\" /><path d=\"M3 12h18\" /><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" />",
@@ -191,6 +193,8 @@ export const icons: Record<string, string> = {
   "upload": "<path d=\"M12 3v12\" /><path d=\"m17 8-5-5-5 5\" /><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\" />",
   "vibrate": "<path d=\"m2 8 2 2-2 2 2 2-2 2\" /><path d=\"m22 8-2 2 2 2-2 2 2 2\" /><rect width=\"8\" height=\"14\" x=\"8\" y=\"5\" rx=\"1\" />",
   "video": "<path d=\"m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5\" /><rect x=\"2\" y=\"6\" width=\"14\" height=\"12\" rx=\"2\" />",
+  "volume-2": "<path d=\"M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z\" /><path d=\"M16 9a5 5 0 0 1 0 6\" /><path d=\"M19.364 18.364a9 9 0 0 0 0-12.728\" />",
+  "volume-x": "<path d=\"M11 4.702a.7.7 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.7.7 0 0 0 11 19.298z\" /><path d=\"m16.5 14.5 5-5\" /><path d=\"m16.5 9.5 5 5\" />",
   "wrap-text": "<path d=\"m16 16-3 3 3 3\" /><path d=\"M3 12h14.5a1 1 0 0 1 0 7H13\" /><path d=\"M3 19h6\" /><path d=\"M3 5h18\" />",
   "zoom-in": "<circle cx=\"11\" cy=\"11\" r=\"8\" /><line x1=\"21\" x2=\"16.65\" y1=\"21\" y2=\"16.65\" /><line x1=\"11\" x2=\"11\" y1=\"8\" y2=\"14\" /><line x1=\"8\" x2=\"14\" y1=\"11\" y2=\"11\" />"
 }

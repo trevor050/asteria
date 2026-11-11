@@ -140,7 +140,7 @@ func TestSearchFindsWhatPeopleType(t *testing.T) {
 		{"extract pages 1-3, 5", ".pdf", "extract_pages", "1-3, 5"},
 		{"trim 0:05-0:30", ".mp4", "trim", "0:05-0:30"},
 		{"mp3", ".mov", "convert_to_mp3", ""},
-		{"extract audio", ".mov", "convert_to_mp3", ""},
+		{"extract audio", ".mov", "extract_audio", ""},
 		{"unzip", ".zip", "extract_archive", ""},
 		{"comprss", ".jpg", "compress", ""},
 		{"export", ".jpg", "export", ""},

@@ -1,0 +1,32 @@
+{
+  "id": "video_thumbnail",
+  "name": "Video Thumbnail",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "video still",
+    "poster frame",
+    "video frame",
+    "screenshot video",
+    "cover frame"
+  ],
+  "category": "media",
+  "icon": "image",
+  "description": "Save one frame as a JPG",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": ".jpg",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.thumbnail"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

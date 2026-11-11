@@ -1,0 +1,35 @@
+{
+  "id": "burn_subtitles",
+  "name": "Burn Subtitles",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "hardcode subtitles",
+    "hardsub",
+    "burn in captions",
+    "open captions"
+  ],
+  "category": "media",
+  "icon": "captions",
+  "description": "Print subtitles permanently onto the video",
+  "inputTypes": [
+    "@video",
+    ".srt",
+    ".vtt",
+    ".ass",
+    ".ssa"
+  ],
+  "outputType": ".mp4",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.burn_subtitles"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

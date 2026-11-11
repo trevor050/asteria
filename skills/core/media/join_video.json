@@ -1,0 +1,33 @@
+{
+  "id": "join_video",
+  "name": "Join Videos",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "concat video",
+    "merge videos",
+    "combine videos",
+    "append video",
+    "stitch videos"
+  ],
+  "category": "media",
+  "icon": "film",
+  "description": "Join videos end to end, in tray order",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": ".mp4",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.join"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0,
+  "outputName": "joined"
+}

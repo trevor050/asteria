@@ -1,0 +1,28 @@
+{
+  "id": "convert_to_opus",
+  "name": "Convert to Opus",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "opus"
+  ],
+  "category": "media",
+  "icon": "arrow-left-right",
+  "description": "Small Opus audio, also from video",
+  "inputTypes": [
+    "@media"
+  ],
+  "outputType": ".opus",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}

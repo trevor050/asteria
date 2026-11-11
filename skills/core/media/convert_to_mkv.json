@@ -1,0 +1,29 @@
+{
+  "id": "convert_to_mkv",
+  "name": "Convert to MKV",
+  "version": "1.0.0",
+  "author": "asteria",
+  "aliases": [
+    "mkv",
+    "matroska"
+  ],
+  "category": "media",
+  "icon": "arrow-left-right",
+  "description": "MKV container with H.264 video",
+  "inputTypes": [
+    "@video"
+  ],
+  "outputType": ".mkv",
+  "params": [],
+  "executor": {
+    "type": "native",
+    "handler": "media.convert"
+  },
+  "permissions": [
+    "files.read",
+    "files.write",
+    "files.temp",
+    "tools.exec"
+  ],
+  "dangerLevel": 0
+}
