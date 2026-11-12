@@ -2,20 +2,33 @@
 import '../styles/global.css'
 import fontUrl from '../assets/fonts/Geist-Variable-subset.woff2?url'
 import icon from '../assets/icon-64.png'
-import { REPO_URL } from '../lib/release'
+import shot from '../../../docs/screenshot-dark.png'
+import { REPO_URL, getRelease } from '../lib/release'
+import { AUTHOR, buildGraph } from '../lib/seo'
 
 interface Props {
   title: string
   description: string
   /** path on the site, starting with / */
   path: string
-  jsonld?: object | object[]
+  /** extra structured-data nodes for this page; the shared graph is added here */
+  jsonld?: Record<string, unknown>[]
   noindex?: boolean
 }
 const { title, description, path, jsonld, noindex = false } = Astro.props
 const site = Astro.site!.href.replace(/\/$/, '')
 const canonical = site + path
 const ogImage = `${site}/og.png`
+const ogAlt = 'The Asteria icon: a file passing through a line of light'
+const graph = buildGraph({
+  canonical,
+  title,
+  description,
+  release: await getRelease(),
+  screenshot: new URL(shot.src, site).href,
+  nodes: jsonld,
+  noindex,
+})
 ---
 
 <!doctype html>
@@ -41,10 +54,17 @@ const ogImage = `${site}/og.png`
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="The Asteria icon: a file passing through a line of light" />
+    <meta property="og:image:alt" content={ogAlt} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogAlt} />
+    <meta name="author" content={AUTHOR.name} />
+    <link rel="author" href={AUTHOR.url} />
     <link rel="sitemap" href="/sitemap.xml" />
-    {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
+    <script type="application/ld+json" set:html={JSON.stringify(graph).replace(/</g, '\\u003c')} />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>

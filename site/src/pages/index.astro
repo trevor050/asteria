@@ -6,25 +6,12 @@ import Through from '../components/Through.astro'
 import Finder from '../components/Finder.astro'
 import Free from '../components/Free.astro'
 import Download from '../components/Download.astro'
-import { summary } from '../lib/data'
-import { REPO_URL } from '../lib/release'
+import { appDescription } from '../lib/seo'
 
-const description = `Asteria is a free file converter for Mac, Windows and Linux. Drop a file, type what you want, get the result. ${summary.conversionPairs} tested conversions, and nothing is ever uploaded.`
-const jsonld = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: 'Asteria',
-  applicationCategory: 'UtilitiesApplication',
-  operatingSystem: 'macOS, Windows, Linux',
-  description,
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  license: 'https://opensource.org/licenses/MIT',
-  codeRepository: REPO_URL,
-  url: 'https://asteria.trevorrosato.com/',
-}
+const description = appDescription
 ---
 
-<Base title="Asteria: a free file converter that never uploads your files" description={description} path="/" jsonld={jsonld}>
+<Base title="Asteria: a free file converter that never uploads your files" description={description} path="/">
   <Hero />
   <AppThrough />
   <Through />

@@ -36,15 +36,17 @@ const description = addon
 const typedIsName = pair.typed === pair.skill.name.toLowerCase()
 const paramExample = skill?.param && skill.aliases.includes(pair.to) && /^\d/.test(skill.param.default) ? `${pair.to} ${skill.param.default}` : null
 
-const jsonld = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Asteria', item: 'https://asteria.trevorrosato.com/' },
-    { '@type': 'ListItem', position: 2, name: 'Conversions', item: 'https://asteria.trevorrosato.com/convert' },
-    { '@type': 'ListItem', position: 3, name: `${F} to ${T}`, item: `https://asteria.trevorrosato.com/convert/${pair.slug}` },
-  ],
-}
+const jsonld = [
+  {
+    '@type': 'BreadcrumbList',
+    '@id': `https://asteria.trevorrosato.com/convert/${pair.slug}#breadcrumb`,
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Asteria', item: 'https://asteria.trevorrosato.com/' },
+      { '@type': 'ListItem', position: 2, name: 'Conversions', item: 'https://asteria.trevorrosato.com/convert' },
+      { '@type': 'ListItem', position: 3, name: `${F} to ${T}`, item: `https://asteria.trevorrosato.com/convert/${pair.slug}` },
+    ],
+  },
+]
 ---
 
 <Base title={title} description={description} path={`/convert/${pair.slug}`} jsonld={jsonld}>
